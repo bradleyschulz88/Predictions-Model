@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -13,64 +13,156 @@ sys.path.insert(0, str(ROOT))
 
 from accuracy_tracker import grade_predictions, record_predictions  # noqa: E402
 from mlb_data import default_game_date, fetch_dashboard_data  # noqa: E402
-from sports_config import list_league_ids  # noqa: E402
+from sports_config import LEAGUES, get_league, list_league_ids  # noqa: E402
 
 OUTPUT_DIR = ROOT / "docs" / "data"
 
 
-def build_league_payload(league: str) -> dict:
-    date_value = default_game_date(league)
-    print(f"Building {league} for {date_value}...", flush=True)
+def dates_for_league(league: str) -> list[str]:
+    today = date.today().isoformat()
+    tomorrow = (date.today() + timedelta(days=1)).isoformat()
+    default = default_game_date(league)
+    ordered: list[str] = []
+    for candidate in (default, today, tomorrow):
+        if candidate not in ordered:
+            ordered.append(candidate)
+    return ordered
+
+
+def build_league_payload(league: str, date_value: str, *, include_enrichment: bool) -> dict:
+    print(f"Building {league} for {date_value} (enrichment={include_enrichment})...", flush=True)
     return fetch_dashboard_data(
         league=league,
         date=date_value,
         source="espn",
-        include_odds=league == "mlb",
-        include_enrichment=True,
+        include_odds=league == "mlb" and include_enrichment,
+        include_enrichment=include_enrichment,
         retries=2,
         retry_delay=0.5,
         verify_ssl=True,
     )
 
 
+def build_overview(payloads: dict[str, dict]) -> dict:
+    league_summaries: list[dict] = []
+    top_picks: list[dict] = []
+
+    for league_id, payload in payloads.items():
+        games = payload.get("games") or []
+        top_game = games[0] if games else None
+        league_summaries.append(
+            {
+                "id": league_id,
+                "label": payload.get("leagueLabel", league_id),
+                "scheduleDate": payload.get("scheduleDate"),
+                "gameCount": payload.get("gameCount", 0),
+                "topPick": payload.get("topPick"),
+                "topConfidence": (top_game or {}).get("prediction", {}).get("confidence"),
+            }
+        )
+        for game in games[:3]:
+            prediction = game.get("prediction") or {}
+            top_picks.append(
+                {
+                    "league": league_id,
+                    "leagueLabel": payload.get("leagueLabel", league_id),
+                    "matchup": game.get("matchup"),
+                    "pick": prediction.get("outcomeLabel"),
+                    "confidence": prediction.get("confidence"),
+                    "confidenceLabel": prediction.get("confidenceLabel"),
+                    "modelEdge": (prediction.get("modelEdge") or {}).get("edgeLabel"),
+                    "eventId": game.get("eventId"),
+                }
+            )
+
+    top_picks.sort(key=lambda item: item.get("confidence") or 0, reverse=True)
+    return {
+        "builtAt": datetime.now(timezone.utc).isoformat(),
+        "leagues": league_summaries,
+        "topPicksOverall": top_picks[:8],
+    }
+
+
 def main() -> int:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     manifest: dict = {"builtAt": None, "leagues": []}
-    payloads: dict[str, dict] = {}
+    primary_payloads: dict[str, dict] = {}
 
     for league in list_league_ids():
-        try:
-            payload = build_league_payload(league)
-        except Exception as exc:
-            print(f"Warning: failed to build {league}: {exc}", flush=True)
-            payload = {
+        league_config = get_league(league)
+        default_date = default_game_date(league)
+        available_dates = dates_for_league(league)
+        date_files: dict[str, str] = {}
+        primary_payload: dict | None = None
+
+        for date_value in available_dates:
+            include_enrichment = date_value == default_date
+            try:
+                payload = build_league_payload(league, date_value, include_enrichment=include_enrichment)
+            except Exception as exc:
+                print(f"Warning: failed to build {league} {date_value}: {exc}", flush=True)
+                payload = {
+                    "league": league,
+                    "leagueLabel": league_config.label,
+                    "scheduleDate": date_value,
+                    "games": [],
+                    "gameCount": 0,
+                    "error": str(exc),
+                    "fetchedAt": datetime.now(timezone.utc).isoformat(),
+                }
+
+            dated_name = f"{league}_{date_value}.json"
+            dated_path = OUTPUT_DIR / dated_name
+            dated_path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
+            date_files[date_value] = f"data/{dated_name}"
+            print(f"Wrote {dated_path} ({payload.get('gameCount', 0)} games)", flush=True)
+
+            if date_value == default_date:
+                primary_payload = payload
+                (OUTPUT_DIR / f"{league}.json").write_text(
+                    json.dumps(payload, indent=2, default=str),
+                    encoding="utf-8",
+                )
+
+        if primary_payload is None:
+            primary_payload = {
                 "league": league,
+                "leagueLabel": league_config.label,
                 "games": [],
                 "gameCount": 0,
-                "error": str(exc),
+                "scheduleDate": default_date,
                 "fetchedAt": datetime.now(timezone.utc).isoformat(),
             }
 
-        payloads[league] = payload
-        output_path = OUTPUT_DIR / f"{league}.json"
-        output_path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
+        primary_payloads[league] = primary_payload
         manifest["leagues"].append(
             {
                 "id": league,
-                "label": payload.get("leagueLabel", league),
-                "scheduleDate": payload.get("scheduleDate"),
-                "gameCount": payload.get("gameCount", 0),
+                "label": league_config.label,
+                "espnPath": league_config.espn_path,
+                "scheduleDate": primary_payload.get("scheduleDate"),
+                "defaultDate": default_date,
+                "availableDates": available_dates,
+                "dateFiles": date_files,
+                "gameCount": primary_payload.get("gameCount", 0),
                 "file": f"data/{league}.json",
-                "error": payload.get("error"),
+                "error": primary_payload.get("error"),
             }
         )
-        print(f"Wrote {output_path} ({payload.get('gameCount', 0)} games)", flush=True)
 
-    record_predictions(OUTPUT_DIR, payloads)
+    record_predictions(OUTPUT_DIR, primary_payloads)
     accuracy = grade_predictions(OUTPUT_DIR)
+    overview = build_overview(primary_payloads)
+
     manifest["accuracy"] = accuracy.get("summary")
     manifest["builtAt"] = datetime.now(timezone.utc).isoformat()
+    manifest["liveScoreRefreshSeconds"] = 90
+    manifest["snapshotNote"] = (
+        "Predictions refresh every 30 minutes on GitHub Actions. Live scores auto-refresh every 90s in your browser."
+    )
+
     (OUTPUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    (OUTPUT_DIR / "overview.json").write_text(json.dumps(overview, indent=2), encoding="utf-8")
     print("Done.", flush=True)
     return 0
 

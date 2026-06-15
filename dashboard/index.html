@@ -21,7 +21,8 @@
         <label class="field">
           <span>Sport</span>
           <select id="sport-select">
-            <option value="mlb">MLB Baseball</option>
+            <option value="overview">All sports</option>
+            <option value="mlb" selected>MLB Baseball</option>
             <option value="nfl">NFL Football</option>
             <option value="nba">NBA Basketball</option>
             <option value="worldcup">FIFA World Cup</option>
@@ -29,9 +30,9 @@
             <option value="afl">AFL</option>
           </select>
         </label>
-        <label class="field">
+        <label class="field" id="date-field">
           <span>Date</span>
-          <input id="date-input" type="date" title="Schedule date from published data on GitHub Pages">
+          <select id="date-select" title="Pick a schedule date"></select>
         </label>
         <label class="field">
           <span>Filter</span>
@@ -53,6 +54,10 @@
             <option value="MoneyLine">Moneyline only</option>
             <option value="Total">Totals only</option>
           </select>
+        </label>
+        <label class="toggle">
+          <input id="live-scores" type="checkbox" checked>
+          <span>Live scores</span>
         </label>
         <label class="toggle">
           <input id="auto-refresh" type="checkbox">
@@ -84,12 +89,18 @@
         <p class="stat-value stat-small" id="stat-date">—</p>
       </article>
       <article class="stat-card">
+        <p class="stat-label">Freshness</p>
+        <p class="stat-value stat-small" id="stat-freshness">—</p>
+      </article>
+      <article class="stat-card">
         <p class="stat-label">Last updated</p>
         <p class="stat-value stat-small" id="stat-updated">—</p>
       </article>
     </section>
 
+    <section id="accuracy-panel" class="accuracy-panel hidden"></section>
     <section id="top-picks" class="top-picks hidden"></section>
+    <p id="freshness-note" class="freshness-note hidden"></p>
     <div id="banner" class="banner hidden"></div>
     <main id="games" class="games"></main>
   </div>

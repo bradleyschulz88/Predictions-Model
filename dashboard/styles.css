@@ -75,7 +75,10 @@ button {
   font: inherit;
 }
 
-input[type="date"],
+#date-select {
+  min-width: 170px;
+}
+
 select {
   background: var(--panel);
   color: var(--text);
@@ -637,4 +640,87 @@ button:hover {
   border-radius: 10px;
   padding: 10px 12px;
   min-width: 140px;
+}
+
+.freshness-note {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(56, 189, 248, 0.1);
+  color: #bae6fd;
+  font-size: 0.88rem;
+}
+
+.accuracy-panel {
+  margin-bottom: 20px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+}
+
+.accuracy-title {
+  margin: 0 0 12px;
+  font-size: 1.05rem;
+}
+
+.accuracy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.accuracy-grid h3 {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.accuracy-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.88rem;
+}
+
+.accuracy-list li {
+  margin-bottom: 6px;
+}
+
+.acc-correct {
+  color: #86efac;
+}
+
+.acc-wrong {
+  color: #fca5a5;
+}
+
+.overview-section h2 {
+  margin: 0 0 12px;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.overview-card {
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+}
+
+.overview-card h3 {
+  margin: 0 0 6px;
+}
+
+.overview-pick {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 8px 0 12px;
+}
+
+.overview-jump {
+  width: 100%;
 }

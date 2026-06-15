@@ -63,5 +63,35 @@ class LeagueConfigTests(unittest.TestCase):
         self.assertTrue({"mlb", "nfl", "nba", "worldcup", "epl", "afl"}.issubset(leagues))
 
 
+class BuildPagesTests(unittest.TestCase):
+    def test_build_overview_sorts_top_picks(self) -> None:
+        from scripts.build_pages_data import build_overview
+
+        payloads = {
+            "mlb": {
+                "leagueLabel": "MLB",
+                "scheduleDate": "2026-06-16",
+                "gameCount": 2,
+                "topPick": "Yankees ML",
+                "games": [
+                    {"matchup": "A @ B", "eventId": "1", "prediction": {"outcomeLabel": "B ML", "confidence": 62, "confidenceLabel": "Lean"}},
+                    {"matchup": "C @ D", "eventId": "2", "prediction": {"outcomeLabel": "C ML", "confidence": 71, "confidenceLabel": "Strong pick"}},
+                ],
+            },
+            "nba": {
+                "leagueLabel": "NBA",
+                "scheduleDate": "2026-06-16",
+                "gameCount": 1,
+                "topPick": "Lakers ML",
+                "games": [
+                    {"matchup": "E @ F", "eventId": "3", "prediction": {"outcomeLabel": "F ML", "confidence": 68, "confidenceLabel": "Lean"}},
+                ],
+            },
+        }
+        overview = build_overview(payloads)
+        self.assertEqual(len(overview["leagues"]), 2)
+        self.assertGreaterEqual(overview["topPicksOverall"][0]["confidence"], overview["topPicksOverall"][1]["confidence"])
+
+
 if __name__ == "__main__":
     unittest.main()
