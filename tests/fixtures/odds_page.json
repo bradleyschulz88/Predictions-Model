@@ -1,0 +1,60 @@
+{
+  "props": {
+    "pageProps": {
+      "oddsTables": [
+        {
+          "oddsTableModel": {
+            "gameRows": [
+              {
+                "gameView": {
+                  "startDate": "2026-06-15T23:10:00Z",
+                  "awayTeam": {"fullName": "New York Yankees"},
+                  "homeTeam": {"fullName": "Boston Red Sox"},
+                  "gameStatusText": "Scheduled",
+                  "venueName": "Fenway Park"
+                },
+                "oddsViews": [
+                  {
+                    "sportsbook": "DraftKings",
+                    "viewType": "Spread",
+                    "openingLine": {"away": -1.5, "home": 1.5},
+                    "currentLine": {"away": -1.5, "home": 1.5}
+                  },
+                  {
+                    "sportsbook": "DraftKings",
+                    "viewType": "MoneyLine",
+                    "openingLine": {"away": -130, "home": 110},
+                    "currentLine": {"away": -125, "home": 105}
+                  },
+                  {
+                    "sportsbook": "FanDuel",
+                    "viewType": "Total",
+                    "openingLine": {"over": 8.5, "under": 8.5},
+                    "currentLine": {"over": 8.5, "under": 8.5}
+                  }
+                ]
+              },
+              {
+                "gameView": {
+                  "startDate": "2026-06-16T00:05:00Z",
+                  "awayTeam": {"fullName": "Los Angeles Dodgers"},
+                  "homeTeam": {"fullName": "San Francisco Giants"},
+                  "gameStatusText": "Scheduled",
+                  "venueName": "Oracle Park"
+                },
+                "oddsViews": [
+                  {
+                    "sportsbook": "BetMGM",
+                    "viewType": "Spread",
+                    "openingLine": {"away": -1.5, "home": 1.5},
+                    "currentLine": {"away": -1.5, "home": 1.5}
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

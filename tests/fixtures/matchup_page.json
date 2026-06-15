@@ -1,0 +1,25 @@
+{
+  "props": {
+    "pageProps": {
+      "matchupModel": {
+        "matchup": {
+          "oddsViews": {
+            "spreadOddsViews": [
+              {
+                "sportsbook": "DraftKings",
+                "openingLine": {"away": -1.5, "home": 1.5},
+                "currentLine": {"away": -1.5, "home": 1.5}
+              },
+              {
+                "sportsbook": "FanDuel",
+                "openingLine": {"away": -1.5, "home": 1.5},
+                "currentLine": {"away": -2.0, "home": 2.0}
+              }
+            ],
+            "moneyLineOddsViews": []
+          }
+        }
+      }
+    }
+  }
+}

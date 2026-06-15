@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sports Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div>
+        <p class="eyebrow">ESPN Schedule + Predictions</p>
+        <h1 id="dashboard-title">Sports Games Dashboard</h1>
+      </div>
+      <div class="controls">
+        <label class="field">
+          <span>Sport</span>
+          <select id="sport-select">
+            <option value="mlb">MLB Baseball</option>
+            <option value="worldcup">FIFA World Cup</option>
+            <option value="afl">AFL</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Date</span>
+          <input id="date-input" type="date">
+        </label>
+        <label class="field" id="market-filter-wrap">
+          <span>Market</span>
+          <select id="view-filter">
+            <option value="Spread|MoneyLine|Total">All main markets</option>
+            <option value="Spread">Spread only</option>
+            <option value="MoneyLine">Moneyline only</option>
+            <option value="Total">Totals only</option>
+          </select>
+        </label>
+        <label class="toggle">
+          <input id="auto-refresh" type="checkbox">
+          <span>Auto-refresh (2m)</span>
+        </label>
+        <button id="refresh-btn" type="button">Refresh</button>
+      </div>
+    </header>
+
+    <section class="stats" id="stats">
+      <article class="stat-card">
+        <p class="stat-label">Games</p>
+        <p class="stat-value" id="stat-games">—</p>
+      </article>
+      <article class="stat-card">
+        <p class="stat-label">Top pick</p>
+        <p class="stat-value stat-small" id="stat-top-pick">—</p>
+      </article>
+      <article class="stat-card">
+        <p class="stat-label">League</p>
+        <p class="stat-value stat-small" id="stat-league">—</p>
+      </article>
+      <article class="stat-card">
+        <p class="stat-label">Schedule date</p>
+        <p class="stat-value stat-small" id="stat-date">—</p>
+      </article>
+      <article class="stat-card">
+        <p class="stat-label">Sorted by</p>
+        <p class="stat-value stat-small">Win likelihood</p>
+      </article>
+      <article class="stat-card">
+        <p class="stat-label">Last updated</p>
+        <p class="stat-value stat-small" id="stat-updated">—</p>
+      </article>
+    </section>
+
+    <div id="banner" class="banner hidden"></div>
+    <main id="games" class="games"></main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
