@@ -68,6 +68,135 @@ let lastLiveScoreAt = null;
 let activeScheduleDate = null;
 let dateOptionsCache = [];
 
+const TRACKED_BETS_KEY = "predictions-dashboard-tracked-bets";
+
+function loadTrackedBets() {
+  try {
+    const raw = localStorage.getItem(TRACKED_BETS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveTrackedBets(bets) {
+  localStorage.setItem(TRACKED_BETS_KEY, JSON.stringify(bets));
+}
+
+function isBetTracked(eventId) {
+  const id = String(eventId || "");
+  return loadTrackedBets().some((bet) => String(bet.eventId) === id);
+}
+
+function toggleTrackedBet(game) {
+  const eventId = String(game.eventId || "");
+  if (!eventId || !game.prediction) return;
+  const bets = loadTrackedBets().filter((bet) => String(bet.eventId) !== eventId);
+  if (!isBetTracked(eventId)) {
+    bets.unshift({
+      eventId,
+      league: game.league || sportSelect.value,
+      scheduleDate: lastPayload?.scheduleDate || getSelectedDate(),
+      matchup: game.matchup,
+      predicted: game.prediction.predictedWinner,
+      outcomeLabel: game.prediction.outcomeLabel,
+      confidence: game.prediction.confidence,
+      trackedAt: new Date().toISOString(),
+    });
+  }
+  saveTrackedBets(bets);
+  renderBetTrackerPanel();
+  renderGames(lastPayload?.games || []);
+}
+
+function winnerFromGame(game) {
+  if (!game?.isFinal || game.homeScore == null || game.awayScore == null) return null;
+  const home = Number(game.homeScore);
+  const away = Number(game.awayScore);
+  if (Number.isNaN(home) || Number.isNaN(away)) return null;
+  if (home === away) return "Draw";
+  return home > away ? game.homeTeam : game.awayTeam;
+}
+
+function namesMatch(left, right) {
+  if (!left || !right) return false;
+  const a = String(left).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const b = String(right).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  if (!a || !b) return false;
+  if (a === b || a.includes(b) || b.includes(a)) return true;
+  const aTokens = new Set(a.split(" "));
+  const bTokens = new Set(b.split(" "));
+  const overlap = [...aTokens].filter((token) => bTokens.has(token)).length;
+  return overlap / Math.max(aTokens.size, bTokens.size) >= 0.55;
+}
+
+function pickMatchesWinner(predicted, actual) {
+  return namesMatch(predicted, actual);
+}
+
+function resolvePickStatus(game) {
+  const eventId = String(game.eventId || "");
+  const serverPick = accuracyData?.picksByEventId?.[eventId];
+  if (serverPick?.status === "graded") return serverPick;
+
+  const actual = winnerFromGame(game);
+  if (actual && game.prediction?.predictedWinner) {
+    const correct = pickMatchesWinner(game.prediction.predictedWinner, actual);
+    return {
+      status: "graded",
+      predicted: game.prediction.predictedWinner,
+      actual,
+      correct,
+      homeScore: game.homeScore,
+      awayScore: game.awayScore,
+      confidence: game.prediction.confidence,
+      outcomeLabel: game.prediction.outcomeLabel,
+      live: true,
+    };
+  }
+
+  if (serverPick) return serverPick;
+  if (game.prediction?.predictedWinner) {
+    return {
+      status: "pending",
+      predicted: game.prediction.predictedWinner,
+      outcomeLabel: game.prediction.outcomeLabel,
+      confidence: game.prediction.confidence,
+    };
+  }
+  return null;
+}
+
+function renderPickStatusBadge(game) {
+  const pick = resolvePickStatus(game);
+  if (!pick) return "";
+  if (pick.status === "pending") {
+    return `<span class="pick-status pick-pending">Pick pending</span>`;
+  }
+  if (pick.correct) {
+    return `<span class="pick-status pick-won">Pick won · ${pick.actual}</span>`;
+  }
+  return `<span class="pick-status pick-lost">Pick lost · won ${pick.actual}</span>`;
+}
+
+function summarizeTrackedBets() {
+  const bets = loadTrackedBets();
+  let wins = 0;
+  let losses = 0;
+  let pending = 0;
+  for (const bet of bets) {
+    const game = (lastPayload?.games || []).find((item) => String(item.eventId) === String(bet.eventId));
+    const pick = game ? resolvePickStatus(game) : accuracyData?.picksByEventId?.[bet.eventId];
+    if (!pick || pick.status === "pending") {
+      pending += 1;
+      continue;
+    }
+    if (pick.correct) wins += 1;
+    else losses += 1;
+  }
+  return { wins, losses, pending, total: bets.length };
+}
+
 function leagueTimezone(sport) {
   return LEAGUE_TIMEZONES[sport] || Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
@@ -311,10 +440,13 @@ function renderStats(payload, visibleCount) {
     sport === "overview" ? "All Sports Predictions" : `${payload.leagueLabel || SPORT_LABELS[sport] || "Sports"} Predictions`;
 
   const acc = accuracyData?.summary?.last7Days;
-  if (acc?.pct != null) {
-    statAccuracy.textContent = `${acc.pct}% (${acc.correct}/${acc.total})`;
+  if (acc?.total > 0 && acc?.pct != null) {
+    const units = acc.units != null ? ` · ${acc.units >= 0 ? "+" : ""}${acc.units}u` : "";
+    statAccuracy.textContent = `${acc.correct}-${acc.total - acc.correct} (${acc.pct}%)${units}`;
+  } else if (acc?.pending > 0) {
+    statAccuracy.textContent = `${acc.pending} pending`;
   } else {
-    statAccuracy.textContent = "Building…";
+    statAccuracy.textContent = "Tracking…";
   }
 
   if (lastLiveScoreAt) {
@@ -327,44 +459,106 @@ function renderStats(payload, visibleCount) {
   }
 }
 
-function renderAccuracyPanel() {
+function renderBetTrackerPanel() {
+  const summary = accuracyData?.summary || {};
+  const last7 = summary.last7Days || {};
+  const streak = summary.streak || {};
   const results = accuracyData?.recentResults || [];
-  if (!results.length) {
+  const pending = accuracyData?.pendingPicks || [];
+  const tracked = summarizeTrackedBets();
+  const myBets = loadTrackedBets();
+
+  const openOnPage = (lastPayload?.games || []).filter((game) => resolvePickStatus(game)?.status === "pending").length;
+  const hasModelData = results.length > 0 || pending.length > 0 || last7.pending > 0 || openOnPage > 0;
+  const hasTracked = myBets.length > 0;
+  if (!hasModelData && !hasTracked) {
     accuracyPanel.classList.add("hidden");
     accuracyPanel.innerHTML = "";
     return;
   }
 
-  const byLeague = accuracyData?.summary?.byLeague || {};
+  const byLeague = summary.byLeague || {};
   const leagueRows = Object.entries(byLeague)
-    .map(
-      ([league, stats]) =>
-        `<li><strong>${SPORT_LABELS[league] || league}</strong>: ${stats.pct != null ? `${stats.pct}% (${stats.correct}/${stats.total})` : "—"}</li>`
-    )
+    .map(([league, stats]) => {
+      const units = stats.units != null ? ` · ${stats.units >= 0 ? "+" : ""}${stats.units}u` : "";
+      return `<li><strong>${SPORT_LABELS[league] || league}</strong>: ${stats.pct != null ? `${stats.correct}-${stats.total - stats.correct} (${stats.pct}%)${units}` : "—"}</li>`;
+    })
     .join("");
 
   const recentRows = results
     .slice(0, 8)
+    .map((item) => {
+      const score =
+        item.homeScore != null && item.awayScore != null ? ` (${item.awayScore}-${item.homeScore})` : "";
+      const units = item.units != null ? ` · ${item.units >= 0 ? "+" : ""}${item.units}u` : "";
+      return `<li class="${item.correct ? "acc-correct" : "acc-wrong"}"><strong>${item.matchup || item.league}</strong>${score} — picked ${item.predicted}, won ${item.actual} ${item.correct ? "✓" : "✗"}${units}</li>`;
+    })
+    .join("");
+
+  const pendingRows = pending
+    .slice(0, 5)
     .map(
       (item) =>
-        `<li class="${item.correct ? "acc-correct" : "acc-wrong"}"><strong>${item.matchup || item.league}</strong> — picked ${item.predicted}, result ${item.actual} ${item.correct ? "✓" : "✗"}</li>`
+        `<li class="pick-pending-row"><strong>${item.matchup || item.league}</strong> — ${item.outcomeLabel || item.predicted} (${item.confidence || "?"}%)</li>`
     )
     .join("");
 
+  const trackedRows = myBets
+    .slice(0, 8)
+    .map((bet) => {
+      const game = (lastPayload?.games || []).find((item) => String(item.eventId) === String(bet.eventId));
+      const pick = game ? resolvePickStatus(game) : accuracyData?.picksByEventId?.[bet.eventId];
+      if (!pick || pick.status === "pending") {
+        return `<li class="pick-pending-row"><strong>${bet.matchup}</strong> — ${bet.outcomeLabel || bet.predicted} (tracked)</li>`;
+      }
+      return `<li class="${pick.correct ? "acc-correct" : "acc-wrong"}"><strong>${bet.matchup}</strong> — ${pick.correct ? "Won" : "Lost"} · ${pick.actual}</li>`;
+    })
+    .join("");
+
+  const streakLabel =
+    streak.current > 0 && streak.type
+      ? `${streak.current} ${streak.type === "win" ? "wins" : "losses"} in a row`
+      : "No active streak";
+
+  const unitsLabel =
+    last7.units != null ? `${last7.units >= 0 ? "+" : ""}${last7.units} units` : "—";
+  const roiLabel = last7.roiPct != null ? `${last7.roiPct}% ROI` : "—";
+
   accuracyPanel.classList.remove("hidden");
   accuracyPanel.innerHTML = `
-    <h2 class="accuracy-title">Prediction track record (7 days)</h2>
+    <h2 class="accuracy-title">Bet tracker</h2>
+    <p class="bet-tracker-note">Model picks are logged automatically. Tap <strong>Track bet</strong> on a game to add it to your personal list (saved on this device).</p>
+    <div class="bet-tracker-stats">
+      <article class="tracker-stat"><span class="tracker-stat-label">7-day record</span><strong>${last7.correct || 0}-${(last7.total || 0) - (last7.correct || 0)}</strong></article>
+      <article class="tracker-stat"><span class="tracker-stat-label">Units (7d)</span><strong>${unitsLabel}</strong></article>
+      <article class="tracker-stat"><span class="tracker-stat-label">ROI (7d)</span><strong>${roiLabel}</strong></article>
+      <article class="tracker-stat"><span class="tracker-stat-label">Streak</span><strong>${streakLabel}</strong></article>
+      <article class="tracker-stat"><span class="tracker-stat-label">Open picks</span><strong>${last7.pending || pending.length || openOnPage || 0}</strong></article>
+      <article class="tracker-stat"><span class="tracker-stat-label">My bets</span><strong>${tracked.wins}-${tracked.losses}${tracked.pending ? ` (${tracked.pending} open)` : ""}</strong></article>
+    </div>
     <div class="accuracy-grid">
       <div>
-        <h3>By league</h3>
-        <ul class="accuracy-list">${leagueRows || "<li>No graded games yet.</li>"}</ul>
+        <h3>By league (7d)</h3>
+        <ul class="accuracy-list">${leagueRows || "<li>No graded picks yet.</li>"}</ul>
       </div>
       <div>
         <h3>Recent results</h3>
-        <ul class="accuracy-list">${recentRows}</ul>
+        <ul class="accuracy-list">${recentRows || "<li>Results appear after games finish.</li>"}</ul>
+      </div>
+      <div>
+        <h3>Open model picks</h3>
+        <ul class="accuracy-list">${pendingRows || "<li>No open picks.</li>"}</ul>
+      </div>
+      <div>
+        <h3>My tracked bets</h3>
+        <ul class="accuracy-list">${trackedRows || "<li>Tap Track bet on any game card.</li>"}</ul>
       </div>
     </div>
   `;
+}
+
+function renderAccuracyPanel() {
+  renderBetTrackerPanel();
 }
 
 function renderOverview() {
@@ -668,6 +862,9 @@ function renderPrediction(game) {
         ? `<div class="final-score">Final: ${game.awayTeam} ${game.awayScore} – ${game.homeScore} ${game.homeTeam}</div>`
         : "";
 
+  const pickBadge = renderPickStatusBadge(game);
+  const pickStatusBlock = pickBadge ? `<div class="pick-status-row">${pickBadge}</div>` : "";
+
   return `
     <section class="prediction-panel">
       <div class="prediction-head">
@@ -680,6 +877,7 @@ function renderPrediction(game) {
         <div class="confidence-badge">${prediction.confidence}%</div>
       </div>
       ${liveBlock}
+      ${pickStatusBlock}
       ${probabilityCompare}
       <div class="probability-bar ${prediction.drawWinPct != null ? "three-way" : ""}">
         <div class="probability-team ${homeFavored ? "favored" : ""}"><span class="probability-label">${game.homeTeam || "Home"} (blended)</span><span class="probability-value">${prediction.homeWinPct}%</span></div>
@@ -743,6 +941,8 @@ function renderGames(games) {
       if (pitchers) metaParts.push(pitchers);
 
       const shareUrl = `${window.location.origin}${window.location.pathname}#game-${game.eventId}`;
+      const pickBadge = renderPickStatusBadge(game);
+      const tracked = isBetTracked(game.eventId);
 
       return `
         <article class="game-card" id="game-${game.eventId}">
@@ -751,6 +951,7 @@ function renderGames(games) {
               <span class="rank-badge small">#${game.predictionRank || "?"}</span>
               <span class="summary-matchup">${game.matchup || "Unknown"}</span>
               <span class="summary-pick">${game.prediction?.outcomeLabel || ""} · ${pickProbabilitySummary(game.prediction) || `${game.prediction?.confidence || "?"}%`}</span>
+              ${pickBadge ? `<span class="summary-pick-status">${pickBadge}</span>` : ""}
             </summary>
             <div class="game-details-body">
               ${renderPrediction(game)}
@@ -761,6 +962,7 @@ function renderGames(games) {
                 </div>
                 <div class="game-actions">
                   <span class="status-pill ${game.isLive ? "live" : ""}">${game.gameStatusText || "Scheduled"}</span>
+                  <button type="button" class="track-btn${tracked ? " tracked" : ""}" data-event-id="${game.eventId}">${tracked ? "Tracked" : "Track bet"}</button>
                   <button type="button" class="share-btn" data-share-url="${shareUrl}" data-share-title="${game.prediction?.outcomeLabel || game.matchup}">Share</button>
                 </div>
               </div>
@@ -776,6 +978,15 @@ function renderGames(games) {
       `;
     })
     .join("");
+
+  gamesEl.querySelectorAll(".track-btn").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const game = (lastPayload?.games || []).find((item) => String(item.eventId) === String(button.dataset.eventId));
+      if (game) toggleTrackedBet(game);
+    });
+  });
 
   gamesEl.querySelectorAll(".share-btn").forEach((button) => {
     button.addEventListener("click", async (event) => {
@@ -1034,6 +1245,7 @@ async function refreshLiveScores() {
     lastLiveScoreAt = Date.now();
     lastPayload = { ...lastPayload, games: mergeLiveScores(lastPayload.games, liveScores) };
     renderGames(lastPayload.games);
+    renderBetTrackerPanel();
   } catch {
     /* ESPN CORS or network blocked — keep snapshot scores */
   }
