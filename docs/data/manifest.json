@@ -1,0 +1,147 @@
+{
+  "builtAt": "2026-06-15T23:16:51.465761+00:00",
+  "leagues": [
+    {
+      "id": "mlb",
+      "label": "MLB Baseball",
+      "espnPath": "baseball/mlb",
+      "scheduleTimezone": "America/New_York",
+      "scheduleDate": "2026-06-15",
+      "defaultDate": "2026-06-15",
+      "availableDates": [
+        "2026-06-13",
+        "2026-06-14",
+        "2026-06-15",
+        "2026-06-16"
+      ],
+      "dateFiles": {
+        "2026-06-13": "data/mlb_2026-06-13.json",
+        "2026-06-14": "data/mlb_2026-06-14.json",
+        "2026-06-15": "data/mlb_2026-06-15.json",
+        "2026-06-16": "data/mlb_2026-06-16.json"
+      },
+      "gameCount": 0,
+      "file": "data/mlb.json",
+      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1081)"
+    },
+    {
+      "id": "nfl",
+      "label": "NFL Football",
+      "espnPath": "football/nfl",
+      "scheduleTimezone": "America/New_York",
+      "scheduleDate": "2026-06-15",
+      "defaultDate": "2026-06-15",
+      "availableDates": [
+        "2026-06-13",
+        "2026-06-14",
+        "2026-06-15",
+        "2026-06-16"
+      ],
+      "dateFiles": {
+        "2026-06-13": "data/nfl_2026-06-13.json",
+        "2026-06-14": "data/nfl_2026-06-14.json",
+        "2026-06-15": "data/nfl_2026-06-15.json",
+        "2026-06-16": "data/nfl_2026-06-16.json"
+      },
+      "gameCount": 0,
+      "file": "data/nfl.json",
+      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1081)"
+    },
+    {
+      "id": "nba",
+      "label": "NBA Basketball",
+      "espnPath": "basketball/nba",
+      "scheduleTimezone": "America/New_York",
+      "scheduleDate": "2026-06-15",
+      "defaultDate": "2026-06-15",
+      "availableDates": [
+        "2026-06-13",
+        "2026-06-14",
+        "2026-06-15",
+        "2026-06-16"
+      ],
+      "dateFiles": {
+        "2026-06-13": "data/nba_2026-06-13.json",
+        "2026-06-14": "data/nba_2026-06-14.json",
+        "2026-06-15": "data/nba_2026-06-15.json",
+        "2026-06-16": "data/nba_2026-06-16.json"
+      },
+      "gameCount": 0,
+      "file": "data/nba.json",
+      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1081)"
+    },
+    {
+      "id": "worldcup",
+      "label": "FIFA World Cup",
+      "espnPath": "soccer/fifa.world",
+      "scheduleTimezone": "America/New_York",
+      "scheduleDate": "2026-06-15",
+      "defaultDate": "2026-06-15",
+      "availableDates": [
+        "2026-06-14",
+        "2026-06-15",
+        "2026-06-16"
+      ],
+      "dateFiles": {
+        "2026-06-14": "data/worldcup_2026-06-14.json",
+        "2026-06-15": "data/worldcup_2026-06-15.json",
+        "2026-06-16": "data/worldcup_2026-06-16.json"
+      },
+      "gameCount": 0,
+      "file": "data/worldcup.json",
+      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1081)"
+    },
+    {
+      "id": "epl",
+      "label": "English Premier League",
+      "espnPath": "soccer/eng.1",
+      "scheduleTimezone": "Europe/London",
+      "scheduleDate": "2026-06-16",
+      "defaultDate": "2026-06-16",
+      "availableDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17"
+      ],
+      "dateFiles": {
+        "2026-06-15": "data/epl_2026-06-15.json",
+        "2026-06-16": "data/epl_2026-06-16.json",
+        "2026-06-17": "data/epl_2026-06-17.json"
+      },
+      "gameCount": 0,
+      "file": "data/epl.json",
+      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260616: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1081)"
+    },
+    {
+      "id": "afl",
+      "label": "AFL",
+      "espnPath": "australian-football/afl",
+      "scheduleTimezone": "Australia/Melbourne",
+      "scheduleDate": "2026-06-16",
+      "defaultDate": "2026-06-16",
+      "availableDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17"
+      ],
+      "dateFiles": {
+        "2026-06-15": "data/afl_2026-06-15.json",
+        "2026-06-16": "data/afl_2026-06-16.json",
+        "2026-06-17": "data/afl_2026-06-17.json"
+      },
+      "gameCount": 0,
+      "file": "data/afl.json",
+      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260616: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1081)"
+    }
+  ],
+  "accuracy": {
+    "last7Days": {
+      "correct": 0,
+      "total": 0,
+      "pct": null
+    },
+    "byLeague": {}
+  },
+  "liveScoreRefreshSeconds": 90,
+  "snapshotNote": "Predictions refresh every 30 minutes on GitHub Actions. Live scores auto-refresh every 90s in your browser."
+}

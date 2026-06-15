@@ -572,6 +572,20 @@ button:hover {
   border-radius: 18px;
 }
 
+.loading-state {
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 760px) {
   .header {
     flex-direction: column;

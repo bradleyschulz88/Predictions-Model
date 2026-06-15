@@ -91,7 +91,9 @@ function leagueDateParts(timeZone, baseDate = new Date(), daysAhead = 0) {
 }
 
 function leagueDateIso(sport, daysAhead = 0) {
-  return leagueDateParts(leagueTimezone(sport), new Date(), daysAhead).iso;
+  const todayIso = leagueDateParts(leagueTimezone(sport), new Date(), 0).iso;
+  if (daysAhead === 0) return todayIso;
+  return shiftIsoDate(todayIso, daysAhead, sport);
 }
 
 function defaultDateForSport(sport) {
@@ -186,6 +188,7 @@ function renderDateQuickPicks() {
     return;
   }
 
+  const sport = sportSelect.value;
   const current = getSelectedDate();
   const quickDates = [leagueDateIso(sport, 0), leagueDateIso(sport, 1), leagueDateIso(sport, -1), defaultDateForSport(sport)]
     .filter((iso, index, list) => iso && list.indexOf(iso) === index)
@@ -821,7 +824,11 @@ function filterPayloadByView(payload, view) {
 
 function staticDataUrl(path, force) {
   const url = new URL(path, window.location.href);
-  if (force) url.searchParams.set("t", String(Date.now()));
+  if (force) {
+    url.searchParams.set("t", String(Date.now()));
+  } else if (String(path).includes("/data/") && String(path).endsWith(".json")) {
+    url.searchParams.set("v", String(Math.floor(Date.now() / 300000)));
+  }
   return url.toString();
 }
 
@@ -924,7 +931,8 @@ async function fetchStaticPayloadForDate(league, dateValue, { force = false } = 
     const response = await fetch(staticDataUrl(String(filePath).replace(/^\//, ""), force));
     if (!response.ok) continue;
     const payload = await response.json();
-    if ((payload.scheduleDate || dateValue) === dateValue) {
+    const gameCount = payload.gameCount ?? payload.games?.length ?? 0;
+    if ((payload.scheduleDate || dateValue) === dateValue || gameCount > 0) {
       return payload;
     }
   }
@@ -1099,10 +1107,13 @@ async function fetchDashboardPayload(params, { force = false } = {}) {
 }
 
 async function loadDashboard(force = false) {
-  if (loadingDashboard) return;
+  if (loadingDashboard && !force) return;
   loadingDashboard = true;
   refreshBtn.disabled = true;
   refreshBtn.textContent = "Loading…";
+  if (sportSelect.value !== "overview") {
+    gamesEl.innerHTML = `<div class="empty-state loading-state">Loading ${SPORT_LABELS[sportSelect.value] || sportSelect.value}…</div>`;
+  }
 
   const requestedDate = getSelectedDate();
   setActiveScheduleDate(requestedDate, { syncSelect: true });
@@ -1142,9 +1153,32 @@ async function loadDashboard(force = false) {
       } else {
         hideBanner();
       }
-      renderGames(payload.games || []);
-      if ((payload.games || []).length === 0 && payload.error) {
+      let games = payload.games || [];
+      if (games.length === 0 && IS_STATIC_HOST && !payload._liveFallback) {
+        const meta = leagueMeta(sportSelect.value);
+        const retryDate = meta?.defaultDate;
+        if (retryDate && retryDate !== requestedDate && retryDate !== payload.scheduleDate) {
+          try {
+            const retryPayload = await fetchStaticPayloadForDate(sportSelect.value, retryDate, { force });
+            if ((retryPayload.games || []).length > 0) {
+              lastPayload = { ...retryPayload, _requestedDate: requestedDate, _dateFallback: true };
+              setActiveScheduleDate(retryPayload.scheduleDate || retryDate, { syncSelect: true });
+              populateDateSelect(sportSelect.value, retryPayload.scheduleDate || retryDate);
+              statDate.textContent = `${retryPayload.scheduleDate || retryDate}${retryPayload.scheduleTimezone ? ` (${retryPayload.scheduleTimezone})` : ""}`;
+              showBanner(`No games for ${requestedDate}. Showing ${retryPayload.scheduleDate || retryDate} snapshot.`);
+              games = retryPayload.games;
+            }
+          } catch {
+            /* keep empty state */
+          }
+        }
+      }
+
+      renderGames(games);
+      if (games.length === 0 && payload.error) {
         showBanner(`Data build error: ${payload.error}. Try another date or re-run GitHub Actions.`);
+      } else if (games.length === 0 && !payload.error) {
+        showBanner(`No games for ${requestedDate}. Pick another date from the dropdown or try Refresh.`);
       }
       resetLiveScorePolling();
     }
@@ -1192,20 +1226,32 @@ function registerServiceWorker() {
   }
 }
 
-configureStaticMode();
-registerServiceWorker();
-sportSelect.addEventListener("change", onSportChange);
-confidenceFilter.addEventListener("change", () => renderGames(lastPayload?.games || []));
-teamSearch.addEventListener("input", () => renderGames(lastPayload?.games || []));
-populateDateSelect(sportSelect.value, defaultDateForSport(sportSelect.value));
-refreshBtn.addEventListener("click", () => loadDashboard(true));
-viewFilter.addEventListener("change", () => loadDashboard(true));
-dateSelect.addEventListener("change", () => onDateSelected(dateSelect.value));
-datePrevBtn?.addEventListener("click", () => onDateNav(-1));
-dateNextBtn?.addEventListener("click", () => onDateNav(1));
-autoRefresh.addEventListener("change", resetAutoRefresh);
-liveScoresToggle?.addEventListener("change", resetLiveScorePolling);
+async function initDashboard() {
+  configureStaticMode();
+  registerServiceWorker();
 
-loadDashboard(true);
-resetAutoRefresh();
-resetLiveScorePolling();
+  if (IS_STATIC_HOST) {
+    manifestData = await fetchManifest({ force: false });
+  }
+
+  sportSelect.addEventListener("change", onSportChange);
+  confidenceFilter.addEventListener("change", () => renderGames(lastPayload?.games || []));
+  teamSearch.addEventListener("input", () => renderGames(lastPayload?.games || []));
+  refreshBtn.addEventListener("click", () => loadDashboard(true));
+  viewFilter.addEventListener("change", () => loadDashboard(true));
+  dateSelect.addEventListener("change", () => onDateSelected(dateSelect.value));
+  datePrevBtn?.addEventListener("click", () => onDateNav(-1));
+  dateNextBtn?.addEventListener("click", () => onDateNav(1));
+  autoRefresh.addEventListener("change", resetAutoRefresh);
+  liveScoresToggle?.addEventListener("change", resetLiveScorePolling);
+
+  populateDateSelect(sportSelect.value, defaultDateForSport(sportSelect.value));
+  await loadDashboard(true);
+  resetAutoRefresh();
+  resetLiveScorePolling();
+}
+
+initDashboard().catch((error) => {
+  showBanner(error.message || "Failed to start dashboard.");
+  gamesEl.innerHTML = `<div class="empty-state">Could not load dashboard. Tap Refresh or clear site data in your browser.</div>`;
+});
