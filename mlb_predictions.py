@@ -320,6 +320,18 @@ def clamp(value: float, low: float = 0.05, high: float = 0.95) -> float:
     return max(low, min(high, value))
 
 
+def _format_plus_minus(value: Any) -> str:
+    if value is None:
+        return "—"
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return str(value)
+    if number.is_integer():
+        return f"{int(number):+d}"
+    return f"{number:+.1f}"
+
+
 def _edge_label(home_value: float, away_value: float) -> str:
     if abs(home_value - away_value) < 0.01:
         return "even"
@@ -798,8 +810,8 @@ def _build_reasons(
                     {
                         "title": "Run differential",
                         "detail": (
-                            f"{game.get('homeTeam')} {home_adv['runDifferential']:+d} vs "
-                            f"{game.get('awayTeam')} {away_adv['runDifferential']:+d} (MLB.com)."
+                            f"{game.get('homeTeam')} {_format_plus_minus(home_adv['runDifferential'])} vs "
+                            f"{game.get('awayTeam')} {_format_plus_minus(away_adv['runDifferential'])} (MLB.com)."
                         ),
                         "impact": "medium",
                         "favors": predicted_side,
@@ -854,8 +866,8 @@ def _build_reasons(
                 {
                     "title": "Goal difference edge",
                     "detail": (
-                        f"{game.get('homeTeam')} GD {home_adv['goalDifference']:+d} vs "
-                        f"{game.get('awayTeam')} {away_adv['goalDifference']:+d}."
+                        f"{game.get('homeTeam')} GD {_format_plus_minus(home_adv['goalDifference'])} vs "
+                        f"{game.get('awayTeam')} {_format_plus_minus(away_adv['goalDifference'])}."
                     ),
                     "impact": "medium",
                     "favors": predicted_side,

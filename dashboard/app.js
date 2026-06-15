@@ -641,7 +641,8 @@ function renderGames(games) {
 
   if (!visible.length) {
     const scheduleOnly = lastPayload?.liveScheduleOnly;
-    gamesEl.innerHTML = `<div class="empty-state">No ${leagueLabel} games match your filters.${scheduleOnly ? " Live schedule loaded — predictions appear once GitHub Actions builds that date." : ""}</div>`;
+    const buildError = lastPayload?.error;
+    gamesEl.innerHTML = `<div class="empty-state">No ${leagueLabel} games match your filters.${buildError ? ` Build error: ${buildError}` : ""}${scheduleOnly ? " Live schedule loaded — predictions appear once GitHub Actions builds that date." : ""}</div>`;
     renderTopPicks([]);
     renderStats(lastPayload || {}, 0);
     return;
@@ -1073,6 +1074,9 @@ async function loadDashboard(force = false) {
         hideBanner();
       }
       renderGames(payload.games || []);
+      if ((payload.games || []).length === 0 && payload.error) {
+        showBanner(`Data build error: ${payload.error}. Try another date or re-run GitHub Actions.`);
+      }
       resetLiveScorePolling();
     }
   } catch (error) {
