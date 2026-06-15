@@ -447,6 +447,66 @@ function renderMajorInjuries(game) {
   return `<section class="detail-panel"><h4>Major injuries</h4><div class="lineup-grid">${renderInjuryColumn(game.awayTeam, game.awayMajorInjuries)}${renderInjuryColumn(game.homeTeam, game.homeMajorInjuries)}</div></section>`;
 }
 
+function renderProbabilityCompare(prediction, game) {
+  const probs = prediction.probabilities;
+  if (!probs) return "";
+
+  const trueP = probs.true || {};
+  const implied = probs.implied || {};
+  const blended = probs.blended || {};
+  const consensus = implied.consensus || {};
+  const edge = prediction.modelEdge;
+
+  const bookRows = (implied.books || [])
+    .map(
+      (book) =>
+        `<tr><td>${book.sportsbook}</td><td>${book.homePct}%</td><td>${book.awayPct}%</td><td>${book.drawPct != null ? `${book.drawPct}%` : "—"}</td><td>${book.vigPct}%</td></tr>`
+    )
+    .join("");
+
+  const componentRows = (trueP.components || [])
+    .map((item) => `<li><strong>${item.source}</strong> (${item.weightPct}% weight): ${item.homePct}% home — ${item.detail}</li>`)
+    .join("");
+
+  const edgeBlock = edge
+    ? `<p class="prob-edge-line"><strong>Value edge:</strong> True ${edge.truePct}% vs implied ${edge.impliedPct}% <span class="edge-chip">${edge.edgeLabel}</span></p>`
+    : "";
+
+  return `
+    <section class="probability-compare">
+      <h4>True vs implied probability</h4>
+      <div class="prob-grid">
+        <article class="prob-card true-card">
+          <p class="prob-card-label">True (all data)</p>
+          <p class="prob-card-values">${game.homeTeam}: <strong>${trueP.homePct ?? "—"}%</strong> · ${game.awayTeam}: <strong>${trueP.awayPct ?? "—"}%</strong>${trueP.drawPct != null ? ` · Draw: <strong>${trueP.drawPct}%</strong>` : ""}</p>
+          <p class="lineup-note">Records, form, injuries, advanced stats, ESPN predictor — no odds.</p>
+          ${componentRows ? `<ul class="prob-components">${componentRows}</ul>` : ""}
+        </article>
+        <article class="prob-card implied-card">
+          <p class="prob-card-label">Implied (market)</p>
+          ${
+            implied.available
+              ? `<p class="prob-card-values">${game.homeTeam}: <strong>${consensus.homePct}%</strong> · ${game.awayTeam}: <strong>${consensus.awayPct}%</strong>${consensus.drawPct != null ? ` · Draw: <strong>${consensus.drawPct}%</strong>` : ""}</p>
+                 <p class="lineup-note">Consensus from ${implied.booksUsed} book(s), ${consensus.avgVigPct}% avg vig removed.</p>`
+              : `<p class="lineup-note">No moneyline odds published yet.</p>`
+          }
+        </article>
+        <article class="prob-card blended-card">
+          <p class="prob-card-label">Blended pick</p>
+          <p class="prob-card-values">${game.homeTeam}: <strong>${blended.homePct ?? prediction.homeWinPct}%</strong> · ${game.awayTeam}: <strong>${blended.awayPct ?? prediction.awayWinPct}%</strong>${blended.drawPct != null ? ` · Draw: <strong>${blended.drawPct}%</strong>` : ""}</p>
+          <p class="lineup-note">${blended.method || "Final pick probability."}</p>
+        </article>
+      </div>
+      ${edgeBlock}
+      ${
+        bookRows
+          ? `<table class="lines-table compact"><thead><tr><th>Book</th><th>Home</th><th>Away</th><th>Draw</th><th>Vig</th></tr></thead><tbody>${bookRows}</tbody></table>`
+          : ""
+      }
+    </section>
+  `;
+}
+
 function renderPrediction(game) {
   const prediction = game.prediction;
   if (!prediction) return "";
@@ -470,11 +530,17 @@ function renderPrediction(game) {
   const sources = (prediction.dataSources || []).map((source) => `<span class="source-chip">${source}</span>`).join("");
 
   const edgeBlock = prediction.modelEdge
-    ? `<div class="edge-panel"><strong>Model vs market:</strong> ${prediction.modelEdge.modelPct}% model · ${prediction.modelEdge.marketPct}% market · <span class="edge-chip">${prediction.modelEdge.edgeLabel}</span></div>`
+    ? `<div class="edge-panel"><strong>True vs implied:</strong> ${prediction.modelEdge.truePct ?? prediction.modelEdge.modelPct}% true · ${prediction.modelEdge.impliedPct ?? prediction.modelEdge.marketPct}% implied · <span class="edge-chip">${prediction.modelEdge.edgeLabel}</span></div>`
     : "";
 
+  const probabilityCompare = renderProbabilityCompare(prediction, game);
+
   const totalBlock = prediction.totalPick
-    ? `<div class="total-panel"><strong>Total pick:</strong> ${prediction.totalPick.pick} (${prediction.totalPick.confidence}% confidence)<br><span class="lineup-note">${prediction.totalPick.detail}</span></div>`
+    ? `<div class="total-panel"><strong>Total pick:</strong> ${prediction.totalPick.pick} (${prediction.totalPick.confidence}% confidence)<br><span class="lineup-note">${prediction.totalPick.detail}</span>${
+        prediction.totalPick.impliedOverPct != null
+          ? `<br><span class="lineup-note">True: ${prediction.totalPick.trueOverPct}% over / ${prediction.totalPick.trueUnderPct}% under · Implied: ${prediction.totalPick.impliedOverPct}% / ${prediction.totalPick.impliedUnderPct}% (${prediction.totalPick.impliedBooksUsed} books)</span>`
+          : ""
+      }</div>`
     : "";
 
   const drawBlock = prediction.drawWinPct != null
@@ -500,6 +566,7 @@ function renderPrediction(game) {
         <div class="confidence-badge">${prediction.confidence}%</div>
       </div>
       ${liveBlock}
+      ${probabilityCompare}
       <div class="probability-bar ${prediction.drawWinPct != null ? "three-way" : ""}">
         <div class="probability-team ${homeFavored ? "favored" : ""}"><span class="probability-label">${game.homeTeam || "Home"}</span><span class="probability-value">${prediction.homeWinPct}%</span></div>
         ${drawBlock}

@@ -319,6 +319,75 @@ button:hover {
   font-weight: 700;
 }
 
+.probability-compare {
+  margin: 0 20px 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--panel-border);
+}
+
+.probability-compare h4 {
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+}
+
+.prob-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.prob-card {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.prob-card.true-card {
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+.prob-card.implied-card {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.prob-card-label {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.prob-card-values {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+}
+
+.prob-components {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.prob-edge-line {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+}
+
+.lines-table.compact {
+  font-size: 0.82rem;
+}
+
+.lines-table.compact th,
+.lines-table.compact td {
+  padding: 6px 8px;
+}
+
 .factor-list {
   display: flex;
   flex-wrap: wrap;
