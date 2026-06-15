@@ -1,8 +1,23 @@
-# MLB SBR Tools
+# Sports Predictions Dashboard
 
-Python tools for inspecting MLB odds and matchups from [SportsBookReview](https://www.sportsbookreview.com) by parsing embedded Next.js `__NEXT_DATA__` JSON.
+Multi-sport win predictions for **MLB**, **FIFA World Cup**, and **AFL** using ESPN schedule data.
 
 No third-party dependencies are required. Uses Python 3.10+.
+
+## Live site (GitHub Pages)
+
+**URL:** https://bradleyschulz88.github.io/Predictions-Model/
+
+Data is refreshed **hourly** by GitHub Actions. To rebuild immediately:
+
+1. Open [Actions → Publish GitHub Pages dashboard](https://github.com/bradleyschulz88/Predictions-Model/actions/workflows/pages.yml)
+2. Click **Run workflow**
+
+### One-time setup (if Pages is not live yet)
+
+1. Repo **Settings → Pages**
+2. **Build and deployment → Source:** GitHub Actions
+3. Push to `main` or run the workflow manually
 
 ## Setup
 
@@ -13,11 +28,13 @@ python -m unittest discover -s tests -v
 
 ## Dashboard
 
-The dashboard is a **local web app** that shows **tomorrow's MLB schedule from ESPN** by default, with sportsbook odds merged in when available.
+The dashboard supports **MLB**, **World Cup**, and **AFL** with win predictions, reasoning, lineups, and odds.
 
-The URL only works while the server is running in a terminal. It is not a public website.
+### GitHub Pages (phone / anywhere)
 
-### Easiest way (Windows)
+Use the live URL above — no PC required.
+
+### Local (Windows)
 
 Double-click:
 

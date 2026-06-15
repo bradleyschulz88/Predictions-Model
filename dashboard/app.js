@@ -14,6 +14,11 @@ const statDate = document.getElementById("stat-date");
 const statUpdated = document.getElementById("stat-updated");
 
 const API_PATHS = ["/api/games", "/api/odds"];
+const GITHUB_PAGES_REPO = "bradleyschulz88/Predictions-Model";
+const UPDATE_WORKFLOW_URL = `https://github.com/${GITHUB_PAGES_REPO}/actions/workflows/pages.yml`;
+const IS_STATIC_HOST =
+  window.location.hostname.endsWith("github.io") ||
+  new URLSearchParams(window.location.search).has("static");
 const SPORT_DEFAULT_DAYS = { mlb: 1, worldcup: 0, afl: 0 };
 const SPORT_LABELS = {
   mlb: "MLB Baseball",
@@ -313,7 +318,54 @@ function renderGames(games) {
     .join("");
 }
 
+function filterPayloadByView(payload, view) {
+  if (!view || view === "Spread|MoneyLine|Total") {
+    const allowed = ["Spread", "MoneyLine", "Total"];
+    return {
+      ...payload,
+      games: (payload.games || []).map((game) => ({
+        ...game,
+        lines: (game.lines || []).filter((line) =>
+          allowed.some((name) => (line.viewType || "").includes(name))
+        ),
+      })),
+    };
+  }
+  return {
+    ...payload,
+    games: (payload.games || []).map((game) => ({
+      ...game,
+      lines: (game.lines || []).filter((line) => (line.viewType || "").includes(view)),
+    })),
+  };
+}
+
+function staticDataUrl(league, force) {
+  const url = new URL(`data/${league}.json`, window.location.href);
+  if (force) {
+    url.searchParams.set("t", String(Date.now()));
+  }
+  return url.toString();
+}
+
+async function fetchStaticPayload(league, { force = false } = {}) {
+  const response = await fetch(staticDataUrl(league, force));
+  if (!response.ok) {
+    throw new Error(
+      `Could not load ${league} data (${response.status}). The site may still be building — check GitHub Actions.`
+    );
+  }
+  return response.json();
+}
+
 async function fetchDashboardPayload(params, { force = false } = {}) {
+  const league = params.get("league") || sportSelect.value;
+
+  if (IS_STATIC_HOST) {
+    const payload = await fetchStaticPayload(league, { force });
+    return filterPayloadByView(payload, params.get("view") || viewFilter.value);
+  }
+
   if (window.location.protocol === "file:") {
     throw new Error(
       "Open the dashboard through the local server, not the HTML file directly. Run start-dashboard.bat first."
@@ -396,6 +448,13 @@ async function loadDashboard(force = false) {
       showBanner(`Live refresh failed. Showing cached data from ${payload.cacheAgeSeconds || "?"}s ago.`);
     } else if (payload.fromCache) {
       showBanner(`Loaded cached data (${payload.cacheAgeSeconds || "?"}s old). Click Refresh for a full update.`);
+    } else if (IS_STATIC_HOST) {
+      showBanner(
+        `Published snapshot · updates hourly on GitHub. Refresh reloads this page's data. Rebuild now: ${UPDATE_WORKFLOW_URL}`
+      );
+      if (payload.scheduleDate) {
+        dateInput.value = payload.scheduleDate;
+      }
     } else if ((payload.sportsbookCount || 0) === 0) {
       showBanner("Games ranked by win probability. Odds will appear when ESPN or sportsbooks publish them.");
     }
@@ -409,7 +468,7 @@ async function loadDashboard(force = false) {
       renderGames(lastPayload.games || []);
     } else {
       showBanner(error.message || "Failed to load dashboard data.");
-      gamesEl.innerHTML = `<div class="empty-state">Could not load games. Run start-dashboard.bat, keep that window open, then refresh this page.</div>`;
+      gamesEl.innerHTML = `<div class="empty-state">Could not load games.${IS_STATIC_HOST ? " Wait for the GitHub Actions workflow to finish, then refresh." : " Run start-dashboard.bat, keep that window open, then refresh this page."}</div>`;
     }
   } finally {
     loadingDashboard = false;
@@ -433,6 +492,15 @@ function onSportChange() {
   loadDashboard(true);
 }
 
+function configureStaticMode() {
+  if (!IS_STATIC_HOST) {
+    return;
+  }
+  dateInput.disabled = true;
+  document.title = "Sports Dashboard · GitHub Pages";
+}
+
+configureStaticMode();
 sportSelect.addEventListener("change", onSportChange);
 dateInput.value = defaultDateForSport(sportSelect.value);
 refreshBtn.addEventListener("click", () => loadDashboard(true));
