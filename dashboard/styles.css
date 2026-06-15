@@ -77,6 +77,51 @@ button {
 
 #date-select {
   min-width: 170px;
+  flex: 1;
+}
+
+.date-controls {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.date-nav-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 0 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.date-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.date-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.date-chip {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.date-chip.active {
+  background: rgba(74, 222, 128, 0.18);
+  color: #bbf7d0;
+  border-color: rgba(74, 222, 128, 0.35);
 }
 
 select {

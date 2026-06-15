@@ -32,7 +32,12 @@
         </label>
         <label class="field" id="date-field">
           <span>Date</span>
-          <select id="date-select" title="Pick a schedule date"></select>
+          <div class="date-controls">
+            <button type="button" class="date-nav-btn" id="date-prev" title="Previous day">◀</button>
+            <select id="date-select" title="Pick a schedule date"></select>
+            <button type="button" class="date-nav-btn" id="date-next" title="Next day">▶</button>
+          </div>
+          <div class="date-quick" id="date-quick"></div>
         </label>
         <label class="field">
           <span>Filter</span>
