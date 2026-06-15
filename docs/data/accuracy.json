@@ -1,12 +1,409 @@
 {
-  "updatedAt": "2026-06-15T23:22:47.587967+00:00",
+  "updatedAt": "2026-06-15T23:40:42.235914+00:00",
   "summary": {
     "last7Days": {
-      "correct": 0,
-      "total": 0,
-      "pct": null
+      "correct": 20,
+      "total": 38,
+      "pct": 52.6
     },
-    "byLeague": {}
+    "byLeague": {
+      "worldcup": {
+        "correct": 4,
+        "total": 7,
+        "pct": 57.1
+      },
+      "nba": {
+        "correct": 0,
+        "total": 1,
+        "pct": 0.0
+      },
+      "mlb": {
+        "correct": 16,
+        "total": 30,
+        "pct": 53.3
+      }
+    }
   },
-  "recentResults": []
+  "recentResults": [
+    {
+      "eventId": "760426",
+      "date": "2026-06-15",
+      "league": "worldcup",
+      "matchup": "Egypt @ Belgium",
+      "predicted": "Belgium",
+      "actual": "Draw",
+      "correct": false,
+      "confidence": 42.0
+    },
+    {
+      "eventId": "760428",
+      "date": "2026-06-15",
+      "league": "worldcup",
+      "matchup": "Cape Verde @ Spain",
+      "predicted": "Spain",
+      "actual": "Draw",
+      "correct": false,
+      "confidence": 50.2
+    },
+    {
+      "eventId": "760424",
+      "date": "2026-06-14",
+      "league": "worldcup",
+      "matchup": "Tunisia @ Sweden",
+      "predicted": "Sweden",
+      "actual": "Sweden",
+      "correct": true,
+      "confidence": 59.6
+    },
+    {
+      "eventId": "760423",
+      "date": "2026-06-14",
+      "league": "worldcup",
+      "matchup": "Ecuador @ Ivory Coast",
+      "predicted": "Ivory Coast",
+      "actual": "Ivory Coast",
+      "correct": true,
+      "confidence": 59.6
+    },
+    {
+      "eventId": "760425",
+      "date": "2026-06-14",
+      "league": "worldcup",
+      "matchup": "Japan @ Netherlands",
+      "predicted": "Japan",
+      "actual": "Draw",
+      "correct": false,
+      "confidence": 41.2
+    },
+    {
+      "eventId": "760422",
+      "date": "2026-06-14",
+      "league": "worldcup",
+      "matchup": "Cura\u00e7ao @ Germany",
+      "predicted": "Germany",
+      "actual": "Germany",
+      "correct": true,
+      "confidence": 59.6
+    },
+    {
+      "eventId": "760421",
+      "date": "2026-06-14",
+      "league": "worldcup",
+      "matchup": "T\u00fcrkiye @ Australia",
+      "predicted": "Australia",
+      "actual": "Australia",
+      "correct": true,
+      "confidence": 59.6
+    },
+    {
+      "eventId": "401859967",
+      "date": "2026-06-13",
+      "league": "nba",
+      "matchup": "New York Knicks @ San Antonio Spurs",
+      "predicted": "San Antonio Spurs",
+      "actual": "New York Knicks",
+      "correct": false,
+      "confidence": 77.3
+    },
+    {
+      "eventId": "401815756",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "Texas Rangers @ Boston Red Sox",
+      "predicted": "Boston Red Sox",
+      "actual": "Texas Rangers",
+      "correct": false,
+      "confidence": 50.1
+    },
+    {
+      "eventId": "401815763",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "Tampa Bay Rays @ Los Angeles Angels",
+      "predicted": "Tampa Bay Rays",
+      "actual": "Tampa Bay Rays",
+      "correct": true,
+      "confidence": 77.6
+    },
+    {
+      "eventId": "401815761",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "Chicago Cubs @ San Francisco Giants",
+      "predicted": "Chicago Cubs",
+      "actual": "San Francisco Giants",
+      "correct": false,
+      "confidence": 59.1
+    },
+    {
+      "eventId": "401815762",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "Colorado Rockies @ Athletics",
+      "predicted": "Athletics",
+      "actual": "Colorado Rockies",
+      "correct": false,
+      "confidence": 68.3
+    },
+    {
+      "eventId": "401815760",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "St. Louis Cardinals @ Minnesota Twins",
+      "predicted": "St. Louis Cardinals",
+      "actual": "Minnesota Twins",
+      "correct": false,
+      "confidence": 59.0
+    },
+    {
+      "eventId": "401815759",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "Philadelphia Phillies @ Milwaukee Brewers",
+      "predicted": "Milwaukee Brewers",
+      "actual": "Milwaukee Brewers",
+      "correct": true,
+      "confidence": 56.6
+    },
+    {
+      "eventId": "401815758",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "Los Angeles Dodgers @ Chicago White Sox",
+      "predicted": "Chicago White Sox",
+      "actual": "Chicago White Sox",
+      "correct": true,
+      "confidence": 60.6
+    },
+    {
+      "eventId": "401815757",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "Houston Astros @ Kansas City Royals",
+      "predicted": "Kansas City Royals",
+      "actual": "Kansas City Royals",
+      "correct": true,
+      "confidence": 52.1
+    },
+    {
+      "eventId": "401815751",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "Detroit Tigers @ Cleveland Guardians",
+      "predicted": "Cleveland Guardians",
+      "actual": "Draw",
+      "correct": false,
+      "confidence": 70.3
+    },
+    {
+      "eventId": "401815750",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "Atlanta Braves @ New York Mets",
+      "predicted": "Atlanta Braves",
+      "actual": "New York Mets",
+      "correct": false,
+      "confidence": 62.9
+    },
+    {
+      "eventId": "401815749",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "Arizona Diamondbacks @ Cincinnati Reds",
+      "predicted": "Cincinnati Reds",
+      "actual": "Arizona Diamondbacks",
+      "correct": false,
+      "confidence": 62.8
+    },
+    {
+      "eventId": "401815753",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "New York Yankees @ Toronto Blue Jays",
+      "predicted": "New York Yankees",
+      "actual": "New York Yankees",
+      "correct": true,
+      "confidence": 63.8
+    },
+    {
+      "eventId": "401815755",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "Seattle Mariners @ Washington Nationals",
+      "predicted": "Seattle Mariners",
+      "actual": "Washington Nationals",
+      "correct": false,
+      "confidence": 50.4
+    },
+    {
+      "eventId": "401815754",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "San Diego Padres @ Baltimore Orioles",
+      "predicted": "San Diego Padres",
+      "actual": "San Diego Padres",
+      "correct": true,
+      "confidence": 58.2
+    },
+    {
+      "eventId": "401815752",
+      "date": "2026-06-14",
+      "league": "mlb",
+      "matchup": "Miami Marlins @ Pittsburgh Pirates",
+      "predicted": "Pittsburgh Pirates",
+      "actual": "Miami Marlins",
+      "correct": false,
+      "confidence": 61.5
+    },
+    {
+      "eventId": "401815748",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "Tampa Bay Rays @ Los Angeles Angels",
+      "predicted": "Tampa Bay Rays",
+      "actual": "Los Angeles Angels",
+      "correct": false,
+      "confidence": 50.3
+    },
+    {
+      "eventId": "401815747",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "Colorado Rockies @ Athletics",
+      "predicted": "Athletics",
+      "actual": "Athletics",
+      "correct": true,
+      "confidence": 71.0
+    },
+    {
+      "eventId": "401815746",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "Chicago Cubs @ San Francisco Giants",
+      "predicted": "Chicago Cubs",
+      "actual": "Chicago Cubs",
+      "correct": true,
+      "confidence": 70.8
+    },
+    {
+      "eventId": "401815744",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "Philadelphia Phillies @ Milwaukee Brewers",
+      "predicted": "Milwaukee Brewers",
+      "actual": "Philadelphia Phillies",
+      "correct": false,
+      "confidence": 74.1
+    },
+    {
+      "eventId": "401815742",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "Houston Astros @ Kansas City Royals",
+      "predicted": "Kansas City Royals",
+      "actual": "Houston Astros",
+      "correct": false,
+      "confidence": 62.1
+    },
+    {
+      "eventId": "401815743",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "Los Angeles Dodgers @ Chicago White Sox",
+      "predicted": "Los Angeles Dodgers",
+      "actual": "Los Angeles Dodgers",
+      "correct": true,
+      "confidence": 64.1
+    },
+    {
+      "eventId": "401815741",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "Texas Rangers @ Boston Red Sox",
+      "predicted": "Texas Rangers",
+      "actual": "Boston Red Sox",
+      "correct": false,
+      "confidence": 50.5
+    },
+    {
+      "eventId": "401815736",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "Detroit Tigers @ Cleveland Guardians",
+      "predicted": "Cleveland Guardians",
+      "actual": "Cleveland Guardians",
+      "correct": true,
+      "confidence": 58.2
+    },
+    {
+      "eventId": "401815735",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "Atlanta Braves @ New York Mets",
+      "predicted": "Atlanta Braves",
+      "actual": "Atlanta Braves",
+      "correct": true,
+      "confidence": 70.0
+    },
+    {
+      "eventId": "401815734",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "Arizona Diamondbacks @ Cincinnati Reds",
+      "predicted": "Arizona Diamondbacks",
+      "actual": "Cincinnati Reds",
+      "correct": false,
+      "confidence": 54.4
+    },
+    {
+      "eventId": "401815740",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "Seattle Mariners @ Washington Nationals",
+      "predicted": "Washington Nationals",
+      "actual": "Washington Nationals",
+      "correct": true,
+      "confidence": 57.0
+    },
+    {
+      "eventId": "401815739",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "San Diego Padres @ Baltimore Orioles",
+      "predicted": "San Diego Padres",
+      "actual": "San Diego Padres",
+      "correct": true,
+      "confidence": 60.6
+    },
+    {
+      "eventId": "401815737",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "Miami Marlins @ Pittsburgh Pirates",
+      "predicted": "Pittsburgh Pirates",
+      "actual": "Pittsburgh Pirates",
+      "correct": true,
+      "confidence": 50.9
+    },
+    {
+      "eventId": "401815738",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "New York Yankees @ Toronto Blue Jays",
+      "predicted": "New York Yankees",
+      "actual": "New York Yankees",
+      "correct": true,
+      "confidence": 63.8
+    },
+    {
+      "eventId": "401815745",
+      "date": "2026-06-13",
+      "league": "mlb",
+      "matchup": "St. Louis Cardinals @ Minnesota Twins",
+      "predicted": "St. Louis Cardinals",
+      "actual": "St. Louis Cardinals",
+      "correct": true,
+      "confidence": 57.8
+    }
+  ]
 }
