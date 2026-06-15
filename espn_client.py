@@ -123,6 +123,7 @@ def parse_scoreboard(scoreboard: dict[str, Any], *, league: LeagueConfig | str) 
         venue = (competition.get("venue") or {}).get("fullName")
 
         status = (event.get("status") or {}).get("type") or {}
+        status_state = status.get("state") or ""
         away_records = away.get("records")
         home_records = home.get("records")
         away_record = _record_by_type(away_records, "total", "standingsoverall")
@@ -145,6 +146,10 @@ def parse_scoreboard(scoreboard: dict[str, Any], *, league: LeagueConfig | str) 
             "homeRecord": home_record,
             "awayRoadRecord": away_road_record,
             "homeHomeRecord": home_home_record,
+            "awayScore": away.get("score"),
+            "homeScore": home.get("score"),
+            "isLive": status_state == "in",
+            "isFinal": bool(status.get("completed")) or status_state == "post",
             "source": "espn",
             "viewTypes": [],
             "lines": [],

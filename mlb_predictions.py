@@ -10,9 +10,14 @@ from sports_config import get_league
 
 HOME_FIELD_LOGIT = {
     "mlb": 0.28,
+    "nfl": 0.32,
+    "nba": 0.24,
     "worldcup": 0.35,
+    "epl": 0.30,
     "afl": 0.22,
 }
+
+DEFAULT_DRAW_PROB = 0.26
 
 
 def parse_record(summary: str | None) -> tuple[int, ...] | None:
@@ -105,6 +110,129 @@ def _league_id(game: dict[str, Any]) -> str:
     return game.get("league") or "mlb"
 
 
+def extract_total_line(lines: list[dict[str, Any]]) -> float | None:
+    for line in lines:
+        if "Total" not in (line.get("viewType") or ""):
+            continue
+        current = line.get("currentLine") or line.get("openingLine")
+        if not isinstance(current, dict):
+            continue
+        for side in ("over", "under"):
+            value = current.get(side)
+            if not value:
+                continue
+            text = str(value).lower().lstrip("ou")
+            try:
+                return float(text.split()[0].replace("o", "").replace("u", ""))
+            except ValueError:
+                continue
+    return None
+
+
+def confidence_label(confidence_pct: float) -> str:
+    if confidence_pct >= 65:
+        return "Strong pick"
+    if confidence_pct >= 55:
+        return "Lean"
+    return "Coin flip"
+
+
+def _injury_logit_adjustment(enrichment: dict[str, Any]) -> float:
+    home_major = len(enrichment.get("homeMajorInjuries") or [])
+    away_major = len(enrichment.get("awayMajorInjuries") or [])
+    return (away_major - home_major) * 0.18
+
+
+def _scoring_pace_from_form(enrichment: dict[str, Any]) -> float | None:
+    scores: list[float] = []
+    for side in ("homeLastFive", "awayLastFive"):
+        for game in (enrichment.get(side) or {}).get("games") or []:
+            score_text = game.get("score") or ""
+            parts = str(score_text).replace("-", " ").split()
+            for part in parts:
+                try:
+                    scores.append(float(part))
+                except ValueError:
+                    continue
+    if not scores:
+        return None
+    return sum(scores) / len(scores)
+
+
+def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment: dict[str, Any]) -> dict[str, Any] | None:
+    total_line = extract_total_line(lines)
+    if total_line is None:
+        return None
+
+    league = _league_id(game)
+    over_lean = 0.5
+    detail_parts: list[str] = []
+
+    pace = _scoring_pace_from_form(enrichment)
+    if pace is not None:
+        if pace >= total_line + 0.8:
+            over_lean += 0.12
+            detail_parts.append(f"Recent scoring pace ({pace:.1f}) runs hot vs the {total_line} line.")
+        elif pace <= total_line - 0.8:
+            over_lean -= 0.12
+            detail_parts.append(f"Recent scoring pace ({pace:.1f}) runs cool vs the {total_line} line.")
+
+    home_pitcher = game.get("homePitcher") or {}
+    away_pitcher = game.get("awayPitcher") or {}
+    if home_pitcher.get("era") is not None and away_pitcher.get("era") is not None:
+        avg_era = (home_pitcher["era"] + away_pitcher["era"]) / 2
+        if avg_era <= 3.6:
+            over_lean -= 0.08
+            detail_parts.append(f"Strong pitching matchup (avg ERA {avg_era:.2f}) favors the under.")
+        elif avg_era >= 4.6:
+            over_lean += 0.08
+            detail_parts.append(f"Weaker pitching matchup (avg ERA {avg_era:.2f}) favors the over.")
+
+    if league in {"nba", "afl"}:
+        home_overall = win_pct_from_record(game.get("homeRecord"))
+        away_overall = win_pct_from_record(game.get("awayRecord"))
+        if home_overall + away_overall > 1.05:
+            over_lean += 0.05
+            detail_parts.append("Both teams have strong records — higher-scoring game possible.")
+
+    over_lean = clamp(over_lean, 0.35, 0.65)
+    under_lean = 1.0 - over_lean
+    pick = "Over" if over_lean >= under_lean else "Under"
+    confidence = max(over_lean, under_lean) * 100
+
+    return {
+        "line": total_line,
+        "pick": f"{pick} {total_line}",
+        "pickSide": pick.lower(),
+        "overPct": round(over_lean * 100, 1),
+        "underPct": round(under_lean * 100, 1),
+        "confidence": round(confidence, 1),
+        "detail": " ".join(detail_parts) if detail_parts else f"Model leans {pick.lower()} vs market total {total_line}.",
+    }
+
+
+def _model_market_edge(
+    *,
+    predicted_side: str,
+    home_prob: float,
+    away_prob: float,
+    market_home: float | None,
+    market_away: float | None,
+) -> dict[str, Any] | None:
+    if market_home is None or market_away is None:
+        return None
+    model_side = home_prob if predicted_side == "home" else away_prob
+    market_side = market_home if predicted_side == "home" else market_away
+    edge = (model_side - market_side) * 100
+    return {
+        "modelPct": round(model_side * 100, 1),
+        "marketPct": round(market_side * 100, 1),
+        "edgePct": round(edge, 1),
+        "edgeLabel": f"{edge:+.1f}% vs market",
+        "favorsModel": abs(edge) >= 3,
+    }
+
+
 def _home_field_logit(game: dict[str, Any]) -> float:
     return HOME_FIELD_LOGIT.get(_league_id(game), 0.25)
 
@@ -112,11 +240,15 @@ def _home_field_logit(game: dict[str, Any]) -> float:
 def _home_field_detail(game: dict[str, Any]) -> str:
     league = _league_id(game)
     venue = game.get("venueName") or "home"
-    if league == "worldcup":
-        return f"{game.get('homeTeam')} play at {venue}, where host nations and familiar conditions can help."
+    if league in {"worldcup", "epl"}:
+        return f"{game.get('homeTeam')} play at {venue}, where home sides often perform better."
     if league == "afl":
         return f"{game.get('homeTeam')} have home-ground advantage at {venue}."
-    return f"{game.get('homeTeam')} play at {venue}, where MLB teams historically win more often."
+    if league == "nba":
+        return f"{game.get('homeTeam')} have home-court advantage at {venue}."
+    if league == "nfl":
+        return f"{game.get('homeTeam')} play at {venue}, where home teams historically win more often."
+    return f"{game.get('homeTeam')} play at {venue}, where home teams historically win more often."
 
 
 def _build_reasons(
@@ -434,6 +566,19 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
             }
         )
 
+    injury_adj = _injury_logit_adjustment(enrichment)
+    if injury_adj:
+        logit += injury_adj
+        home_major = len(enrichment.get("homeMajorInjuries") or [])
+        away_major = len(enrichment.get("awayMajorInjuries") or [])
+        factors.append(
+            {
+                "label": "Injury impact",
+                "detail": f"Major injuries: home {home_major} vs away {away_major}",
+                "edge": "home" if injury_adj > 0 else "away" if injury_adj < 0 else "even",
+            }
+        )
+
     espn_home = enrichment.get("espnPredictorHome")
     espn_away = enrichment.get("espnPredictorAway")
     if espn_home is not None and espn_away is not None:
@@ -477,20 +622,76 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
     weight_total = sum(weight for _, weight in components)
     home_prob = sum(prob * weight for prob, weight in components) / weight_total
 
+    draw_prob = market_draw if market_draw is not None else (DEFAULT_DRAW_PROB if league_config.supports_draw else 0.0)
     home_prob = clamp(home_prob)
     away_prob = 1.0 - home_prob
-    predicted_side = "home" if home_prob >= away_prob else "away"
-    predicted_winner = _team_by_side(game, predicted_side)
-    confidence = max(home_prob, away_prob)
+
+    if league_config.supports_draw and draw_prob:
+        draw_prob = clamp(draw_prob, 0.08, 0.40)
+        scale = 1.0 - draw_prob
+        home_prob = home_prob * scale
+        away_prob = away_prob * scale
+    else:
+        draw_prob = 0.0
+
+    outcomes = [
+        ("home", home_prob, game.get("homeTeam")),
+        ("away", away_prob, game.get("awayTeam")),
+    ]
+    if league_config.supports_draw and draw_prob:
+        outcomes.append(("draw", draw_prob, "Draw"))
+
+    predicted_side, best_prob, predicted_winner = max(outcomes, key=lambda item: item[1])
+    confidence = best_prob * 100
+    home_pct = round(home_prob * 100, 1)
+    away_pct = round(away_prob * 100, 1)
 
     reasons = _build_reasons(
         game,
-        predicted_side=predicted_side,
+        predicted_side=predicted_side if predicted_side in {"home", "away"} else "home",
         home_prob=home_prob,
         away_prob=away_prob,
         enrichment=enrichment,
     )
-    why_they_win = _build_why_they_win(game, reasons, predicted_winner)
+    if predicted_side == "draw":
+        reasons.insert(
+            0,
+            {
+                "title": "Draw is the top outcome",
+                "detail": f"Model and market imply a {round(draw_prob * 100, 1)}% chance of a draw.",
+                "impact": "high",
+                "favors": "even",
+                "source": "Model",
+            },
+        )
+    why_they_win = (
+        _build_why_they_win(game, reasons, predicted_winner)
+        if predicted_side != "draw"
+        else f"Draw is the most likely result ({round(draw_prob * 100, 1)}%) based on market and form."
+    )
+
+    market_edge = _model_market_edge(
+        predicted_side=predicted_side if predicted_side in {"home", "away"} else "home",
+        home_prob=home_prob,
+        away_prob=away_prob,
+        market_home=market_home,
+        market_away=market_away,
+    )
+    if market_edge and abs(market_edge["edgePct"]) >= 3 and predicted_side in {"home", "away"}:
+        reasons.insert(
+            0,
+            {
+                "title": "Model vs market edge",
+                "detail": (
+                    f"Model {market_edge['modelPct']}% vs market {market_edge['marketPct']}% "
+                    f"({market_edge['edgeLabel']})."
+                ),
+                "impact": "high",
+                "favors": predicted_side,
+            },
+        )
+
+    total_prediction = predict_total(game, game.get("lines") or [], enrichment)
 
     data_sources = ["ESPN scoreboard"]
     if enrichment:
@@ -506,17 +707,21 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
     result: dict[str, Any] = {
         "predictedWinner": predicted_winner,
         "predictedSide": predicted_side,
-        "homeWinPct": round(home_prob * 100, 1),
-        "awayWinPct": round(away_prob * 100, 1),
-        "confidence": round(confidence * 100, 1),
-        "outcomeLabel": f"{predicted_winner} to win",
+        "homeWinPct": home_pct,
+        "awayWinPct": away_pct,
+        "confidence": round(confidence, 1),
+        "confidenceLabel": confidence_label(confidence),
+        "outcomeLabel": f"{predicted_winner} to win" if predicted_side != "draw" else "Draw",
         "whyTheyWin": why_they_win,
         "reasons": reasons,
         "factors": factors,
         "dataSources": sorted(set(data_sources)),
+        "modelEdge": market_edge,
     }
-    if league_config.supports_draw and market_draw is not None:
-        result["drawWinPct"] = round(market_draw * 100, 1)
+    if league_config.supports_draw and draw_prob:
+        result["drawWinPct"] = round(draw_prob * 100, 1)
+    if total_prediction:
+        result["totalPick"] = total_prediction
     return result
 
 

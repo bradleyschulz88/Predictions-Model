@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sports Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#4ade80">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="description" content="Win predictions for MLB, NFL, NBA, World Cup, EPL and AFL">
+  <title>Sports Predictions Dashboard</title>
+  <link rel="manifest" href="./manifest.json">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -11,20 +15,35 @@
     <header class="header">
       <div>
         <p class="eyebrow">ESPN Schedule + Predictions</p>
-        <h1 id="dashboard-title">Sports Games Dashboard</h1>
+        <h1 id="dashboard-title">Sports Predictions Dashboard</h1>
       </div>
       <div class="controls">
         <label class="field">
           <span>Sport</span>
           <select id="sport-select">
             <option value="mlb">MLB Baseball</option>
+            <option value="nfl">NFL Football</option>
+            <option value="nba">NBA Basketball</option>
             <option value="worldcup">FIFA World Cup</option>
+            <option value="epl">Premier League</option>
             <option value="afl">AFL</option>
           </select>
         </label>
         <label class="field">
           <span>Date</span>
-          <input id="date-input" type="date" title="Schedule date baked into published data on GitHub Pages">
+          <input id="date-input" type="date" title="Schedule date from published data on GitHub Pages">
+        </label>
+        <label class="field">
+          <span>Filter</span>
+          <select id="confidence-filter">
+            <option value="0">All games</option>
+            <option value="55">Lean+ (55%+)</option>
+            <option value="65">Strong picks (65%+)</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Search</span>
+          <input id="team-search" type="search" placeholder="Team name…" autocomplete="off">
         </label>
         <label class="field" id="market-filter-wrap">
           <span>Market</span>
@@ -53,6 +72,10 @@
         <p class="stat-value stat-small" id="stat-top-pick">—</p>
       </article>
       <article class="stat-card">
+        <p class="stat-label">Accuracy (7d)</p>
+        <p class="stat-value stat-small" id="stat-accuracy">—</p>
+      </article>
+      <article class="stat-card">
         <p class="stat-label">League</p>
         <p class="stat-value stat-small" id="stat-league">—</p>
       </article>
@@ -61,15 +84,12 @@
         <p class="stat-value stat-small" id="stat-date">—</p>
       </article>
       <article class="stat-card">
-        <p class="stat-label">Sorted by</p>
-        <p class="stat-value stat-small">Win likelihood</p>
-      </article>
-      <article class="stat-card">
         <p class="stat-label">Last updated</p>
         <p class="stat-value stat-small" id="stat-updated">—</p>
       </article>
     </section>
 
+    <section id="top-picks" class="top-picks hidden"></section>
     <div id="banner" class="banner hidden"></div>
     <main id="games" class="games"></main>
   </div>

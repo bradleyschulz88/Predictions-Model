@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -19,7 +19,7 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -38,9 +38,19 @@ jobs:
           cp dashboard/index.html docs/index.html
           cp dashboard/app.js docs/app.js
           cp dashboard/styles.css docs/styles.css
+          cp dashboard/manifest.json docs/manifest.json
+          cp dashboard/sw.js docs/sw.js
 
       - name: Build dashboard JSON
         run: python scripts/build_pages_data.py
+
+      - name: Commit accuracy log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/accuracy.json docs/data/predictions_log.json || true
+          git diff --staged --quiet || git commit -m "Update prediction accuracy [skip ci]"
+          git push || true
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4

@@ -468,4 +468,173 @@ button:hover {
   .game-head {
     flex-direction: column;
   }
+
+  .probability-bar.three-way {
+    grid-template-columns: 1fr;
+  }
+
+  .top-picks-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.top-picks {
+  margin-bottom: 20px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--panel-border);
+  background: rgba(18, 27, 46, 0.92);
+}
+
+.top-picks.hidden {
+  display: none;
+}
+
+.top-picks-title {
+  margin: 0 0 12px;
+  font-size: 1rem;
+}
+
+.top-picks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.top-pick-card {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: grid;
+  gap: 6px;
+}
+
+.top-pick-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.edge-chip {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(74, 222, 128, 0.15);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.edge-panel,
+.total-panel {
+  margin: 0 20px 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.92rem;
+}
+
+.confidence-label {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.label-strong {
+  background: rgba(74, 222, 128, 0.18);
+  color: var(--accent);
+}
+
+.label-lean {
+  background: rgba(147, 197, 253, 0.18);
+  color: #93c5fd;
+}
+
+.label-coin {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+}
+
+.probability-bar.three-way {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.live-score,
+.final-score {
+  margin: 0 20px 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(248, 113, 113, 0.12);
+  color: #fecaca;
+  font-weight: 700;
+}
+
+.final-score {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+}
+
+.status-pill.live {
+  background: rgba(248, 113, 113, 0.18);
+  color: #fecaca;
+}
+
+.game-details {
+  border: none;
+}
+
+.game-summary-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  list-style: none;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.game-summary-bar::-webkit-details-marker {
+  display: none;
+}
+
+.rank-badge.small {
+  min-width: 28px;
+  height: 28px;
+  font-size: 0.8rem;
+}
+
+.summary-matchup {
+  flex: 1;
+  font-weight: 600;
+}
+
+.summary-pick {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.game-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.share-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  padding: 8px 12px;
+  font-size: 0.82rem;
+}
+
+#team-search {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-width: 140px;
 }

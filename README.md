@@ -1,6 +1,8 @@
 # Sports Predictions Dashboard
 
-Multi-sport win predictions for **MLB**, **FIFA World Cup**, and **AFL** using ESPN schedule data.
+Multi-sport win predictions for **MLB**, **NFL**, **NBA**, **World Cup**, **EPL**, and **AFL** using ESPN schedule data.
+
+Features include model vs market edge, totals picks, injury-adjusted predictions, accuracy tracking, mobile-friendly UI, and PWA support.
 
 No third-party dependencies are required. Uses Python 3.10+.
 

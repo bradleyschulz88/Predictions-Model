@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from accuracy_tracker import grade_predictions, record_predictions  # noqa: E402
 from mlb_data import default_game_date, fetch_dashboard_data  # noqa: E402
 from sports_config import list_league_ids  # noqa: E402
 
@@ -35,6 +36,7 @@ def build_league_payload(league: str) -> dict:
 def main() -> int:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     manifest: dict = {"builtAt": None, "leagues": []}
+    payloads: dict[str, dict] = {}
 
     for league in list_league_ids():
         try:
@@ -49,6 +51,7 @@ def main() -> int:
                 "fetchedAt": datetime.now(timezone.utc).isoformat(),
             }
 
+        payloads[league] = payload
         output_path = OUTPUT_DIR / f"{league}.json"
         output_path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
         manifest["leagues"].append(
@@ -63,6 +66,9 @@ def main() -> int:
         )
         print(f"Wrote {output_path} ({payload.get('gameCount', 0)} games)", flush=True)
 
+    record_predictions(OUTPUT_DIR, payloads)
+    accuracy = grade_predictions(OUTPUT_DIR)
+    manifest["accuracy"] = accuracy.get("summary")
     manifest["builtAt"] = datetime.now(timezone.utc).isoformat()
     (OUTPUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print("Done.", flush=True)

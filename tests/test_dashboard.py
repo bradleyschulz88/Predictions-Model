@@ -116,7 +116,7 @@ class DashboardServerTests(unittest.TestCase):
     def test_index_page(self) -> None:
         with urllib.request.urlopen(f"http://{self.host}:{self.port}/", timeout=5) as response:
             html = response.read().decode("utf-8")
-        self.assertIn("Sports Games Dashboard", html)
+        self.assertIn("Sports Predictions Dashboard", html)
 
 
 if __name__ == "__main__":
