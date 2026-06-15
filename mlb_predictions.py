@@ -143,6 +143,63 @@ def _injury_logit_adjustment(enrichment: dict[str, Any]) -> float:
     return (away_major - home_major) * 0.18
 
 
+def _advanced_logit_adjustment(enrichment: dict[str, Any]) -> float:
+    home = enrichment.get("homeAdvanced") or {}
+    away = enrichment.get("awayAdvanced") or {}
+    adjustment = 0.0
+
+    home_power = home.get("powerRating")
+    away_power = away.get("powerRating")
+    if home_power is not None and away_power is not None:
+        adjustment += (home_power - away_power) * 2.2
+
+    home_rpg = home.get("runsPerGame")
+    away_rpg = away.get("runsPerGame")
+    home_rapg = home.get("runsAllowedPerGame")
+    away_rapg = away.get("runsAllowedPerGame")
+    if home_rpg is not None and away_rapg is not None and away_rpg is not None and home_rapg is not None:
+        offense_edge = (home_rpg - away_rpg) / 2.0
+        defense_edge = (away_rapg - home_rapg) / 2.0
+        adjustment += (offense_edge + defense_edge) * 0.35
+
+    home_gf = home.get("pointsPerGame")
+    away_gf = away.get("pointsPerGame")
+    home_ga = home.get("goalsAgainstPerGame")
+    away_ga = away.get("goalsAgainstPerGame")
+    if home_gf is not None and away_gf is not None and home_ga is not None and away_ga is not None:
+        adjustment += ((home_gf - away_gf) + (away_ga - home_ga)) * 0.45
+
+    home_ops = home.get("opsProxy")
+    away_ops = away.get("opsProxy")
+    if home_ops is not None and away_ops is not None:
+        adjustment += (home_ops - away_ops) * 1.8
+
+    home_era = home.get("era")
+    away_era = away.get("era")
+    if home_era is not None and away_era is not None:
+        adjustment += (away_era - home_era) * 0.22
+
+    return adjustment
+
+
+def _rest_logit_adjustment(enrichment: dict[str, Any]) -> float:
+    rest = enrichment.get("restDays") or {}
+    home_rest = rest.get("home")
+    away_rest = rest.get("away")
+    if home_rest is None or away_rest is None:
+        return 0.0
+    return max(-0.35, min(0.35, (home_rest - away_rest) * 0.12))
+
+
+def _head_to_head_logit_adjustment(enrichment: dict[str, Any]) -> float:
+    h2h = enrichment.get("headToHead") or {}
+    home_pct = h2h.get("homeSeriesWinPct")
+    away_pct = h2h.get("awaySeriesWinPct")
+    if home_pct is None or away_pct is None:
+        return 0.0
+    return (home_pct - away_pct) * 1.4
+
+
 def _scoring_pace_from_form(enrichment: dict[str, Any]) -> float | None:
     scores: list[float] = []
     for side in ("homeLastFive", "awayLastFive"):
@@ -187,6 +244,24 @@ def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment:
         elif avg_era >= 4.6:
             over_lean += 0.08
             detail_parts.append(f"Weaker pitching matchup (avg ERA {avg_era:.2f}) favors the over.")
+
+    weather_impact = enrichment.get("weatherImpact") or {}
+    run_env = weather_impact.get("runEnvironmentAdj")
+    if run_env:
+        over_lean += run_env
+        if weather_impact.get("summary"):
+            detail_parts.append(f"Weather: {weather_impact['summary']}.")
+
+    home_adv = enrichment.get("homeAdvanced") or {}
+    away_adv = enrichment.get("awayAdvanced") or {}
+    if home_adv.get("runsPerGame") is not None and away_adv.get("runsPerGame") is not None:
+        combined = home_adv["runsPerGame"] + away_adv["runsPerGame"]
+        if combined >= total_line + 1.5:
+            over_lean += 0.06
+            detail_parts.append(f"Season scoring pace ({combined:.1f} combined R/G) leans over.")
+        elif combined <= total_line - 1.5:
+            over_lean -= 0.06
+            detail_parts.append(f"Season scoring pace ({combined:.1f} combined R/G) leans under.")
 
     if league in {"nba", "afl"}:
         home_overall = win_pct_from_record(game.get("homeRecord"))
@@ -466,6 +541,98 @@ def _build_reasons(
             }
         )
 
+    home_adv = enrichment.get("homeAdvanced") or {}
+    away_adv = enrichment.get("awayAdvanced") or {}
+    if home_adv.get("powerRating") is not None and away_adv.get("powerRating") is not None:
+        power_side = _edge_label(home_adv["powerRating"], away_adv["powerRating"])
+        if power_side == predicted_side:
+            reasons.append(
+                {
+                    "title": "Power rating edge",
+                    "detail": (
+                        f"Composite rating favors {winner}: "
+                        f"{home_adv['powerRating']:.3f} vs {away_adv['powerRating']:.3f} "
+                        f"(ESPN + MLB.com + form)."
+                    ),
+                    "impact": "high",
+                    "favors": predicted_side,
+                    "source": "Multi-source",
+                }
+            )
+
+    if league_config := get_league(_league_id(game)):
+        if league_config.id == "mlb" and home_adv.get("runDifferential") is not None and away_adv.get("runDifferential") is not None:
+            rd_side = _edge_label(home_adv["runDifferential"], away_adv["runDifferential"])
+            if rd_side == predicted_side:
+                reasons.append(
+                    {
+                        "title": "Run differential",
+                        "detail": (
+                            f"{game.get('homeTeam')} {home_adv['runDifferential']:+d} vs "
+                            f"{game.get('awayTeam')} {away_adv['runDifferential']:+d} (MLB.com)."
+                        ),
+                        "impact": "medium",
+                        "favors": predicted_side,
+                        "source": "MLB.com",
+                    }
+                )
+
+    rest = enrichment.get("restDays") or {}
+    if rest.get("home") is not None and rest.get("away") is not None:
+        if rest["home"] > rest["away"] and predicted_side == "home":
+            reasons.append(
+                {
+                    "title": "Rest advantage",
+                    "detail": f"{game.get('homeTeam')} have {rest['home']} days rest vs {rest['away']} for {game.get('awayTeam')}.",
+                    "impact": "low",
+                    "favors": "home",
+                    "source": "Schedule",
+                }
+            )
+        elif rest["away"] > rest["home"] and predicted_side == "away":
+            reasons.append(
+                {
+                    "title": "Rest advantage",
+                    "detail": f"{game.get('awayTeam')} have {rest['away']} days rest vs {rest['home']} for {game.get('homeTeam')}.",
+                    "impact": "low",
+                    "favors": "away",
+                    "source": "Schedule",
+                }
+            )
+
+    h2h = enrichment.get("headToHead") or {}
+    if h2h.get("summary") and winner and predicted_side in {"home", "away"}:
+        home_h2h = h2h.get("homeSeriesWinPct")
+        away_h2h = h2h.get("awaySeriesWinPct")
+        if home_h2h is not None and away_h2h is not None:
+            h2h_side = _edge_label(home_h2h, away_h2h)
+            if h2h_side == predicted_side:
+                reasons.append(
+                    {
+                        "title": "Season series edge",
+                        "detail": f"{h2h['summary']} ({h2h.get('seriesScore')}).",
+                        "impact": "medium",
+                        "favors": predicted_side,
+                        "source": "ESPN",
+                    }
+                )
+
+    if league_config and league_config.id in {"epl", "worldcup"} and home_adv.get("goalDifference") is not None and away_adv.get("goalDifference") is not None:
+        gd_side = _edge_label(home_adv["goalDifference"], away_adv["goalDifference"])
+        if gd_side == predicted_side:
+            reasons.append(
+                {
+                    "title": "Goal difference edge",
+                    "detail": (
+                        f"{game.get('homeTeam')} GD {home_adv['goalDifference']:+d} vs "
+                        f"{game.get('awayTeam')} {away_adv['goalDifference']:+d}."
+                    ),
+                    "impact": "medium",
+                    "favors": predicted_side,
+                    "source": "ESPN",
+                }
+            )
+
     impact_rank = {"high": 0, "medium": 1, "low": 2}
     reasons.sort(key=lambda reason: (0 if reason.get("favors") == predicted_side else 1, impact_rank.get(reason.get("impact", "low"), 9)))
     return reasons
@@ -576,6 +743,49 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
                 "label": "Injury impact",
                 "detail": f"Major injuries: home {home_major} vs away {away_major}",
                 "edge": "home" if injury_adj > 0 else "away" if injury_adj < 0 else "even",
+            }
+        )
+
+    advanced_adj = _advanced_logit_adjustment(enrichment)
+    if advanced_adj:
+        logit += advanced_adj
+        home_adv = enrichment.get("homeAdvanced") or {}
+        away_adv = enrichment.get("awayAdvanced") or {}
+        home_power = home_adv.get("powerRating")
+        away_power = away_adv.get("powerRating")
+        if home_power is not None and away_power is not None:
+            power_detail = f"Power {home_power:.3f} vs {away_power:.3f} (ESPN/MLB.com)"
+        else:
+            power_detail = "Multi-source team analytics"
+        factors.append(
+            {
+                "label": "Advanced team profile",
+                "detail": power_detail,
+                "edge": "home" if advanced_adj > 0 else "away" if advanced_adj < 0 else "even",
+            }
+        )
+
+    rest_adj = _rest_logit_adjustment(enrichment)
+    if rest_adj:
+        logit += rest_adj
+        rest = enrichment.get("restDays") or {}
+        factors.append(
+            {
+                "label": "Rest days",
+                "detail": f"Home {rest.get('home', '?')} vs away {rest.get('away', '?')} days rest",
+                "edge": "home" if rest_adj > 0 else "away" if rest_adj < 0 else "even",
+            }
+        )
+
+    h2h_adj = _head_to_head_logit_adjustment(enrichment)
+    if h2h_adj:
+        logit += h2h_adj
+        h2h = enrichment.get("headToHead") or {}
+        factors.append(
+            {
+                "label": "Season series",
+                "detail": h2h.get("summary") or "Head-to-head history",
+                "edge": "home" if h2h_adj > 0 else "away" if h2h_adj < 0 else "even",
             }
         )
 

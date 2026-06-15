@@ -10,6 +10,7 @@ from typing import Any
 
 from espn_client import ESPNClientError, fetch_scoreboard, parse_scoreboard
 from espn_enrichment import enrich_game, enrich_games
+from data_providers import enrich_games_with_providers
 from mlb_predictions import apply_predictions
 from sbr_client import SBRClientError, build_odds_url, get_game_rows, get_page_props
 from sports_config import LEAGUES, get_league
@@ -293,6 +294,13 @@ def fetch_dashboard_data(
     if include_enrichment:
         enrich_games(
             games,
+            retries=retries,
+            retry_delay=retry_delay,
+            verify_ssl=verify_ssl,
+        )
+        enrich_games_with_providers(
+            games,
+            league=league,
             retries=retries,
             retry_delay=retry_delay,
             verify_ssl=verify_ssl,

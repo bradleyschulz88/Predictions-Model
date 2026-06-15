@@ -44,6 +44,7 @@ class TTLCache(Generic[T]):
 
 DASHBOARD_CACHE: TTLCache[dict[str, Any]] = TTLCache(ttl_seconds=180.0)
 ENRICHMENT_CACHE: TTLCache[dict[str, Any]] = TTLCache(ttl_seconds=300.0)
+PROVIDER_CACHE: TTLCache[dict[str, Any]] = TTLCache(ttl_seconds=900.0)
 
 
 def dashboard_cache_key(
