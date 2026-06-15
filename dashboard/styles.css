@@ -729,6 +729,34 @@ button:hover {
   font-weight: 600;
 }
 
+.prob-pct-table .true-pct {
+  color: #86efac;
+  font-weight: 700;
+}
+
+.prob-pct-table .implied-pct {
+  color: #7dd3fc;
+  font-weight: 700;
+}
+
+.prob-pct-table .blended-pct {
+  font-weight: 700;
+}
+
+.prob-pct-table .edge-pct.edge-positive {
+  color: #86efac;
+  font-weight: 700;
+}
+
+.prob-pct-table .edge-pct.edge-negative {
+  color: #fca5a5;
+  font-weight: 700;
+}
+
+.prob-pick-row {
+  background: rgba(74, 222, 128, 0.06);
+}
+
 .summary-pick {
   color: var(--muted);
   font-size: 0.85rem;

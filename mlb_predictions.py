@@ -248,6 +248,39 @@ def compute_true_probabilities(
     }
 
 
+def _build_team_probabilities(
+    *,
+    true_probs: dict[str, Any],
+    implied_probs: dict[str, Any],
+    blended: dict[str, Any],
+) -> dict[str, Any]:
+    consensus = implied_probs.get("consensus") or {}
+    available = bool(implied_probs.get("available"))
+
+    def side_block(side: str, true_key: str, implied_key: str, blended_key: str) -> dict[str, Any]:
+        true_pct = true_probs.get(true_key)
+        implied_pct = consensus.get(implied_key) if available else None
+        blended_pct = blended.get(blended_key)
+        edge_pct = None
+        if true_pct is not None and implied_pct is not None:
+            edge_pct = round(true_pct - implied_pct, 1)
+        return {
+            "truePct": true_pct,
+            "impliedPct": implied_pct,
+            "blendedPct": blended_pct,
+            "edgePct": edge_pct,
+            "edgeLabel": f"{edge_pct:+.1f}%" if edge_pct is not None else None,
+        }
+
+    teams: dict[str, Any] = {
+        "home": side_block("home", "homePct", "homePct", "homePct"),
+        "away": side_block("away", "awayPct", "awayPct", "awayPct"),
+    }
+    if true_probs.get("drawPct") is not None:
+        teams["draw"] = side_block("draw", "drawPct", "drawPct", "drawPct")
+    return teams
+
+
 def _probability_edge(
     *,
     predicted_side: str,
@@ -1204,6 +1237,11 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
             "method": "65% true probability + 35% implied consensus" if market_home is not None else "True probability only",
         },
     }
+    team_probabilities = _build_team_probabilities(
+        true_probs=true_probs,
+        implied_probs=implied_probs,
+        blended=probabilities["blended"],
+    )
 
     result: dict[str, Any] = {
         "predictedWinner": predicted_winner,
@@ -1219,6 +1257,7 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         "dataSources": sorted(set(data_sources)),
         "modelEdge": market_edge,
         "probabilities": probabilities,
+        "teamProbabilities": team_probabilities,
     }
     if league_config.supports_draw and draw_prob:
         result["drawWinPct"] = round(draw_prob * 100, 1)

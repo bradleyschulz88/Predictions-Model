@@ -489,6 +489,75 @@ function renderMajorInjuries(game) {
   return `<section class="detail-panel"><h4>Major injuries</h4><div class="lineup-grid">${renderInjuryColumn(game.awayTeam, game.awayMajorInjuries)}${renderInjuryColumn(game.homeTeam, game.homeMajorInjuries)}</div></section>`;
 }
 
+function formatPct(value) {
+  if (value == null || Number.isNaN(Number(value))) return "—";
+  return `${Number(value).toFixed(1)}%`;
+}
+
+function pickProbabilitySummary(prediction) {
+  if (!prediction?.teamProbabilities) return "";
+  const side = prediction.predictedSide;
+  const team = prediction.teamProbabilities[side];
+  if (!team?.truePct) return "";
+  const implied = team.impliedPct != null ? ` · Implied ${formatPct(team.impliedPct)}` : "";
+  return `True ${formatPct(team.truePct)}${implied}`;
+}
+
+function renderTeamProbabilityTable(prediction, game) {
+  const teams = prediction.teamProbabilities;
+  if (!teams) return renderProbabilityCompare(prediction, game);
+
+  const rows = [
+    { key: "away", label: game.awayTeam || "Away", favored: prediction.predictedSide === "away" },
+    { key: "home", label: game.homeTeam || "Home", favored: prediction.predictedSide === "home" },
+  ];
+  if (teams.draw) {
+    rows.push({ key: "draw", label: "Draw", favored: prediction.predictedSide === "draw" });
+  }
+
+  const body = rows
+    .map((row) => {
+      const stats = teams[row.key] || {};
+      const edgeClass =
+        stats.edgePct > 0 ? "edge-positive" : stats.edgePct < 0 ? "edge-negative" : "";
+      return `
+        <tr class="${row.favored ? "prob-pick-row" : ""}">
+          <td><strong>${row.label}</strong>${row.favored ? ' <span class="rank-badge small">Pick</span>' : ""}</td>
+          <td class="true-pct">${formatPct(stats.truePct)}</td>
+          <td class="implied-pct">${stats.impliedPct != null ? formatPct(stats.impliedPct) : "—"}</td>
+          <td class="blended-pct">${formatPct(stats.blendedPct)}</td>
+          <td class="edge-pct ${edgeClass}">${stats.edgeLabel || "—"}</td>
+        </tr>
+      `;
+    })
+    .join("");
+
+  const pickEdge = prediction.modelEdge;
+  const edgeNote = pickEdge
+    ? `<p class="prob-edge-line"><strong>Pick value edge:</strong> True ${formatPct(pickEdge.truePct)} vs implied ${formatPct(pickEdge.impliedPct)} <span class="edge-chip">${pickEdge.edgeLabel}</span></p>`
+    : `<p class="lineup-note">Implied % appears when moneyline odds are available.</p>`;
+
+  return `
+    <section class="probability-compare">
+      <h4>Probability by team (%)</h4>
+      <table class="lines-table prob-pct-table">
+        <thead>
+          <tr>
+            <th>Team</th>
+            <th>True %</th>
+            <th>Implied %</th>
+            <th>Blended %</th>
+            <th>Edge</th>
+          </tr>
+        </thead>
+        <tbody>${body}</tbody>
+      </table>
+      ${edgeNote}
+      <p class="lineup-note"><strong>True %</strong> = model data only (records, form, injuries, advanced stats). <strong>Implied %</strong> = devigged market odds. <strong>Blended %</strong> = final pick weighting.</p>
+    </section>
+  `;
+}
+
 function renderProbabilityCompare(prediction, game) {
   const probs = prediction.probabilities;
   if (!probs) return "";
@@ -575,7 +644,7 @@ function renderPrediction(game) {
     ? `<div class="edge-panel"><strong>True vs implied:</strong> ${prediction.modelEdge.truePct ?? prediction.modelEdge.modelPct}% true · ${prediction.modelEdge.impliedPct ?? prediction.modelEdge.marketPct}% implied · <span class="edge-chip">${prediction.modelEdge.edgeLabel}</span></div>`
     : "";
 
-  const probabilityCompare = renderProbabilityCompare(prediction, game);
+  const probabilityCompare = renderTeamProbabilityTable(prediction, game);
 
   const totalBlock = prediction.totalPick
     ? `<div class="total-panel"><strong>Total pick:</strong> ${prediction.totalPick.pick} (${prediction.totalPick.confidence}% confidence)<br><span class="lineup-note">${prediction.totalPick.detail}</span>${
@@ -610,9 +679,9 @@ function renderPrediction(game) {
       ${liveBlock}
       ${probabilityCompare}
       <div class="probability-bar ${prediction.drawWinPct != null ? "three-way" : ""}">
-        <div class="probability-team ${homeFavored ? "favored" : ""}"><span class="probability-label">${game.homeTeam || "Home"}</span><span class="probability-value">${prediction.homeWinPct}%</span></div>
+        <div class="probability-team ${homeFavored ? "favored" : ""}"><span class="probability-label">${game.homeTeam || "Home"} (blended)</span><span class="probability-value">${prediction.homeWinPct}%</span></div>
         ${drawBlock}
-        <div class="probability-team ${awayFavored ? "favored" : ""}"><span class="probability-label">${game.awayTeam || "Away"}</span><span class="probability-value">${prediction.awayWinPct}%</span></div>
+        <div class="probability-team ${awayFavored ? "favored" : ""}"><span class="probability-label">${game.awayTeam || "Away"} (blended)</span><span class="probability-value">${prediction.awayWinPct}%</span></div>
       </div>
       ${edgeBlock}
       ${totalBlock}
@@ -678,7 +747,7 @@ function renderGames(games) {
             <summary class="game-summary-bar">
               <span class="rank-badge small">#${game.predictionRank || "?"}</span>
               <span class="summary-matchup">${game.matchup || "Unknown"}</span>
-              <span class="summary-pick">${game.prediction?.outcomeLabel || ""} · ${game.prediction?.confidence || "?"}%</span>
+              <span class="summary-pick">${game.prediction?.outcomeLabel || ""} · ${pickProbabilitySummary(game.prediction) || `${game.prediction?.confidence || "?"}%`}</span>
             </summary>
             <div class="game-details-body">
               ${renderPrediction(game)}
