@@ -57,14 +57,23 @@ def american_odds_to_implied(odds: int | float) -> float:
     return 100.0 / (value + 100.0)
 
 
-def extract_moneyline_probs(
-    lines: list[dict[str, Any]],
-) -> tuple[float | None, float | None, float | None]:
-    implied = compute_implied_probabilities(lines)
-    if not implied.get("available"):
-        return None, None, None
-    consensus = implied["consensus"]
-    return consensus.get("home"), consensus.get("away"), consensus.get("draw")
+def _line_odds_value(line: dict[str, Any], *keys: str) -> int | float | None:
+    """Read American odds from SBR (homeOdds) or ESPN (home) line shapes."""
+    for key in keys:
+        value = line.get(key)
+        if value is None:
+            continue
+        if isinstance(value, (int, float)) and value == 0:
+            continue
+        if isinstance(value, str):
+            text = value.strip().replace("+", "")
+            try:
+                return int(text)
+            except ValueError:
+                continue
+        if isinstance(value, (int, float)):
+            return value
+    return None
 
 
 def _moneyline_from_line(line: dict[str, Any]) -> dict[str, Any] | None:
@@ -74,11 +83,11 @@ def _moneyline_from_line(line: dict[str, Any]) -> dict[str, Any] | None:
     current = line.get("currentLine") or line.get("openingLine")
     if not isinstance(current, dict):
         return None
-    home_ml = current.get("home")
-    away_ml = current.get("away")
+    home_ml = _line_odds_value(current, "home", "homeOdds")
+    away_ml = _line_odds_value(current, "away", "awayOdds")
     if home_ml is None or away_ml is None:
         return None
-    draw_ml = current.get("draw")
+    draw_ml = _line_odds_value(current, "draw", "drawOdds")
     raw_home = american_odds_to_implied(home_ml)
     raw_away = american_odds_to_implied(away_ml)
     raw_draw = american_odds_to_implied(draw_ml) if draw_ml is not None else 0.0
@@ -102,6 +111,16 @@ def _moneyline_from_line(line: dict[str, Any]) -> dict[str, Any] | None:
             "draw": (raw_draw / raw_total) if raw_draw else None,
         },
     }
+
+
+def extract_moneyline_probs(
+    lines: list[dict[str, Any]],
+) -> tuple[float | None, float | None, float | None]:
+    implied = compute_implied_probabilities(lines)
+    if not implied.get("available"):
+        return None, None, None
+    consensus = implied["consensus"]
+    return consensus.get("home"), consensus.get("away"), consensus.get("draw")
 
 
 def compute_implied_probabilities(lines: list[dict[str, Any]]) -> dict[str, Any]:
@@ -314,8 +333,8 @@ def compute_total_implied_probabilities(lines: list[dict[str, Any]]) -> dict[str
         current = line.get("currentLine") or line.get("openingLine")
         if not isinstance(current, dict):
             continue
-        over_odds = current.get("over")
-        under_odds = current.get("under")
+        over_odds = _line_odds_value(current, "over", "overOdds")
+        under_odds = _line_odds_value(current, "under", "underOdds")
         if over_odds is None or under_odds is None:
             continue
         if isinstance(over_odds, str):

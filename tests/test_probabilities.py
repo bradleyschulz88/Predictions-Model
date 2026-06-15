@@ -40,6 +40,24 @@ class ImpliedProbabilityTests(unittest.TestCase):
             places=0,
         )
 
+    def test_sbr_moneyline_shape(self) -> None:
+        lines = [
+            {
+                "sportsbook": "betmgm",
+                "viewType": "MoneyLineDataOpeningAndLatestOddsDataView",
+                "currentLine": {"homeOdds": -140, "awayOdds": 115, "drawOdds": 0},
+            },
+            {
+                "sportsbook": "draftkings",
+                "viewType": "MoneyLineDataOpeningAndLatestOddsDataView",
+                "currentLine": {"homeOdds": -138, "awayOdds": 118, "drawOdds": 0},
+            },
+        ]
+        implied = compute_implied_probabilities(lines)
+        self.assertTrue(implied["available"])
+        self.assertEqual(implied["booksUsed"], 2)
+        self.assertGreater(implied["consensus"]["homePct"], 50.0)
+
     def test_true_probability_components(self) -> None:
         true_probs = compute_true_probabilities(
             model_home=0.58,
