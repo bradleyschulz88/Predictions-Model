@@ -458,6 +458,18 @@ def _merge_espn_odds(game: dict[str, Any], enrichment: dict[str, Any]) -> None:
     game["viewTypes"] = view_types
 
 
+def ensure_espn_odds_on_games(games: list[dict[str, Any]]) -> None:
+    """Attach ESPN summary odds when a game has no usable moneyline lines."""
+    from mlb_predictions import has_moneyline_lines
+
+    for game in games:
+        if has_moneyline_lines(game.get("lines") or []):
+            continue
+        enrichment = game.get("enrichment") or {}
+        if enrichment.get("espnOdds"):
+            _merge_espn_odds(game, enrichment)
+
+
 def enrich_game(
     game: dict[str, Any],
     *,

@@ -24,6 +24,13 @@ def normalize_team_name(name: str | None) -> str:
         "man city": "manchester city",
         "spurs": "tottenham hotspur",
         "nyc fc": "new york city fc",
+        "athletics": "oakland athletics",
+        "dodgers": "los angeles dodgers",
+        "angels": "los angeles angels",
+        "yankees": "new york yankees",
+        "mets": "new york mets",
+        "white sox": "chicago white sox",
+        "cubs": "chicago cubs",
     }
     return aliases.get(cleaned, cleaned)
 

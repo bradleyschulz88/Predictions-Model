@@ -123,6 +123,13 @@ def extract_moneyline_probs(
     return consensus.get("home"), consensus.get("away"), consensus.get("draw")
 
 
+def has_moneyline_lines(lines: list[dict[str, Any]]) -> bool:
+    for line in lines or []:
+        if _moneyline_from_line(line):
+            return True
+    return False
+
+
 def compute_implied_probabilities(lines: list[dict[str, Any]]) -> dict[str, Any]:
     books: list[dict[str, Any]] = []
     for line in lines or []:

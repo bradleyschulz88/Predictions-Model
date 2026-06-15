@@ -11,11 +11,15 @@ class LeagueConfig:
     label: str
     short_label: str
     espn_path: str
-    supports_sbr_odds: bool
+    sbr_odds_slug: str | None
     supports_pitchers: bool
     supports_draw: bool
     lineup_label: str
     default_days_ahead: int
+
+    @property
+    def supports_sbr_odds(self) -> bool:
+        return bool(self.sbr_odds_slug)
 
 
 LEAGUES: dict[str, LeagueConfig] = {
@@ -24,7 +28,7 @@ LEAGUES: dict[str, LeagueConfig] = {
         label="MLB Baseball",
         short_label="MLB",
         espn_path="baseball/mlb",
-        supports_sbr_odds=True,
+        sbr_odds_slug="mlb-baseball",
         supports_pitchers=True,
         supports_draw=False,
         lineup_label="Batting lineup",
@@ -35,7 +39,7 @@ LEAGUES: dict[str, LeagueConfig] = {
         label="NFL Football",
         short_label="NFL",
         espn_path="football/nfl",
-        supports_sbr_odds=False,
+        sbr_odds_slug="nfl-football",
         supports_pitchers=False,
         supports_draw=False,
         lineup_label="Key players",
@@ -46,7 +50,7 @@ LEAGUES: dict[str, LeagueConfig] = {
         label="NBA Basketball",
         short_label="NBA",
         espn_path="basketball/nba",
-        supports_sbr_odds=False,
+        sbr_odds_slug="nba-basketball",
         supports_pitchers=False,
         supports_draw=False,
         lineup_label="Key players",
@@ -57,7 +61,7 @@ LEAGUES: dict[str, LeagueConfig] = {
         label="FIFA World Cup",
         short_label="World Cup",
         espn_path="soccer/fifa.world",
-        supports_sbr_odds=False,
+        sbr_odds_slug=None,
         supports_pitchers=False,
         supports_draw=True,
         lineup_label="Key players",
@@ -68,7 +72,7 @@ LEAGUES: dict[str, LeagueConfig] = {
         label="English Premier League",
         short_label="EPL",
         espn_path="soccer/eng.1",
-        supports_sbr_odds=False,
+        sbr_odds_slug="english-premier-league",
         supports_pitchers=False,
         supports_draw=True,
         lineup_label="Key players",
@@ -79,7 +83,7 @@ LEAGUES: dict[str, LeagueConfig] = {
         label="AFL",
         short_label="AFL",
         espn_path="australian-football/afl",
-        supports_sbr_odds=False,
+        sbr_odds_slug=None,
         supports_pitchers=False,
         supports_draw=False,
         lineup_label="Key players",

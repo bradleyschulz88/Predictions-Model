@@ -23,13 +23,22 @@ def dates_for_league(league: str) -> list[str]:
     return schedule_dates_for_league(league)
 
 
-def build_league_payload(league: str, date_value: str, *, include_enrichment: bool) -> dict:
-    print(f"Building {league} for {date_value} (enrichment={include_enrichment})...", flush=True)
+def build_league_payload(
+    league: str,
+    date_value: str,
+    *,
+    include_enrichment: bool,
+    include_odds: bool,
+) -> dict:
+    print(
+        f"Building {league} for {date_value} (enrichment={include_enrichment}, odds={include_odds})...",
+        flush=True,
+    )
     return fetch_dashboard_data(
         league=league,
         date=date_value,
         source="espn",
-        include_odds=league == "mlb" and include_enrichment,
+        include_odds=include_odds,
         include_enrichment=include_enrichment,
         retries=2,
         retry_delay=0.5,
@@ -81,6 +90,7 @@ def main() -> int:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     manifest: dict = {"builtAt": None, "leagues": []}
     primary_payloads: dict[str, dict] = {}
+    payloads_for_accuracy: list[dict] = []
 
     for league in list_league_ids():
         league_config = get_league(league)
@@ -91,8 +101,14 @@ def main() -> int:
 
         for date_value in available_dates:
             include_enrichment = date_value == default_date
+            include_odds = league_config.supports_sbr_odds or include_enrichment
             try:
-                payload = build_league_payload(league, date_value, include_enrichment=include_enrichment)
+                payload = build_league_payload(
+                    league,
+                    date_value,
+                    include_enrichment=include_enrichment,
+                    include_odds=include_odds,
+                )
             except Exception as exc:
                 print(f"Warning: failed to build {league} {date_value}: {exc}", flush=True)
                 payload = {
@@ -110,6 +126,8 @@ def main() -> int:
             dated_path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
             date_files[date_value] = f"data/{dated_name}"
             print(f"Wrote {dated_path} ({payload.get('gameCount', 0)} games)", flush=True)
+            if payload.get("gameCount", 0) > 0:
+                payloads_for_accuracy.append(payload)
 
             if date_value == default_date:
                 primary_payload = payload
@@ -145,7 +163,7 @@ def main() -> int:
             }
         )
 
-    record_predictions(OUTPUT_DIR, primary_payloads)
+    record_predictions(OUTPUT_DIR, payloads_for_accuracy)
     accuracy = grade_predictions(OUTPUT_DIR)
     overview = build_overview(primary_payloads)
 

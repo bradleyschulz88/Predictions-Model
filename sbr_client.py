@@ -34,10 +34,11 @@ class SBRParseError(SBRClientError):
     """Page fetched but __NEXT_DATA__ JSON could not be extracted or parsed."""
 
 
-def build_odds_url(date: str | None = None) -> str:
+def build_odds_url(date: str | None = None, *, odds_slug: str = "mlb-baseball") -> str:
+    base = f"https://www.sportsbookreview.com/betting-odds/{odds_slug}/"
     if date:
-        return f"{SBR_ODDS_BASE}?date={date}"
-    return SBR_ODDS_BASE
+        return f"{base}?date={date}"
+    return base
 
 
 def build_matchups_url() -> str:
