@@ -72,6 +72,12 @@
       </div>
     </header>
 
+    <nav class="view-tabs" id="view-tabs" aria-label="Dashboard views">
+      <button type="button" class="view-tab active" data-view="predictions">Predictions</button>
+      <button type="button" class="view-tab" data-view="my-bets">My Bets</button>
+    </nav>
+
+    <div id="predictions-view">
     <section class="stats" id="stats">
       <article class="stat-card">
         <p class="stat-label">Games</p>
@@ -103,11 +109,13 @@
       </article>
     </section>
 
-    <section id="accuracy-panel" class="accuracy-panel bet-tracker-panel hidden"></section>
     <section id="top-picks" class="top-picks hidden"></section>
     <p id="freshness-note" class="freshness-note hidden"></p>
     <div id="banner" class="banner hidden"></div>
     <main id="games" class="games"></main>
+    </div>
+
+    <section id="my-bets-view" class="my-bets-view hidden" aria-label="Personal bet tracker"></section>
   </div>
 
   <script src="./app.js"></script>

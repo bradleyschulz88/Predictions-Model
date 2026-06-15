@@ -20,9 +20,12 @@ const statLeague = document.getElementById("stat-league");
 const statDate = document.getElementById("stat-date");
 const statUpdated = document.getElementById("stat-updated");
 const statFreshness = document.getElementById("stat-freshness");
-const accuracyPanel = document.getElementById("accuracy-panel");
 const freshnessNote = document.getElementById("freshness-note");
 const liveScoresToggle = document.getElementById("live-scores");
+const viewTabsEl = document.getElementById("view-tabs");
+const predictionsViewEl = document.getElementById("predictions-view");
+const myBetsViewEl = document.getElementById("my-bets-view");
+const dateFieldEl = document.getElementById("date-field");
 
 const ESPN_PATHS = {
   mlb: "baseball/mlb",
@@ -68,45 +71,376 @@ let lastLiveScoreAt = null;
 let activeScheduleDate = null;
 let dateOptionsCache = [];
 
-const TRACKED_BETS_KEY = "predictions-dashboard-tracked-bets";
+let activeView = "predictions";
+let betFormDraft = null;
 
-function loadTrackedBets() {
+const MY_BETS_KEY = "predictions-dashboard-my-bets";
+
+function createBetId() {
+  return `bet-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function parseAmericanOddsInput(value) {
+  const text = String(value ?? "").trim().replace(/^\+/, "");
+  if (!text) return null;
+  const num = Number(text);
+  if (!Number.isFinite(num) || num === 0) return null;
+  return Math.trunc(num);
+}
+
+function parseStakeInput(value) {
+  const num = Number(String(value ?? "").trim());
+  if (!Number.isFinite(num) || num <= 0) return null;
+  return Math.round(num * 100) / 100;
+}
+
+function formatMoney(value) {
+  if (value == null || Number.isNaN(Number(value))) return "—";
+  const amount = Number(value);
+  const prefix = amount >= 0 ? "+$" : "-$";
+  return `${prefix}${Math.abs(amount).toFixed(2)}`;
+}
+
+function calcBetProfit(odds, stake, won) {
+  const amount = Number(stake);
+  if (!won) return -amount;
+  const line = Number(odds);
+  if (line < 0) return Math.round(amount * (100 / Math.abs(line)) * 100) / 100;
+  return Math.round(amount * (line / 100) * 100) / 100;
+}
+
+function formatAmericanOdds(odds) {
+  const value = Number(odds);
+  if (!Number.isFinite(value)) return "—";
+  return value > 0 ? `+${value}` : String(value);
+}
+
+function escapeAttr(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;");
+}
+
+function loadMyBets() {
   try {
-    const raw = localStorage.getItem(TRACKED_BETS_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const raw = localStorage.getItem(MY_BETS_KEY);
+    if (raw) return JSON.parse(raw);
   } catch {
-    return [];
+    /* ignore */
   }
+  return [];
 }
 
-function saveTrackedBets(bets) {
-  localStorage.setItem(TRACKED_BETS_KEY, JSON.stringify(bets));
+function saveMyBets(bets) {
+  localStorage.setItem(MY_BETS_KEY, JSON.stringify(bets));
 }
 
-function isBetTracked(eventId) {
+function findGameForBet(bet) {
+  if (!bet?.eventId) return null;
+  if (lastPayload?.games?.length) {
+    const linked = lastPayload.games.find((game) => String(game.eventId) === String(bet.eventId));
+    if (linked) return linked;
+  }
+  return null;
+}
+
+function gradeMyBet(bet, resultWinner) {
+  if (!resultWinner || bet.status !== "pending") return bet;
+  const won =
+    resultWinner === "Draw" ? namesMatch(bet.pick, "Draw") : pickMatchesWinner(bet.pick, resultWinner);
+  const profit = calcBetProfit(bet.odds, bet.stake, won);
+  return {
+    ...bet,
+    status: won ? "won" : "lost",
+    resultWinner,
+    profit,
+    settledAt: new Date().toISOString(),
+  };
+}
+
+function autoSettleMyBets(bets) {
+  return bets.map((bet) => {
+    if (bet.status !== "pending") return bet;
+    const game = findGameForBet(bet);
+    if (!game) return bet;
+    const winner = winnerFromGame(game);
+    if (!winner) return bet;
+    return gradeMyBet(bet, winner);
+  });
+}
+
+function summarizeMyBets(bets) {
+  const settled = bets.filter((bet) => bet.status === "won" || bet.status === "lost");
+  const pending = bets.filter((bet) => bet.status === "pending");
+  const wins = settled.filter((bet) => bet.status === "won").length;
+  const losses = settled.filter((bet) => bet.status === "lost").length;
+  const profit = settled.reduce((sum, bet) => sum + Number(bet.profit || 0), 0);
+  const staked = settled.reduce((sum, bet) => sum + Number(bet.stake || 0), 0);
+  const pendingStake = pending.reduce((sum, bet) => sum + Number(bet.stake || 0), 0);
+  const roiPct = staked > 0 ? Math.round((profit / staked) * 1000) / 10 : null;
+  return {
+    wins,
+    losses,
+    pending: pending.length,
+    profit: Math.round(profit * 100) / 100,
+    staked: Math.round(staked * 100) / 100,
+    pendingStake: Math.round(pendingStake * 100) / 100,
+    roiPct,
+    total: bets.length,
+  };
+}
+
+function addMyBet(entry) {
+  const odds = parseAmericanOddsInput(entry.odds);
+  const stake = parseStakeInput(entry.stake);
+  if (!entry.matchup?.trim() || !entry.pick?.trim() || odds == null || stake == null) {
+    showBanner("Enter matchup, pick, odds, and bet amount.");
+    return false;
+  }
+
+  const bets = loadMyBets();
+  bets.unshift({
+    id: createBetId(),
+    createdAt: new Date().toISOString(),
+    matchup: entry.matchup.trim(),
+    pick: entry.pick.trim(),
+    odds,
+    stake,
+    league: entry.league || null,
+    eventId: entry.eventId || null,
+    scheduleDate: entry.scheduleDate || null,
+    status: "pending",
+    resultWinner: null,
+    profit: null,
+  });
+  const settled = autoSettleMyBets(bets);
+  saveMyBets(settled);
+  betFormDraft = null;
+  renderMyBetsView();
+  return true;
+}
+
+function updateMyBet(betId, patch) {
+  const bets = loadMyBets().map((bet) => (bet.id === betId ? { ...bet, ...patch } : bet));
+  saveMyBets(autoSettleMyBets(bets));
+  renderMyBetsView();
+}
+
+function deleteMyBet(betId) {
+  saveMyBets(loadMyBets().filter((bet) => bet.id !== betId));
+  renderMyBetsView();
+}
+
+function settleMyBetManual(betId, won) {
+  const bets = loadMyBets().map((bet) => {
+    if (bet.id !== betId || bet.status !== "pending") return bet;
+    const profit = calcBetProfit(bet.odds, bet.stake, won);
+    return {
+      ...bet,
+      status: won ? "won" : "lost",
+      resultWinner: won ? bet.pick : "Manual loss",
+      profit,
+      settledAt: new Date().toISOString(),
+      manual: true,
+    };
+  });
+  saveMyBets(bets);
+  renderMyBetsView();
+}
+
+function openBetFormFromGame(game) {
+  if (!game?.prediction) return;
+  betFormDraft = {
+    matchup: game.matchup || "",
+    pick: game.prediction.predictedWinner || "",
+    eventId: game.eventId || null,
+    league: game.league || sportSelect.value,
+    scheduleDate: lastPayload?.scheduleDate || getSelectedDate(),
+    odds: "",
+    stake: "",
+  };
+  switchView("my-bets");
+}
+
+function isBetLoggedForGame(eventId) {
   const id = String(eventId || "");
-  return loadTrackedBets().some((bet) => String(bet.eventId) === id);
+  return loadMyBets().some((bet) => String(bet.eventId) === id && bet.status === "pending");
 }
 
-function toggleTrackedBet(game) {
-  const eventId = String(game.eventId || "");
-  if (!eventId || !game.prediction) return;
-  const bets = loadTrackedBets().filter((bet) => String(bet.eventId) !== eventId);
-  if (!isBetTracked(eventId)) {
-    bets.unshift({
-      eventId,
-      league: game.league || sportSelect.value,
-      scheduleDate: lastPayload?.scheduleDate || getSelectedDate(),
-      matchup: game.matchup,
-      predicted: game.prediction.predictedWinner,
-      outcomeLabel: game.prediction.outcomeLabel,
-      confidence: game.prediction.confidence,
-      trackedAt: new Date().toISOString(),
-    });
+function switchView(view) {
+  activeView = view;
+  const isPredictions = view === "predictions";
+
+  viewTabsEl?.querySelectorAll(".view-tab").forEach((button) => {
+    button.classList.toggle("active", button.dataset.view === view);
+  });
+
+  predictionsViewEl?.classList.toggle("hidden", !isPredictions);
+  myBetsViewEl?.classList.toggle("hidden", isPredictions);
+
+  const predictionControls = [
+    sportSelect,
+    dateFieldEl,
+    confidenceFilter?.closest(".field"),
+    teamSearch?.closest(".field"),
+    document.getElementById("market-filter-wrap"),
+    liveScoresToggle?.closest(".toggle"),
+    autoRefresh?.closest(".toggle"),
+  ];
+  predictionControls.forEach((el) => {
+    if (el) el.classList.toggle("hidden", !isPredictions);
+  });
+
+  if (isPredictions) {
+    dashboardTitle.textContent =
+      sportSelect.value === "overview"
+        ? "All Sports Predictions"
+        : `${SPORT_LABELS[sportSelect.value] || "Sports"} Predictions`;
+    if (sportSelect.value === "my-bets") {
+      /* legacy guard */
+    }
+    if (lastPayload) renderGames(lastPayload.games || []);
+    else loadDashboard(true);
+  } else {
+    dashboardTitle.textContent = "My Bet Tracker";
+    hideBanner();
+    renderMyBetsView();
   }
-  saveTrackedBets(bets);
-  renderBetTrackerPanel();
-  renderGames(lastPayload?.games || []);
+}
+
+function renderMyBetsView() {
+  if (!myBetsViewEl) return;
+
+  let bets = autoSettleMyBets(loadMyBets());
+  saveMyBets(bets);
+  const summary = summarizeMyBets(bets);
+  const draft = betFormDraft || {};
+
+  const rows = bets.length
+    ? bets
+        .map((bet) => {
+          const statusClass =
+            bet.status === "won" ? "bet-won" : bet.status === "lost" ? "bet-lost" : "bet-pending";
+          const statusLabel =
+            bet.status === "won" ? "Won" : bet.status === "lost" ? "Lost" : "Pending";
+          const profitCell =
+            bet.status === "pending"
+              ? `<span class="bet-pending-label">—</span>`
+              : `<strong class="${bet.profit >= 0 ? "acc-correct" : "acc-wrong"}">${formatMoney(bet.profit)}</strong>`;
+          const actions =
+            bet.status === "pending"
+              ? `<div class="bet-row-actions">
+                  <button type="button" class="bet-action-btn" data-bet-action="win" data-bet-id="${bet.id}">Mark won</button>
+                  <button type="button" class="bet-action-btn" data-bet-action="loss" data-bet-id="${bet.id}">Mark lost</button>
+                  <button type="button" class="bet-action-btn danger" data-bet-action="delete" data-bet-id="${bet.id}">Delete</button>
+                </div>`
+              : `<div class="bet-row-actions">
+                  <button type="button" class="bet-action-btn danger" data-bet-action="delete" data-bet-id="${bet.id}">Delete</button>
+                </div>`;
+          const resultNote =
+            bet.resultWinner && bet.status !== "pending"
+              ? `<span class="bet-result-note">Result: ${bet.resultWinner}</span>`
+              : "";
+
+          return `
+            <tr class="${statusClass}">
+              <td>
+                <strong>${bet.matchup}</strong>
+                <span class="bet-pick-line">${bet.pick}</span>
+                ${resultNote}
+              </td>
+              <td>${formatAmericanOdds(bet.odds)}</td>
+              <td>$${Number(bet.stake).toFixed(2)}</td>
+              <td><span class="bet-status-pill ${statusClass}">${statusLabel}</span></td>
+              <td>${profitCell}</td>
+              <td>${actions}</td>
+            </tr>
+          `;
+        })
+        .join("")
+    : `<tr><td colspan="6" class="empty-bets-cell">No bets logged yet. Add one below or tap <strong>Log bet</strong> on a game.</td></tr>`;
+
+  myBetsViewEl.innerHTML = `
+    <section class="my-bets-hero">
+      <p class="my-bets-note">Your bets are saved on this device only. Enter the odds you actually got and your stake — P/L is calculated when the game finishes or you mark the result.</p>
+      <div class="my-bets-stats">
+        <article class="tracker-stat"><span class="tracker-stat-label">Record</span><strong>${summary.wins}-${summary.losses}</strong></article>
+        <article class="tracker-stat"><span class="tracker-stat-label">Total P/L</span><strong class="${summary.profit >= 0 ? "acc-correct" : "acc-wrong"}">${formatMoney(summary.profit)}</strong></article>
+        <article class="tracker-stat"><span class="tracker-stat-label">ROI</span><strong>${summary.roiPct != null ? `${summary.roiPct}%` : "—"}</strong></article>
+        <article class="tracker-stat"><span class="tracker-stat-label">Open bets</span><strong>${summary.pending}</strong></article>
+        <article class="tracker-stat"><span class="tracker-stat-label">At risk</span><strong>$${summary.pendingStake.toFixed(2)}</strong></article>
+        <article class="tracker-stat"><span class="tracker-stat-label">Wagered</span><strong>$${summary.staked.toFixed(2)}</strong></article>
+      </div>
+    </section>
+
+    <section class="my-bets-form-card">
+      <h2>Log a bet</h2>
+      <form id="my-bet-form" class="my-bet-form">
+        <label class="field">
+          <span>Matchup</span>
+          <input id="bet-matchup" type="text" required placeholder="Yankees @ Red Sox" value="${escapeAttr(draft.matchup || "")}">
+        </label>
+        <label class="field">
+          <span>Your pick</span>
+          <input id="bet-pick" type="text" required placeholder="Team name or Draw" value="${escapeAttr(draft.pick || "")}">
+        </label>
+        <label class="field">
+          <span>Odds (American)</span>
+          <input id="bet-odds" type="text" required placeholder="-150 or +130" value="${escapeAttr(draft.odds ?? "")}">
+        </label>
+        <label class="field">
+          <span>Amount bet ($)</span>
+          <input id="bet-stake" type="number" min="0.01" step="0.01" required placeholder="25" value="${escapeAttr(draft.stake ?? "")}">
+        </label>
+        <button type="submit" class="primary-btn">Add bet</button>
+      </form>
+    </section>
+
+    <section class="my-bets-table-card">
+      <h2>Bet history</h2>
+      <div class="my-bets-table-wrap">
+        <table class="my-bets-table">
+          <thead>
+            <tr>
+              <th>Bet</th>
+              <th>Odds</th>
+              <th>Stake</th>
+              <th>Status</th>
+              <th>P/L</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </section>
+  `;
+
+  myBetsViewEl.querySelector("#my-bet-form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const success = addMyBet({
+      matchup: form.querySelector("#bet-matchup")?.value,
+      pick: form.querySelector("#bet-pick")?.value,
+      odds: form.querySelector("#bet-odds")?.value,
+      stake: form.querySelector("#bet-stake")?.value,
+      eventId: draft.eventId || null,
+      league: draft.league || null,
+      scheduleDate: draft.scheduleDate || null,
+    });
+    if (success) form.reset();
+  });
+
+  myBetsViewEl.querySelectorAll("[data-bet-action]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const betId = button.dataset.betId;
+      const action = button.dataset.betAction;
+      if (action === "delete") deleteMyBet(betId);
+      if (action === "win") settleMyBetManual(betId, true);
+      if (action === "loss") settleMyBetManual(betId, false);
+    });
+  });
 }
 
 function winnerFromGame(game) {
@@ -177,24 +511,6 @@ function renderPickStatusBadge(game) {
     return `<span class="pick-status pick-won">Pick won · ${pick.actual}</span>`;
   }
   return `<span class="pick-status pick-lost">Pick lost · won ${pick.actual}</span>`;
-}
-
-function summarizeTrackedBets() {
-  const bets = loadTrackedBets();
-  let wins = 0;
-  let losses = 0;
-  let pending = 0;
-  for (const bet of bets) {
-    const game = (lastPayload?.games || []).find((item) => String(item.eventId) === String(bet.eventId));
-    const pick = game ? resolvePickStatus(game) : accuracyData?.picksByEventId?.[bet.eventId];
-    if (!pick || pick.status === "pending") {
-      pending += 1;
-      continue;
-    }
-    if (pick.correct) wins += 1;
-    else losses += 1;
-  }
-  return { wins, losses, pending, total: bets.length };
 }
 
 function leagueTimezone(sport) {
@@ -459,108 +775,6 @@ function renderStats(payload, visibleCount) {
   }
 }
 
-function renderBetTrackerPanel() {
-  const summary = accuracyData?.summary || {};
-  const last7 = summary.last7Days || {};
-  const streak = summary.streak || {};
-  const results = accuracyData?.recentResults || [];
-  const pending = accuracyData?.pendingPicks || [];
-  const tracked = summarizeTrackedBets();
-  const myBets = loadTrackedBets();
-
-  const openOnPage = (lastPayload?.games || []).filter((game) => resolvePickStatus(game)?.status === "pending").length;
-  const hasModelData = results.length > 0 || pending.length > 0 || last7.pending > 0 || openOnPage > 0;
-  const hasTracked = myBets.length > 0;
-  if (!hasModelData && !hasTracked) {
-    accuracyPanel.classList.add("hidden");
-    accuracyPanel.innerHTML = "";
-    return;
-  }
-
-  const byLeague = summary.byLeague || {};
-  const leagueRows = Object.entries(byLeague)
-    .map(([league, stats]) => {
-      const units = stats.units != null ? ` · ${stats.units >= 0 ? "+" : ""}${stats.units}u` : "";
-      return `<li><strong>${SPORT_LABELS[league] || league}</strong>: ${stats.pct != null ? `${stats.correct}-${stats.total - stats.correct} (${stats.pct}%)${units}` : "—"}</li>`;
-    })
-    .join("");
-
-  const recentRows = results
-    .slice(0, 8)
-    .map((item) => {
-      const score =
-        item.homeScore != null && item.awayScore != null ? ` (${item.awayScore}-${item.homeScore})` : "";
-      const units = item.units != null ? ` · ${item.units >= 0 ? "+" : ""}${item.units}u` : "";
-      return `<li class="${item.correct ? "acc-correct" : "acc-wrong"}"><strong>${item.matchup || item.league}</strong>${score} — picked ${item.predicted}, won ${item.actual} ${item.correct ? "✓" : "✗"}${units}</li>`;
-    })
-    .join("");
-
-  const pendingRows = pending
-    .slice(0, 5)
-    .map(
-      (item) =>
-        `<li class="pick-pending-row"><strong>${item.matchup || item.league}</strong> — ${item.outcomeLabel || item.predicted} (${item.confidence || "?"}%)</li>`
-    )
-    .join("");
-
-  const trackedRows = myBets
-    .slice(0, 8)
-    .map((bet) => {
-      const game = (lastPayload?.games || []).find((item) => String(item.eventId) === String(bet.eventId));
-      const pick = game ? resolvePickStatus(game) : accuracyData?.picksByEventId?.[bet.eventId];
-      if (!pick || pick.status === "pending") {
-        return `<li class="pick-pending-row"><strong>${bet.matchup}</strong> — ${bet.outcomeLabel || bet.predicted} (tracked)</li>`;
-      }
-      return `<li class="${pick.correct ? "acc-correct" : "acc-wrong"}"><strong>${bet.matchup}</strong> — ${pick.correct ? "Won" : "Lost"} · ${pick.actual}</li>`;
-    })
-    .join("");
-
-  const streakLabel =
-    streak.current > 0 && streak.type
-      ? `${streak.current} ${streak.type === "win" ? "wins" : "losses"} in a row`
-      : "No active streak";
-
-  const unitsLabel =
-    last7.units != null ? `${last7.units >= 0 ? "+" : ""}${last7.units} units` : "—";
-  const roiLabel = last7.roiPct != null ? `${last7.roiPct}% ROI` : "—";
-
-  accuracyPanel.classList.remove("hidden");
-  accuracyPanel.innerHTML = `
-    <h2 class="accuracy-title">Bet tracker</h2>
-    <p class="bet-tracker-note">Model picks are logged automatically. Tap <strong>Track bet</strong> on a game to add it to your personal list (saved on this device).</p>
-    <div class="bet-tracker-stats">
-      <article class="tracker-stat"><span class="tracker-stat-label">7-day record</span><strong>${last7.correct || 0}-${(last7.total || 0) - (last7.correct || 0)}</strong></article>
-      <article class="tracker-stat"><span class="tracker-stat-label">Units (7d)</span><strong>${unitsLabel}</strong></article>
-      <article class="tracker-stat"><span class="tracker-stat-label">ROI (7d)</span><strong>${roiLabel}</strong></article>
-      <article class="tracker-stat"><span class="tracker-stat-label">Streak</span><strong>${streakLabel}</strong></article>
-      <article class="tracker-stat"><span class="tracker-stat-label">Open picks</span><strong>${last7.pending || pending.length || openOnPage || 0}</strong></article>
-      <article class="tracker-stat"><span class="tracker-stat-label">My bets</span><strong>${tracked.wins}-${tracked.losses}${tracked.pending ? ` (${tracked.pending} open)` : ""}</strong></article>
-    </div>
-    <div class="accuracy-grid">
-      <div>
-        <h3>By league (7d)</h3>
-        <ul class="accuracy-list">${leagueRows || "<li>No graded picks yet.</li>"}</ul>
-      </div>
-      <div>
-        <h3>Recent results</h3>
-        <ul class="accuracy-list">${recentRows || "<li>Results appear after games finish.</li>"}</ul>
-      </div>
-      <div>
-        <h3>Open model picks</h3>
-        <ul class="accuracy-list">${pendingRows || "<li>No open picks.</li>"}</ul>
-      </div>
-      <div>
-        <h3>My tracked bets</h3>
-        <ul class="accuracy-list">${trackedRows || "<li>Tap Track bet on any game card.</li>"}</ul>
-      </div>
-    </div>
-  `;
-}
-
-function renderAccuracyPanel() {
-  renderBetTrackerPanel();
-}
-
 function renderOverview() {
   if (!overviewData) {
     gamesEl.innerHTML = `<div class="empty-state">Overview not loaded yet.</div>`;
@@ -577,7 +791,6 @@ function renderOverview() {
     },
     totalGames
   );
-  renderAccuracyPanel();
 
   const leagueCards = (overviewData.leagues || [])
     .map(
@@ -907,8 +1120,6 @@ function renderGames(games) {
   const leagueLabel = SPORT_LABELS[sport] || "games";
   const visible = filterGames(games);
 
-  renderAccuracyPanel();
-
   if (!visible.length) {
     const scheduleOnly = lastPayload?.liveScheduleOnly;
     const buildError = lastPayload?.error;
@@ -942,7 +1153,7 @@ function renderGames(games) {
 
       const shareUrl = `${window.location.origin}${window.location.pathname}#game-${game.eventId}`;
       const pickBadge = renderPickStatusBadge(game);
-      const tracked = isBetTracked(game.eventId);
+      const logged = isBetLoggedForGame(game.eventId);
 
       return `
         <article class="game-card" id="game-${game.eventId}">
@@ -962,7 +1173,7 @@ function renderGames(games) {
                 </div>
                 <div class="game-actions">
                   <span class="status-pill ${game.isLive ? "live" : ""}">${game.gameStatusText || "Scheduled"}</span>
-                  <button type="button" class="track-btn${tracked ? " tracked" : ""}" data-event-id="${game.eventId}">${tracked ? "Tracked" : "Track bet"}</button>
+                  <button type="button" class="track-btn${logged ? " tracked" : ""}" data-event-id="${game.eventId}">${logged ? "Bet logged" : "Log bet"}</button>
                   <button type="button" class="share-btn" data-share-url="${shareUrl}" data-share-title="${game.prediction?.outcomeLabel || game.matchup}">Share</button>
                 </div>
               </div>
@@ -984,7 +1195,7 @@ function renderGames(games) {
       event.preventDefault();
       event.stopPropagation();
       const game = (lastPayload?.games || []).find((item) => String(item.eventId) === String(button.dataset.eventId));
-      if (game) toggleTrackedBet(game);
+      if (game) openBetFormFromGame(game);
     });
   });
 
@@ -1244,8 +1455,12 @@ async function refreshLiveScores() {
     if (!liveScores) return;
     lastLiveScoreAt = Date.now();
     lastPayload = { ...lastPayload, games: mergeLiveScores(lastPayload.games, liveScores) };
-    renderGames(lastPayload.games);
-    renderBetTrackerPanel();
+    saveMyBets(autoSettleMyBets(loadMyBets()));
+    if (activeView === "predictions") {
+      renderGames(lastPayload.games);
+    } else {
+      renderMyBetsView();
+    }
   } catch {
     /* ESPN CORS or network blocked — keep snapshot scores */
   }
@@ -1409,6 +1624,10 @@ async function loadDashboard(force = false) {
     loadingDashboard = false;
     refreshBtn.disabled = false;
     refreshBtn.textContent = "Refresh";
+    if (activeView === "my-bets") {
+      saveMyBets(autoSettleMyBets(loadMyBets()));
+      renderMyBetsView();
+    }
   }
 }
 
@@ -1447,9 +1666,21 @@ async function initDashboard() {
   }
 
   sportSelect.addEventListener("change", onSportChange);
+  viewTabsEl?.querySelectorAll(".view-tab").forEach((button) => {
+    button.addEventListener("click", () => {
+      const view = button.dataset.view;
+      if (view && view !== activeView) switchView(view);
+    });
+  });
   confidenceFilter.addEventListener("change", () => renderGames(lastPayload?.games || []));
   teamSearch.addEventListener("input", () => renderGames(lastPayload?.games || []));
-  refreshBtn.addEventListener("click", () => loadDashboard(true));
+  refreshBtn.addEventListener("click", () => {
+    if (activeView === "my-bets") {
+      loadDashboard(true);
+      return;
+    }
+    loadDashboard(true);
+  });
   viewFilter.addEventListener("change", () => loadDashboard(true));
   dateSelect.addEventListener("change", () => onDateSelected(dateSelect.value));
   datePrevBtn?.addEventListener("click", () => onDateNav(-1));
