@@ -39,7 +39,15 @@ const IS_STATIC_HOST =
   window.location.hostname.endsWith("github.io") ||
   new URLSearchParams(window.location.search).has("static");
 
-const SPORT_DEFAULT_DAYS = { mlb: 1, nfl: 0, nba: 0, worldcup: 0, epl: 0, afl: 0 };
+const LEAGUE_TIMEZONES = {
+  mlb: "America/New_York",
+  nfl: "America/New_York",
+  nba: "America/New_York",
+  worldcup: "America/New_York",
+  epl: "Europe/London",
+  afl: "Australia/Sydney",
+};
+
 const SPORT_LABELS = {
   mlb: "MLB Baseball",
   nfl: "NFL Football",
@@ -60,28 +68,58 @@ let lastLiveScoreAt = null;
 let activeScheduleDate = null;
 let dateOptionsCache = [];
 
-function offsetIso(daysAhead) {
-  const now = new Date();
-  now.setDate(now.getDate() + daysAhead);
-  const offset = now.getTimezoneOffset();
-  const local = new Date(now.getTime() - offset * 60 * 1000);
-  return local.toISOString().slice(0, 10);
+function leagueTimezone(sport) {
+  return LEAGUE_TIMEZONES[sport] || Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
+function leagueDateParts(timeZone, baseDate = new Date(), daysAhead = 0) {
+  const shifted = new Date(baseDate);
+  shifted.setDate(shifted.getDate() + daysAhead);
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "numeric",
+    hour12: false,
+  }).formatToParts(shifted);
+  const pick = (type) => parts.find((part) => part.type === type)?.value;
+  return {
+    iso: `${pick("year")}-${pick("month")}-${pick("day")}`,
+    hour: Number(pick("hour") ?? 0),
+  };
+}
+
+function leagueDateIso(sport, daysAhead = 0) {
+  return leagueDateParts(leagueTimezone(sport), new Date(), daysAhead).iso;
 }
 
 function defaultDateForSport(sport) {
-  return offsetIso(SPORT_DEFAULT_DAYS[sport] ?? 0);
+  const tz = leagueTimezone(sport);
+  const meta = leagueMeta(sport);
+  if (meta?.defaultDate) {
+    return meta.defaultDate;
+  }
+  const { hour } = leagueDateParts(tz);
+  if (["mlb", "nfl", "nba"].includes(sport) && hour < 10) {
+    return leagueDateIso(sport, -1);
+  }
+  return leagueDateIso(sport, 0);
 }
 
-function formatDateLabel(iso) {
-  const today = offsetIso(0);
-  const tomorrow = offsetIso(1);
-  const yesterday = offsetIso(-1);
+function formatDateLabel(iso, sport = sportSelect.value) {
+  const tz = leagueTimezone(sport);
+  const today = leagueDateIso(sport, 0);
+  const tomorrow = leagueDateIso(sport, 1);
+  const yesterday = leagueDateIso(sport, -1);
   const date = new Date(`${iso}T12:00:00`);
   const formatted = date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
-  if (iso === today) return `Today · ${formatted}`;
-  if (iso === tomorrow) return `Tomorrow · ${formatted}`;
-  if (iso === yesterday) return `Yesterday · ${formatted}`;
-  return formatted;
+  const tzShort = tz.split("/").pop()?.replace("_", " ") || tz;
+
+  if (iso === today) return `Schedule today · ${formatted} (${tzShort})`;
+  if (iso === tomorrow) return `Schedule tomorrow · ${formatted} (${tzShort})`;
+  if (iso === yesterday) return `Schedule yesterday · ${formatted} (${tzShort})`;
+  return `${formatted} (${tzShort})`;
 }
 
 function getSelectedDate() {
@@ -99,12 +137,10 @@ function setActiveScheduleDate(iso, { syncSelect = true } = {}) {
   }
 }
 
-function shiftIsoDate(iso, days) {
-  const date = new Date(`${iso}T12:00:00`);
-  date.setDate(date.getDate() + days);
-  const offset = date.getTimezoneOffset();
-  const local = new Date(date.getTime() - offset * 60 * 1000);
-  return local.toISOString().slice(0, 10);
+function shiftIsoDate(iso, days, sport = sportSelect.value) {
+  const tz = leagueTimezone(sport);
+  const base = new Date(`${iso}T12:00:00`);
+  return leagueDateParts(tz, base, days).iso;
 }
 
 function ensureDateOption(iso) {
@@ -113,7 +149,7 @@ function ensureDateOption(iso) {
   if (exists) return;
   const option = document.createElement("option");
   option.value = iso;
-  option.textContent = formatDateLabel(iso);
+  option.textContent = formatDateLabel(iso, sportSelect.value);
   dateSelect.appendChild(option);
   dateOptionsCache = [...dateOptionsCache, iso].sort();
 }
@@ -124,15 +160,21 @@ function availableDatesForLeague(league) {
     return [...new Set(meta.availableDates)].sort();
   }
 
-  const dates = new Set();
-  const defaultDate = defaultDateForSport(league);
-  dates.add(defaultDate);
-  dates.add(offsetIso(0));
-  dates.add(offsetIso(1));
-  dates.add(offsetIso(-1));
+  const dates = new Set([
+    defaultDateForSport(league),
+    leagueDateIso(league, 0),
+    leagueDateIso(league, 1),
+    leagueDateIso(league, -1),
+  ]);
 
-  for (let offset = -3; offset <= 7; offset += 1) {
-    dates.add(offsetIso(offset));
+  if (["mlb", "nfl", "nba"].includes(league)) {
+    dates.add(leagueDateIso(league, -2));
+  }
+
+  if (!IS_STATIC_HOST) {
+    for (let offset = -3; offset <= 7; offset += 1) {
+      dates.add(leagueDateIso(league, offset));
+    }
   }
 
   return [...dates].sort();
@@ -145,14 +187,14 @@ function renderDateQuickPicks() {
   }
 
   const current = getSelectedDate();
-  const quickDates = [offsetIso(0), offsetIso(1), defaultDateForSport(sportSelect.value)]
+  const quickDates = [leagueDateIso(sport, 0), leagueDateIso(sport, 1), leagueDateIso(sport, -1), defaultDateForSport(sport)]
     .filter((iso, index, list) => iso && list.indexOf(iso) === index)
     .sort();
 
   dateQuickEl.innerHTML = quickDates
     .map(
       (iso) =>
-        `<button type="button" class="date-chip${iso === current ? " active" : ""}" data-date="${iso}">${formatDateLabel(iso)}</button>`
+        `<button type="button" class="date-chip${iso === current ? " active" : ""}" data-date="${iso}">${formatDateLabel(iso, sport)}</button>`
     )
     .join("");
 
@@ -187,9 +229,9 @@ function populateDateSelect(league, preferredDate = null) {
   const existingKey = [...dateSelect.options].map((option) => option.value).join("|");
 
   if (optionsKey !== existingKey) {
-    dateSelect.innerHTML = options
-      .map((iso) => `<option value="${iso}">${formatDateLabel(iso)}</option>`)
-      .join("");
+  dateSelect.innerHTML = options
+    .map((iso) => `<option value="${iso}">${formatDateLabel(iso, league)}</option>`)
+    .join("");
   }
 
   dateSelect.disabled = false;
@@ -1009,12 +1051,16 @@ async function loadDashboard(force = false) {
       hideBanner();
       renderOverview();
     } else {
-      setActiveScheduleDate(requestedDate, { syncSelect: true });
-      populateDateSelect(sportSelect.value, requestedDate);
-      statDate.textContent = requestedDate;
+      const scheduleDate = payload.defaultScheduleDate || payload.scheduleDate || requestedDate;
+      setActiveScheduleDate(scheduleDate, { syncSelect: true });
+      populateDateSelect(sportSelect.value, scheduleDate);
+      statDate.textContent = `${scheduleDate}${payload.scheduleTimezone ? ` (${payload.scheduleTimezone})` : ""}`;
 
       if (IS_STATIC_HOST) {
         let note = `Predictions update every 30 min on GitHub. Live scores refresh every ${manifestData?.liveScoreRefreshSeconds || 90}s in your browser.`;
+        if (payload.scheduleTimezone) {
+          note += ` MLB/US sports use ${payload.scheduleTimezone} schedule dates (not your local calendar day).`;
+        }
         if (payload._liveFallback) {
           note += ` Showing live ESPN schedule for ${requestedDate} (predictions load when snapshot is built).`;
         } else if (payload._dateFallback) {

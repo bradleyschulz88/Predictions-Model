@@ -12,21 +12,15 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from accuracy_tracker import grade_predictions, record_predictions  # noqa: E402
-from mlb_data import default_game_date, fetch_dashboard_data  # noqa: E402
+from mlb_data import fetch_dashboard_data  # noqa: E402
+from schedule_dates import default_game_date, get_schedule_timezone, schedule_dates_for_league  # noqa: E402
 from sports_config import LEAGUES, get_league, list_league_ids  # noqa: E402
 
 OUTPUT_DIR = ROOT / "docs" / "data"
 
 
 def dates_for_league(league: str) -> list[str]:
-    today = date.today().isoformat()
-    tomorrow = (date.today() + timedelta(days=1)).isoformat()
-    default = default_game_date(league)
-    ordered: list[str] = []
-    for candidate in (default, today, tomorrow):
-        if candidate not in ordered:
-            ordered.append(candidate)
-    return ordered
+    return schedule_dates_for_league(league)
 
 
 def build_league_payload(league: str, date_value: str, *, include_enrichment: bool) -> dict:
@@ -140,6 +134,7 @@ def main() -> int:
                 "id": league,
                 "label": league_config.label,
                 "espnPath": league_config.espn_path,
+                "scheduleTimezone": get_schedule_timezone(league),
                 "scheduleDate": primary_payload.get("scheduleDate"),
                 "defaultDate": default_date,
                 "availableDates": available_dates,

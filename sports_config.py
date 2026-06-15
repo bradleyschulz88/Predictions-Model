@@ -28,7 +28,7 @@ LEAGUES: dict[str, LeagueConfig] = {
         supports_pitchers=True,
         supports_draw=False,
         lineup_label="Batting lineup",
-        default_days_ahead=1,
+        default_days_ahead=0,
     ),
     "nfl": LeagueConfig(
         id="nfl",

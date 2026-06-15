@@ -37,8 +37,9 @@ class ESPNDataTests(unittest.TestCase):
         self.assertEqual(payload["source"], "espn")
         self.assertEqual(payload["gameCount"], 15)
 
-    def test_default_game_date_is_tomorrow(self) -> None:
-        self.assertRegex(default_game_date(), r"^\d{4}-\d{2}-\d{2}$")
+    def test_default_game_date_uses_league_timezone(self) -> None:
+        self.assertRegex(default_game_date("mlb"), r"^\d{4}-\d{2}-\d{2}$")
+        self.assertRegex(default_game_date("afl"), r"^\d{4}-\d{2}-\d{2}$")
 
 
 WORLDCUP_FIXTURE = FIXTURES / "espn_worldcup_scoreboard_20260615.json"

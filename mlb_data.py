@@ -12,13 +12,9 @@ from espn_client import ESPNClientError, fetch_scoreboard, parse_scoreboard
 from espn_enrichment import enrich_game, enrich_games
 from data_providers import enrich_games_with_providers
 from mlb_predictions import apply_predictions
+from schedule_dates import default_game_date, get_schedule_timezone
 from sbr_client import SBRClientError, build_odds_url, get_game_rows, get_page_props
 from sports_config import LEAGUES, get_league
-
-
-def default_game_date(league: str = "mlb") -> str:
-    league_config = get_league(league)
-    return (date.today() + timedelta(days=league_config.default_days_ahead)).isoformat()
 
 
 def game_summary(row: dict[str, Any]) -> dict[str, Any]:
@@ -318,6 +314,8 @@ def fetch_dashboard_data(
 
     payload = build_dashboard_payload_from_espn_games(games, url=url, league=league)
     payload["scheduleDate"] = date_value
+    payload["scheduleTimezone"] = get_schedule_timezone(league)
+    payload["defaultScheduleDate"] = default_game_date(league)
 
     if include_odds:
         payload["sportsbooks"] = sorted(
