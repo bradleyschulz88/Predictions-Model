@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-16T11:40:43.703219+00:00",
+  "updatedAt": "2026-06-16T16:41:36.000667+00:00",
   "summary": {
     "last7Days": {
       "correct": 27,
@@ -7,7 +7,7 @@
       "pct": 54.0,
       "units": 0.524,
       "roiPct": 1.0,
-      "pending": 37
+      "pending": 38
     },
     "allTime": {
       "correct": 27,
@@ -15,7 +15,7 @@
       "pct": 54.0,
       "units": 0.524,
       "roiPct": 1.0,
-      "pending": 37
+      "pending": 38
     },
     "byLeague": {
       "mlb": {
@@ -1003,6 +1003,25 @@
     }
   ],
   "pendingPicks": [
+    {
+      "eventId": "1133604",
+      "league": "afl",
+      "scheduleDate": "2026-06-18",
+      "matchup": "Geelong Cats @ Fremantle",
+      "predicted": "Fremantle",
+      "predictedSide": "home",
+      "outcomeLabel": "Fremantle to win",
+      "confidence": 85.7,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-06-18"
+    },
     {
       "eventId": "760437",
       "league": "worldcup",
@@ -3360,6 +3379,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-06-17"
+    },
+    "1133604": {
+      "eventId": "1133604",
+      "league": "afl",
+      "scheduleDate": "2026-06-18",
+      "matchup": "Geelong Cats @ Fremantle",
+      "predicted": "Fremantle",
+      "predictedSide": "home",
+      "outcomeLabel": "Fremantle to win",
+      "confidence": 85.7,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-06-18"
     }
   }
 }
