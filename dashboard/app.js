@@ -1935,6 +1935,19 @@ function renderOverview() {
   });
 }
 
+function rankTierClass(rank) {
+  const value = Number(rank);
+  if (value === 1) return "rank-tier-gold";
+  if (value === 2) return "rank-tier-silver";
+  if (value === 3) return "rank-tier-bronze";
+  return "";
+}
+
+function renderConfidenceRing(confidence) {
+  const pct = Math.max(0, Math.min(100, Number(confidence) || 0));
+  return `<div class="confidence-ring" style="--pct: ${pct}" title="${pct}% confidence"><span>${pct}%</span></div>`;
+}
+
 function renderTopPicks(games) {
   const top = (games || []).slice(0, 3);
   if (!top.length) {
@@ -1944,14 +1957,17 @@ function renderTopPicks(games) {
   }
   topPicksEl.classList.remove("hidden");
   topPicksEl.innerHTML = `
-    <h2 class="top-picks-title">Top picks today</h2>
+    <div class="top-picks-head">
+      <h2 class="top-picks-title">Top picks today</h2>
+      <p class="top-picks-sub">Highest-confidence model selections</p>
+    </div>
     <div class="top-picks-grid">
       ${top
         .map(
           (game) => `
-        <article class="top-pick-card">
-          <span class="rank-badge">#${game.predictionRank}</span>
-          <strong>${game.prediction?.outcomeLabel || game.matchup}</strong>
+        <article class="top-pick-card ${rankTierClass(game.predictionRank)}">
+          <div class="top-pick-rank">#${game.predictionRank}</div>
+          <strong class="top-pick-label">${game.prediction?.outcomeLabel || game.matchup}</strong>
           <span class="top-pick-meta">${game.prediction?.confidence}% · ${game.prediction?.confidenceLabel || ""}</span>
           ${game.prediction?.modelEdge?.edgeLabel ? `<span class="edge-chip">${game.prediction.modelEdge.edgeLabel}</span>` : ""}
         </article>
@@ -2185,7 +2201,7 @@ function renderPrediction(game) {
           <h3 class="prediction-title">${prediction.outcomeLabel}</h3>
           <p class="prediction-subtitle">${prediction.confidence}% confidence · sorted highest to lowest</p>
         </div>
-        <div class="confidence-badge">${prediction.confidence}%</div>
+        <div class="confidence-ring-wrap">${renderConfidenceRing(prediction.confidence)}</div>
       </div>
       ${liveBlock}
       ${modelPickBlock}
@@ -2246,10 +2262,10 @@ function renderGames(games) {
       const detailsOpen = !game.isFinal;
 
       return `
-        <article class="game-card" id="game-${game.eventId}">
+        <article class="game-card ${rankTierClass(game.predictionRank)}${game.isLive ? " game-live" : ""}${game.isFinal ? " game-final" : ""}" id="game-${game.eventId}">
           <details class="game-details"${detailsOpen ? " open" : ""}>
             <summary class="game-summary-bar">
-              <span class="rank-badge small">#${game.predictionRank || "?"}</span>
+              <span class="rank-badge small ${rankTierClass(game.predictionRank)}">#${game.predictionRank || "?"}</span>
               <span class="summary-main">
                 <span class="summary-matchup">${game.matchup || "Unknown"}</span>
                 <span class="summary-pick">${game.prediction?.outcomeLabel || ""} · ${pickProbabilitySummary(game.prediction) || `${game.prediction?.confidence || "?"}%`}</span>

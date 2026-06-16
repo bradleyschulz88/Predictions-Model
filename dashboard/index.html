@@ -3,22 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#4ade80">
+  <meta name="theme-color" content="#060a12">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="description" content="Win predictions for MLB, NFL, NBA, World Cup, EPL and AFL">
   <title>Sports Predictions Dashboard</title>
   <link rel="manifest" href="./manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+  <div class="ambient-bg" aria-hidden="true"></div>
   <div class="app">
-    <header class="header">
+    <header class="header shell-card">
       <div class="header-brand">
-        <p class="eyebrow">ESPN Schedule + Predictions</p>
-        <h1 id="dashboard-title">Sports Predictions Dashboard</h1>
+        <div class="brand-lockup">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <div>
+            <p class="eyebrow">ESPN Schedule + Predictions</p>
+            <h1 id="dashboard-title">Sports Predictions Dashboard</h1>
+          </div>
+        </div>
       </div>
 
       <div class="header-toolbar">
@@ -86,7 +92,7 @@
       </div>
     </header>
 
-    <div class="page-bar">
+    <div class="page-bar shell-card">
       <nav class="view-tabs" id="view-tabs" aria-label="Dashboard views">
         <button type="button" class="view-tab active" data-view="predictions">Predictions</button>
         <button type="button" class="view-tab" data-view="my-bets">My Bets</button>
