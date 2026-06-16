@@ -73,11 +73,13 @@ let dateOptionsCache = [];
 
 let activeView = "predictions";
 let betFormDraft = {
-  type: "single",
-  legs: [{ matchup: "", pick: "", legOdds: "" }],
-  decimalOdds: "",
+  betDate: "",
+  game: "",
   stake: "",
-  betDate: todayBetDateInput(),
+  odds: "",
+  eventId: null,
+  league: null,
+  scheduleDate: null,
 };
 
 const MY_BETS_KEY = "predictions-dashboard-my-bets";
@@ -266,13 +268,10 @@ function convertOddsInputBetweenFormats(value, fromFormat, toFormat) {
 
 function convertBetFormDraftOddsFormat(newFormat, oldFormat = getOddsFormat()) {
   if (!betFormDraft || oldFormat === newFormat) return;
+  const currentOdds = betFormDraft.odds ?? betFormDraft.decimalOdds ?? "";
   betFormDraft = {
     ...betFormDraft,
-    decimalOdds: convertOddsInputBetweenFormats(betFormDraft.decimalOdds, oldFormat, newFormat),
-    legs: (betFormDraft.legs || []).map((leg) => ({
-      ...leg,
-      legOdds: convertOddsInputBetweenFormats(leg.legOdds ?? leg.legDecimalOdds ?? "", oldFormat, newFormat),
-    })),
+    odds: convertOddsInputBetweenFormats(currentOdds, oldFormat, newFormat),
   };
 }
 
@@ -328,11 +327,13 @@ function escapeHtml(value) {
 
 function defaultBetFormDraft(overrides = {}) {
   return {
-    type: "single",
-    legs: [{ matchup: "", pick: "", legOdds: "" }],
-    decimalOdds: "",
-    stake: "",
     betDate: todayBetDateInput(),
+    game: "",
+    stake: "",
+    odds: "",
+    eventId: null,
+    league: null,
+    scheduleDate: null,
     ...overrides,
   };
 }
@@ -340,10 +341,10 @@ function defaultBetFormDraft(overrides = {}) {
 function collectBetFormDraftFromForm(form, draft = {}) {
   return {
     ...draft,
-    legs: form ? collectLegsFromForm(form) : draft.legs,
-    decimalOdds: form?.querySelector("#bet-decimal-odds")?.value ?? draft.decimalOdds ?? "",
-    stake: form?.querySelector("#bet-stake")?.value ?? draft.stake ?? "",
     betDate: form?.querySelector("#bet-date")?.value ?? draft.betDate ?? todayBetDateInput(),
+    game: form?.querySelector("#bet-game")?.value?.trim() ?? draft.game ?? "",
+    stake: form?.querySelector("#bet-stake")?.value ?? draft.stake ?? "",
+    odds: form?.querySelector("#bet-odds")?.value ?? draft.odds ?? "",
   };
 }
 
@@ -999,69 +1000,44 @@ function exportBetsToClipboard(bets) {
   return [header, ...lines].join("\n");
 }
 
-function collectLegsFromForm(form) {
-  return [...form.querySelectorAll(".parlay-leg-row")].map((row) => ({
-    matchup: row.querySelector(".leg-matchup")?.value?.trim() || "",
-    pick: row.querySelector(".leg-pick")?.value?.trim() || "",
-    legOdds: row.querySelector(".leg-odds")?.value?.trim() || "",
-    eventId: row.dataset.eventId || null,
-    league: row.dataset.league || null,
-    scheduleDate: row.dataset.scheduleDate || null,
-  }));
-}
-
 function addMyBet(entry, format = getOddsFormat()) {
+  const game = String(entry.game ?? "").trim();
   const stake = parseStakeInput(entry.stake);
-  const type = entry.type === "parlay" ? "parlay" : "single";
-  const legs = (entry.legs || [])
-    .filter((leg) => leg.matchup && leg.pick)
-    .map((leg) => ({
-      id: createBetId(),
-      matchup: leg.matchup.trim(),
-      pick: leg.pick.trim(),
-      legDecimalOdds: parseOddsInput(leg.legOdds, format),
-      eventId: leg.eventId || null,
-      league: leg.league || null,
-      scheduleDate: leg.scheduleDate || null,
-      status: "pending",
-      resultWinner: null,
-    }));
+  const decimalOdds = parseOddsInput(entry.odds ?? entry.decimalOdds, format);
 
-  if (!legs.length || stake == null) {
-    showBanner("Add at least one leg and a stake amount.");
+  if (!game) {
+    showBanner("Enter a game.");
+    return false;
+  }
+  if (stake == null) {
+    showBanner("Enter bet amount.");
+    return false;
+  }
+  if (decimalOdds == null) {
+    showBanner(`Enter odds (e.g. ${formatOddsInputPlaceholder(format)}).`);
     return false;
   }
 
-  let decimalOdds = parseOddsInput(entry.decimalOdds, format);
-  if (type === "single") {
-    if (decimalOdds == null) {
-      decimalOdds = legs[0].legDecimalOdds;
-    }
-    if (decimalOdds == null) {
-      showBanner(`Enter ${oddsFieldLabel({ format })} (e.g. ${formatOddsInputPlaceholder(format)}).`);
-      return false;
-    }
-    legs[0].legDecimalOdds = decimalOdds;
-  } else {
-    if (legs.length < 2) {
-      showBanner("A parlay/multi needs at least 2 legs.");
-      return false;
-    }
-    if (decimalOdds == null) {
-      decimalOdds = productDecimalOdds(legs, format);
-    }
-    if (decimalOdds == null) {
-      showBanner(`Enter ${oddsFieldLabel({ combined: true, format })} for the parlay, or odds on each leg.`);
-      return false;
-    }
-  }
+  const legs = [
+    {
+      id: createBetId(),
+      matchup: game,
+      pick: game,
+      legDecimalOdds: decimalOdds,
+      eventId: entry.eventId || null,
+      league: entry.league || null,
+      scheduleDate: entry.scheduleDate || null,
+      status: "pending",
+      resultWinner: null,
+    },
+  ];
 
   const bets = loadMyBets();
   bets.unshift(
     normalizeBet({
       id: createBetId(),
       createdAt: parseBetDateInput(entry.betDate),
-      type,
+      type: "single",
       stake,
       decimalOdds,
       legs,
@@ -1119,38 +1095,15 @@ function settleMyBetManual(betId, won) {
 
 function openBetFormFromGame(game) {
   if (!game?.prediction) return;
+  const pick = game.prediction.outcomeLabel || game.prediction.predictedWinner || "";
   betFormDraft = defaultBetFormDraft({
-    type: "single",
+    game: pick ? `${game.matchup || ""} — ${pick}`.replace(/^ — /, "") : game.matchup || "",
     betDate: betDateInputFromIso(lastPayload?.scheduleDate || getSelectedDate()),
-    legs: [
-      {
-        matchup: game.matchup || "",
-        pick: game.prediction.predictedWinner || "",
-        legOdds: "",
-        eventId: game.eventId || null,
-        league: game.league || sportSelect.value,
-        scheduleDate: lastPayload?.scheduleDate || getSelectedDate(),
-      },
-    ],
+    eventId: game.eventId || null,
+    league: game.league || sportSelect.value,
+    scheduleDate: lastPayload?.scheduleDate || getSelectedDate(),
   });
   switchView("my-bets");
-}
-
-function addParlayLegToDraft() {
-  betFormDraft = {
-    ...defaultBetFormDraft(betFormDraft),
-    type: "parlay",
-    legs: [...(betFormDraft?.legs || []), { matchup: "", pick: "", legOdds: "" }],
-  };
-  renderMyBetsView();
-}
-
-function removeParlayLegFromDraft(index) {
-  const legs = [...(betFormDraft?.legs || [])];
-  if (legs.length <= 1) return;
-  legs.splice(index, 1);
-  betFormDraft = { ...defaultBetFormDraft(betFormDraft), type: betFormDraft?.type || "parlay", legs };
-  renderMyBetsView();
 }
 
 function isBetLoggedForGame(eventId) {
@@ -1211,36 +1164,9 @@ function renderMyBetsView() {
   const bankroll = loadBankrollSettings();
   const summary = summarizeMyBets(bets, bankroll);
   const draft = defaultBetFormDraft(betFormDraft);
-  const isParlay = draft.type === "parlay";
   const oddsFormat = getOddsFormat();
-  const suggestedParlayOdds = productDecimalOdds(draft.legs, oddsFormat);
-
-  const legRows = draft.legs
-    .map(
-      (leg, index) => `
-        <div class="parlay-leg-row" data-leg-index="${index}" data-event-id="${escapeAttr(leg.eventId || "")}" data-league="${escapeAttr(leg.league || "")}" data-schedule-date="${escapeAttr(leg.scheduleDate || "")}">
-          <div class="parlay-leg-head">
-            <strong>Leg ${index + 1}</strong>
-            ${draft.legs.length > 1 ? `<button type="button" class="bet-action-btn danger" data-leg-action="remove" data-leg-index="${index}">Remove</button>` : ""}
-          </div>
-          <div class="parlay-leg-fields">
-            <label class="field">
-              <span>Matchup</span>
-              <input class="leg-matchup" type="text" required placeholder="Team A @ Team B" value="${escapeAttr(leg.matchup || "")}">
-            </label>
-            <label class="field">
-              <span>Your pick</span>
-              <input class="leg-pick" type="text" required placeholder="Team or Draw" value="${escapeAttr(leg.pick || "")}">
-            </label>
-            <label class="field">
-              <span>${oddsFieldLabel({ leg: true, format: oddsFormat })}</span>
-              <input class="leg-odds" type="text" inputmode="decimal" placeholder="${formatOddsInputPlaceholder(oddsFormat)}" value="${escapeAttr(leg.legOdds ?? "")}">
-            </label>
-          </div>
-        </div>
-      `
-    )
-    .join("");
+  const oddsLabel = oddsFormat === "american" ? "Odds (American)" : "Odds (Decimal)";
+  const oddsPlaceholder = formatOddsInputPlaceholder(oddsFormat);
 
   const sortedBets = [...bets].sort(
     (left, right) => new Date(right.createdAt || 0).getTime() - new Date(left.createdAt || 0).getTime()
@@ -1315,6 +1241,29 @@ function renderMyBetsView() {
       </div>
     </section>
 
+    <section class="my-bets-form-card">
+      <h2>Log a bet</h2>
+      <form id="my-bet-form" class="my-bet-form bet-log-form">
+        <label class="field">
+          <span>Date</span>
+          <input id="bet-date" type="date" required value="${escapeAttr(draft.betDate ?? todayBetDateInput())}">
+        </label>
+        <label class="field field-game">
+          <span>Game</span>
+          <input id="bet-game" type="text" required placeholder="MLB, Yankees @ Red Sox, etc." value="${escapeAttr(draft.game ?? "")}">
+        </label>
+        <label class="field">
+          <span>Bet ($)</span>
+          <input id="bet-stake" type="text" inputmode="decimal" required placeholder="100" value="${escapeAttr(draft.stake ?? "")}">
+        </label>
+        <label class="field">
+          <span>${oddsLabel}</span>
+          <input id="bet-odds" type="text" inputmode="decimal" required placeholder="${escapeAttr(oddsPlaceholder)}" value="${escapeAttr(draft.odds ?? "")}">
+        </label>
+        <button type="submit" class="primary-btn bet-form-submit">Add bet</button>
+      </form>
+    </section>
+
     <section class="my-bets-import-card">
       <h2>Import from spreadsheet</h2>
       <p class="my-bets-note">Export from Google Sheets: <strong>File → Download → Comma-separated values (.csv)</strong>, then upload here. Needs columns <strong>Date Placed, Game, Bet, Odd, W/L</strong> — P/L formulas are ignored and recalculated.</p>
@@ -1358,88 +1307,20 @@ function renderMyBetsView() {
         </table>
       </div>
     </section>
-
-    <section class="my-bets-form-card">
-      <h2>Log a bet</h2>
-      <form id="my-bet-form" class="my-bet-form">
-        <div class="bet-type-toggle">
-          <label class="bet-type-option">
-            <input type="radio" name="bet-type" value="single" ${isParlay ? "" : "checked"}>
-            <span>Single</span>
-          </label>
-          <label class="bet-type-option">
-            <input type="radio" name="bet-type" value="parlay" ${isParlay ? "checked" : ""}>
-            <span>Parlay / Multi</span>
-          </label>
-        </div>
-
-        <label class="field">
-          <span>Date placed</span>
-          <input id="bet-date" type="date" required value="${escapeAttr(draft.betDate ?? todayBetDateInput())}">
-        </label>
-
-        <div class="parlay-legs-block">
-          <div class="parlay-legs-header">
-            <h3>${isParlay ? "Parlay legs" : "Bet leg"}</h3>
-            ${isParlay ? `<button type="button" class="bet-action-btn" id="add-parlay-leg">+ Add leg</button>` : ""}
-          </div>
-          <div id="parlay-legs">${legRows}</div>
-        </div>
-
-        <label class="field">
-          <span>${oddsFieldLabel({ combined: isParlay, format: oddsFormat })}</span>
-          <input id="bet-decimal-odds" type="text" inputmode="decimal" ${isParlay ? "" : "required"} placeholder="${isParlay ? `${formatOddsInputPlaceholder(oddsFormat)} (or leave blank to multiply leg odds)` : formatOddsInputPlaceholder(oddsFormat)}" value="${escapeAttr(draft.decimalOdds ?? "")}">
-          ${isParlay && suggestedParlayOdds ? `<span class="field-hint">Leg product: ${formatOddsDisplay(suggestedParlayOdds, oddsFormat)}</span>` : ""}
-        </label>
-
-        <label class="field">
-          <span>Amount bet ($)</span>
-          <input id="bet-stake" type="number" min="0.01" step="0.01" required placeholder="25" value="${escapeAttr(draft.stake ?? "")}">
-        </label>
-
-        <button type="submit" class="primary-btn">${isParlay ? "Add parlay" : "Add bet"}</button>
-      </form>
-    </section>
   `;
-
-  myBetsViewEl.querySelectorAll('input[name="bet-type"]').forEach((input) => {
-    input.addEventListener("change", () => {
-      const form = myBetsViewEl.querySelector("#my-bet-form");
-      const current = collectBetFormDraftFromForm(form, draft);
-      const type = input.value === "parlay" ? "parlay" : "single";
-      const legs =
-        type === "parlay" && current.legs.length < 2
-          ? [...current.legs, { matchup: "", pick: "", legOdds: "" }]
-          : current.legs;
-      betFormDraft = { ...current, type, legs };
-      renderMyBetsView();
-    });
-  });
-
-  myBetsViewEl.querySelector("#add-parlay-leg")?.addEventListener("click", () => {
-    const form = myBetsViewEl.querySelector("#my-bet-form");
-    betFormDraft = { ...collectBetFormDraftFromForm(form, { ...draft, type: "parlay" }) };
-    addParlayLegToDraft();
-  });
-
-  myBetsViewEl.querySelectorAll("[data-leg-action='remove']").forEach((button) => {
-    button.addEventListener("click", () => {
-      const form = myBetsViewEl.querySelector("#my-bet-form");
-      betFormDraft = collectBetFormDraftFromForm(form, draft);
-      removeParlayLegFromDraft(Number(button.dataset.legIndex));
-    });
-  });
 
   myBetsViewEl.querySelector("#my-bet-form")?.addEventListener("submit", (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    const type = form.querySelector('input[name="bet-type"]:checked')?.value || "single";
+    const draftValues = collectBetFormDraftFromForm(form, betFormDraft);
     const success = addMyBet({
-      type,
-      legs: collectLegsFromForm(form),
-      decimalOdds: form.querySelector("#bet-decimal-odds")?.value,
-      stake: form.querySelector("#bet-stake")?.value,
-      betDate: form.querySelector("#bet-date")?.value,
+      game: draftValues.game,
+      stake: draftValues.stake,
+      odds: draftValues.odds,
+      betDate: draftValues.betDate,
+      eventId: betFormDraft?.eventId || null,
+      league: betFormDraft?.league || null,
+      scheduleDate: betFormDraft?.scheduleDate || null,
     });
     if (success) form.reset();
   });
@@ -2784,13 +2665,7 @@ async function initDashboard() {
     if (activeView === "my-bets") {
       const form = myBetsViewEl?.querySelector("#my-bet-form");
       if (form) {
-        betFormDraft = {
-          ...defaultBetFormDraft(betFormDraft),
-          type: form.querySelector('input[name="bet-type"]:checked')?.value || betFormDraft.type,
-          legs: collectLegsFromForm(form),
-          decimalOdds: form.querySelector("#bet-decimal-odds")?.value || betFormDraft.decimalOdds,
-          stake: form.querySelector("#bet-stake")?.value || betFormDraft.stake,
-        };
+        betFormDraft = collectBetFormDraftFromForm(form, betFormDraft);
       }
     }
 

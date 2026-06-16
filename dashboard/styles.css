@@ -1190,9 +1190,53 @@ button:hover {
 
 .my-bet-form {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 12px;
   align-items: end;
+}
+
+.bet-log-form {
+  grid-template-columns: minmax(130px, 0.4fr) minmax(0, 1fr);
+  gap: 14px 16px;
+}
+
+.bet-log-form .field-game {
+  grid-column: 1 / -1;
+}
+
+.bet-log-form .field span {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bet-log-form .field input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 11px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.bet-log-form .field input:focus {
+  outline: none;
+  border-color: rgba(74, 222, 128, 0.45);
+}
+
+.bet-form-submit {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-top: 4px;
+}
+
+@media (max-width: 640px) {
+  .bet-log-form {
+    grid-template-columns: 1fr;
+  }
 }
 
 .primary-btn {
