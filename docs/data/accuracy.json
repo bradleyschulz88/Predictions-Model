@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-06-16T01:15:30.111396+00:00",
+  "updatedAt": "2026-06-16T01:26:49.535497+00:00",
   "summary": {
     "last7Days": {
-      "correct": 20,
-      "total": 39,
-      "pct": 51.3,
-      "units": 0.216,
-      "roiPct": 0.6,
-      "pending": 29
+      "correct": 21,
+      "total": 40,
+      "pct": 52.5,
+      "units": 0.946,
+      "roiPct": 2.4,
+      "pending": 28
     },
     "allTime": {
-      "correct": 20,
-      "total": 39,
-      "pct": 51.3,
-      "units": 0.216,
-      "roiPct": 0.6,
-      "pending": 29
+      "correct": 21,
+      "total": 40,
+      "pct": 52.5,
+      "units": 0.946,
+      "roiPct": 2.4,
+      "pending": 28
     },
     "byLeague": {
+      "mlb": {
+        "correct": 17,
+        "total": 31,
+        "pct": 54.8,
+        "units": 1.946,
+        "roiPct": 6.3,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 4,
         "total": 8,
@@ -33,14 +41,6 @@
         "units": -1.0,
         "roiPct": -100.0,
         "pending": 0
-      },
-      "mlb": {
-        "correct": 16,
-        "total": 30,
-        "pct": 53.3,
-        "units": 1.216,
-        "roiPct": 4.1,
-        "pending": 0
       }
     },
     "streak": {
@@ -51,6 +51,25 @@
     }
   },
   "recentResults": [
+    {
+      "eventId": "401815764",
+      "league": "mlb",
+      "scheduleDate": "2026-06-15",
+      "matchup": "Kansas City Royals @ Washington Nationals",
+      "predicted": "Washington Nationals",
+      "predictedSide": "home",
+      "outcomeLabel": "Washington Nationals to win",
+      "confidence": 77.9,
+      "pickOdds": -137,
+      "status": "graded",
+      "actual": "Washington Nationals",
+      "correct": true,
+      "units": 0.73,
+      "homeScore": "7",
+      "awayScore": "3",
+      "gradedAt": "2026-06-16T01:26:47.560547+00:00",
+      "date": "2026-06-15"
+    },
     {
       "eventId": "760429",
       "league": "worldcup",
@@ -1325,25 +1344,6 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-06-15"
-    },
-    {
-      "eventId": "401815764",
-      "league": "mlb",
-      "scheduleDate": "2026-06-15",
-      "matchup": "Kansas City Royals @ Washington Nationals",
-      "predicted": "Washington Nationals",
-      "predictedSide": "home",
-      "outcomeLabel": "Washington Nationals to win",
-      "confidence": 77.9,
-      "pickOdds": -140,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-06-15"
     }
   ],
   "picksByEventId": {
@@ -2401,14 +2401,14 @@
       "predictedSide": "home",
       "outcomeLabel": "Washington Nationals to win",
       "confidence": 77.9,
-      "pickOdds": -140,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "pickOdds": -137,
+      "status": "graded",
+      "actual": "Washington Nationals",
+      "correct": true,
+      "units": 0.73,
+      "homeScore": "7",
+      "awayScore": "3",
+      "gradedAt": "2026-06-16T01:26:47.560547+00:00",
       "date": "2026-06-15"
     },
     "401815767": {
