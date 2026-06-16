@@ -77,6 +77,7 @@ let betFormDraft = {
   legs: [{ matchup: "", pick: "", legOdds: "" }],
   decimalOdds: "",
   stake: "",
+  betDate: todayBetDateInput(),
 };
 
 const MY_BETS_KEY = "predictions-dashboard-my-bets";
@@ -165,6 +166,30 @@ function formatBetDateShort(iso) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
+}
+
+function todayBetDateInput() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+
+function betDateInputFromIso(iso) {
+  if (!iso) return todayBetDateInput();
+  const text = String(iso).trim().slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return todayBetDateInput();
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function parseBetDateInput(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return new Date().toISOString();
+  const isoMatch = text.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (isoMatch) {
+    return new Date(`${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}T12:00:00`).toISOString();
+  }
+  return parseSheetDate(text);
 }
 
 function calcBetProfitDecimal(decimalOdds, stake, won) {
@@ -307,7 +332,18 @@ function defaultBetFormDraft(overrides = {}) {
     legs: [{ matchup: "", pick: "", legOdds: "" }],
     decimalOdds: "",
     stake: "",
+    betDate: todayBetDateInput(),
     ...overrides,
+  };
+}
+
+function collectBetFormDraftFromForm(form, draft = {}) {
+  return {
+    ...draft,
+    legs: form ? collectLegsFromForm(form) : draft.legs,
+    decimalOdds: form?.querySelector("#bet-decimal-odds")?.value ?? draft.decimalOdds ?? "",
+    stake: form?.querySelector("#bet-stake")?.value ?? draft.stake ?? "",
+    betDate: form?.querySelector("#bet-date")?.value ?? draft.betDate ?? todayBetDateInput(),
   };
 }
 
@@ -1024,7 +1060,7 @@ function addMyBet(entry, format = getOddsFormat()) {
   bets.unshift(
     normalizeBet({
       id: createBetId(),
-      createdAt: new Date().toISOString(),
+      createdAt: parseBetDateInput(entry.betDate),
       type,
       stake,
       decimalOdds,
@@ -1042,6 +1078,15 @@ function addMyBet(entry, format = getOddsFormat()) {
 
 function deleteMyBet(betId) {
   saveMyBets(loadMyBets().filter((bet) => bet.id !== betId));
+  renderMyBetsView();
+}
+
+function updateMyBetDate(betId, dateValue) {
+  const bets = loadMyBets().map((bet) => {
+    if (bet.id !== betId) return bet;
+    return normalizeBet({ ...bet, createdAt: parseBetDateInput(dateValue) });
+  });
+  saveMyBets(bets);
   renderMyBetsView();
 }
 
@@ -1076,6 +1121,7 @@ function openBetFormFromGame(game) {
   if (!game?.prediction) return;
   betFormDraft = defaultBetFormDraft({
     type: "single",
+    betDate: betDateInputFromIso(lastPayload?.scheduleDate || getSelectedDate()),
     legs: [
       {
         matchup: game.matchup || "",
@@ -1224,7 +1270,9 @@ function renderMyBetsView() {
 
           return `
             <tr class="${statusClass}">
-              <td>${formatBetDateShort(normalized.createdAt)}</td>
+              <td>
+                <input type="date" class="bet-date-input" data-bet-id="${normalized.id}" value="${betDateInputFromIso(normalized.createdAt)}" title="Date placed">
+              </td>
               <td>
                 <strong>${escapeHtml(betGameLabel(normalized))}</strong>
                 ${normalized.type === "parlay" ? `<span class="bet-pick-line">${normalized.legs.length} legs</span>` : ""}
@@ -1325,6 +1373,11 @@ function renderMyBetsView() {
           </label>
         </div>
 
+        <label class="field">
+          <span>Date placed</span>
+          <input id="bet-date" type="date" required value="${escapeAttr(draft.betDate ?? todayBetDateInput())}">
+        </label>
+
         <div class="parlay-legs-block">
           <div class="parlay-legs-header">
             <h3>${isParlay ? "Parlay legs" : "Bet leg"}</h3>
@@ -1352,12 +1405,7 @@ function renderMyBetsView() {
   myBetsViewEl.querySelectorAll('input[name="bet-type"]').forEach((input) => {
     input.addEventListener("change", () => {
       const form = myBetsViewEl.querySelector("#my-bet-form");
-      const current = {
-        ...draft,
-        legs: form ? collectLegsFromForm(form) : draft.legs,
-        decimalOdds: form?.querySelector("#bet-decimal-odds")?.value || draft.decimalOdds,
-        stake: form?.querySelector("#bet-stake")?.value || draft.stake,
-      };
+      const current = collectBetFormDraftFromForm(form, draft);
       const type = input.value === "parlay" ? "parlay" : "single";
       const legs =
         type === "parlay" && current.legs.length < 2
@@ -1370,25 +1418,14 @@ function renderMyBetsView() {
 
   myBetsViewEl.querySelector("#add-parlay-leg")?.addEventListener("click", () => {
     const form = myBetsViewEl.querySelector("#my-bet-form");
-    betFormDraft = {
-      ...draft,
-      type: "parlay",
-      legs: collectLegsFromForm(form),
-      decimalOdds: form.querySelector("#bet-decimal-odds")?.value || "",
-      stake: form.querySelector("#bet-stake")?.value || "",
-    };
+    betFormDraft = { ...collectBetFormDraftFromForm(form, { ...draft, type: "parlay" }) };
     addParlayLegToDraft();
   });
 
   myBetsViewEl.querySelectorAll("[data-leg-action='remove']").forEach((button) => {
     button.addEventListener("click", () => {
       const form = myBetsViewEl.querySelector("#my-bet-form");
-      betFormDraft = {
-        ...draft,
-        legs: collectLegsFromForm(form),
-        decimalOdds: form.querySelector("#bet-decimal-odds")?.value || "",
-        stake: form.querySelector("#bet-stake")?.value || "",
-      };
+      betFormDraft = collectBetFormDraftFromForm(form, draft);
       removeParlayLegFromDraft(Number(button.dataset.legIndex));
     });
   });
@@ -1402,8 +1439,15 @@ function renderMyBetsView() {
       legs: collectLegsFromForm(form),
       decimalOdds: form.querySelector("#bet-decimal-odds")?.value,
       stake: form.querySelector("#bet-stake")?.value,
+      betDate: form.querySelector("#bet-date")?.value,
     });
     if (success) form.reset();
+  });
+
+  myBetsViewEl.querySelectorAll(".bet-date-input").forEach((input) => {
+    input.addEventListener("change", () => {
+      updateMyBetDate(input.dataset.betId, input.value);
+    });
   });
 
   myBetsViewEl.querySelectorAll("[data-bet-action]").forEach((button) => {

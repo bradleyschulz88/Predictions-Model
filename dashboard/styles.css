@@ -1033,9 +1033,20 @@ button:hover {
   color: #fca5a5;
 }
 
-.bet-wl-pill.bet-pending {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--muted);
+.bet-date-input {
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.82rem;
+  padding: 4px 6px;
+  max-width: 140px;
+}
+
+.bet-date-input:focus {
+  outline: none;
+  border-color: rgba(74, 222, 128, 0.45);
 }
 
 .model-pick-block {
