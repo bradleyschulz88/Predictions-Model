@@ -8,114 +8,130 @@
   <meta name="description" content="Win predictions for MLB, NFL, NBA, World Cup, EPL and AFL">
   <title>Sports Predictions Dashboard</title>
   <link rel="manifest" href="./manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <div class="app">
     <header class="header">
-      <div>
+      <div class="header-brand">
         <p class="eyebrow">ESPN Schedule + Predictions</p>
         <h1 id="dashboard-title">Sports Predictions Dashboard</h1>
       </div>
-      <div class="controls">
-        <label class="field">
-          <span>Sport</span>
-          <select id="sport-select">
-            <option value="overview">All sports</option>
-            <option value="mlb" selected>MLB Baseball</option>
-            <option value="nfl">NFL Football</option>
-            <option value="nba">NBA Basketball</option>
-            <option value="worldcup">FIFA World Cup</option>
-            <option value="epl">Premier League</option>
-            <option value="afl">AFL</option>
-          </select>
-        </label>
-        <label class="field" id="date-field">
-          <span>Date</span>
-          <div class="date-controls">
-            <button type="button" class="date-nav-btn" id="date-prev" title="Previous day">◀</button>
-            <select id="date-select" title="Pick a schedule date"></select>
-            <button type="button" class="date-nav-btn" id="date-next" title="Next day">▶</button>
+
+      <div class="header-toolbar">
+        <div class="toolbar-row toolbar-primary">
+          <label class="field">
+            <span>Sport</span>
+            <select id="sport-select">
+              <option value="overview">All sports</option>
+              <option value="mlb" selected>MLB Baseball</option>
+              <option value="nfl">NFL Football</option>
+              <option value="nba">NBA Basketball</option>
+              <option value="worldcup">FIFA World Cup</option>
+              <option value="epl">Premier League</option>
+              <option value="afl">AFL</option>
+            </select>
+          </label>
+
+          <label class="field" id="date-field">
+            <span>Date</span>
+            <div class="date-controls">
+              <button type="button" class="btn-icon date-nav-btn" id="date-prev" title="Previous day" aria-label="Previous day">‹</button>
+              <select id="date-select" title="Pick a schedule date"></select>
+              <button type="button" class="btn-icon date-nav-btn" id="date-next" title="Next day" aria-label="Next day">›</button>
+            </div>
+            <div class="date-quick" id="date-quick"></div>
+          </label>
+
+          <button id="refresh-btn" type="button" class="btn-primary">Refresh</button>
+        </div>
+
+        <details class="filter-panel" id="filter-panel">
+          <summary>Filters &amp; options</summary>
+          <div class="toolbar-row toolbar-secondary">
+            <label class="field">
+              <span>Confidence</span>
+              <select id="confidence-filter">
+                <option value="0">All games</option>
+                <option value="55">Lean+ (55%+)</option>
+                <option value="65">Strong picks (65%+)</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Search</span>
+              <input id="team-search" type="search" placeholder="Team name…" autocomplete="off">
+            </label>
+            <label class="field" id="market-filter-wrap">
+              <span>Market</span>
+              <select id="view-filter">
+                <option value="Spread|MoneyLine|Total">All main markets</option>
+                <option value="Spread">Spread only</option>
+                <option value="MoneyLine">Moneyline only</option>
+                <option value="Total">Totals only</option>
+              </select>
+            </label>
+            <label class="toggle">
+              <input id="live-scores" type="checkbox" checked>
+              <span>Live scores</span>
+            </label>
+            <label class="toggle">
+              <input id="auto-refresh" type="checkbox">
+              <span>Auto-refresh (2m)</span>
+            </label>
           </div>
-          <div class="date-quick" id="date-quick"></div>
-        </label>
-        <label class="field">
-          <span>Odds format</span>
-          <select id="odds-format">
-            <option value="decimal">Decimal</option>
-            <option value="american">American</option>
-          </select>
-        </label>
-        <label class="field">
-          <span>Filter</span>
-          <select id="confidence-filter">
-            <option value="0">All games</option>
-            <option value="55">Lean+ (55%+)</option>
-            <option value="65">Strong picks (65%+)</option>
-          </select>
-        </label>
-        <label class="field">
-          <span>Search</span>
-          <input id="team-search" type="search" placeholder="Team name…" autocomplete="off">
-        </label>
-        <label class="field" id="market-filter-wrap">
-          <span>Market</span>
-          <select id="view-filter">
-            <option value="Spread|MoneyLine|Total">All main markets</option>
-            <option value="Spread">Spread only</option>
-            <option value="MoneyLine">Moneyline only</option>
-            <option value="Total">Totals only</option>
-          </select>
-        </label>
-        <label class="toggle">
-          <input id="live-scores" type="checkbox" checked>
-          <span>Live scores</span>
-        </label>
-        <label class="toggle">
-          <input id="auto-refresh" type="checkbox">
-          <span>Auto-refresh (2m)</span>
-        </label>
-        <button id="refresh-btn" type="button">Refresh</button>
+        </details>
       </div>
     </header>
 
-    <nav class="view-tabs" id="view-tabs" aria-label="Dashboard views">
-      <button type="button" class="view-tab active" data-view="predictions">Predictions</button>
-      <button type="button" class="view-tab" data-view="my-bets">My Bets</button>
-    </nav>
+    <div class="page-bar">
+      <nav class="view-tabs" id="view-tabs" aria-label="Dashboard views">
+        <button type="button" class="view-tab active" data-view="predictions">Predictions</button>
+        <button type="button" class="view-tab" data-view="my-bets">My Bets</button>
+      </nav>
+      <label class="field field-compact page-bar-odds">
+        <span>Odds</span>
+        <select id="odds-format">
+          <option value="decimal">Decimal</option>
+          <option value="american">American</option>
+        </select>
+      </label>
+    </div>
 
     <div id="predictions-view">
-    <section class="stats" id="stats">
-      <article class="stat-card">
-        <p class="stat-label">Games</p>
-        <p class="stat-value" id="stat-games">—</p>
-      </article>
-      <article class="stat-card">
-        <p class="stat-label">Top pick</p>
-        <p class="stat-value stat-small" id="stat-top-pick">—</p>
-      </article>
-      <article class="stat-card">
-        <p class="stat-label">League</p>
-        <p class="stat-value stat-small" id="stat-league">—</p>
-      </article>
-      <article class="stat-card">
-        <p class="stat-label">Schedule date</p>
-        <p class="stat-value stat-small" id="stat-date">—</p>
-      </article>
-      <article class="stat-card">
-        <p class="stat-label">Freshness</p>
-        <p class="stat-value stat-small" id="stat-freshness">—</p>
-      </article>
-      <article class="stat-card">
-        <p class="stat-label">Last updated</p>
-        <p class="stat-value stat-small" id="stat-updated">—</p>
-      </article>
-    </section>
+      <section class="stats-strip" id="stats">
+        <div class="stat-item stat-item-primary">
+          <span class="stat-label">Games</span>
+          <span class="stat-value" id="stat-games">—</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Top pick</span>
+          <span class="stat-value stat-value-sm" id="stat-top-pick">—</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">League</span>
+          <span class="stat-value stat-value-sm" id="stat-league">—</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Schedule</span>
+          <span class="stat-value stat-value-sm" id="stat-date">—</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Freshness</span>
+          <span class="stat-value stat-value-sm" id="stat-freshness">—</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Updated</span>
+          <span class="stat-value stat-value-sm" id="stat-updated">—</span>
+        </div>
+      </section>
 
-    <section id="top-picks" class="top-picks hidden"></section>
-    <p id="freshness-note" class="freshness-note hidden"></p>
-    <div id="banner" class="banner hidden"></div>
-    <main id="games" class="games"></main>
+      <section id="top-picks" class="top-picks hidden"></section>
+      <p id="freshness-note" class="freshness-note hidden"></p>
+      <div id="banner" class="banner hidden"></div>
+      <main id="games" class="games"></main>
     </div>
 
     <section id="my-bets-view" class="my-bets-view hidden" aria-label="Personal bet tracker"></section>

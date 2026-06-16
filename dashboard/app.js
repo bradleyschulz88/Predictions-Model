@@ -1177,13 +1177,7 @@ function switchView(view) {
   myBetsViewEl?.classList.toggle("hidden", isPredictions);
 
   const predictionControls = [
-    sportSelect,
-    dateFieldEl,
-    confidenceFilter?.closest(".field"),
-    teamSearch?.closest(".field"),
-    document.getElementById("market-filter-wrap"),
-    liveScoresToggle?.closest(".toggle"),
-    autoRefresh?.closest(".toggle"),
+    document.querySelector(".header-toolbar"),
   ];
   predictionControls.forEach((el) => {
     if (el) el.classList.toggle("hidden", !isPredictions);
@@ -1276,89 +1270,123 @@ function renderMyBetsView() {
 
   myBetsViewEl.innerHTML = `
     <section class="my-bets-hero">
-      <p class="my-bets-note">Your personal W/L tracker. Model picks stay on the Predictions tab — this tab is for your bets only.</p>
-      <div class="bankroll-row">
+      <div class="my-bets-hero-head">
+        <div>
+          <h2 class="section-title">Bankroll</h2>
+          <p class="my-bets-note">Track your bets here. Model picks stay on the Predictions tab.</p>
+        </div>
         <label class="field bankroll-field">
-          <span>Starting bankroll ($)</span>
-          <input id="starting-bankroll" type="number" min="0" step="0.01" value="${summary.startingBankroll.toFixed(2)}">
+          <span>Starting bankroll</span>
+          <div class="bankroll-input-wrap">
+            <span class="input-prefix">$</span>
+            <input id="starting-bankroll" type="number" min="0" step="0.01" value="${summary.startingBankroll.toFixed(2)}">
+          </div>
         </label>
       </div>
       <div class="my-bets-stats">
-        <article class="tracker-stat"><span class="tracker-stat-label">W/L record</span><strong>${summary.wins}-${summary.losses}</strong></article>
-        <article class="tracker-stat"><span class="tracker-stat-label">Total P/L</span><strong class="${summary.profit >= 0 ? "acc-correct" : "acc-wrong"}">${formatMoney(summary.profit)}</strong></article>
-        <article class="tracker-stat"><span class="tracker-stat-label">Current bankroll</span><strong>$${summary.currentBankroll.toFixed(2)}</strong></article>
-        <article class="tracker-stat"><span class="tracker-stat-label">Available</span><strong>$${summary.available.toFixed(2)}</strong></article>
-        <article class="tracker-stat"><span class="tracker-stat-label">At risk</span><strong>$${summary.pendingStake.toFixed(2)}</strong></article>
-        <article class="tracker-stat"><span class="tracker-stat-label">ROI</span><strong>${summary.roiPct != null ? `${summary.roiPct}%` : "—"}</strong></article>
+        <article class="tracker-stat tracker-stat-highlight ${summary.profit >= 0 ? "stat-positive" : "stat-negative"}">
+          <span class="tracker-stat-label">Total P/L</span>
+          <strong>${formatMoney(summary.profit)}</strong>
+        </article>
+        <article class="tracker-stat">
+          <span class="tracker-stat-label">W/L</span>
+          <strong>${summary.wins}-${summary.losses}</strong>
+        </article>
+        <article class="tracker-stat">
+          <span class="tracker-stat-label">Bankroll</span>
+          <strong>$${summary.currentBankroll.toFixed(2)}</strong>
+        </article>
+        <article class="tracker-stat">
+          <span class="tracker-stat-label">Available</span>
+          <strong>$${summary.available.toFixed(2)}</strong>
+        </article>
+        <article class="tracker-stat">
+          <span class="tracker-stat-label">At risk</span>
+          <strong>$${summary.pendingStake.toFixed(2)}</strong>
+        </article>
+        <article class="tracker-stat">
+          <span class="tracker-stat-label">ROI</span>
+          <strong>${summary.roiPct != null ? `${summary.roiPct}%` : "—"}</strong>
+        </article>
       </div>
     </section>
 
-    <section class="my-bets-form-card">
-      <h2>Log a bet</h2>
-      <form id="my-bet-form" class="my-bet-form bet-log-form">
-        <label class="field">
-          <span>Date</span>
-          <input id="bet-date" type="date" required value="${escapeAttr(draft.betDate ?? todayBetDateInput())}">
-        </label>
-        <label class="field field-game">
-          <span>Game</span>
-          <input id="bet-game" type="text" required placeholder="MLB, Yankees @ Red Sox, etc." value="${escapeAttr(draft.game ?? "")}">
-        </label>
-        <label class="field">
-          <span>Bet ($)</span>
-          <input id="bet-stake" type="text" inputmode="decimal" required placeholder="100" value="${escapeAttr(draft.stake ?? "")}">
-        </label>
-        <label class="field">
-          <span>${oddsLabel}</span>
-          <input id="bet-odds" type="text" inputmode="decimal" required placeholder="${escapeAttr(oddsPlaceholder)}" value="${escapeAttr(draft.odds ?? "")}">
-        </label>
-        <button type="submit" class="primary-btn bet-form-submit">Add bet</button>
-      </form>
-    </section>
+    <div class="my-bets-grid">
+      <section class="my-bets-form-card panel-card">
+        <h2 class="section-title">Log a bet</h2>
+        <form id="my-bet-form" class="my-bet-form bet-log-form">
+          <label class="field">
+            <span>Date</span>
+            <input id="bet-date" type="date" required value="${escapeAttr(draft.betDate ?? todayBetDateInput())}">
+          </label>
+          <label class="field field-game">
+            <span>Game</span>
+            <input id="bet-game" type="text" required placeholder="Yankees @ Red Sox — Yankees ML" value="${escapeAttr(draft.game ?? "")}">
+          </label>
+          <label class="field">
+            <span>Stake</span>
+            <div class="bankroll-input-wrap">
+              <span class="input-prefix">$</span>
+              <input id="bet-stake" type="text" inputmode="decimal" required placeholder="100" value="${escapeAttr(draft.stake ?? "")}">
+            </div>
+          </label>
+          <label class="field">
+            <span>${oddsLabel}</span>
+            <input id="bet-odds" type="text" inputmode="decimal" required placeholder="${escapeAttr(oddsPlaceholder)}" value="${escapeAttr(draft.odds ?? "")}">
+          </label>
+          <button type="submit" class="btn-primary bet-form-submit">Add bet</button>
+        </form>
+      </section>
 
-    <section class="my-bets-import-card">
-      <h2>Import from spreadsheet</h2>
-      <p class="my-bets-note">Export from Google Sheets: <strong>File → Download → Comma-separated values (.csv)</strong>, then upload here. Needs columns <strong>Date Placed, Game, Bet, Odd, W/L</strong> — P/L formulas are ignored and recalculated.</p>
+      <section class="my-bets-table-card panel-card">
+        <div class="panel-card-head">
+          <h2 class="section-title">Bet history</h2>
+          <button type="button" class="btn-ghost" id="export-bets-btn">Export CSV</button>
+        </div>
+        <div class="my-bets-table-wrap">
+          <table class="my-bets-table sheet-style">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Game</th>
+                <th>Bet</th>
+                <th>Odd</th>
+                <th>W/L</th>
+                <th>P/L</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </section>
+    </div>
 
-      <div class="csv-dropzone" id="csv-dropzone">
-        <input id="sheet-file" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values" hidden>
-        <p class="csv-dropzone-title">Drop your CSV here</p>
-        <p class="csv-dropzone-sub">or</p>
-        <button type="button" class="primary-btn" id="choose-csv-btn">Choose CSV file</button>
-        ${importFileName ? `<p class="csv-dropzone-file">Selected: <strong>${escapeHtml(importFileName)}</strong></p>` : ""}
+    <details class="my-bets-import-card panel-card import-collapse">
+      <summary class="import-collapse-summary">
+        <span class="section-title">Import from spreadsheet</span>
+        <span class="import-collapse-hint">CSV upload or paste</span>
+      </summary>
+      <div class="import-collapse-body">
+        <p class="my-bets-note">Download from Google Sheets as CSV. Columns: <strong>Date, Game, Bet, Odd, W/L</strong>. P/L is recalculated from your stake and odds.</p>
+
+        <div class="csv-dropzone" id="csv-dropzone">
+          <input id="sheet-file" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values" hidden>
+          <p class="csv-dropzone-title">Drop your CSV here</p>
+          <p class="csv-dropzone-sub">or</p>
+          <button type="button" class="btn-secondary" id="choose-csv-btn">Choose file</button>
+          ${importFileName ? `<p class="csv-dropzone-file">Selected: <strong>${escapeHtml(importFileName)}</strong></p>` : ""}
+        </div>
+
+        <details class="paste-fallback">
+          <summary>Paste rows instead</summary>
+          <textarea id="sheet-paste" class="sheet-paste" rows="4" placeholder="Paste spreadsheet rows here…">${escapeHtml(sheetPasteDraft)}</textarea>
+          <button type="button" class="btn-ghost" id="preview-import-btn">Preview pasted rows</button>
+        </details>
+
+        <div id="import-preview" class="import-preview">${importPreview}</div>
       </div>
-
-      <details class="paste-fallback">
-        <summary>Paste rows instead (values only, no formulas)</summary>
-        <textarea id="sheet-paste" class="sheet-paste" rows="5" placeholder="Paste spreadsheet rows here…">${escapeHtml(sheetPasteDraft)}</textarea>
-        <button type="button" class="bet-action-btn" id="preview-import-btn">Preview pasted rows</button>
-      </details>
-
-      <div class="import-actions">
-        <button type="button" class="bet-action-btn" id="export-bets-btn">Copy history for spreadsheet</button>
-      </div>
-      <div id="import-preview" class="import-preview">${importPreview}</div>
-    </section>
-
-    <section class="my-bets-table-card">
-      <h2>Bet history</h2>
-      <div class="my-bets-table-wrap">
-        <table class="my-bets-table sheet-style">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Game</th>
-              <th>Bet</th>
-              <th>Odd</th>
-              <th>W/L</th>
-              <th>P/L</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>
-    </section>
+    </details>
   `;
 
   myBetsViewEl.querySelector("#my-bet-form")?.addEventListener("submit", (event) => {
@@ -2200,9 +2228,12 @@ function renderGames(games) {
           <details class="game-details"${detailsOpen ? " open" : ""}>
             <summary class="game-summary-bar">
               <span class="rank-badge small">#${game.predictionRank || "?"}</span>
-              <span class="summary-matchup">${game.matchup || "Unknown"}</span>
-              <span class="summary-pick">${game.prediction?.outcomeLabel || ""} · ${pickProbabilitySummary(game.prediction) || `${game.prediction?.confidence || "?"}%`}</span>
+              <span class="summary-main">
+                <span class="summary-matchup">${game.matchup || "Unknown"}</span>
+                <span class="summary-pick">${game.prediction?.outcomeLabel || ""} · ${pickProbabilitySummary(game.prediction) || `${game.prediction?.confidence || "?"}%`}</span>
+              </span>
               ${pickBadge ? `<span class="summary-pick-status">${pickBadge}</span>` : ""}
+              <span class="summary-chevron" aria-hidden="true"></span>
             </summary>
             <div class="game-details-body">
               ${renderPrediction(game)}
