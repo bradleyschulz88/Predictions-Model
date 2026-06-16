@@ -1943,9 +1943,20 @@ function rankTierClass(rank) {
   return "";
 }
 
+function formatConfidencePct(value) {
+  const pct = Math.max(0, Math.min(100, Number(value) || 0));
+  return Math.round(pct * 10) / 10;
+}
+
+function formatConfidenceDisplay(value) {
+  const pct = formatConfidencePct(value);
+  return Number.isInteger(pct) ? String(pct) : pct.toFixed(1);
+}
+
 function renderConfidenceRing(confidence) {
-  const pct = Math.max(0, Math.min(100, Number(confidence) || 0));
-  return `<div class="confidence-ring" style="--pct: ${pct}" title="${pct}% confidence"><span>${pct}%</span></div>`;
+  const pct = formatConfidencePct(confidence);
+  const display = formatConfidenceDisplay(confidence);
+  return `<div class="confidence-ring" style="--pct: ${pct}" title="${display}% confidence" aria-label="${display} percent confidence"><span class="confidence-ring-inner"><span class="confidence-ring-value">${display}</span><span class="confidence-ring-unit">%</span></span></div>`;
 }
 
 function renderTopPicks(games) {
@@ -2199,7 +2210,7 @@ function renderPrediction(game) {
           <span class="rank-badge">#${game.predictionRank || "?"}</span>
           <span class="confidence-label ${labelClass}">${prediction.confidenceLabel || ""}</span>
           <h3 class="prediction-title">${prediction.outcomeLabel}</h3>
-          <p class="prediction-subtitle">${prediction.confidence}% confidence · sorted highest to lowest</p>
+          <p class="prediction-subtitle">${formatConfidenceDisplay(prediction.confidence)}% confidence · sorted highest to lowest</p>
         </div>
         <div class="confidence-ring-wrap">${renderConfidenceRing(prediction.confidence)}</div>
       </div>
