@@ -1,4 +1,4 @@
-const CACHE = "predictions-dashboard-v12";
+const CACHE = "predictions-dashboard-v13";
 const ASSETS = ["./", "./index.html", "./app.js", "./styles.css", "./manifest.json"];
 
 self.addEventListener("install", (event) => {

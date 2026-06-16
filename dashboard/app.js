@@ -16,7 +16,6 @@ const dashboardTitle = document.getElementById("dashboard-title");
 
 const statGames = document.getElementById("stat-games");
 const statTopPick = document.getElementById("stat-top-pick");
-const statAccuracy = document.getElementById("stat-accuracy");
 const statLeague = document.getElementById("stat-league");
 const statDate = document.getElementById("stat-date");
 const statUpdated = document.getElementById("stat-updated");
@@ -81,7 +80,11 @@ let betFormDraft = {
 };
 
 const MY_BETS_KEY = "predictions-dashboard-my-bets";
+const BANKROLL_KEY = "predictions-dashboard-bankroll";
+const MODEL_PICKS_KEY = "predictions-dashboard-model-picks";
 const ODDS_FORMAT_KEY = "predictions-dashboard-odds-format";
+let importPreviewRows = null;
+let sheetPasteDraft = "";
 const AMERICAN_ODDS_LINE_KEYS = new Set([
   "home",
   "away",
@@ -129,6 +132,22 @@ function formatMoney(value) {
   const amount = Number(value);
   const prefix = amount >= 0 ? "+$" : "-$";
   return `${prefix}${Math.abs(amount).toFixed(2)}`;
+}
+
+function formatPlainMoney(value) {
+  const amount = Number(value);
+  if (!Number.isFinite(amount)) return "";
+  return amount.toFixed(2);
+}
+
+function formatBetDateShort(iso) {
+  if (!iso) return "—";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "—";
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
 }
 
 function calcBetProfitDecimal(decimalOdds, stake, won) {
@@ -334,6 +353,51 @@ function saveMyBets(bets) {
   localStorage.setItem(MY_BETS_KEY, JSON.stringify(bets.map(normalizeBet)));
 }
 
+function loadBankrollSettings() {
+  try {
+    const raw = localStorage.getItem(BANKROLL_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return { startingBankroll: Math.max(0, Number(parsed.startingBankroll) || 0) };
+    }
+  } catch {
+    /* ignore */
+  }
+  return { startingBankroll: 0 };
+}
+
+function saveBankrollSettings(settings) {
+  localStorage.setItem(
+    BANKROLL_KEY,
+    JSON.stringify({ startingBankroll: Math.max(0, Number(settings.startingBankroll) || 0) })
+  );
+}
+
+function loadModelPickCache() {
+  try {
+    const raw = localStorage.getItem(MODEL_PICKS_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function cacheModelPick(eventId, pick) {
+  if (!eventId || !pick || pick.status !== "graded") return;
+  const cache = loadModelPickCache();
+  cache[eventId] = {
+    predicted: pick.predicted,
+    outcomeLabel: pick.outcomeLabel,
+    actual: pick.actual,
+    correct: pick.correct,
+    homeScore: pick.homeScore,
+    awayScore: pick.awayScore,
+    confidence: pick.confidence,
+    status: "graded",
+  };
+  localStorage.setItem(MODEL_PICKS_KEY, JSON.stringify(cache));
+}
+
 function findGameForLeg(leg) {
   if (!leg?.eventId) return null;
   if (lastPayload?.games?.length) {
@@ -445,7 +509,15 @@ function renderBetLegsDetail(bet) {
     .join("");
 }
 
-function summarizeMyBets(bets) {
+function betGameLabel(bet) {
+  const normalized = normalizeBet(bet);
+  if (normalized.type === "parlay") {
+    return normalized.legs.map((leg) => leg.matchup || leg.pick).join(" + ");
+  }
+  return normalized.legs[0]?.matchup || normalized.legs[0]?.pick || "Bet";
+}
+
+function summarizeMyBets(bets, bankrollSettings = loadBankrollSettings()) {
   const settled = bets.filter((bet) => bet.status === "won" || bet.status === "lost");
   const pending = bets.filter((bet) => bet.status === "pending");
   const wins = settled.filter((bet) => bet.status === "won").length;
@@ -454,6 +526,9 @@ function summarizeMyBets(bets) {
   const staked = settled.reduce((sum, bet) => sum + Number(bet.stake || 0), 0);
   const pendingStake = pending.reduce((sum, bet) => sum + Number(bet.stake || 0), 0);
   const roiPct = staked > 0 ? Math.round((profit / staked) * 1000) / 10 : null;
+  const startingBankroll = Math.round((bankrollSettings.startingBankroll || 0) * 100) / 100;
+  const currentBankroll = Math.round((startingBankroll + profit) * 100) / 100;
+  const available = Math.round((currentBankroll - pendingStake) * 100) / 100;
   return {
     wins,
     losses,
@@ -463,7 +538,247 @@ function summarizeMyBets(bets) {
     pendingStake: Math.round(pendingStake * 100) / 100,
     roiPct,
     total: bets.length,
+    startingBankroll,
+    currentBankroll,
+    available,
   };
+}
+
+function splitSheetRow(line, delimiter) {
+  if (delimiter === "\t") return line.split("\t").map((cell) => cell.trim());
+  const cells = [];
+  let current = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i += 1) {
+    const char = line[i];
+    if (char === '"') {
+      inQuotes = !inQuotes;
+      continue;
+    }
+    if (char === delimiter && !inQuotes) {
+      cells.push(current.trim());
+      current = "";
+      continue;
+    }
+    current += char;
+  }
+  cells.push(current.trim());
+  return cells;
+}
+
+function detectSheetDelimiter(lines) {
+  const sample = lines.find((line) => line.trim()) || "";
+  const tabCount = (sample.match(/\t/g) || []).length;
+  const commaCount = (sample.match(/,/g) || []).length;
+  return tabCount >= commaCount ? "\t" : ",";
+}
+
+function normalizeSheetHeader(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+function parseSheetDate(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return new Date().toISOString();
+  const slash = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (slash) {
+    const first = Number(slash[1]);
+    const second = Number(slash[2]);
+    const year = slash[3];
+    let day = first;
+    let month = second;
+    if (first > 12 && second <= 12) {
+      day = first;
+      month = second;
+    } else if (second > 12 && first <= 12) {
+      day = second;
+      month = first;
+    }
+    return new Date(`${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T12:00:00`).toISOString();
+  }
+  const parsed = new Date(text);
+  return Number.isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
+}
+
+function parseSheetStake(value) {
+  const cleaned = String(value ?? "").replace(/[$,\s]/g, "");
+  return parseStakeInput(cleaned);
+}
+
+function parseSheetWl(value) {
+  const token = String(value ?? "").trim().toUpperCase();
+  if (token === "W" || token === "WIN" || token === "WON") return "won";
+  if (token === "L" || token === "LOSS" || token === "LOST") return "lost";
+  return "pending";
+}
+
+function mapSheetColumns(headers) {
+  const normalized = headers.map(normalizeSheetHeader);
+  const find = (...names) => normalized.findIndex((header) => names.includes(header));
+  return {
+    date: find("dateplaced", "date", "placed"),
+    game: find("game", "matchup", "event", "description"),
+    stake: find("bet", "stake", "amount", "wager"),
+    odds: find("odd", "odds", "price", "decimal"),
+    wl: find("wl", "winlose", "result", "outcome"),
+    index: find("d", "id", "no", "num"),
+  };
+}
+
+function parseSheetPaste(text) {
+  const lines = String(text || "")
+    .trim()
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  if (!lines.length) return { rows: [], errors: ["Paste is empty."] };
+
+  const delimiter = detectSheetDelimiter(lines);
+  const parsedLines = lines.map((line) => splitSheetRow(line, delimiter));
+  let headerIndex = parsedLines.findIndex((cells) => {
+    const normalized = cells.map(normalizeSheetHeader);
+    return normalized.includes("game") || normalized.includes("bet") || normalized.includes("odd");
+  });
+  if (headerIndex < 0) headerIndex = 0;
+
+  const headers = parsedLines[headerIndex];
+  const columns = mapSheetColumns(headers);
+  const dataLines = parsedLines.slice(headerIndex + 1);
+  const rows = [];
+  const errors = [];
+
+  dataLines.forEach((cells, index) => {
+    const rowNumber = headerIndex + index + 2;
+    const game =
+      columns.game >= 0 ? cells[columns.game] : columns.index >= 0 ? cells[columns.index + 1] : cells[1];
+    const stake = columns.stake >= 0 ? cells[columns.stake] : cells[3];
+    const odds = columns.odds >= 0 ? cells[columns.odds] : cells[4];
+    const wl = columns.wl >= 0 ? cells[columns.wl] : cells[5];
+    const dateValue = columns.date >= 0 ? cells[columns.date] : cells[1];
+
+    if (!game || !String(game).trim()) return;
+
+    const stakeAmount = parseSheetStake(stake);
+    const decimalOdds = parseDecimalOddsInput(String(odds ?? "").replace(",", "."));
+    const status = parseSheetWl(wl);
+
+    if (stakeAmount == null) {
+      errors.push(`Row ${rowNumber}: invalid stake "${stake || ""}".`);
+      return;
+    }
+    if (decimalOdds == null) {
+      errors.push(`Row ${rowNumber}: invalid decimal odds "${odds || ""}".`);
+      return;
+    }
+
+    const profit =
+      status === "pending"
+        ? null
+        : calcBetProfitDecimal(decimalOdds, stakeAmount, status === "won");
+
+    rows.push({
+      createdAt: parseSheetDate(dateValue),
+      matchup: String(game).trim(),
+      pick: String(game).trim(),
+      stake: stakeAmount,
+      decimalOdds,
+      status,
+      profit,
+      type: "single",
+      legs: [
+        {
+          id: createBetId(),
+          matchup: String(game).trim(),
+          pick: String(game).trim(),
+          legDecimalOdds: decimalOdds,
+          status,
+          resultWinner: null,
+        },
+      ],
+    });
+  });
+
+  if (!rows.length && !errors.length) errors.push("No bet rows found. Include headers like Date, Game, Bet, Odd, W/L.");
+  return { rows, errors };
+}
+
+function importPreviewMarkup(rows, errors) {
+  if (errors.length) {
+    return `<div class="import-errors">${errors.map((error) => `<p>${escapeHtml(error)}</p>`).join("")}</div>`;
+  }
+  const previewRows = rows
+    .slice(0, 12)
+    .map(
+      (row) => `
+      <tr>
+        <td>${formatBetDateShort(row.createdAt)}</td>
+        <td>${escapeHtml(row.matchup)}</td>
+        <td>$${row.stake.toFixed(2)}</td>
+        <td>${formatDecimalOdds(row.decimalOdds)}</td>
+        <td>${row.status === "won" ? "W" : row.status === "lost" ? "L" : "—"}</td>
+        <td>${row.profit != null ? formatPlainMoney(row.profit) : "—"}</td>
+      </tr>
+    `
+    )
+    .join("");
+  const more = rows.length > 12 ? `<p class="field-hint">Showing first 12 of ${rows.length} rows.</p>` : "";
+  return `
+    ${more}
+    <div class="import-preview-wrap">
+      <table class="import-preview-table">
+        <thead><tr><th>Date</th><th>Game</th><th>Stake</th><th>Odds</th><th>W/L</th><th>P/L</th></tr></thead>
+        <tbody>${previewRows}</tbody>
+      </table>
+    </div>
+    <button type="button" class="primary-btn" id="confirm-import-btn">Import ${rows.length} bet${rows.length === 1 ? "" : "s"}</button>
+  `;
+}
+
+function importBetsFromRows(rows) {
+  const existing = loadMyBets();
+  const imported = rows.map((row) =>
+    normalizeBet({
+      id: createBetId(),
+      createdAt: row.createdAt,
+      type: "single",
+      stake: row.stake,
+      decimalOdds: row.decimalOdds,
+      status: row.status,
+      profit: row.profit,
+      legs: row.legs,
+      imported: true,
+    })
+  );
+  saveMyBets([...imported, ...existing]);
+  importPreviewRows = null;
+  sheetPasteDraft = "";
+  renderMyBetsView();
+  showBanner(`Imported ${imported.length} bet${imported.length === 1 ? "" : "s"}.`);
+}
+
+function exportBetsToClipboard(bets) {
+  const header = ["Date Placed", "Game", "Bet", "Odd", "W/L", "P/L"].join("\t");
+  const lines = bets.map((bet) => {
+    const normalized = normalizeBet(bet);
+    const wl = normalized.status === "won" ? "W" : normalized.status === "lost" ? "L" : "";
+    const profit =
+      normalized.profit != null
+        ? formatPlainMoney(normalized.profit)
+        : normalized.status === "pending"
+          ? ""
+          : formatPlainMoney(calcBetProfitDecimal(normalized.decimalOdds, normalized.stake, normalized.status === "won"));
+    return [
+      formatBetDateShort(normalized.createdAt),
+      betGameLabel(normalized),
+      normalized.stake.toFixed(2),
+      formatDecimalOdds(normalized.decimalOdds),
+      wl,
+      profit,
+    ].join("\t");
+  });
+  return [header, ...lines].join("\n");
 }
 
 function collectLegsFromForm(form) {
@@ -665,7 +980,8 @@ function renderMyBetsView() {
 
   let bets = autoSettleMyBets(loadMyBets());
   saveMyBets(bets);
-  const summary = summarizeMyBets(bets);
+  const bankroll = loadBankrollSettings();
+  const summary = summarizeMyBets(bets, bankroll);
   const draft = defaultBetFormDraft(betFormDraft);
   const isParlay = draft.type === "parlay";
   const oddsFormat = getOddsFormat();
@@ -698,27 +1014,26 @@ function renderMyBetsView() {
     )
     .join("");
 
-  const rows = bets.length
-    ? bets
+  const sortedBets = [...bets].sort(
+    (left, right) => new Date(right.createdAt || 0).getTime() - new Date(left.createdAt || 0).getTime()
+  );
+
+  const rows = sortedBets.length
+    ? sortedBets
         .map((bet) => {
           const normalized = normalizeBet(bet);
           const statusClass =
             normalized.status === "won" ? "bet-won" : normalized.status === "lost" ? "bet-lost" : "bet-pending";
-          const statusLabel =
-            normalized.status === "won" ? "Won" : normalized.status === "lost" ? "Lost" : "Pending";
+          const wlLabel = normalized.status === "won" ? "W" : normalized.status === "lost" ? "L" : "—";
           const profitCell =
             normalized.status === "pending"
               ? `<span class="bet-pending-label">—</span>`
-              : `<strong class="${normalized.profit >= 0 ? "acc-correct" : "acc-wrong"}">${formatMoney(normalized.profit)}</strong>`;
-          const potentialWin =
-            normalized.status === "pending"
-              ? `<span class="bet-result-note">Potential win: ${formatMoney(calcBetProfitDecimal(normalized.decimalOdds, normalized.stake, true))}</span>`
-              : "";
+              : `<strong class="${normalized.profit >= 0 ? "acc-correct" : "acc-wrong"}">${formatPlainMoney(normalized.profit)}</strong>`;
           const actions =
             normalized.status === "pending"
               ? `<div class="bet-row-actions">
-                  <button type="button" class="bet-action-btn" data-bet-action="win" data-bet-id="${normalized.id}">Mark won</button>
-                  <button type="button" class="bet-action-btn" data-bet-action="loss" data-bet-id="${normalized.id}">Mark lost</button>
+                  <button type="button" class="bet-action-btn" data-bet-action="win" data-bet-id="${normalized.id}">W</button>
+                  <button type="button" class="bet-action-btn" data-bet-action="loss" data-bet-id="${normalized.id}">L</button>
                   <button type="button" class="bet-action-btn danger" data-bet-action="delete" data-bet-id="${normalized.id}">Delete</button>
                 </div>`
               : `<div class="bet-row-actions">
@@ -727,33 +1042,54 @@ function renderMyBetsView() {
 
           return `
             <tr class="${statusClass}">
+              <td>${formatBetDateShort(normalized.createdAt)}</td>
               <td>
-                <strong>${escapeHtml(betLabel(normalized))}</strong>
-                <ul class="bet-legs-list">${renderBetLegsDetail(normalized)}</ul>
-                ${potentialWin}
+                <strong>${escapeHtml(betGameLabel(normalized))}</strong>
+                ${normalized.type === "parlay" ? `<span class="bet-pick-line">${normalized.legs.length} legs</span>` : ""}
               </td>
-              <td>${formatOddsDisplay(normalized.decimalOdds, oddsFormat)}</td>
               <td>$${Number(normalized.stake).toFixed(2)}</td>
-              <td><span class="bet-status-pill ${statusClass}">${statusLabel}</span></td>
+              <td>${formatOddsDisplay(normalized.decimalOdds, oddsFormat)}</td>
+              <td><span class="bet-wl-pill ${statusClass}">${wlLabel}</span></td>
               <td>${profitCell}</td>
               <td>${actions}</td>
             </tr>
           `;
         })
         .join("")
-    : `<tr><td colspan="6" class="empty-bets-cell">No bets logged yet. Add a single or parlay below, or tap <strong>Log bet</strong> on a game.</td></tr>`;
+    : `<tr><td colspan="7" class="empty-bets-cell">No bets yet. Log one below or paste rows from your spreadsheet.</td></tr>`;
+
+  const importPreview = importPreviewRows
+    ? importPreviewMarkup(importPreviewRows.rows, importPreviewRows.errors)
+    : "";
 
   myBetsViewEl.innerHTML = `
     <section class="my-bets-hero">
-      <p class="my-bets-note">Saved on this device only. Enter odds in <strong>${oddsFormat === "american" ? "American" : "decimal"}</strong> format — change anytime with <strong>Odds format</strong> in the header. Build parlays/multi bets by adding legs manually.</p>
-      <div class="my-bets-stats">
-        <article class="tracker-stat"><span class="tracker-stat-label">Record</span><strong>${summary.wins}-${summary.losses}</strong></article>
-        <article class="tracker-stat"><span class="tracker-stat-label">Total P/L</span><strong class="${summary.profit >= 0 ? "acc-correct" : "acc-wrong"}">${formatMoney(summary.profit)}</strong></article>
-        <article class="tracker-stat"><span class="tracker-stat-label">ROI</span><strong>${summary.roiPct != null ? `${summary.roiPct}%` : "—"}</strong></article>
-        <article class="tracker-stat"><span class="tracker-stat-label">Open bets</span><strong>${summary.pending}</strong></article>
-        <article class="tracker-stat"><span class="tracker-stat-label">At risk</span><strong>$${summary.pendingStake.toFixed(2)}</strong></article>
-        <article class="tracker-stat"><span class="tracker-stat-label">Wagered</span><strong>$${summary.staked.toFixed(2)}</strong></article>
+      <p class="my-bets-note">Your personal W/L tracker. Model picks stay on the Predictions tab — this tab is for your bets only.</p>
+      <div class="bankroll-row">
+        <label class="field bankroll-field">
+          <span>Starting bankroll ($)</span>
+          <input id="starting-bankroll" type="number" min="0" step="0.01" value="${summary.startingBankroll.toFixed(2)}">
+        </label>
       </div>
+      <div class="my-bets-stats">
+        <article class="tracker-stat"><span class="tracker-stat-label">W/L record</span><strong>${summary.wins}-${summary.losses}</strong></article>
+        <article class="tracker-stat"><span class="tracker-stat-label">Total P/L</span><strong class="${summary.profit >= 0 ? "acc-correct" : "acc-wrong"}">${formatMoney(summary.profit)}</strong></article>
+        <article class="tracker-stat"><span class="tracker-stat-label">Current bankroll</span><strong>$${summary.currentBankroll.toFixed(2)}</strong></article>
+        <article class="tracker-stat"><span class="tracker-stat-label">Available</span><strong>$${summary.available.toFixed(2)}</strong></article>
+        <article class="tracker-stat"><span class="tracker-stat-label">At risk</span><strong>$${summary.pendingStake.toFixed(2)}</strong></article>
+        <article class="tracker-stat"><span class="tracker-stat-label">ROI</span><strong>${summary.roiPct != null ? `${summary.roiPct}%` : "—"}</strong></article>
+      </div>
+    </section>
+
+    <section class="my-bets-import-card">
+      <h2>Import / Export</h2>
+      <p class="my-bets-note">Paste rows copied from Excel or Google Sheets. Expected columns: <strong>Date Placed, Game, Bet, Odd, W/L</strong> (P/L is recalculated).</p>
+      <textarea id="sheet-paste" class="sheet-paste" rows="5" placeholder="Paste spreadsheet rows here…">${escapeHtml(sheetPasteDraft)}</textarea>
+      <div class="import-actions">
+        <button type="button" class="bet-action-btn" id="preview-import-btn">Preview import</button>
+        <button type="button" class="bet-action-btn" id="export-bets-btn">Copy for spreadsheet</button>
+      </div>
+      <div id="import-preview" class="import-preview">${importPreview}</div>
     </section>
 
     <section class="my-bets-form-card">
@@ -796,13 +1132,14 @@ function renderMyBetsView() {
     <section class="my-bets-table-card">
       <h2>Bet history</h2>
       <div class="my-bets-table-wrap">
-        <table class="my-bets-table">
+        <table class="my-bets-table sheet-style">
           <thead>
             <tr>
+              <th>Date</th>
+              <th>Game</th>
               <th>Bet</th>
-              <th>Odds</th>
-              <th>Stake</th>
-              <th>Status</th>
+              <th>Odd</th>
+              <th>W/L</th>
               <th>P/L</th>
               <th></th>
             </tr>
@@ -879,6 +1216,31 @@ function renderMyBetsView() {
       if (action === "loss") settleMyBetManual(betId, false);
     });
   });
+
+  myBetsViewEl.querySelector("#starting-bankroll")?.addEventListener("change", (event) => {
+    saveBankrollSettings({ startingBankroll: Number(event.currentTarget.value) || 0 });
+    renderMyBetsView();
+  });
+
+  myBetsViewEl.querySelector("#preview-import-btn")?.addEventListener("click", () => {
+    sheetPasteDraft = myBetsViewEl.querySelector("#sheet-paste")?.value || "";
+    importPreviewRows = parseSheetPaste(sheetPasteDraft);
+    renderMyBetsView();
+  });
+
+  myBetsViewEl.querySelector("#confirm-import-btn")?.addEventListener("click", () => {
+    if (importPreviewRows?.rows?.length) importBetsFromRows(importPreviewRows.rows);
+  });
+
+  myBetsViewEl.querySelector("#export-bets-btn")?.addEventListener("click", async () => {
+    const text = exportBetsToClipboard(loadMyBets());
+    try {
+      await navigator.clipboard.writeText(text);
+      showBanner("Bet history copied — paste into Excel or Google Sheets.");
+    } catch {
+      showBanner("Could not copy automatically. Select the export text manually.");
+    }
+  });
 }
 
 function winnerFromGame(game) {
@@ -909,12 +1271,18 @@ function pickMatchesWinner(predicted, actual) {
 function resolvePickStatus(game) {
   const eventId = String(game.eventId || "");
   const serverPick = accuracyData?.picksByEventId?.[eventId];
-  if (serverPick?.status === "graded") return serverPick;
+  if (serverPick?.status === "graded") {
+    cacheModelPick(eventId, serverPick);
+    return serverPick;
+  }
+
+  const cached = loadModelPickCache()[eventId];
+  if (cached?.status === "graded") return cached;
 
   const actual = winnerFromGame(game);
   if (actual && game.prediction?.predictedWinner) {
     const correct = pickMatchesWinner(game.prediction.predictedWinner, actual);
-    return {
+    const pick = {
       status: "graded",
       predicted: game.prediction.predictedWinner,
       actual,
@@ -925,6 +1293,8 @@ function resolvePickStatus(game) {
       outcomeLabel: game.prediction.outcomeLabel,
       live: true,
     };
+    cacheModelPick(eventId, pick);
+    return pick;
   }
 
   if (serverPick) return serverPick;
@@ -942,13 +1312,41 @@ function resolvePickStatus(game) {
 function renderPickStatusBadge(game) {
   const pick = resolvePickStatus(game);
   if (!pick) return "";
+  const score =
+    pick.homeScore != null && pick.awayScore != null
+      ? ` · ${game.awayTeam} ${pick.awayScore}–${pick.homeScore} ${game.homeTeam}`
+      : "";
   if (pick.status === "pending") {
-    return `<span class="pick-status pick-pending">Pick pending</span>`;
+    return `<span class="pick-status pick-pending">Awaiting result</span>`;
   }
   if (pick.correct) {
-    return `<span class="pick-status pick-won">Pick won · ${pick.actual}</span>`;
+    return `<span class="pick-status pick-won">✓ Correct · ${pick.actual} won${score}</span>`;
   }
-  return `<span class="pick-status pick-lost">Pick lost · won ${pick.actual}</span>`;
+  return `<span class="pick-status pick-lost">✗ Wrong · ${pick.actual} won${score}</span>`;
+}
+
+function renderModelPickBlock(game) {
+  const prediction = game.prediction;
+  if (!prediction?.outcomeLabel) return "";
+  const pick = resolvePickStatus(game);
+  let resultHtml = "";
+  if (pick?.status === "graded") {
+    const score =
+      pick.homeScore != null && pick.awayScore != null
+        ? `<p class="model-pick-score">Final: ${game.awayTeam} ${pick.awayScore} – ${pick.homeScore} ${game.homeTeam}</p>`
+        : "";
+    resultHtml = pick.correct
+      ? `<p class="model-pick-result pick-won">Result: <strong>${pick.actual}</strong> won — model was correct</p>${score}`
+      : `<p class="model-pick-result pick-lost">Result: <strong>${pick.actual}</strong> won — model was wrong</p>${score}`;
+  } else {
+    resultHtml = `<p class="model-pick-result pick-pending">Result pending — pick stays here after the game finishes</p>`;
+  }
+  return `
+    <div class="model-pick-block">
+      <p class="model-pick-heading"><span class="model-pick-label">Model pick</span> <strong>${prediction.outcomeLabel}</strong> · ${prediction.confidence}%</p>
+      ${resultHtml}
+    </div>
+  `;
 }
 
 function leagueTimezone(sport) {
@@ -1192,16 +1590,6 @@ function renderStats(payload, visibleCount) {
   statUpdated.textContent = formatDateTime(payload.fetchedAt);
   dashboardTitle.textContent =
     sport === "overview" ? "All Sports Predictions" : `${payload.leagueLabel || SPORT_LABELS[sport] || "Sports"} Predictions`;
-
-  const acc = accuracyData?.summary?.last7Days;
-  if (acc?.total > 0 && acc?.pct != null) {
-    const units = acc.units != null ? ` · ${acc.units >= 0 ? "+" : ""}${acc.units}u` : "";
-    statAccuracy.textContent = `${acc.correct}-${acc.total - acc.correct} (${acc.pct}%)${units}`;
-  } else if (acc?.pending > 0) {
-    statAccuracy.textContent = `${acc.pending} pending`;
-  } else {
-    statAccuracy.textContent = "Tracking…";
-  }
 
   if (lastLiveScoreAt) {
     const seconds = Math.round((Date.now() - lastLiveScoreAt) / 1000);
@@ -1513,8 +1901,7 @@ function renderPrediction(game) {
         ? `<div class="final-score">Final: ${game.awayTeam} ${game.awayScore} – ${game.homeScore} ${game.homeTeam}</div>`
         : "";
 
-  const pickBadge = renderPickStatusBadge(game);
-  const pickStatusBlock = pickBadge ? `<div class="pick-status-row">${pickBadge}</div>` : "";
+  const modelPickBlock = renderModelPickBlock(game);
 
   return `
     <section class="prediction-panel">
@@ -1528,7 +1915,7 @@ function renderPrediction(game) {
         <div class="confidence-badge">${prediction.confidence}%</div>
       </div>
       ${liveBlock}
-      ${pickStatusBlock}
+      ${modelPickBlock}
       ${probabilityCompare}
       <div class="probability-bar ${prediction.drawWinPct != null ? "three-way" : ""}">
         <div class="probability-team ${homeFavored ? "favored" : ""}"><span class="probability-label">${game.homeTeam || "Home"} (blended)</span><span class="probability-value">${prediction.homeWinPct}%</span></div>
@@ -1573,15 +1960,6 @@ function renderGames(games) {
   const lineupLabel = lineupLabelForSport(sport);
   gamesEl.innerHTML = visible
     .map((game) => {
-      const lines = game.lines || [];
-      const rows = lines.length
-        ? lines
-            .map(
-              (line) => `<tr><td>${line.sportsbook || "—"}</td><td>${line.viewType || "—"}</td><td>${renderLineChips(line.openingLine)}</td><td>${renderLineChips(line.currentLine)}</td></tr>`
-            )
-            .join("")
-        : `<tr><td colspan="4">No odds available yet.</td></tr>`;
-
       const records = game.awayRecord || game.homeRecord ? `${game.awayTeam} ${game.awayRecord || "—"} · ${game.homeTeam} ${game.homeRecord || "—"}` : null;
       const pitchers = sport === "mlb" && (game.awayPitcher?.name || game.homePitcher?.name) ? `SP: ${game.awayPitcher?.name || "TBD"} vs ${game.homePitcher?.name || "TBD"}` : null;
       const metaParts = [formatDateTime(game.startDate), game.venueName || "Venue TBD"];
@@ -1592,10 +1970,11 @@ function renderGames(games) {
       const shareUrl = `${window.location.origin}${window.location.pathname}#game-${game.eventId}`;
       const pickBadge = renderPickStatusBadge(game);
       const logged = isBetLoggedForGame(game.eventId);
+      const detailsOpen = !game.isFinal;
 
       return `
         <article class="game-card" id="game-${game.eventId}">
-          <details class="game-details" open>
+          <details class="game-details"${detailsOpen ? " open" : ""}>
             <summary class="game-summary-bar">
               <span class="rank-badge small">#${game.predictionRank || "?"}</span>
               <span class="summary-matchup">${game.matchup || "Unknown"}</span>
@@ -1617,10 +1996,6 @@ function renderGames(games) {
               </div>
               ${renderLineups(game, lineupLabel)}
               ${renderMajorInjuries(game)}
-              <table class="lines-table">
-                <thead><tr><th>Book</th><th>Market</th><th>Opening</th><th>Current</th></tr></thead>
-                <tbody>${rows}</tbody>
-              </table>
             </div>
           </details>
         </article>
