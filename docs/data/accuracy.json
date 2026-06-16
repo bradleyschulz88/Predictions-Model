@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-06-16T01:46:55.806480+00:00",
+  "updatedAt": "2026-06-16T02:00:01.462828+00:00",
   "summary": {
     "last7Days": {
-      "correct": 22,
-      "total": 41,
-      "pct": 53.7,
-      "units": 1.446,
-      "roiPct": 3.5,
-      "pending": 27
+      "correct": 23,
+      "total": 42,
+      "pct": 54.8,
+      "units": 2.091,
+      "roiPct": 5.0,
+      "pending": 26
     },
     "allTime": {
-      "correct": 22,
-      "total": 41,
-      "pct": 53.7,
-      "units": 1.446,
-      "roiPct": 3.5,
-      "pending": 27
+      "correct": 23,
+      "total": 42,
+      "pct": 54.8,
+      "units": 2.091,
+      "roiPct": 5.0,
+      "pending": 26
     },
     "byLeague": {
       "mlb": {
-        "correct": 18,
-        "total": 32,
-        "pct": 56.2,
-        "units": 2.446,
-        "roiPct": 7.6,
+        "correct": 19,
+        "total": 33,
+        "pct": 57.6,
+        "units": 3.091,
+        "roiPct": 9.4,
         "pending": 0
       },
       "worldcup": {
@@ -51,6 +51,25 @@
     }
   },
   "recentResults": [
+    {
+      "eventId": "401815770",
+      "league": "mlb",
+      "scheduleDate": "2026-06-15",
+      "matchup": "San Diego Padres @ St. Louis Cardinals",
+      "predicted": "St. Louis Cardinals",
+      "predictedSide": "home",
+      "outcomeLabel": "St. Louis Cardinals to win",
+      "confidence": 57.9,
+      "pickOdds": -155,
+      "status": "graded",
+      "actual": "St. Louis Cardinals",
+      "correct": true,
+      "units": 0.645,
+      "homeScore": "3",
+      "awayScore": "0",
+      "gradedAt": "2026-06-16T01:59:56.687269+00:00",
+      "date": "2026-06-15"
+    },
     {
       "eventId": "401815765",
       "league": "mlb",
@@ -1241,25 +1260,6 @@
       "outcomeLabel": "Los Angeles Angels to win",
       "confidence": 53.3,
       "pickOdds": 118,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-06-15"
-    },
-    {
-      "eventId": "401815770",
-      "league": "mlb",
-      "scheduleDate": "2026-06-15",
-      "matchup": "San Diego Padres @ St. Louis Cardinals",
-      "predicted": "St. Louis Cardinals",
-      "predictedSide": "home",
-      "outcomeLabel": "St. Louis Cardinals to win",
-      "confidence": 55.4,
-      "pickOdds": -155,
       "status": "pending",
       "actual": null,
       "correct": null,
@@ -2552,15 +2552,15 @@
       "predicted": "St. Louis Cardinals",
       "predictedSide": "home",
       "outcomeLabel": "St. Louis Cardinals to win",
-      "confidence": 55.4,
+      "confidence": 57.9,
       "pickOdds": -155,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "status": "graded",
+      "actual": "St. Louis Cardinals",
+      "correct": true,
+      "units": 0.645,
+      "homeScore": "3",
+      "awayScore": "0",
+      "gradedAt": "2026-06-16T01:59:56.687269+00:00",
       "date": "2026-06-15"
     },
     "401815766": {
