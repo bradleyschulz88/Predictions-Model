@@ -92,6 +92,7 @@ const MODEL_PICKS_KEY = "predictions-dashboard-model-picks";
 const ODDS_FORMAT_KEY = "predictions-dashboard-odds-format";
 let importPreviewRows = null;
 let modelTrackerFocusId = null;
+const storageWarningsShown = new Set();
 let sheetPasteDraft = "";
 let importFileName = "";
 let importDetectedBankroll = null;
@@ -109,6 +110,57 @@ const AMERICAN_ODDS_LINE_KEYS = new Set([
 
 function createBetId() {
   return `bet-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function storageErrorMessage(error) {
+  const name = error?.name || "";
+  if (name === "QuotaExceededError") {
+    return "Storage is full. Free browser space or remove old site data, then try again.";
+  }
+  return "Could not save to this device. Check that private browsing is off and storage is allowed.";
+}
+
+function loadNormalizedList(key, normalizer) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return { ok: true, items: [] };
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return { ok: false, items: [], corrupt: true };
+    const items = [];
+    for (const entry of parsed) {
+      try {
+        const normalized = normalizer(entry);
+        if (normalized) items.push(normalized);
+      } catch {
+        /* skip bad row, keep the rest */
+      }
+    }
+    return { ok: true, items };
+  } catch {
+    return { ok: false, items: [], corrupt: true };
+  }
+}
+
+function writeNormalizedList(key, items, normalizer) {
+  try {
+    localStorage.setItem(key, JSON.stringify(items.map(normalizer)));
+    return true;
+  } catch (error) {
+    showBanner(storageErrorMessage(error), { type: "error" });
+    return false;
+  }
+}
+
+function betsChangedAfterSettle(before, after) {
+  if (before.length !== after.length) return true;
+  for (let index = 0; index < before.length; index += 1) {
+    const left = before[index];
+    const right = after[index];
+    if (left?.id !== right?.id) return true;
+    if (left?.status !== right?.status) return true;
+    if (left?.profit !== right?.profit) return true;
+  }
+  return false;
 }
 
 function getOddsFormat() {
@@ -469,18 +521,25 @@ function ensureBetProfit(bet) {
   };
 }
 
+function warnStorageOnce(key, message) {
+  if (storageWarningsShown.has(key)) return;
+  storageWarningsShown.add(key);
+  showBanner(message, { type: "error", autoHideMs: 6000 });
+}
+
 function loadMyBets() {
-  try {
-    const raw = localStorage.getItem(MY_BETS_KEY);
-    if (raw) return JSON.parse(raw).map(normalizeBet);
-  } catch {
-    /* ignore */
+  const result = loadNormalizedList(MY_BETS_KEY, normalizeBet);
+  if (!result.ok && result.corrupt) {
+    warnStorageOnce(
+      MY_BETS_KEY,
+      "Saved bets could not be read. Your data was not erased — try refreshing."
+    );
   }
-  return [];
+  return result.items;
 }
 
 function saveMyBets(bets) {
-  localStorage.setItem(MY_BETS_KEY, JSON.stringify(bets.map(normalizeBet)));
+  return writeNormalizedList(MY_BETS_KEY, bets, normalizeBet);
 }
 
 function loadBankrollSettings() {
@@ -497,10 +556,16 @@ function loadBankrollSettings() {
 }
 
 function saveBankrollSettings(settings) {
-  localStorage.setItem(
-    BANKROLL_KEY,
-    JSON.stringify({ startingBankroll: Math.max(0, Number(settings.startingBankroll) || 0) })
-  );
+  try {
+    localStorage.setItem(
+      BANKROLL_KEY,
+      JSON.stringify({ startingBankroll: Math.max(0, Number(settings.startingBankroll) || 0) })
+    );
+    return true;
+  } catch (error) {
+    showBanner(storageErrorMessage(error), { type: "error" });
+    return false;
+  }
 }
 
 function lineOddsValue(line, ...keys) {
@@ -599,17 +664,18 @@ function ensureModelTrackerProfit(entry) {
 }
 
 function loadModelTracker() {
-  try {
-    const raw = localStorage.getItem(MODEL_TRACKER_KEY);
-    if (raw) return JSON.parse(raw).map(normalizeModelTrackerEntry);
-  } catch {
-    /* ignore */
+  const result = loadNormalizedList(MODEL_TRACKER_KEY, normalizeModelTrackerEntry);
+  if (!result.ok && result.corrupt) {
+    warnStorageOnce(
+      MODEL_TRACKER_KEY,
+      "Model tracker data could not be read. Your data was not erased — try refreshing."
+    );
   }
-  return [];
+  return result.items;
 }
 
 function saveModelTracker(entries) {
-  localStorage.setItem(MODEL_TRACKER_KEY, JSON.stringify(entries.map(normalizeModelTrackerEntry)));
+  return writeNormalizedList(MODEL_TRACKER_KEY, entries, normalizeModelTrackerEntry);
 }
 
 function loadModelBankrollSettings() {
@@ -626,10 +692,30 @@ function loadModelBankrollSettings() {
 }
 
 function saveModelBankrollSettings(settings) {
-  localStorage.setItem(
-    MODEL_BANKROLL_KEY,
-    JSON.stringify({ startingBankroll: Math.max(0, Number(settings.startingBankroll) || 0) })
-  );
+  try {
+    localStorage.setItem(
+      MODEL_BANKROLL_KEY,
+      JSON.stringify({ startingBankroll: Math.max(0, Number(settings.startingBankroll) || 0) })
+    );
+    return true;
+  } catch (error) {
+    showBanner(storageErrorMessage(error), { type: "error" });
+    return false;
+  }
+}
+
+function flushModelTrackerEditsFromDom() {
+  if (!modelTrackerViewEl || modelTrackerViewEl.classList.contains("hidden")) return;
+
+  modelTrackerViewEl.querySelectorAll(".model-tracker-stake-input").forEach((input) => {
+    updateModelTrackerStake(input.dataset.entryId, input.value, { silent: true });
+  });
+  modelTrackerViewEl.querySelectorAll(".model-tracker-odds-input").forEach((input) => {
+    updateModelTrackerUserOdds(input.dataset.entryId, input.value, { silent: true });
+  });
+  modelTrackerViewEl.querySelectorAll(".model-tracker-date-input").forEach((input) => {
+    updateModelTrackerDate(input.dataset.entryId, input.value, { silent: true });
+  });
 }
 
 function findGameForModelEntry(entry) {
@@ -733,33 +819,37 @@ function deleteModelTrackerEntry(entryId) {
   renderModelTrackerView();
 }
 
-function updateModelTrackerDate(entryId, dateValue) {
+function updateModelTrackerDate(entryId, dateValue, { silent = false } = {}) {
   const entries = loadModelTracker().map((entry) => {
     if (entry.id !== entryId) return entry;
     return normalizeModelTrackerEntry({ ...entry, createdAt: parseBetDateInput(dateValue) });
   });
   saveModelTracker(entries);
-  renderModelTrackerView();
+  if (!silent) renderModelTrackerView();
 }
 
-function updateModelTrackerStake(entryId, value) {
+function updateModelTrackerStake(entryId, value, { silent = false } = {}) {
   const stake = parseStakeInput(value);
   const entries = loadModelTracker().map((entry) => {
     if (entry.id !== entryId) return entry;
-    const next = normalizeModelTrackerEntry({ ...entry, stake: stake ?? entry.stake });
+    const nextStake = stake ?? entry.stake;
+    const next = normalizeModelTrackerEntry({ ...entry, stake: nextStake });
     return ensureModelTrackerProfit(next);
   });
   saveModelTracker(entries);
+  if (!silent) renderModelTrackerView();
 }
 
-function updateModelTrackerUserOdds(entryId, value) {
+function updateModelTrackerUserOdds(entryId, value, { silent = false } = {}) {
   const userDecimalOdds = parseOddsInput(value);
   const entries = loadModelTracker().map((entry) => {
     if (entry.id !== entryId) return entry;
-    const next = normalizeModelTrackerEntry({ ...entry, userDecimalOdds: userDecimalOdds ?? entry.userDecimalOdds });
+    const nextOdds = userDecimalOdds ?? entry.userDecimalOdds;
+    const next = normalizeModelTrackerEntry({ ...entry, userDecimalOdds: nextOdds });
     return ensureModelTrackerProfit(next);
   });
   saveModelTracker(entries);
+  if (!silent) renderModelTrackerView();
 }
 
 function settleModelTrackerManual(entryId, won) {
@@ -1416,7 +1506,9 @@ function addMyBet(entry, format = getOddsFormat()) {
       resultWinner: null,
     })
   );
-  saveMyBets(autoSettleMyBets(bets));
+  if (!saveMyBets(autoSettleMyBets(bets))) {
+    return false;
+  }
   betFormDraft = defaultBetFormDraft();
   renderMyBetsView();
   return true;
@@ -1488,6 +1580,10 @@ function isBetLoggedForGame(eventId) {
 }
 
 function switchView(view) {
+  if (activeView === "model-tracker" && view !== "model-tracker") {
+    flushModelTrackerEditsFromDom();
+  }
+
   activeView = view;
   const isPredictions = view === "predictions";
   const isMyBets = view === "my-bets";
@@ -1534,8 +1630,11 @@ function renderMyBetsView() {
 
   syncBetFormDraftFromDom();
 
-  let bets = autoSettleMyBets(loadMyBets());
-  saveMyBets(bets);
+  const loaded = loadMyBets();
+  const bets = autoSettleMyBets(loaded);
+  if (betsChangedAfterSettle(loaded, bets)) {
+    saveMyBets(bets);
+  }
   const bankroll = loadBankrollSettings();
   const summary = summarizeMyBets(bets, bankroll);
   const draft = defaultBetFormDraft(betFormDraft);
@@ -1727,17 +1826,21 @@ function renderMyBetsView() {
     const form = event.currentTarget;
     const draftValues = collectBetFormDraftFromForm(form, betFormDraft);
     const link = resolveBetFormGameLink(betFormDraft, draftValues.game);
-    const success = addMyBet({
-      game: draftValues.game,
-      stake: draftValues.stake,
-      odds: draftValues.odds,
-      betDate: draftValues.betDate,
-      eventId: link.eventId,
-      league: link.league,
-      scheduleDate: link.scheduleDate,
-    });
-    if (success) {
-      showBanner("Bet added to history.", { autoHideMs: 3200, type: "success" });
+    try {
+      const success = addMyBet({
+        game: draftValues.game,
+        stake: draftValues.stake,
+        odds: draftValues.odds,
+        betDate: draftValues.betDate,
+        eventId: link.eventId,
+        league: link.league,
+        scheduleDate: link.scheduleDate,
+      });
+      if (success) {
+        showBanner("Bet added to history.", { autoHideMs: 3200, type: "success" });
+      }
+    } catch (error) {
+      showBanner(storageErrorMessage(error), { type: "error" });
     }
   });
 
@@ -1815,8 +1918,11 @@ function renderMyBetsView() {
 function renderModelTrackerView() {
   if (!modelTrackerViewEl) return;
 
-  let entries = autoSettleModelBets(loadModelTracker());
-  saveModelTracker(entries);
+  const loaded = loadModelTracker();
+  const entries = autoSettleModelBets(loaded);
+  if (betsChangedAfterSettle(loaded, entries)) {
+    saveModelTracker(entries);
+  }
   const bankroll = loadModelBankrollSettings();
   const summary = summarizeModelTracker(entries, bankroll);
   const oddsFormat = getOddsFormat();
@@ -1980,23 +2086,21 @@ function renderModelTrackerView() {
   `;
 
   modelTrackerViewEl.querySelectorAll(".model-tracker-date-input").forEach((input) => {
-    input.addEventListener("change", () => {
-      updateModelTrackerDate(input.dataset.entryId, input.value);
-    });
+    const persist = () => updateModelTrackerDate(input.dataset.entryId, input.value);
+    input.addEventListener("change", persist);
+    input.addEventListener("blur", persist);
   });
 
   modelTrackerViewEl.querySelectorAll(".model-tracker-stake-input").forEach((input) => {
-    input.addEventListener("change", () => {
-      updateModelTrackerStake(input.dataset.entryId, input.value);
-      renderModelTrackerView();
-    });
+    const persist = () => updateModelTrackerStake(input.dataset.entryId, input.value);
+    input.addEventListener("change", persist);
+    input.addEventListener("blur", persist);
   });
 
   modelTrackerViewEl.querySelectorAll(".model-tracker-odds-input").forEach((input) => {
-    input.addEventListener("change", () => {
-      updateModelTrackerUserOdds(input.dataset.entryId, input.value);
-      renderModelTrackerView();
-    });
+    const persist = () => updateModelTrackerUserOdds(input.dataset.entryId, input.value);
+    input.addEventListener("change", persist);
+    input.addEventListener("blur", persist);
   });
 
   modelTrackerViewEl.querySelectorAll("[data-model-action]").forEach((button) => {
@@ -3474,6 +3578,12 @@ async function initDashboard() {
   registerServiceWorker();
   syncOddsFormatSelect();
   bindMyBetsImportActions();
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      flushModelTrackerEditsFromDom();
+    }
+  });
 
   if (IS_STATIC_HOST) {
     manifestData = await fetchManifest({ force: false });
