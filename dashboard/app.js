@@ -25,6 +25,7 @@ const liveScoresToggle = document.getElementById("live-scores");
 const viewTabsEl = document.getElementById("view-tabs");
 const predictionsViewEl = document.getElementById("predictions-view");
 const myBetsViewEl = document.getElementById("my-bets-view");
+const modelTrackerViewEl = document.getElementById("model-tracker-view");
 const dateFieldEl = document.getElementById("date-field");
 const modelDayResultEl = document.getElementById("model-day-result");
 
@@ -85,9 +86,12 @@ let betFormDraft = {
 
 const MY_BETS_KEY = "predictions-dashboard-my-bets";
 const BANKROLL_KEY = "predictions-dashboard-bankroll";
+const MODEL_TRACKER_KEY = "predictions-dashboard-model-tracker";
+const MODEL_BANKROLL_KEY = "predictions-dashboard-model-bankroll";
 const MODEL_PICKS_KEY = "predictions-dashboard-model-picks";
 const ODDS_FORMAT_KEY = "predictions-dashboard-odds-format";
 let importPreviewRows = null;
+let modelTrackerFocusId = null;
 let sheetPasteDraft = "";
 let importFileName = "";
 let importDetectedBankroll = null;
@@ -497,6 +501,320 @@ function saveBankrollSettings(settings) {
     BANKROLL_KEY,
     JSON.stringify({ startingBankroll: Math.max(0, Number(settings.startingBankroll) || 0) })
   );
+}
+
+function lineOddsValue(line, ...keys) {
+  if (!line || typeof line !== "object") return null;
+  for (const key of keys) {
+    const value = line[key];
+    if (value == null || value === "") continue;
+    const num = Number(value);
+    if (Number.isFinite(num) && num !== 0) return num;
+  }
+  return null;
+}
+
+function extractPickAmericanOdds(game, predictedSide) {
+  if (!["home", "away", "draw"].includes(predictedSide)) return null;
+  const keyOptions = {
+    home: ["home", "homeOdds"],
+    away: ["away", "awayOdds"],
+    draw: ["draw", "drawOdds"],
+  }[predictedSide];
+
+  for (const line of game?.lines || []) {
+    if (!(line.viewType || "").includes("MoneyLine")) continue;
+    const current = line.currentLine || line.openingLine;
+    if (!current || typeof current !== "object") continue;
+    const odds = lineOddsValue(current, ...keyOptions);
+    if (odds != null) return Math.round(odds);
+  }
+  return null;
+}
+
+function extractModelDecimalOddsFromGame(game) {
+  const side = game?.prediction?.predictedSide;
+  if (side) {
+    const american = extractPickAmericanOdds(game, side);
+    if (american != null) return americanToDecimal(american);
+  }
+  const eventId = String(game?.eventId || "");
+  const serverPick = accuracyData?.picksByEventId?.[eventId];
+  if (serverPick?.pickOdds != null) {
+    return americanToDecimal(serverPick.pickOdds);
+  }
+  return null;
+}
+
+function formatModelEdge(modelDecimal, userDecimal) {
+  const model = Number(modelDecimal);
+  const user = Number(userDecimal);
+  if (!Number.isFinite(model) || !Number.isFinite(user) || model <= 1 || user <= 1) return "—";
+  const pct = Math.round((user / model - 1) * 1000) / 10;
+  const sign = pct >= 0 ? "+" : "";
+  const edgeClass = pct >= 0 ? "edge-positive" : "edge-negative";
+  return `<span class="model-edge ${edgeClass}">${sign}${pct}% vs mkt</span>`;
+}
+
+function normalizeModelTrackerEntry(entry) {
+  if (!entry) return entry;
+  const stakeRaw = entry.stake;
+  const stake =
+    stakeRaw == null || stakeRaw === ""
+      ? null
+      : Number.isFinite(Number(stakeRaw))
+        ? Math.round(Number(stakeRaw) * 100) / 100
+        : null;
+  return ensureModelTrackerProfit({
+    ...entry,
+    id: entry.id || createBetId(),
+    eventId: entry.eventId || null,
+    league: entry.league || null,
+    scheduleDate: entry.scheduleDate || null,
+    matchup: entry.matchup || "Unknown matchup",
+    pick: entry.pick || entry.outcomeLabel || "Pick",
+    outcomeLabel: entry.outcomeLabel || entry.pick || "Pick",
+    confidence: entry.confidence ?? null,
+    modelDecimalOdds:
+      entry.modelDecimalOdds ?? resolveOddsToDecimal(entry.modelOdds) ?? null,
+    userDecimalOdds:
+      entry.userDecimalOdds ?? resolveOddsToDecimal(entry.userOdds) ?? null,
+    stake,
+    status: entry.status || "pending",
+    profit: entry.profit ?? null,
+    createdAt: entry.createdAt || new Date().toISOString(),
+  });
+}
+
+function ensureModelTrackerProfit(entry) {
+  if (!entry) return entry;
+  if (entry.status === "pending") return { ...entry, profit: null };
+  const userOdds = Number(entry.userDecimalOdds);
+  const stake = Number(entry.stake);
+  if (!Number.isFinite(userOdds) || !Number.isFinite(stake)) return { ...entry, profit: null };
+  return {
+    ...entry,
+    profit: calcBetProfitDecimal(userOdds, stake, entry.status === "won"),
+  };
+}
+
+function loadModelTracker() {
+  try {
+    const raw = localStorage.getItem(MODEL_TRACKER_KEY);
+    if (raw) return JSON.parse(raw).map(normalizeModelTrackerEntry);
+  } catch {
+    /* ignore */
+  }
+  return [];
+}
+
+function saveModelTracker(entries) {
+  localStorage.setItem(MODEL_TRACKER_KEY, JSON.stringify(entries.map(normalizeModelTrackerEntry)));
+}
+
+function loadModelBankrollSettings() {
+  try {
+    const raw = localStorage.getItem(MODEL_BANKROLL_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return { startingBankroll: Math.max(0, Number(parsed.startingBankroll) || 0) };
+    }
+  } catch {
+    /* ignore */
+  }
+  return { startingBankroll: 0 };
+}
+
+function saveModelBankrollSettings(settings) {
+  localStorage.setItem(
+    MODEL_BANKROLL_KEY,
+    JSON.stringify({ startingBankroll: Math.max(0, Number(settings.startingBankroll) || 0) })
+  );
+}
+
+function findGameForModelEntry(entry) {
+  if (!entry?.eventId) return null;
+  if (lastPayload?.games?.length) {
+    return lastPayload.games.find((game) => String(game.eventId) === String(entry.eventId)) || null;
+  }
+  return null;
+}
+
+function autoSettleModelBet(entry) {
+  const normalized = normalizeModelTrackerEntry(entry);
+  if (normalized.status !== "pending") return normalized;
+  const game = findGameForModelEntry(normalized);
+  if (!game) return normalized;
+  const winner = winnerFromGame(game);
+  if (!winner) return normalized;
+  const pickLabel = normalized.outcomeLabel || normalized.pick;
+  const won =
+    winner === "Draw" ? namesMatch(pickLabel, "Draw") : pickMatchesWinner(pickLabel, winner);
+  return ensureModelTrackerProfit({
+    ...normalized,
+    status: won ? "won" : "lost",
+    settledAt: new Date().toISOString(),
+  });
+}
+
+function autoSettleModelBets(entries) {
+  return entries.map(autoSettleModelBet);
+}
+
+function summarizeModelTracker(entries, bankrollSettings = loadModelBankrollSettings()) {
+  const settled = entries.filter((entry) => entry.status === "won" || entry.status === "lost");
+  const pending = entries.filter((entry) => entry.status === "pending");
+  const wins = settled.filter((entry) => entry.status === "won").length;
+  const losses = settled.filter((entry) => entry.status === "lost").length;
+  const profit = settled.reduce((sum, entry) => sum + Number(entry.profit || 0), 0);
+  const staked = settled.reduce((sum, entry) => sum + Number(entry.stake || 0), 0);
+  const pendingStake = pending.reduce((sum, entry) => sum + Number(entry.stake || 0), 0);
+  const roiPct = staked > 0 ? Math.round((profit / staked) * 1000) / 10 : null;
+  const startingBankroll = Math.round((bankrollSettings.startingBankroll || 0) * 100) / 100;
+  const currentBankroll = Math.round((startingBankroll + profit) * 100) / 100;
+  const available = Math.round((currentBankroll - pendingStake) * 100) / 100;
+  return {
+    wins,
+    losses,
+    pending: pending.length,
+    profit: Math.round(profit * 100) / 100,
+    staked: Math.round(staked * 100) / 100,
+    pendingStake: Math.round(pendingStake * 100) / 100,
+    roiPct,
+    startingBankroll,
+    currentBankroll,
+    available,
+  };
+}
+
+function isModelPickTracked(eventId) {
+  const id = String(eventId || "");
+  return loadModelTracker().some(
+    (entry) => entry.status === "pending" && String(entry.eventId) === id
+  );
+}
+
+function addModelTrackerFromGame(game) {
+  if (!game?.prediction) return;
+  const eventId = game.eventId;
+  if (isModelPickTracked(eventId)) {
+    switchView("model-tracker");
+    showBanner("This pick is already tracked.", { autoHideMs: 3000, type: "success" });
+    return;
+  }
+
+  const entry = normalizeModelTrackerEntry({
+    id: createBetId(),
+    eventId,
+    league: game.league || sportSelect.value,
+    scheduleDate: lastPayload?.scheduleDate || getSelectedDate(),
+    matchup: game.matchup || "",
+    pick: game.prediction.outcomeLabel || game.prediction.predictedWinner || "",
+    outcomeLabel: game.prediction.outcomeLabel || "",
+    confidence: game.prediction.confidence ?? null,
+    modelDecimalOdds: extractModelDecimalOddsFromGame(game),
+    userDecimalOdds: null,
+    stake: null,
+    status: "pending",
+    profit: null,
+    createdAt: new Date().toISOString(),
+  });
+
+  const entries = loadModelTracker();
+  entries.unshift(entry);
+  saveModelTracker(autoSettleModelBets(entries));
+  modelTrackerFocusId = entry.id;
+  switchView("model-tracker");
+  showBanner("Pick added — enter your stake and odds.", { autoHideMs: 3500, type: "success" });
+}
+
+function deleteModelTrackerEntry(entryId) {
+  saveModelTracker(loadModelTracker().filter((entry) => entry.id !== entryId));
+  renderModelTrackerView();
+}
+
+function updateModelTrackerDate(entryId, dateValue) {
+  const entries = loadModelTracker().map((entry) => {
+    if (entry.id !== entryId) return entry;
+    return normalizeModelTrackerEntry({ ...entry, createdAt: parseBetDateInput(dateValue) });
+  });
+  saveModelTracker(entries);
+  renderModelTrackerView();
+}
+
+function updateModelTrackerStake(entryId, value) {
+  const stake = parseStakeInput(value);
+  const entries = loadModelTracker().map((entry) => {
+    if (entry.id !== entryId) return entry;
+    const next = normalizeModelTrackerEntry({ ...entry, stake: stake ?? entry.stake });
+    return ensureModelTrackerProfit(next);
+  });
+  saveModelTracker(entries);
+}
+
+function updateModelTrackerUserOdds(entryId, value) {
+  const userDecimalOdds = parseOddsInput(value);
+  const entries = loadModelTracker().map((entry) => {
+    if (entry.id !== entryId) return entry;
+    const next = normalizeModelTrackerEntry({ ...entry, userDecimalOdds: userDecimalOdds ?? entry.userDecimalOdds });
+    return ensureModelTrackerProfit(next);
+  });
+  saveModelTracker(entries);
+}
+
+function settleModelTrackerManual(entryId, won) {
+  const entries = loadModelTracker().map((entry) => {
+    if (entry.id !== entryId || entry.status !== "pending") return entry;
+    return ensureModelTrackerProfit({
+      ...normalizeModelTrackerEntry(entry),
+      status: won ? "won" : "lost",
+      settledAt: new Date().toISOString(),
+      manual: true,
+    });
+  });
+  saveModelTracker(entries);
+  renderModelTrackerView();
+}
+
+function exportModelTrackerToClipboard(entries) {
+  const header = ["Date", "Game", "Pick", "Stake", "Model Odd", "Your Odd", "Edge", "W/L", "P/L"].join("\t");
+  const lines = entries.map((entry) => {
+    const normalized = normalizeModelTrackerEntry(entry);
+    const wl = normalized.status === "won" ? "W" : normalized.status === "lost" ? "L" : "";
+    const model = normalized.modelDecimalOdds != null ? formatDecimalOdds(normalized.modelDecimalOdds) : "";
+    const user = normalized.userDecimalOdds != null ? formatDecimalOdds(normalized.userDecimalOdds) : "";
+    let edge = "";
+    if (normalized.modelDecimalOdds != null && normalized.userDecimalOdds != null) {
+      const pct = Math.round((normalized.userDecimalOdds / normalized.modelDecimalOdds - 1) * 1000) / 10;
+      edge = `${pct >= 0 ? "+" : ""}${pct}%`;
+    }
+    const profit =
+      normalized.profit != null
+        ? formatPlainMoney(normalized.profit)
+        : normalized.status !== "pending" &&
+            normalized.userDecimalOdds != null &&
+            normalized.stake != null
+          ? formatPlainMoney(
+              calcBetProfitDecimal(
+                normalized.userDecimalOdds,
+                normalized.stake,
+                normalized.status === "won"
+              )
+            )
+          : "";
+    return [
+      formatBetDateShort(normalized.scheduleDate || normalized.createdAt),
+      normalized.matchup,
+      normalized.outcomeLabel || normalized.pick,
+      normalized.stake != null ? normalized.stake.toFixed(2) : "",
+      model,
+      user,
+      edge,
+      wl,
+      profit,
+    ].join("\t");
+  });
+  return [header, ...lines].join("\n");
 }
 
 function loadModelPickCache() {
@@ -1172,17 +1490,18 @@ function isBetLoggedForGame(eventId) {
 function switchView(view) {
   activeView = view;
   const isPredictions = view === "predictions";
+  const isMyBets = view === "my-bets";
+  const isModelTracker = view === "model-tracker";
 
   viewTabsEl?.querySelectorAll(".view-tab").forEach((button) => {
     button.classList.toggle("active", button.dataset.view === view);
   });
 
   predictionsViewEl?.classList.toggle("hidden", !isPredictions);
-  myBetsViewEl?.classList.toggle("hidden", isPredictions);
+  myBetsViewEl?.classList.toggle("hidden", !isMyBets);
+  modelTrackerViewEl?.classList.toggle("hidden", !isModelTracker);
 
-  const predictionControls = [
-    document.querySelector(".header-toolbar"),
-  ];
+  const predictionControls = [document.querySelector(".header-toolbar")];
   predictionControls.forEach((el) => {
     if (el) el.classList.toggle("hidden", !isPredictions);
   });
@@ -1197,11 +1516,16 @@ function switchView(view) {
     }
     if (lastPayload) renderGames(lastPayload.games || []);
     else loadDashboard(true);
-  } else {
+  } else if (isMyBets) {
     dashboardTitle.textContent = "My Bet Tracker";
     hideBanner();
     modelDayResultEl?.classList.add("hidden");
     renderMyBetsView();
+  } else if (isModelTracker) {
+    dashboardTitle.textContent = "Model Tracker";
+    hideBanner();
+    modelDayResultEl?.classList.add("hidden");
+    renderModelTrackerView();
   }
 }
 
@@ -1486,6 +1810,226 @@ function renderMyBetsView() {
       showBanner("Could not copy automatically. Select the export text manually.");
     }
   });
+}
+
+function renderModelTrackerView() {
+  if (!modelTrackerViewEl) return;
+
+  let entries = autoSettleModelBets(loadModelTracker());
+  saveModelTracker(entries);
+  const bankroll = loadModelBankrollSettings();
+  const summary = summarizeModelTracker(entries, bankroll);
+  const oddsFormat = getOddsFormat();
+  const oddsPlaceholder = formatOddsInputPlaceholder(oddsFormat);
+
+  const sortedEntries = [...entries].sort(
+    (left, right) =>
+      new Date(right.createdAt || 0).getTime() - new Date(left.createdAt || 0).getTime()
+  );
+
+  const rows = sortedEntries.length
+    ? sortedEntries
+        .map((entry) => {
+          const normalized = normalizeModelTrackerEntry(entry);
+          const statusClass =
+            normalized.status === "won"
+              ? "bet-won"
+              : normalized.status === "lost"
+                ? "bet-lost"
+                : "bet-pending";
+          const wlLabel = normalized.status === "won" ? "W" : normalized.status === "lost" ? "L" : "—";
+          const profitCell =
+            normalized.status === "pending"
+              ? `<span class="bet-pending-label">—</span>`
+              : normalized.profit != null
+                ? `<strong class="${normalized.profit >= 0 ? "acc-correct" : "acc-wrong"}">${formatPlainMoney(normalized.profit)}</strong>`
+                : `<span class="bet-pending-label">—</span>`;
+          const edgeCell = formatModelEdge(normalized.modelDecimalOdds, normalized.userDecimalOdds);
+          const modelOddCell =
+            normalized.modelDecimalOdds != null
+              ? formatOddsDisplay(normalized.modelDecimalOdds, oddsFormat)
+              : "—";
+          const stakeValue =
+            normalized.stake != null && Number.isFinite(Number(normalized.stake))
+              ? Number(normalized.stake).toFixed(2)
+              : "";
+          const userOddsValue =
+            normalized.userDecimalOdds != null
+              ? formatOddsDisplay(normalized.userDecimalOdds, oddsFormat)
+              : "";
+          const actions =
+            normalized.status === "pending"
+              ? `<div class="bet-row-actions">
+                  <button type="button" class="bet-action-btn" data-model-action="win" data-entry-id="${normalized.id}">W</button>
+                  <button type="button" class="bet-action-btn" data-model-action="loss" data-entry-id="${normalized.id}">L</button>
+                  <button type="button" class="bet-action-btn danger" data-model-action="delete" data-entry-id="${normalized.id}">Delete</button>
+                </div>`
+              : `<div class="bet-row-actions">
+                  <button type="button" class="bet-action-btn danger" data-model-action="delete" data-entry-id="${normalized.id}">Delete</button>
+                </div>`;
+          const focusClass = modelTrackerFocusId === normalized.id ? " model-tracker-row-focus" : "";
+
+          return `
+            <tr class="${statusClass}${focusClass}" data-entry-id="${normalized.id}">
+              <td>
+                <input type="date" class="bet-date-input model-tracker-date-input" data-entry-id="${normalized.id}" value="${betDateInputFromIso(normalized.scheduleDate || normalized.createdAt)}" title="Schedule date">
+              </td>
+              <td>
+                <strong>${escapeHtml(normalized.matchup)}</strong>
+                <span class="bet-pick-line">${escapeHtml(normalized.outcomeLabel || normalized.pick)}${normalized.confidence != null ? ` · ${normalized.confidence}%` : ""}</span>
+              </td>
+              <td>
+                <div class="bankroll-input-wrap model-tracker-input-wrap">
+                  <span class="input-prefix">$</span>
+                  <input type="text" inputmode="decimal" class="model-tracker-stake-input" data-entry-id="${normalized.id}" placeholder="100" value="${escapeAttr(stakeValue)}" aria-label="Stake">
+                </div>
+              </td>
+              <td>${modelOddCell}</td>
+              <td>
+                <input type="text" inputmode="decimal" class="model-tracker-odds-input" data-entry-id="${normalized.id}" placeholder="${escapeAttr(oddsPlaceholder)}" value="${escapeAttr(userOddsValue)}" aria-label="Your odds">
+              </td>
+              <td>${edgeCell}</td>
+              <td><span class="bet-wl-pill ${statusClass}">${wlLabel}</span></td>
+              <td>${profitCell}</td>
+              <td>${actions}</td>
+            </tr>
+          `;
+        })
+        .join("")
+    : `<tr><td colspan="9" class="empty-bets-cell">No tracked picks yet. Add picks from the Predictions tab using <strong>Track model pick</strong>.</td></tr>`;
+
+  modelTrackerViewEl.innerHTML = `
+    <section class="my-bets-hero model-tracker-hero">
+      <div class="my-bets-hero-head">
+        <div>
+          <h2 class="section-title">Model picks</h2>
+          <p class="my-bets-note">Track model picks you take — enter your stake and the odds you got. Model odds are for comparison only.</p>
+        </div>
+        <label class="field bankroll-field">
+          <span>Starting bankroll</span>
+          <div class="bankroll-input-wrap">
+            <span class="input-prefix">$</span>
+            <input id="model-starting-bankroll" type="number" min="0" step="0.01" value="${summary.startingBankroll.toFixed(2)}">
+          </div>
+        </label>
+      </div>
+      <div class="my-bets-stats">
+        <article class="tracker-stat tracker-stat-highlight ${summary.profit >= 0 ? "stat-positive" : "stat-negative"}">
+          <span class="tracker-stat-label">Total P/L</span>
+          <strong>${formatMoney(summary.profit)}</strong>
+        </article>
+        <article class="tracker-stat">
+          <span class="tracker-stat-label">W/L</span>
+          <strong>${summary.wins}-${summary.losses}</strong>
+        </article>
+        <article class="tracker-stat">
+          <span class="tracker-stat-label">Bankroll</span>
+          <strong>$${summary.currentBankroll.toFixed(2)}</strong>
+        </article>
+        <article class="tracker-stat">
+          <span class="tracker-stat-label">Available</span>
+          <strong>$${summary.available.toFixed(2)}</strong>
+        </article>
+        <article class="tracker-stat">
+          <span class="tracker-stat-label">At risk</span>
+          <strong>$${summary.pendingStake.toFixed(2)}</strong>
+        </article>
+        <article class="tracker-stat">
+          <span class="tracker-stat-label">Pending</span>
+          <strong>${summary.pending}</strong>
+        </article>
+        <article class="tracker-stat">
+          <span class="tracker-stat-label">ROI</span>
+          <strong>${summary.roiPct != null ? `${summary.roiPct}%` : "—"}</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="my-bets-table-card panel-card model-tracker-table-card">
+      <div class="panel-card-head">
+        <h2 class="section-title">Tracked picks</h2>
+        <button type="button" class="btn-ghost" id="export-model-tracker-btn">Copy for spreadsheet</button>
+      </div>
+      <div class="my-bets-table-wrap">
+        <table class="my-bets-table sheet-style model-tracker-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Game / Pick</th>
+              <th>Stake</th>
+              <th>Model odd</th>
+              <th>Your odd</th>
+              <th>Edge</th>
+              <th>W/L</th>
+              <th>P/L</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </section>
+  `;
+
+  modelTrackerViewEl.querySelectorAll(".model-tracker-date-input").forEach((input) => {
+    input.addEventListener("change", () => {
+      updateModelTrackerDate(input.dataset.entryId, input.value);
+    });
+  });
+
+  modelTrackerViewEl.querySelectorAll(".model-tracker-stake-input").forEach((input) => {
+    input.addEventListener("change", () => {
+      updateModelTrackerStake(input.dataset.entryId, input.value);
+      renderModelTrackerView();
+    });
+  });
+
+  modelTrackerViewEl.querySelectorAll(".model-tracker-odds-input").forEach((input) => {
+    input.addEventListener("change", () => {
+      updateModelTrackerUserOdds(input.dataset.entryId, input.value);
+      renderModelTrackerView();
+    });
+  });
+
+  modelTrackerViewEl.querySelectorAll("[data-model-action]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const entryId = button.dataset.entryId;
+      const action = button.dataset.modelAction;
+      if (action === "delete") deleteModelTrackerEntry(entryId);
+      if (action === "win") settleModelTrackerManual(entryId, true);
+      if (action === "loss") settleModelTrackerManual(entryId, false);
+    });
+  });
+
+  modelTrackerViewEl.querySelector("#model-starting-bankroll")?.addEventListener("change", (event) => {
+    saveModelBankrollSettings({ startingBankroll: Number(event.currentTarget.value) || 0 });
+    renderModelTrackerView();
+  });
+
+  modelTrackerViewEl.querySelector("#export-model-tracker-btn")?.addEventListener("click", async () => {
+    const text = exportModelTrackerToClipboard(loadModelTracker());
+    try {
+      await navigator.clipboard.writeText(text);
+      showBanner("Model tracker copied — paste into Excel or Google Sheets.", {
+        autoHideMs: 4000,
+        type: "success",
+      });
+    } catch {
+      showBanner("Could not copy automatically. Select the export text manually.");
+    }
+  });
+
+  if (modelTrackerFocusId) {
+    const focusId = modelTrackerFocusId;
+    modelTrackerFocusId = null;
+    requestAnimationFrame(() => {
+      const row = modelTrackerViewEl.querySelector(`tr[data-entry-id="${focusId}"]`);
+      const input =
+        row?.querySelector(".model-tracker-stake-input") || row?.querySelector(".model-tracker-odds-input");
+      input?.focus();
+      row?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }
 }
 
 function bindMyBetsImportActions() {
@@ -2379,6 +2923,7 @@ function renderGames(games) {
       const shareUrl = `${window.location.origin}${window.location.pathname}#game-${game.eventId}`;
       const pickBadge = renderPickStatusBadge(game);
       const logged = isBetLoggedForGame(game.eventId);
+      const modelTracked = isModelPickTracked(game.eventId);
       const detailsOpen = !game.isFinal;
 
       return `
@@ -2402,6 +2947,7 @@ function renderGames(games) {
                 </div>
                 <div class="game-actions">
                   <span class="status-pill ${game.isLive ? "live" : ""}">${game.gameStatusText || "Scheduled"}</span>
+                  <button type="button" class="track-btn model-track-btn${modelTracked ? " tracked" : ""}" data-model-track-id="${game.eventId}"${!game.prediction?.outcomeLabel && !game.prediction?.predictedWinner ? " disabled" : ""}>${modelTracked ? "Already tracked" : "Track model pick"}</button>
                   <button type="button" class="track-btn${logged ? " tracked" : ""}" data-event-id="${game.eventId}">${logged ? "Bet logged" : "Log bet"}</button>
                   <button type="button" class="share-btn" data-share-url="${shareUrl}" data-share-title="${game.prediction?.outcomeLabel || game.matchup}">Share</button>
                 </div>
@@ -2415,12 +2961,24 @@ function renderGames(games) {
     })
     .join("");
 
-  gamesEl.querySelectorAll(".track-btn").forEach((button) => {
+  gamesEl.querySelectorAll(".track-btn[data-event-id]").forEach((button) => {
     button.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
       const game = (lastPayload?.games || []).find((item) => String(item.eventId) === String(button.dataset.eventId));
       if (game) openBetFormFromGame(game);
+    });
+  });
+
+  gamesEl.querySelectorAll(".model-track-btn").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (button.disabled) return;
+      const game = (lastPayload?.games || []).find(
+        (item) => String(item.eventId) === String(button.dataset.modelTrackId)
+      );
+      if (game) addModelTrackerFromGame(game);
     });
   });
 
@@ -2705,10 +3263,13 @@ async function refreshLiveScores() {
     lastLiveScoreAt = Date.now();
     lastPayload = { ...lastPayload, games: mergeLiveScores(lastPayload.games, liveScores) };
     saveMyBets(autoSettleMyBets(loadMyBets()));
+    saveModelTracker(autoSettleModelBets(loadModelTracker()));
     if (activeView === "predictions") {
       renderGames(lastPayload.games);
-    } else {
+    } else if (activeView === "my-bets") {
       renderMyBetsView();
+    } else if (activeView === "model-tracker") {
+      renderModelTrackerView();
     }
   } catch {
     /* ESPN CORS or network blocked — keep snapshot scores */
@@ -2867,6 +3428,9 @@ async function loadDashboard(force = false) {
     if (activeView === "my-bets") {
       saveMyBets(autoSettleMyBets(loadMyBets()));
       renderMyBetsView();
+    } else if (activeView === "model-tracker") {
+      saveModelTracker(autoSettleModelBets(loadModelTracker()));
+      renderModelTrackerView();
     }
   }
 }
@@ -2930,6 +3494,8 @@ async function initDashboard() {
     convertBetFormDraftOddsFormat(nextFormat, previousFormat);
     if (activeView === "my-bets") {
       renderMyBetsView();
+    } else if (activeView === "model-tracker") {
+      renderModelTrackerView();
     } else if (lastPayload) {
       renderGames(lastPayload.games || []);
     }
