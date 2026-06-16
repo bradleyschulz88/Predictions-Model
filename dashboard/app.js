@@ -630,8 +630,30 @@ function parseSheetDate(value) {
 }
 
 function parseSheetStake(value) {
-  const cleaned = String(value ?? "").replace(/[$,\s]/g, "");
+  const cleaned = String(value ?? "").replace(/[$£€¥,\s]/g, "");
   return parseStakeInput(cleaned);
+}
+
+function parseSheetOdds(value) {
+  let text = sanitizeSheetCell(value);
+  if (!text) return null;
+
+  text = text.replace(/[$£€¥\s]/g, "");
+  if (/^\d+,\d{1,3}$/.test(text)) {
+    text = text.replace(",", ".");
+  } else {
+    text = text.replace(/,/g, "");
+  }
+
+  const numeric = Number(text);
+  if (!Number.isFinite(numeric)) return null;
+
+  if (numeric >= 100 || numeric <= -100 || /^[+-]\d{3,}/.test(text)) {
+    const american = parseAmericanOddsInput(text.replace(/^\+/, ""));
+    if (american != null) return americanToDecimal(american);
+  }
+
+  return parseDecimalOddsInput(text);
 }
 
 function parseSheetWl(value) {
@@ -725,7 +747,7 @@ function parseSheetPaste(text) {
     if (!game) return;
 
     const stakeAmount = parseSheetStake(stake);
-    const decimalOdds = parseOddsInput(String(odds).replace(",", "."), "decimal");
+    const decimalOdds = parseSheetOdds(odds);
     const status = parseSheetWl(wl);
 
     if (stakeAmount == null) {
