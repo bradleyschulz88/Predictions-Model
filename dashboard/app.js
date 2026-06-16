@@ -115,8 +115,21 @@ function syncOddsFormatSelect() {
   oddsFormatSelect.value = getOddsFormat();
 }
 
+function cleanNumericCell(value) {
+  let text = String(value ?? "").trim();
+  if (!text || text.startsWith("=")) return "";
+  text = text.replace(/^["']+|["']+$/g, "");
+  text = text.replace(/[\uFF04$£€¥₹\s\u00A0]/g, "");
+  if (/^\d+,\d{1,3}$/.test(text)) {
+    text = text.replace(",", ".");
+  } else {
+    text = text.replace(/,/g, "");
+  }
+  return text;
+}
+
 function parseDecimalOddsInput(value) {
-  const text = String(value ?? "").trim().replace(",", ".");
+  const text = cleanNumericCell(value);
   if (!text) return null;
   const num = Number(text);
   if (!Number.isFinite(num) || num < 1.01) return null;
@@ -124,7 +137,9 @@ function parseDecimalOddsInput(value) {
 }
 
 function parseStakeInput(value) {
-  const num = Number(String(value ?? "").trim());
+  const text = cleanNumericCell(value);
+  if (!text) return null;
+  const num = Number(text);
   if (!Number.isFinite(num) || num <= 0) return null;
   return Math.round(num * 100) / 100;
 }
@@ -166,7 +181,7 @@ function formatDecimalOdds(odds) {
 }
 
 function parseAmericanOddsInput(value) {
-  const text = String(value ?? "").trim().replace(/,/g, "");
+  const text = cleanNumericCell(value).replace(/^\+/, "");
   if (!text) return null;
   const num = Number(text);
   if (!Number.isFinite(num) || num === 0 || Math.abs(num) < 100) return null;
@@ -630,26 +645,18 @@ function parseSheetDate(value) {
 }
 
 function parseSheetStake(value) {
-  const cleaned = String(value ?? "").replace(/[$£€¥,\s]/g, "");
-  return parseStakeInput(cleaned);
+  return parseStakeInput(value);
 }
 
 function parseSheetOdds(value) {
-  let text = sanitizeSheetCell(value);
+  const text = cleanNumericCell(sanitizeSheetCell(value));
   if (!text) return null;
-
-  text = text.replace(/[$£€¥\s]/g, "");
-  if (/^\d+,\d{1,3}$/.test(text)) {
-    text = text.replace(",", ".");
-  } else {
-    text = text.replace(/,/g, "");
-  }
 
   const numeric = Number(text);
   if (!Number.isFinite(numeric)) return null;
 
-  if (numeric >= 100 || numeric <= -100 || /^[+-]\d{3,}/.test(text)) {
-    const american = parseAmericanOddsInput(text.replace(/^\+/, ""));
+  if (numeric >= 100 || numeric <= -100 || /^[+-]?\d{3,}/.test(text)) {
+    const american = parseAmericanOddsInput(text);
     if (american != null) return americanToDecimal(american);
   }
 
