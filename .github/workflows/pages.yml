@@ -40,8 +40,6 @@ jobs:
           cp dashboard/styles.css docs/styles.css
           cp dashboard/manifest.json docs/manifest.json
           cp dashboard/sw.js docs/sw.js
-          cp dashboard/cloud.js docs/cloud.js
-          cp dashboard/config.js docs/config.js
 
       - name: Build dashboard JSON
         run: python scripts/build_pages_data.py

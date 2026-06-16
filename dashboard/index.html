@@ -98,8 +98,9 @@
           <option value="american">American</option>
         </select>
       </label>
-      <div id="auth-panel" class="auth-panel" aria-live="polite"></div>
     </div>
+
+    <div id="banner" class="banner hidden" role="status" aria-live="polite"></div>
 
     <div id="predictions-view">
       <section class="stats-strip" id="stats">
@@ -131,16 +132,12 @@
 
       <section id="top-picks" class="top-picks hidden"></section>
       <p id="freshness-note" class="freshness-note hidden"></p>
-      <div id="banner" class="banner hidden"></div>
       <main id="games" class="games"></main>
     </div>
 
     <section id="my-bets-view" class="my-bets-view hidden" aria-label="Personal bet tracker"></section>
   </div>
 
-  <script src="./config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./cloud.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>

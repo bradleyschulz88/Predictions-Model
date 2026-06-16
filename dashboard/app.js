@@ -90,9 +90,7 @@ let importPreviewRows = null;
 let sheetPasteDraft = "";
 let importFileName = "";
 let importDetectedBankroll = null;
-let betsMemoryCache = null;
-let settingsMemoryCache = null;
-let cloudSyncPromise = null;
+let bannerTimer = null;
 const AMERICAN_ODDS_LINE_KEYS = new Set([
   "home",
   "away",
@@ -466,7 +464,7 @@ function ensureBetProfit(bet) {
   };
 }
 
-function loadMyBetsFromStorage() {
+function loadMyBets() {
   try {
     const raw = localStorage.getItem(MY_BETS_KEY);
     if (raw) return JSON.parse(raw).map(normalizeBet);
@@ -476,35 +474,11 @@ function loadMyBetsFromStorage() {
   return [];
 }
 
-function loadMyBets() {
-  if (betsMemoryCache) return betsMemoryCache.map(normalizeBet);
-  return loadMyBetsFromStorage();
-}
-
-function saveMyBetsLocal(bets) {
+function saveMyBets(bets) {
   localStorage.setItem(MY_BETS_KEY, JSON.stringify(bets.map(normalizeBet)));
 }
 
-function queueCloudBetsSync() {
-  if (!window.PredictionsCloud?.session) return;
-  PredictionsCloud.queueSync(async () => {
-    await PredictionsCloud.pushBets(loadMyBets());
-  });
-}
-
-function saveMyBets(bets) {
-  const normalized = bets.map((bet) =>
-    normalizeBet({
-      ...bet,
-      updatedAt: new Date().toISOString(),
-    })
-  );
-  betsMemoryCache = normalized;
-  saveMyBetsLocal(normalized);
-  queueCloudBetsSync();
-}
-
-function loadBankrollSettingsFromStorage() {
+function loadBankrollSettings() {
   try {
     const raw = localStorage.getItem(BANKROLL_KEY);
     if (raw) {
@@ -517,178 +491,11 @@ function loadBankrollSettingsFromStorage() {
   return { startingBankroll: 0 };
 }
 
-function loadBankrollSettings() {
-  if (settingsMemoryCache) return settingsMemoryCache;
-  return loadBankrollSettingsFromStorage();
-}
-
-function saveBankrollSettingsLocal(settings) {
+function saveBankrollSettings(settings) {
   localStorage.setItem(
     BANKROLL_KEY,
     JSON.stringify({ startingBankroll: Math.max(0, Number(settings.startingBankroll) || 0) })
   );
-}
-
-function queueCloudSettingsSync() {
-  if (!window.PredictionsCloud?.session) return;
-  PredictionsCloud.queueSync(async () => {
-    await PredictionsCloud.pushSettings({
-      startingBankroll: loadBankrollSettings().startingBankroll,
-      oddsFormat: getOddsFormat(),
-    });
-  });
-}
-
-function saveBankrollSettings(settings) {
-  settingsMemoryCache = {
-    startingBankroll: Math.max(0, Number(settings.startingBankroll) || 0),
-  };
-  saveBankrollSettingsLocal(settingsMemoryCache);
-  queueCloudSettingsSync();
-}
-
-async function syncCloudAccount() {
-  if (!window.PredictionsCloud?.session) return null;
-  if (cloudSyncPromise) return cloudSyncPromise;
-
-  cloudSyncPromise = (async () => {
-    const bundle = await PredictionsCloud.pullSync();
-    const localBets = loadMyBetsFromStorage();
-    const merged = PredictionsCloud.mergeBets(localBets, bundle.bets || []).map(normalizeBet);
-    betsMemoryCache = merged;
-    saveMyBetsLocal(merged);
-    await PredictionsCloud.pushBets(merged);
-
-    const remoteSettings = bundle.settings || {};
-    settingsMemoryCache = {
-      startingBankroll: Math.max(0, Number(remoteSettings.startingBankroll) || 0),
-    };
-    saveBankrollSettingsLocal(settingsMemoryCache);
-
-    if (remoteSettings.oddsFormat === "american" || remoteSettings.oddsFormat === "decimal") {
-      setOddsFormat(remoteSettings.oddsFormat);
-      syncOddsFormatSelect();
-    } else {
-      await PredictionsCloud.pushSettings({
-        startingBankroll: settingsMemoryCache.startingBankroll,
-        oddsFormat: getOddsFormat(),
-      });
-    }
-
-    return bundle;
-  })();
-
-  try {
-    return await cloudSyncPromise;
-  } finally {
-    cloudSyncPromise = null;
-  }
-}
-
-function renderAuthPanel() {
-  const panel = document.getElementById("auth-panel");
-  if (!panel) return;
-
-  const cloud = window.PredictionsCloud;
-  if (!cloud?.enabled) {
-    panel.classList.add("hidden");
-    panel.innerHTML = "";
-    return;
-  }
-
-  panel.classList.remove("hidden");
-
-  if (cloud.user) {
-    panel.innerHTML = `
-      <div class="auth-signed-in">
-        <span class="auth-email" title="${escapeAttr(cloud.user.email || "")}">${escapeHtml(cloud.user.email || "Signed in")}</span>
-        <span class="auth-sync-badge" title="Bets sync to your account">Synced</span>
-        <button type="button" class="btn-ghost auth-signout-btn" id="auth-signout-btn">Sign out</button>
-      </div>
-    `;
-    panel.querySelector("#auth-signout-btn")?.addEventListener("click", async () => {
-      await cloud.signOut();
-      showBanner("Signed out. Bets remain on this device.");
-    });
-    return;
-  }
-
-  panel.innerHTML = `
-    <details class="auth-details">
-      <summary class="auth-summary">Sign in to sync bets</summary>
-      <form id="auth-form" class="auth-form">
-        <label class="field">
-          <span>Email</span>
-          <input id="auth-email" type="email" required autocomplete="email" placeholder="you@example.com">
-        </label>
-        <label class="field">
-          <span>Password</span>
-          <input id="auth-password" type="password" required minlength="6" autocomplete="current-password" placeholder="••••••••">
-        </label>
-        <div class="auth-actions">
-          <button type="submit" class="btn-primary" id="auth-signin-btn">Sign in</button>
-          <button type="button" class="btn-secondary" id="auth-signup-btn">Create account</button>
-        </div>
-        <p class="auth-hint">Sync bet history and bankroll across devices.</p>
-      </form>
-    </details>
-  `;
-
-  panel.querySelector("#auth-form")?.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const email = panel.querySelector("#auth-email")?.value?.trim();
-    const password = panel.querySelector("#auth-password")?.value || "";
-    try {
-      await cloud.signIn(email, password);
-      await syncCloudAccount();
-      showBanner("Signed in. Your bets are syncing.");
-      if (activeView === "my-bets") renderMyBetsView();
-    } catch (error) {
-      showBanner(error.message || "Sign in failed.");
-    }
-  });
-
-  panel.querySelector("#auth-signup-btn")?.addEventListener("click", async () => {
-    const email = panel.querySelector("#auth-email")?.value?.trim();
-    const password = panel.querySelector("#auth-password")?.value || "";
-    try {
-      const result = await cloud.signUp(email, password);
-      if (result.session) {
-        await syncCloudAccount();
-        showBanner("Account created. Your bets are syncing.");
-        if (activeView === "my-bets") renderMyBetsView();
-      } else {
-        showBanner("Check your email to confirm your account, then sign in.");
-      }
-    } catch (error) {
-      showBanner(error.message || "Sign up failed.");
-    }
-  });
-}
-
-async function initCloudSync() {
-  if (!window.PredictionsCloud) return;
-  await PredictionsCloud.init();
-  renderAuthPanel();
-  PredictionsCloud.onChange(async () => {
-    renderAuthPanel();
-    if (PredictionsCloud.session) {
-      try {
-        await syncCloudAccount();
-        if (activeView === "my-bets") renderMyBetsView();
-      } catch (error) {
-        showBanner(error.message || "Cloud sync failed.");
-      }
-    }
-  });
-
-  if (PredictionsCloud.session) {
-    try {
-      await syncCloudAccount();
-    } catch (error) {
-      console.warn("Initial cloud sync failed:", error);
-    }
-  }
 }
 
 function loadModelPickCache() {
@@ -1155,6 +962,7 @@ async function handleSheetFileUpload(file) {
     if (importPreviewRows.rows.length) {
       showBanner(`Loaded ${importPreviewRows.rows.length} bet(s). Click "Add to bet history" to save them.`);
       requestAnimationFrame(() => {
+        myBetsViewEl.querySelector(".import-collapse")?.setAttribute("open", "");
         myBetsViewEl.querySelector("#import-preview")?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     } else if (importPreviewRows.errors.length) {
@@ -1205,7 +1013,8 @@ function importBetsFromRows(rows) {
   renderMyBetsView();
   const totalPl = imported.reduce((sum, bet) => sum + Number(bet.profit || 0), 0);
   showBanner(
-    `Added ${imported.length} bet${imported.length === 1 ? "" : "s"} to history. Settled P/L: ${formatMoney(totalPl)}.`
+    `Added ${imported.length} bet${imported.length === 1 ? "" : "s"} to history. Settled P/L: ${formatMoney(totalPl)}.`,
+    { autoHideMs: 5000, type: "success" }
   );
   requestAnimationFrame(() => {
     myBetsViewEl.querySelector(".my-bets-table-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1248,15 +1057,15 @@ function addMyBet(entry, format = getOddsFormat()) {
   const decimalOdds = parseOddsInput(entry.odds ?? entry.decimalOdds, format);
 
   if (!game) {
-    showBanner("Enter a game.");
+    showBanner("Enter a game.", { type: "error" });
     return false;
   }
   if (stake == null) {
-    showBanner("Enter bet amount.");
+    showBanner("Enter bet amount.", { type: "error" });
     return false;
   }
   if (decimalOdds == null) {
-    showBanner(`Enter odds (e.g. ${formatOddsInputPlaceholder(format)}).`);
+    showBanner(`Enter odds (e.g. ${formatOddsInputPlaceholder(format)}).`, { type: "error" });
     return false;
   }
 
@@ -1443,7 +1252,7 @@ function renderMyBetsView() {
                 <strong>${escapeHtml(betGameLabel(normalized))}</strong>
                 ${normalized.type === "parlay" ? `<span class="bet-pick-line">${normalized.legs.length} legs</span>` : ""}
               </td>
-              <td>$${Number(normalized.stake).toFixed(2)}</td>
+              <td>$${Number.isFinite(Number(normalized.stake)) ? Number(normalized.stake).toFixed(2) : "—"}</td>
               <td>${formatOddsDisplay(normalized.decimalOdds, oddsFormat)}</td>
               <td><span class="bet-wl-pill ${statusClass}">${wlLabel}</span></td>
               <td>${profitCell}</td>
@@ -1452,7 +1261,7 @@ function renderMyBetsView() {
           `;
         })
         .join("")
-    : `<tr><td colspan="7" class="empty-bets-cell">No bets yet. Log one below or paste rows from your spreadsheet.</td></tr>`;
+    : `<tr><td colspan="7" class="empty-bets-cell">No bets yet. Log one above or import from a spreadsheet below.</td></tr>`;
 
   const importPreview = importPreviewRows
     ? importPreviewMarkup(
@@ -1467,7 +1276,7 @@ function renderMyBetsView() {
       <div class="my-bets-hero-head">
         <div>
           <h2 class="section-title">Bankroll</h2>
-          <p class="my-bets-note">${window.PredictionsCloud?.user ? "Bets sync to your account across devices." : window.PredictionsCloud?.enabled ? "Sign in above to sync bets across devices." : "Track your bets here. Model picks stay on the Predictions tab."}</p>
+          <p class="my-bets-note">Track your bets here. Model picks stay on the Predictions tab.</p>
         </div>
         <label class="field bankroll-field">
           <span>Starting bankroll</span>
@@ -1497,6 +1306,10 @@ function renderMyBetsView() {
         <article class="tracker-stat">
           <span class="tracker-stat-label">At risk</span>
           <strong>$${summary.pendingStake.toFixed(2)}</strong>
+        </article>
+        <article class="tracker-stat">
+          <span class="tracker-stat-label">Pending</span>
+          <strong>${summary.pending}</strong>
         </article>
         <article class="tracker-stat">
           <span class="tracker-stat-label">ROI</span>
@@ -1556,7 +1369,7 @@ function renderMyBetsView() {
       </section>
     </div>
 
-    <details class="my-bets-import-card panel-card import-collapse">
+    <details class="my-bets-import-card panel-card import-collapse"${importPreviewRows ? " open" : ""}>
       <summary class="import-collapse-summary">
         <span class="section-title">Import from spreadsheet</span>
         <span class="import-collapse-hint">CSV upload or paste</span>
@@ -1597,7 +1410,9 @@ function renderMyBetsView() {
       league: link.league,
       scheduleDate: link.scheduleDate,
     });
-    if (success) form.reset();
+    if (success) {
+      showBanner("Bet added to history.", { autoHideMs: 3200, type: "success" });
+    }
   });
 
   myBetsViewEl.querySelectorAll(".bet-date-input").forEach((input) => {
@@ -1629,6 +1444,7 @@ function renderMyBetsView() {
     renderMyBetsView();
     if (importPreviewRows.rows.length) {
       requestAnimationFrame(() => {
+        myBetsViewEl.querySelector(".import-collapse")?.setAttribute("open", "");
         myBetsViewEl.querySelector("#import-preview")?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     }
@@ -1663,7 +1479,7 @@ function renderMyBetsView() {
     const text = exportBetsToClipboard(loadMyBets());
     try {
       await navigator.clipboard.writeText(text);
-      showBanner("Bet history copied — paste into Excel or Google Sheets.");
+      showBanner("Bet history copied — paste into Excel or Google Sheets.", { autoHideMs: 4000, type: "success" });
     } catch {
       showBanner("Could not copy automatically. Select the export text manually.");
     }
@@ -1996,13 +1812,27 @@ function renderLineChips(line) {
     .join("");
 }
 
-function showBanner(message) {
+function showBanner(message, { autoHideMs = 0, type = "info" } = {}) {
+  if (!bannerEl) return;
   bannerEl.textContent = message;
-  bannerEl.classList.remove("hidden");
+  bannerEl.classList.remove("hidden", "banner-error", "banner-success");
+  if (type === "error") bannerEl.classList.add("banner-error");
+  if (type === "success") bannerEl.classList.add("banner-success");
+  if (bannerTimer) {
+    clearTimeout(bannerTimer);
+    bannerTimer = null;
+  }
+  if (autoHideMs > 0) {
+    bannerTimer = setTimeout(() => hideBanner(), autoHideMs);
+  }
 }
 
 function hideBanner() {
-  bannerEl.classList.add("hidden");
+  if (bannerTimer) {
+    clearTimeout(bannerTimer);
+    bannerTimer = null;
+  }
+  bannerEl?.classList.add("hidden");
 }
 
 function lineupLabelForSport(sport) {
@@ -2023,9 +1853,11 @@ function filterGames(games) {
 
 function renderStats(payload, visibleCount) {
   statGames.textContent = visibleCount ?? payload.gameCount ?? 0;
-  statDate.textContent = payload.scheduleDate || getSelectedDate() || "—";
-  statTopPick.textContent = payload.topPick || "—";
   const sport = sportSelect.value;
+  const displayDate = getSelectedDate() || payload.scheduleDate || "—";
+  const tz = payload.scheduleTimezone || leagueMeta(sport)?.scheduleTimezone;
+  statDate.textContent = displayDate !== "—" && tz ? `${displayDate} (${tz})` : displayDate;
+  statTopPick.textContent = payload.topPick || "—";
   statLeague.textContent =
     sport === "overview" ? "All sports" : payload.leagueLabel || SPORT_LABELS[sport] || "—";
   statUpdated.textContent = formatDateTime(payload.fetchedAt);
@@ -2467,7 +2299,7 @@ function renderGames(games) {
           await navigator.share({ title, url });
         } else {
           await navigator.clipboard.writeText(url);
-          showBanner("Link copied to clipboard.");
+          showBanner("Link copied to clipboard.", { autoHideMs: 3000, type: "success" });
         }
       } catch {
         /* user cancelled */
@@ -2846,7 +2678,16 @@ async function loadDashboard(force = false) {
       const tz = payload.scheduleTimezone || leagueMeta(sportSelect.value)?.scheduleTimezone;
       statDate.textContent = `${displayDate}${tz ? ` (${tz})` : ""}`;
 
-      if (IS_STATIC_HOST) {
+      let games = payload.games || [];
+      if (payload._dateFallback && payload.scheduleDate !== displayDate) {
+        games = [];
+      }
+
+      renderGames(games);
+
+      if (games.length === 0 && payload.error) {
+        showBanner(`Data build error: ${payload.error}. Try another date or re-run GitHub Actions.`);
+      } else if (IS_STATIC_HOST) {
         let note = `Predictions update every 30 min on GitHub. Live scores refresh every ${manifestData?.liveScoreRefreshSeconds || 90}s in your browser.`;
         if (tz) {
           note += ` MLB/US sports use ${tz} schedule dates (not your local calendar day).`;
@@ -2856,23 +2697,16 @@ async function loadDashboard(force = false) {
         } else if (payload._dateFallback) {
           note += ` No snapshot for ${payload._requestedDate || displayDate}; predictions unavailable for that date.`;
         }
+        if (games.length === 0) {
+          note += ` No games for ${displayDate}. Pick another date from the dropdown or try Refresh.`;
+        }
         showBanner(note);
+      } else if (games.length === 0) {
+        showBanner(`No games for ${displayDate}. Pick another date from the dropdown or try Refresh.`);
       } else if ((payload.sportsbookCount || 0) === 0) {
         showBanner("Games ranked by win probability. Odds appear when ESPN or sportsbooks publish them.");
       } else {
         hideBanner();
-      }
-
-      let games = payload.games || [];
-      if (payload._dateFallback && payload.scheduleDate !== displayDate) {
-        games = [];
-      }
-
-      renderGames(games);
-      if (games.length === 0 && payload.error) {
-        showBanner(`Data build error: ${payload.error}. Try another date or re-run GitHub Actions.`);
-      } else if (games.length === 0 && !payload.error) {
-        showBanner(`No games for ${displayDate}. Pick another date from the dropdown or try Refresh.`);
       }
       resetLiveScorePolling();
     }
@@ -2929,7 +2763,6 @@ async function initDashboard() {
   registerServiceWorker();
   syncOddsFormatSelect();
   bindMyBetsImportActions();
-  await initCloudSync();
 
   if (IS_STATIC_HOST) {
     manifestData = await fetchManifest({ force: false });
@@ -2956,7 +2789,6 @@ async function initDashboard() {
 
     setOddsFormat(nextFormat);
     convertBetFormDraftOddsFormat(nextFormat, previousFormat);
-    queueCloudSettingsSync();
     if (activeView === "my-bets") {
       renderMyBetsView();
     } else if (lastPayload) {
