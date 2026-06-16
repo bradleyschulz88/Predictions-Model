@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-06-15T23:56:33.937752+00:00",
+  "updatedAt": "2026-06-16T00:25:31.395869+00:00",
   "summary": {
     "last7Days": {
       "correct": 20,
-      "total": 38,
-      "pct": 52.6,
-      "units": 1.216,
-      "roiPct": 3.2,
-      "pending": 30
+      "total": 39,
+      "pct": 51.3,
+      "units": 0.216,
+      "roiPct": 0.6,
+      "pending": 29
     },
     "allTime": {
       "correct": 20,
-      "total": 38,
-      "pct": 52.6,
-      "units": 1.216,
-      "roiPct": 3.2,
-      "pending": 30
+      "total": 39,
+      "pct": 51.3,
+      "units": 0.216,
+      "roiPct": 0.6,
+      "pending": 29
     },
     "byLeague": {
       "worldcup": {
         "correct": 4,
-        "total": 7,
-        "pct": 57.1,
-        "units": 1.0,
-        "roiPct": 14.3,
+        "total": 8,
+        "pct": 50.0,
+        "units": 0.0,
+        "roiPct": 0.0,
         "pending": 0
       },
       "nba": {
@@ -51,6 +51,25 @@
     }
   },
   "recentResults": [
+    {
+      "eventId": "760429",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-15",
+      "matchup": "Uruguay @ Saudi Arabia",
+      "predicted": "Uruguay",
+      "predictedSide": "away",
+      "outcomeLabel": "Uruguay to win",
+      "confidence": 54.0,
+      "pickOdds": -205,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "1",
+      "gradedAt": "2026-06-16T00:25:31.371933+00:00",
+      "date": "2026-06-15"
+    },
     {
       "eventId": "760426",
       "league": "worldcup",
@@ -1116,25 +1135,6 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-06-16"
-    },
-    {
-      "eventId": "760429",
-      "league": "worldcup",
-      "scheduleDate": "2026-06-15",
-      "matchup": "Uruguay @ Saudi Arabia",
-      "predicted": "Uruguay",
-      "predictedSide": "away",
-      "outcomeLabel": "Uruguay to win",
-      "confidence": 56.9,
-      "pickOdds": -205,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-06-15"
     },
     {
       "eventId": "760427",
@@ -2362,15 +2362,15 @@
       "predicted": "Uruguay",
       "predictedSide": "away",
       "outcomeLabel": "Uruguay to win",
-      "confidence": 56.9,
+      "confidence": 54.0,
       "pickOdds": -205,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "1",
+      "gradedAt": "2026-06-16T00:25:31.371933+00:00",
       "date": "2026-06-15"
     },
     "760427": {
