@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-06-16T01:26:49.535497+00:00",
+  "updatedAt": "2026-06-16T01:31:11.995780+00:00",
   "summary": {
     "last7Days": {
-      "correct": 21,
-      "total": 40,
-      "pct": 52.5,
-      "units": 0.946,
-      "roiPct": 2.4,
-      "pending": 28
+      "correct": 22,
+      "total": 41,
+      "pct": 53.7,
+      "units": 1.446,
+      "roiPct": 3.5,
+      "pending": 27
     },
     "allTime": {
-      "correct": 21,
-      "total": 40,
-      "pct": 52.5,
-      "units": 0.946,
-      "roiPct": 2.4,
-      "pending": 28
+      "correct": 22,
+      "total": 41,
+      "pct": 53.7,
+      "units": 1.446,
+      "roiPct": 3.5,
+      "pending": 27
     },
     "byLeague": {
       "mlb": {
-        "correct": 17,
-        "total": 31,
-        "pct": 54.8,
-        "units": 1.946,
-        "roiPct": 6.3,
+        "correct": 18,
+        "total": 32,
+        "pct": 56.2,
+        "units": 2.446,
+        "roiPct": 7.6,
         "pending": 0
       },
       "worldcup": {
@@ -51,6 +51,25 @@
     }
   },
   "recentResults": [
+    {
+      "eventId": "401815765",
+      "league": "mlb",
+      "scheduleDate": "2026-06-15",
+      "matchup": "Miami Marlins @ Philadelphia Phillies",
+      "predicted": "Philadelphia Phillies",
+      "predictedSide": "home",
+      "outcomeLabel": "Philadelphia Phillies to win",
+      "confidence": 76.4,
+      "pickOdds": -200,
+      "status": "graded",
+      "actual": "Philadelphia Phillies",
+      "correct": true,
+      "units": 0.5,
+      "homeScore": "7",
+      "awayScore": "0",
+      "gradedAt": "2026-06-16T01:31:09.597271+00:00",
+      "date": "2026-06-15"
+    },
     {
       "eventId": "401815764",
       "league": "mlb",
@@ -1325,25 +1344,6 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-06-15"
-    },
-    {
-      "eventId": "401815765",
-      "league": "mlb",
-      "scheduleDate": "2026-06-15",
-      "matchup": "Miami Marlins @ Philadelphia Phillies",
-      "predicted": "Philadelphia Phillies",
-      "predictedSide": "home",
-      "outcomeLabel": "Philadelphia Phillies to win",
-      "confidence": 75.3,
-      "pickOdds": -200,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-06-15"
     }
   ],
   "picksByEventId": {
@@ -2438,15 +2438,15 @@
       "predicted": "Philadelphia Phillies",
       "predictedSide": "home",
       "outcomeLabel": "Philadelphia Phillies to win",
-      "confidence": 75.3,
+      "confidence": 76.4,
       "pickOdds": -200,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "status": "graded",
+      "actual": "Philadelphia Phillies",
+      "correct": true,
+      "units": 0.5,
+      "homeScore": "7",
+      "awayScore": "0",
+      "gradedAt": "2026-06-16T01:31:09.597271+00:00",
       "date": "2026-06-15"
     },
     "401815769": {
