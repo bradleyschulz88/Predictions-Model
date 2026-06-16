@@ -90,6 +90,9 @@ let importPreviewRows = null;
 let sheetPasteDraft = "";
 let importFileName = "";
 let importDetectedBankroll = null;
+let betsMemoryCache = null;
+let settingsMemoryCache = null;
+let cloudSyncPromise = null;
 const AMERICAN_ODDS_LINE_KEYS = new Set([
   "home",
   "away",
@@ -463,7 +466,7 @@ function ensureBetProfit(bet) {
   };
 }
 
-function loadMyBets() {
+function loadMyBetsFromStorage() {
   try {
     const raw = localStorage.getItem(MY_BETS_KEY);
     if (raw) return JSON.parse(raw).map(normalizeBet);
@@ -473,11 +476,35 @@ function loadMyBets() {
   return [];
 }
 
-function saveMyBets(bets) {
+function loadMyBets() {
+  if (betsMemoryCache) return betsMemoryCache.map(normalizeBet);
+  return loadMyBetsFromStorage();
+}
+
+function saveMyBetsLocal(bets) {
   localStorage.setItem(MY_BETS_KEY, JSON.stringify(bets.map(normalizeBet)));
 }
 
-function loadBankrollSettings() {
+function queueCloudBetsSync() {
+  if (!window.PredictionsCloud?.session) return;
+  PredictionsCloud.queueSync(async () => {
+    await PredictionsCloud.pushBets(loadMyBets());
+  });
+}
+
+function saveMyBets(bets) {
+  const normalized = bets.map((bet) =>
+    normalizeBet({
+      ...bet,
+      updatedAt: new Date().toISOString(),
+    })
+  );
+  betsMemoryCache = normalized;
+  saveMyBetsLocal(normalized);
+  queueCloudBetsSync();
+}
+
+function loadBankrollSettingsFromStorage() {
   try {
     const raw = localStorage.getItem(BANKROLL_KEY);
     if (raw) {
@@ -490,11 +517,178 @@ function loadBankrollSettings() {
   return { startingBankroll: 0 };
 }
 
-function saveBankrollSettings(settings) {
+function loadBankrollSettings() {
+  if (settingsMemoryCache) return settingsMemoryCache;
+  return loadBankrollSettingsFromStorage();
+}
+
+function saveBankrollSettingsLocal(settings) {
   localStorage.setItem(
     BANKROLL_KEY,
     JSON.stringify({ startingBankroll: Math.max(0, Number(settings.startingBankroll) || 0) })
   );
+}
+
+function queueCloudSettingsSync() {
+  if (!window.PredictionsCloud?.session) return;
+  PredictionsCloud.queueSync(async () => {
+    await PredictionsCloud.pushSettings({
+      startingBankroll: loadBankrollSettings().startingBankroll,
+      oddsFormat: getOddsFormat(),
+    });
+  });
+}
+
+function saveBankrollSettings(settings) {
+  settingsMemoryCache = {
+    startingBankroll: Math.max(0, Number(settings.startingBankroll) || 0),
+  };
+  saveBankrollSettingsLocal(settingsMemoryCache);
+  queueCloudSettingsSync();
+}
+
+async function syncCloudAccount() {
+  if (!window.PredictionsCloud?.session) return null;
+  if (cloudSyncPromise) return cloudSyncPromise;
+
+  cloudSyncPromise = (async () => {
+    const bundle = await PredictionsCloud.pullSync();
+    const localBets = loadMyBetsFromStorage();
+    const merged = PredictionsCloud.mergeBets(localBets, bundle.bets || []).map(normalizeBet);
+    betsMemoryCache = merged;
+    saveMyBetsLocal(merged);
+    await PredictionsCloud.pushBets(merged);
+
+    const remoteSettings = bundle.settings || {};
+    settingsMemoryCache = {
+      startingBankroll: Math.max(0, Number(remoteSettings.startingBankroll) || 0),
+    };
+    saveBankrollSettingsLocal(settingsMemoryCache);
+
+    if (remoteSettings.oddsFormat === "american" || remoteSettings.oddsFormat === "decimal") {
+      setOddsFormat(remoteSettings.oddsFormat);
+      syncOddsFormatSelect();
+    } else {
+      await PredictionsCloud.pushSettings({
+        startingBankroll: settingsMemoryCache.startingBankroll,
+        oddsFormat: getOddsFormat(),
+      });
+    }
+
+    return bundle;
+  })();
+
+  try {
+    return await cloudSyncPromise;
+  } finally {
+    cloudSyncPromise = null;
+  }
+}
+
+function renderAuthPanel() {
+  const panel = document.getElementById("auth-panel");
+  if (!panel) return;
+
+  const cloud = window.PredictionsCloud;
+  if (!cloud?.enabled) {
+    panel.classList.add("hidden");
+    panel.innerHTML = "";
+    return;
+  }
+
+  panel.classList.remove("hidden");
+
+  if (cloud.user) {
+    panel.innerHTML = `
+      <div class="auth-signed-in">
+        <span class="auth-email" title="${escapeAttr(cloud.user.email || "")}">${escapeHtml(cloud.user.email || "Signed in")}</span>
+        <span class="auth-sync-badge" title="Bets sync to your account">Synced</span>
+        <button type="button" class="btn-ghost auth-signout-btn" id="auth-signout-btn">Sign out</button>
+      </div>
+    `;
+    panel.querySelector("#auth-signout-btn")?.addEventListener("click", async () => {
+      await cloud.signOut();
+      showBanner("Signed out. Bets remain on this device.");
+    });
+    return;
+  }
+
+  panel.innerHTML = `
+    <details class="auth-details">
+      <summary class="auth-summary">Sign in to sync bets</summary>
+      <form id="auth-form" class="auth-form">
+        <label class="field">
+          <span>Email</span>
+          <input id="auth-email" type="email" required autocomplete="email" placeholder="you@example.com">
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input id="auth-password" type="password" required minlength="6" autocomplete="current-password" placeholder="••••••••">
+        </label>
+        <div class="auth-actions">
+          <button type="submit" class="btn-primary" id="auth-signin-btn">Sign in</button>
+          <button type="button" class="btn-secondary" id="auth-signup-btn">Create account</button>
+        </div>
+        <p class="auth-hint">Sync bet history and bankroll across devices.</p>
+      </form>
+    </details>
+  `;
+
+  panel.querySelector("#auth-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const email = panel.querySelector("#auth-email")?.value?.trim();
+    const password = panel.querySelector("#auth-password")?.value || "";
+    try {
+      await cloud.signIn(email, password);
+      await syncCloudAccount();
+      showBanner("Signed in. Your bets are syncing.");
+      if (activeView === "my-bets") renderMyBetsView();
+    } catch (error) {
+      showBanner(error.message || "Sign in failed.");
+    }
+  });
+
+  panel.querySelector("#auth-signup-btn")?.addEventListener("click", async () => {
+    const email = panel.querySelector("#auth-email")?.value?.trim();
+    const password = panel.querySelector("#auth-password")?.value || "";
+    try {
+      const result = await cloud.signUp(email, password);
+      if (result.session) {
+        await syncCloudAccount();
+        showBanner("Account created. Your bets are syncing.");
+        if (activeView === "my-bets") renderMyBetsView();
+      } else {
+        showBanner("Check your email to confirm your account, then sign in.");
+      }
+    } catch (error) {
+      showBanner(error.message || "Sign up failed.");
+    }
+  });
+}
+
+async function initCloudSync() {
+  if (!window.PredictionsCloud) return;
+  await PredictionsCloud.init();
+  renderAuthPanel();
+  PredictionsCloud.onChange(async () => {
+    renderAuthPanel();
+    if (PredictionsCloud.session) {
+      try {
+        await syncCloudAccount();
+        if (activeView === "my-bets") renderMyBetsView();
+      } catch (error) {
+        showBanner(error.message || "Cloud sync failed.");
+      }
+    }
+  });
+
+  if (PredictionsCloud.session) {
+    try {
+      await syncCloudAccount();
+    } catch (error) {
+      console.warn("Initial cloud sync failed:", error);
+    }
+  }
 }
 
 function loadModelPickCache() {
@@ -1273,7 +1467,7 @@ function renderMyBetsView() {
       <div class="my-bets-hero-head">
         <div>
           <h2 class="section-title">Bankroll</h2>
-          <p class="my-bets-note">Track your bets here. Model picks stay on the Predictions tab.</p>
+          <p class="my-bets-note">${window.PredictionsCloud?.user ? "Bets sync to your account across devices." : window.PredictionsCloud?.enabled ? "Sign in above to sync bets across devices." : "Track your bets here. Model picks stay on the Predictions tab."}</p>
         </div>
         <label class="field bankroll-field">
           <span>Starting bankroll</span>
@@ -2735,6 +2929,7 @@ async function initDashboard() {
   registerServiceWorker();
   syncOddsFormatSelect();
   bindMyBetsImportActions();
+  await initCloudSync();
 
   if (IS_STATIC_HOST) {
     manifestData = await fetchManifest({ force: false });
@@ -2761,6 +2956,7 @@ async function initDashboard() {
 
     setOddsFormat(nextFormat);
     convertBetFormDraftOddsFormat(nextFormat, previousFormat);
+    queueCloudSettingsSync();
     if (activeView === "my-bets") {
       renderMyBetsView();
     } else if (lastPayload) {

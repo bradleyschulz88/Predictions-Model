@@ -1,0 +1,15 @@
+{
+  "name": "predictions-dashboard",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/generate_frontend_config.js",
+    "dev:api": "vercel dev"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.8"
+  },
+  "devDependencies": {
+    "vercel": "^41.0.0"
+  }
+}

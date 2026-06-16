@@ -4,7 +4,15 @@ Multi-sport win predictions for **MLB**, **NFL**, **NBA**, **World Cup**, **EPL*
 
 Features include model vs market edge, totals picks, injury-adjusted predictions, accuracy tracking, mobile-friendly UI, and PWA support.
 
-No third-party dependencies are required. Uses Python 3.10+.
+No third-party dependencies are required for the core Python pipeline. Uses Python 3.10+.
+
+## Cloud accounts & bet sync (Phase 1)
+
+Deploy on **Vercel** with **Supabase** to let users sign in and sync **My Bets** across devices.
+
+See **[docs/SAAS_SETUP.md](docs/SAAS_SETUP.md)** for Supabase migration, Vercel env vars, and testing steps.
+
+GitHub Pages continues to work without accounts (bets stay in the browser).
 
 ## Live site (GitHub Pages)
 
