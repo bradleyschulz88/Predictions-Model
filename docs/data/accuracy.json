@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-06-16T20:11:35.777782+00:00",
+  "updatedAt": "2026-06-16T22:29:31.902801+00:00",
   "summary": {
     "last7Days": {
-      "correct": 27,
-      "total": 50,
-      "pct": 54.0,
-      "units": 0.524,
-      "roiPct": 1.0,
-      "pending": 38
+      "correct": 28,
+      "total": 51,
+      "pct": 54.9,
+      "units": 1.024,
+      "roiPct": 2.0,
+      "pending": 37
     },
     "allTime": {
-      "correct": 27,
-      "total": 50,
-      "pct": 54.0,
-      "units": 0.524,
-      "roiPct": 1.0,
-      "pending": 38
+      "correct": 28,
+      "total": 51,
+      "pct": 54.9,
+      "units": 1.024,
+      "roiPct": 2.0,
+      "pending": 37
     },
     "byLeague": {
+      "worldcup": {
+        "correct": 5,
+        "total": 10,
+        "pct": 50.0,
+        "units": -0.5,
+        "roiPct": -5.0,
+        "pending": 0
+      },
       "mlb": {
         "correct": 23,
         "total": 40,
         "pct": 57.5,
         "units": 2.524,
         "roiPct": 6.3,
-        "pending": 0
-      },
-      "worldcup": {
-        "correct": 4,
-        "total": 9,
-        "pct": 44.4,
-        "units": -1.0,
-        "roiPct": -11.1,
         "pending": 0
       },
       "nba": {
@@ -51,6 +51,25 @@
     }
   },
   "recentResults": [
+    {
+      "eventId": "760432",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-16",
+      "matchup": "Senegal @ France",
+      "predicted": "France",
+      "predictedSide": "home",
+      "outcomeLabel": "France to win",
+      "confidence": 52.9,
+      "pickOdds": -200,
+      "status": "graded",
+      "actual": "France",
+      "correct": true,
+      "units": 0.5,
+      "homeScore": "3",
+      "awayScore": "1",
+      "gradedAt": "2026-06-16T22:29:31.866545+00:00",
+      "date": "2026-06-16"
+    },
     {
       "eventId": "401815773",
       "league": "mlb",
@@ -1391,25 +1410,6 @@
       "predicted": "Algeria",
       "predictedSide": "away",
       "outcomeLabel": "Algeria to win",
-      "confidence": 41.2,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-06-16"
-    },
-    {
-      "eventId": "760432",
-      "league": "worldcup",
-      "scheduleDate": "2026-06-16",
-      "matchup": "Senegal @ France",
-      "predicted": "Senegal",
-      "predictedSide": "away",
-      "outcomeLabel": "Senegal to win",
       "confidence": 41.2,
       "pickOdds": null,
       "status": "pending",
@@ -2967,18 +2967,18 @@
       "league": "worldcup",
       "scheduleDate": "2026-06-16",
       "matchup": "Senegal @ France",
-      "predicted": "Senegal",
-      "predictedSide": "away",
-      "outcomeLabel": "Senegal to win",
-      "confidence": 41.2,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "predicted": "France",
+      "predictedSide": "home",
+      "outcomeLabel": "France to win",
+      "confidence": 52.9,
+      "pickOdds": -200,
+      "status": "graded",
+      "actual": "France",
+      "correct": true,
+      "units": 0.5,
+      "homeScore": "3",
+      "awayScore": "1",
+      "gradedAt": "2026-06-16T22:29:31.866545+00:00",
       "date": "2026-06-16"
     },
     "760430": {
