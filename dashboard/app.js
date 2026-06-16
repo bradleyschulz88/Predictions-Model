@@ -5,6 +5,7 @@ const dateNextBtn = document.getElementById("date-next");
 const dateQuickEl = document.getElementById("date-quick");
 const viewFilter = document.getElementById("view-filter");
 const confidenceFilter = document.getElementById("confidence-filter");
+const oddsFormatSelect = document.getElementById("odds-format");
 const teamSearch = document.getElementById("team-search");
 const refreshBtn = document.getElementById("refresh-btn");
 const autoRefresh = document.getElementById("auto-refresh");
@@ -74,15 +75,39 @@ let dateOptionsCache = [];
 let activeView = "predictions";
 let betFormDraft = {
   type: "single",
-  legs: [{ matchup: "", pick: "", legDecimalOdds: "" }],
+  legs: [{ matchup: "", pick: "", legOdds: "" }],
   decimalOdds: "",
   stake: "",
 };
 
 const MY_BETS_KEY = "predictions-dashboard-my-bets";
+const ODDS_FORMAT_KEY = "predictions-dashboard-odds-format";
+const AMERICAN_ODDS_LINE_KEYS = new Set([
+  "home",
+  "away",
+  "draw",
+  "homeOdds",
+  "awayOdds",
+  "drawOdds",
+  "overOdds",
+  "underOdds",
+]);
 
 function createBetId() {
   return `bet-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function getOddsFormat() {
+  return localStorage.getItem(ODDS_FORMAT_KEY) === "american" ? "american" : "decimal";
+}
+
+function setOddsFormat(format) {
+  localStorage.setItem(ODDS_FORMAT_KEY, format === "american" ? "american" : "decimal");
+}
+
+function syncOddsFormatSelect() {
+  if (!oddsFormatSelect) return;
+  oddsFormatSelect.value = getOddsFormat();
 }
 
 function parseDecimalOddsInput(value) {
@@ -119,6 +144,14 @@ function formatDecimalOdds(odds) {
   return value.toFixed(2);
 }
 
+function parseAmericanOddsInput(value) {
+  const text = String(value ?? "").trim().replace(/,/g, "");
+  if (!text) return null;
+  const num = Number(text);
+  if (!Number.isFinite(num) || num === 0 || Math.abs(num) < 100) return null;
+  return Math.round(num);
+}
+
 function americanToDecimal(american) {
   const value = Number(american);
   if (!Number.isFinite(value) || value === 0) return null;
@@ -126,9 +159,95 @@ function americanToDecimal(american) {
   return Math.round((100 / Math.abs(value) + 1) * 1000) / 1000;
 }
 
-function productDecimalOdds(legs) {
+function decimalToAmerican(decimal) {
+  const value = Number(decimal);
+  if (!Number.isFinite(value) || value <= 1) return null;
+  if (value >= 2) return Math.round((value - 1) * 100);
+  return Math.round(-100 / (value - 1));
+}
+
+function parseOddsInput(value, format = getOddsFormat()) {
+  if (format === "american") {
+    const american = parseAmericanOddsInput(value);
+    return american != null ? americanToDecimal(american) : null;
+  }
+  return parseDecimalOddsInput(value);
+}
+
+function formatOddsDisplay(decimalOdds, format = getOddsFormat()) {
+  const value = Number(decimalOdds);
+  if (!Number.isFinite(value)) return "—";
+  if (format === "american") {
+    const american = decimalToAmerican(value);
+    if (american == null) return "—";
+    return american > 0 ? `+${american}` : String(american);
+  }
+  return formatDecimalOdds(value);
+}
+
+function formatOddsInputPlaceholder(format = getOddsFormat()) {
+  return format === "american" ? "-150 or +130" : "1.91";
+}
+
+function oddsFieldLabel({ combined = false, leg = false, format = getOddsFormat() } = {}) {
+  const formatLabel = format === "american" ? "American" : "Decimal";
+  if (leg) return `Leg odds (${formatLabel})`;
+  if (combined) return `Combined ${formatLabel.toLowerCase()} odds`;
+  return `${formatLabel} odds`;
+}
+
+function convertOddsInputBetweenFormats(value, fromFormat, toFormat) {
+  if (!value || fromFormat === toFormat) return value;
+  const decimal = parseOddsInput(value, fromFormat);
+  if (decimal == null) return value;
+  return toFormat === "american" ? formatOddsDisplay(decimal, "american") : formatDecimalOdds(decimal);
+}
+
+function convertBetFormDraftOddsFormat(newFormat, oldFormat = getOddsFormat()) {
+  if (!betFormDraft || oldFormat === newFormat) return;
+  betFormDraft = {
+    ...betFormDraft,
+    decimalOdds: convertOddsInputBetweenFormats(betFormDraft.decimalOdds, oldFormat, newFormat),
+    legs: (betFormDraft.legs || []).map((leg) => ({
+      ...leg,
+      legOdds: convertOddsInputBetweenFormats(leg.legOdds ?? leg.legDecimalOdds ?? "", oldFormat, newFormat),
+    })),
+  };
+}
+
+function looksLikeAmericanOdds(value) {
+  const num = Number(value);
+  return Number.isFinite(num) && (num >= 100 || num <= -100);
+}
+
+function isAmericanOddsLineKey(key) {
+  const normalized = String(key || "").toLowerCase();
+  if (AMERICAN_ODDS_LINE_KEYS.has(normalized)) return true;
+  return normalized.endsWith("odds");
+}
+
+function formatLineChipValue(key, value) {
+  if (value == null) return value;
+  const num = Number(value);
+  if (Number.isFinite(num) && (isAmericanOddsLineKey(key) || looksLikeAmericanOdds(num))) {
+    return formatOddsDisplay(americanToDecimal(num), getOddsFormat());
+  }
+  if (typeof value === "string") {
+    return value.replace(/\(([+-]?\d{3,})\)/g, (match, odds) => {
+      const decimal = americanToDecimal(Number(odds));
+      if (decimal == null) return match;
+      return `(${formatOddsDisplay(decimal, getOddsFormat())})`;
+    });
+  }
+  return value;
+}
+
+function productDecimalOdds(legs, format = getOddsFormat()) {
   const values = (legs || [])
-    .map((leg) => parseDecimalOddsInput(leg.legDecimalOdds))
+    .map((leg) => {
+      if (typeof leg.legDecimalOdds === "number") return leg.legDecimalOdds;
+      return parseOddsInput(leg.legOdds ?? leg.legDecimalOdds, format);
+    })
     .filter((value) => value != null);
   if (!values.length) return null;
   const product = values.reduce((total, value) => total * value, 1);
@@ -149,7 +268,7 @@ function escapeHtml(value) {
 function defaultBetFormDraft(overrides = {}) {
   return {
     type: "single",
-    legs: [{ matchup: "", pick: "", legDecimalOdds: "" }],
+    legs: [{ matchup: "", pick: "", legOdds: "" }],
     decimalOdds: "",
     stake: "",
     ...overrides,
@@ -318,7 +437,7 @@ function renderBetLegsDetail(bet) {
     .map((leg) => {
       const legClass =
         leg.status === "won" ? "leg-won" : leg.status === "lost" ? "leg-lost" : "leg-pending";
-      const legOdds = leg.legDecimalOdds != null ? ` @ ${formatDecimalOdds(leg.legDecimalOdds)}` : "";
+      const legOdds = leg.legDecimalOdds != null ? ` @ ${formatOddsDisplay(leg.legDecimalOdds)}` : "";
       const legResult =
         leg.resultWinner && leg.status !== "pending" ? ` · ${leg.status === "won" ? "✓" : "✗"} ${leg.resultWinner}` : "";
       return `<li class="bet-leg-line ${legClass}">${escapeHtml(leg.matchup)} — ${escapeHtml(leg.pick)}${legOdds}${legResult}</li>`;
@@ -351,14 +470,14 @@ function collectLegsFromForm(form) {
   return [...form.querySelectorAll(".parlay-leg-row")].map((row) => ({
     matchup: row.querySelector(".leg-matchup")?.value?.trim() || "",
     pick: row.querySelector(".leg-pick")?.value?.trim() || "",
-    legDecimalOdds: row.querySelector(".leg-decimal-odds")?.value?.trim() || "",
+    legOdds: row.querySelector(".leg-odds")?.value?.trim() || "",
     eventId: row.dataset.eventId || null,
     league: row.dataset.league || null,
     scheduleDate: row.dataset.scheduleDate || null,
   }));
 }
 
-function addMyBet(entry) {
+function addMyBet(entry, format = getOddsFormat()) {
   const stake = parseStakeInput(entry.stake);
   const type = entry.type === "parlay" ? "parlay" : "single";
   const legs = (entry.legs || [])
@@ -367,7 +486,7 @@ function addMyBet(entry) {
       id: createBetId(),
       matchup: leg.matchup.trim(),
       pick: leg.pick.trim(),
-      legDecimalOdds: parseDecimalOddsInput(leg.legDecimalOdds),
+      legDecimalOdds: parseOddsInput(leg.legOdds, format),
       eventId: leg.eventId || null,
       league: leg.league || null,
       scheduleDate: leg.scheduleDate || null,
@@ -380,13 +499,13 @@ function addMyBet(entry) {
     return false;
   }
 
-  let decimalOdds = parseDecimalOddsInput(entry.decimalOdds);
+  let decimalOdds = parseOddsInput(entry.decimalOdds, format);
   if (type === "single") {
     if (decimalOdds == null) {
       decimalOdds = legs[0].legDecimalOdds;
     }
     if (decimalOdds == null) {
-      showBanner("Enter decimal odds (e.g. 1.91).");
+      showBanner(`Enter ${oddsFieldLabel({ format })} (e.g. ${formatOddsInputPlaceholder(format)}).`);
       return false;
     }
     legs[0].legDecimalOdds = decimalOdds;
@@ -396,10 +515,10 @@ function addMyBet(entry) {
       return false;
     }
     if (decimalOdds == null) {
-      decimalOdds = productDecimalOdds(legs);
+      decimalOdds = productDecimalOdds(legs, format);
     }
     if (decimalOdds == null) {
-      showBanner("Enter combined decimal odds for the parlay, or odds on each leg.");
+      showBanner(`Enter ${oddsFieldLabel({ combined: true, format })} for the parlay, or odds on each leg.`);
       return false;
     }
   }
@@ -464,7 +583,7 @@ function openBetFormFromGame(game) {
       {
         matchup: game.matchup || "",
         pick: game.prediction.predictedWinner || "",
-        legDecimalOdds: "",
+        legOdds: "",
         eventId: game.eventId || null,
         league: game.league || sportSelect.value,
         scheduleDate: lastPayload?.scheduleDate || getSelectedDate(),
@@ -478,7 +597,7 @@ function addParlayLegToDraft() {
   betFormDraft = {
     ...defaultBetFormDraft(betFormDraft),
     type: "parlay",
-    legs: [...(betFormDraft?.legs || []), { matchup: "", pick: "", legDecimalOdds: "" }],
+    legs: [...(betFormDraft?.legs || []), { matchup: "", pick: "", legOdds: "" }],
   };
   renderMyBetsView();
 }
@@ -549,7 +668,8 @@ function renderMyBetsView() {
   const summary = summarizeMyBets(bets);
   const draft = defaultBetFormDraft(betFormDraft);
   const isParlay = draft.type === "parlay";
-  const suggestedParlayOdds = productDecimalOdds(draft.legs);
+  const oddsFormat = getOddsFormat();
+  const suggestedParlayOdds = productDecimalOdds(draft.legs, oddsFormat);
 
   const legRows = draft.legs
     .map(
@@ -569,8 +689,8 @@ function renderMyBetsView() {
               <input class="leg-pick" type="text" required placeholder="Team or Draw" value="${escapeAttr(leg.pick || "")}">
             </label>
             <label class="field">
-              <span>Leg odds (decimal)</span>
-              <input class="leg-decimal-odds" type="text" inputmode="decimal" placeholder="1.91" value="${escapeAttr(leg.legDecimalOdds ?? "")}">
+              <span>${oddsFieldLabel({ leg: true, format: oddsFormat })}</span>
+              <input class="leg-odds" type="text" inputmode="decimal" placeholder="${formatOddsInputPlaceholder(oddsFormat)}" value="${escapeAttr(leg.legOdds ?? "")}">
             </label>
           </div>
         </div>
@@ -612,7 +732,7 @@ function renderMyBetsView() {
                 <ul class="bet-legs-list">${renderBetLegsDetail(normalized)}</ul>
                 ${potentialWin}
               </td>
-              <td>${formatDecimalOdds(normalized.decimalOdds)}</td>
+              <td>${formatOddsDisplay(normalized.decimalOdds, oddsFormat)}</td>
               <td>$${Number(normalized.stake).toFixed(2)}</td>
               <td><span class="bet-status-pill ${statusClass}">${statusLabel}</span></td>
               <td>${profitCell}</td>
@@ -625,7 +745,7 @@ function renderMyBetsView() {
 
   myBetsViewEl.innerHTML = `
     <section class="my-bets-hero">
-      <p class="my-bets-note">Saved on this device only. Use <strong>decimal odds</strong> (e.g. 1.91, 2.40). Build parlays/multi bets by adding legs manually — any game, any sport.</p>
+      <p class="my-bets-note">Saved on this device only. Enter odds in <strong>${oddsFormat === "american" ? "American" : "decimal"}</strong> format — change anytime with <strong>Odds format</strong> in the header. Build parlays/multi bets by adding legs manually.</p>
       <div class="my-bets-stats">
         <article class="tracker-stat"><span class="tracker-stat-label">Record</span><strong>${summary.wins}-${summary.losses}</strong></article>
         <article class="tracker-stat"><span class="tracker-stat-label">Total P/L</span><strong class="${summary.profit >= 0 ? "acc-correct" : "acc-wrong"}">${formatMoney(summary.profit)}</strong></article>
@@ -659,9 +779,9 @@ function renderMyBetsView() {
         </div>
 
         <label class="field">
-          <span>${isParlay ? "Combined decimal odds" : "Decimal odds"}</span>
-          <input id="bet-decimal-odds" type="text" inputmode="decimal" ${isParlay ? "" : "required"} placeholder="${isParlay ? "5.25 (or leave blank to multiply leg odds)" : "1.91"}" value="${escapeAttr(draft.decimalOdds ?? "")}">
-          ${isParlay && suggestedParlayOdds ? `<span class="field-hint">Leg product: ${formatDecimalOdds(suggestedParlayOdds)}</span>` : ""}
+          <span>${oddsFieldLabel({ combined: isParlay, format: oddsFormat })}</span>
+          <input id="bet-decimal-odds" type="text" inputmode="decimal" ${isParlay ? "" : "required"} placeholder="${isParlay ? `${formatOddsInputPlaceholder(oddsFormat)} (or leave blank to multiply leg odds)` : formatOddsInputPlaceholder(oddsFormat)}" value="${escapeAttr(draft.decimalOdds ?? "")}">
+          ${isParlay && suggestedParlayOdds ? `<span class="field-hint">Leg product: ${formatOddsDisplay(suggestedParlayOdds, oddsFormat)}</span>` : ""}
         </label>
 
         <label class="field">
@@ -680,7 +800,7 @@ function renderMyBetsView() {
           <thead>
             <tr>
               <th>Bet</th>
-              <th>Decimal odds</th>
+              <th>Odds</th>
               <th>Stake</th>
               <th>Status</th>
               <th>P/L</th>
@@ -705,7 +825,7 @@ function renderMyBetsView() {
       const type = input.value === "parlay" ? "parlay" : "single";
       const legs =
         type === "parlay" && current.legs.length < 2
-          ? [...current.legs, { matchup: "", pick: "", legDecimalOdds: "" }]
+          ? [...current.legs, { matchup: "", pick: "", legOdds: "" }]
           : current.legs;
       betFormDraft = { ...current, type, legs };
       renderMyBetsView();
@@ -1033,7 +1153,7 @@ function renderLineChips(line) {
   if (line == null) return "—";
   if (typeof line !== "object") return `<span class="line-chip">${line}</span>`;
   return Object.entries(line)
-    .map(([key, value]) => `<span class="line-chip">${key}: ${value}</span>`)
+    .map(([key, value]) => `<span class="line-chip">${key}: ${formatLineChipValue(key, value)}</span>`)
     .join("");
 }
 
@@ -1978,6 +2098,7 @@ function registerServiceWorker() {
 async function initDashboard() {
   configureStaticMode();
   registerServiceWorker();
+  syncOddsFormatSelect();
 
   if (IS_STATIC_HOST) {
     manifestData = await fetchManifest({ force: false });
@@ -1989,6 +2110,32 @@ async function initDashboard() {
       const view = button.dataset.view;
       if (view && view !== activeView) switchView(view);
     });
+  });
+  oddsFormatSelect?.addEventListener("change", () => {
+    const previousFormat = getOddsFormat();
+    const nextFormat = oddsFormatSelect.value === "american" ? "american" : "decimal";
+    if (previousFormat === nextFormat) return;
+
+    if (activeView === "my-bets") {
+      const form = myBetsViewEl?.querySelector("#my-bet-form");
+      if (form) {
+        betFormDraft = {
+          ...defaultBetFormDraft(betFormDraft),
+          type: form.querySelector('input[name="bet-type"]:checked')?.value || betFormDraft.type,
+          legs: collectLegsFromForm(form),
+          decimalOdds: form.querySelector("#bet-decimal-odds")?.value || betFormDraft.decimalOdds,
+          stake: form.querySelector("#bet-stake")?.value || betFormDraft.stake,
+        };
+      }
+    }
+
+    setOddsFormat(nextFormat);
+    convertBetFormDraftOddsFormat(nextFormat, previousFormat);
+    if (activeView === "my-bets") {
+      renderMyBetsView();
+    } else if (lastPayload) {
+      renderGames(lastPayload.games || []);
+    }
   });
   confidenceFilter.addEventListener("change", () => renderGames(lastPayload?.games || []));
   teamSearch.addEventListener("input", () => renderGames(lastPayload?.games || []));
