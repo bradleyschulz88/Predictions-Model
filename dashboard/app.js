@@ -162,11 +162,13 @@ function formatPlainMoney(value) {
 
 function formatBetDateShort(iso) {
   if (!iso) return "—";
+  const isoDate = String(iso).trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoDate) return `${isoDate[3]}/${isoDate[2]}/${isoDate[1]}`;
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "—";
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const year = date.getUTCFullYear();
   return `${day}/${month}/${year}`;
 }
 
@@ -177,11 +179,11 @@ function todayBetDateInput() {
 
 function betDateInputFromIso(iso) {
   if (!iso) return todayBetDateInput();
-  const text = String(iso).trim().slice(0, 10);
-  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return todayBetDateInput();
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  const isoDate = String(iso).trim().match(/^(\d{4}-\d{2}-\d{2})/);
+  if (isoDate) return isoDate[1];
+  const parsed = new Date(iso);
+  if (Number.isNaN(parsed.getTime())) return todayBetDateInput();
+  return `${parsed.getUTCFullYear()}-${String(parsed.getUTCMonth() + 1).padStart(2, "0")}-${String(parsed.getUTCDate()).padStart(2, "0")}`;
 }
 
 function parseBetDateInput(value) {
@@ -220,6 +222,25 @@ function americanToDecimal(american) {
   if (!Number.isFinite(value) || value === 0) return null;
   if (value > 0) return Math.round((value / 100 + 1) * 1000) / 1000;
   return Math.round((100 / Math.abs(value) + 1) * 1000) / 1000;
+}
+
+function resolveStoredOdds(value) {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return null;
+  if (num >= 1.01 && num < 100) return Math.round(num * 1000) / 1000;
+  return americanToDecimal(num);
+}
+
+function resolveOddsToDecimal(value) {
+  if (value == null || value === "") return null;
+  const decimal = parseDecimalOddsInput(value);
+  if (decimal != null) return decimal;
+  const raw = String(value).trim();
+  if (/^[+-]/.test(raw.replace(/[\s$£€¥₹]/g, ""))) {
+    const american = parseAmericanOddsInput(value);
+    if (american != null) return americanToDecimal(american);
+  }
+  return resolveStoredOdds(Number(cleanNumericCell(value)));
 }
 
 function decimalToAmerican(decimal) {
@@ -302,11 +323,11 @@ function formatLineChipValue(key, value) {
   return value;
 }
 
-function productDecimalOdds(legs, format = getOddsFormat()) {
+function productDecimalOdds(legs) {
   const values = (legs || [])
     .map((leg) => {
       if (typeof leg.legDecimalOdds === "number") return leg.legDecimalOdds;
-      return parseOddsInput(leg.legOdds ?? leg.legDecimalOdds, format);
+      return resolveOddsToDecimal(leg.legDecimalOdds ?? leg.legOdds);
     })
     .filter((value) => value != null);
   if (!values.length) return null;
@@ -334,6 +355,7 @@ function defaultBetFormDraft(overrides = {}) {
     eventId: null,
     league: null,
     scheduleDate: null,
+    linkedGame: "",
     ...overrides,
   };
 }
@@ -348,6 +370,25 @@ function collectBetFormDraftFromForm(form, draft = {}) {
   };
 }
 
+function syncBetFormDraftFromDom() {
+  const form = myBetsViewEl?.querySelector("#my-bet-form");
+  if (!form) return;
+  betFormDraft = collectBetFormDraftFromForm(form, betFormDraft);
+}
+
+function resolveBetFormGameLink(draft, gameText) {
+  const game = String(gameText ?? "").trim();
+  const linked = String(draft?.linkedGame ?? "").trim();
+  if (draft?.eventId && linked && game === linked) {
+    return {
+      eventId: draft.eventId,
+      league: draft.league || null,
+      scheduleDate: draft.scheduleDate || null,
+    };
+  }
+  return { eventId: null, league: null, scheduleDate: null };
+}
+
 function normalizeBet(bet) {
   if (!bet) return bet;
   if (Array.isArray(bet.legs) && bet.legs.length) {
@@ -355,7 +396,7 @@ function normalizeBet(bet) {
       id: leg.id || createBetId(),
       matchup: leg.matchup || "Unknown matchup",
       pick: leg.pick || "Pick",
-      legDecimalOdds: leg.legDecimalOdds ?? null,
+      legDecimalOdds: leg.legDecimalOdds ?? resolveOddsToDecimal(leg.legOdds) ?? null,
       eventId: leg.eventId || null,
       league: leg.league || null,
       scheduleDate: leg.scheduleDate || null,
@@ -371,18 +412,19 @@ function normalizeBet(bet) {
           : legStatuses.length && legStatuses.every((status) => status === "won")
             ? "won"
             : bet.status || "pending";
+    const betType = bet.type || (legs.length > 1 ? "parlay" : "single");
     return ensureBetProfit({
       ...bet,
       id: bet.id || createBetId(),
       createdAt: bet.createdAt || new Date().toISOString(),
-      type: bet.type || "single",
+      type: betType,
       status: derivedStatus,
-      decimalOdds: bet.decimalOdds ?? productDecimalOdds(legs),
+      decimalOdds: bet.decimalOdds ?? resolveOddsToDecimal(bet.odds) ?? productDecimalOdds(legs),
       legs,
     });
   }
 
-  const decimalOdds = bet.decimalOdds ?? americanToDecimal(bet.odds);
+  const decimalOdds = bet.decimalOdds ?? resolveOddsToDecimal(bet.odds);
   const legStatus =
     bet.status === "won" ? "won" : bet.status === "lost" ? "lost" : "pending";
 
@@ -410,11 +452,14 @@ function normalizeBet(bet) {
 }
 
 function ensureBetProfit(bet) {
-  if (!bet || bet.status === "pending") return bet;
-  if (bet.profit != null && Number.isFinite(Number(bet.profit))) return bet;
+  if (!bet) return bet;
+  if (bet.status === "pending") return { ...bet, profit: null };
+  const decimalOdds = Number(bet.decimalOdds);
+  const stake = Number(bet.stake);
+  if (!Number.isFinite(decimalOdds) || !Number.isFinite(stake)) return bet;
   return {
     ...bet,
-    profit: calcBetProfitDecimal(bet.decimalOdds, bet.stake, bet.status === "won"),
+    profit: calcBetProfitDecimal(decimalOdds, stake, bet.status === "won"),
   };
 }
 
@@ -686,16 +731,19 @@ function parseSheetStake(value) {
 }
 
 function parseSheetOdds(value) {
-  const text = cleanNumericCell(sanitizeSheetCell(value));
+  const raw = sanitizeSheetCell(value);
+  const text = cleanNumericCell(raw);
   if (!text) return null;
 
-  const numeric = Number(text);
-  if (!Number.isFinite(numeric)) return null;
+  const hasAmericanSign = /^[+-]/.test(String(value ?? "").trim().replace(/[\s$£€¥₹]/g, ""));
 
-  if (numeric >= 100 || numeric <= -100 || /^[+-]?\d{3,}/.test(text)) {
-    const american = parseAmericanOddsInput(text);
-    if (american != null) return americanToDecimal(american);
+  if (!hasAmericanSign) {
+    const decimal = parseDecimalOddsInput(text);
+    if (decimal != null) return decimal;
   }
+
+  const american = parseAmericanOddsInput(text);
+  if (american != null) return americanToDecimal(american);
 
   return parseDecimalOddsInput(text);
 }
@@ -786,7 +834,7 @@ function parseSheetPaste(text) {
     const stake = columns.stake >= 0 ? readSheetCell(cells, columns.stake) : readSheetCell(cells, 3);
     const odds = columns.odds >= 0 ? readSheetCell(cells, columns.odds) : readSheetCell(cells, 4);
     const wl = columns.wl >= 0 ? readSheetCell(cells, columns.wl) : readSheetCell(cells, 5);
-    const dateValue = columns.date >= 0 ? readSheetCell(cells, columns.date) : readSheetCell(cells, 1);
+    const dateValue = columns.date >= 0 ? readSheetCell(cells, columns.date) : "";
 
     if (!game) return;
 
@@ -812,7 +860,7 @@ function parseSheetPaste(text) {
         : calcBetProfitDecimal(decimalOdds, stakeAmount, status === "won");
 
     rows.push({
-      createdAt: parseSheetDate(dateValue),
+      createdAt: dateValue ? parseSheetDate(dateValue) : new Date().toISOString(),
       matchup: String(game).trim(),
       pick: String(game).trim(),
       stake: stakeAmount,
@@ -1096,8 +1144,10 @@ function settleMyBetManual(betId, won) {
 function openBetFormFromGame(game) {
   if (!game?.prediction) return;
   const pick = game.prediction.outcomeLabel || game.prediction.predictedWinner || "";
+  const gameLabel = pick ? `${game.matchup || ""} — ${pick}`.replace(/^ — /, "") : game.matchup || "";
   betFormDraft = defaultBetFormDraft({
-    game: pick ? `${game.matchup || ""} — ${pick}`.replace(/^ — /, "") : game.matchup || "",
+    game: gameLabel,
+    linkedGame: gameLabel,
     betDate: betDateInputFromIso(lastPayload?.scheduleDate || getSelectedDate()),
     eventId: game.eventId || null,
     league: game.league || sportSelect.value,
@@ -1158,6 +1208,8 @@ function switchView(view) {
 
 function renderMyBetsView() {
   if (!myBetsViewEl) return;
+
+  syncBetFormDraftFromDom();
 
   let bets = autoSettleMyBets(loadMyBets());
   saveMyBets(bets);
@@ -1313,14 +1365,15 @@ function renderMyBetsView() {
     event.preventDefault();
     const form = event.currentTarget;
     const draftValues = collectBetFormDraftFromForm(form, betFormDraft);
+    const link = resolveBetFormGameLink(betFormDraft, draftValues.game);
     const success = addMyBet({
       game: draftValues.game,
       stake: draftValues.stake,
       odds: draftValues.odds,
       betDate: draftValues.betDate,
-      eventId: betFormDraft?.eventId || null,
-      league: betFormDraft?.league || null,
-      scheduleDate: betFormDraft?.scheduleDate || null,
+      eventId: link.eventId,
+      league: link.league,
+      scheduleDate: link.scheduleDate,
     });
     if (success) form.reset();
   });
