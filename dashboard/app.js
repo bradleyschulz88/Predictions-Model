@@ -1571,18 +1571,18 @@ function renderMyBetsView() {
 
           return `
             <tr class="${statusClass}">
-              <td>
+              <td data-label="Date">
                 <input type="date" class="bet-date-input" data-bet-id="${normalized.id}" value="${betDateInputFromIso(normalized.createdAt)}" title="Date placed">
               </td>
-              <td>
+              <td data-label="Game">
                 <strong>${escapeHtml(betGameLabel(normalized))}</strong>
                 ${normalized.type === "parlay" ? `<span class="bet-pick-line">${normalized.legs.length} legs</span>` : ""}
               </td>
-              <td>$${Number.isFinite(Number(normalized.stake)) ? Number(normalized.stake).toFixed(2) : "—"}</td>
-              <td>${formatOddsDisplay(normalized.decimalOdds, oddsFormat)}</td>
-              <td><span class="bet-wl-pill ${statusClass}">${wlLabel}</span></td>
-              <td>${profitCell}</td>
-              <td>${actions}</td>
+              <td data-label="Bet">$${Number.isFinite(Number(normalized.stake)) ? Number(normalized.stake).toFixed(2) : "—"}</td>
+              <td data-label="Odd">${formatOddsDisplay(normalized.decimalOdds, oddsFormat)}</td>
+              <td data-label="W/L"><span class="bet-wl-pill ${statusClass}">${wlLabel}</span></td>
+              <td data-label="P/L">${profitCell}</td>
+              <td data-label="Actions">${actions}</td>
             </tr>
           `;
         })
@@ -1676,8 +1676,8 @@ function renderMyBetsView() {
           <h2 class="section-title">Bet history</h2>
           <button type="button" class="btn-ghost" id="export-bets-btn">Export CSV</button>
         </div>
-        <div class="my-bets-table-wrap">
-          <table class="my-bets-table sheet-style">
+        <div class="my-bets-table-wrap tracker-table-wrap">
+          <table class="my-bets-table sheet-style tracker-sheet-table">
             <thead>
               <tr>
                 <th>Date</th>
@@ -1871,27 +1871,35 @@ function renderModelTrackerView() {
 
           return `
             <tr class="${statusClass}${focusClass}" data-entry-id="${normalized.id}">
-              <td>
+              <td data-label="Date">
                 <input type="date" class="bet-date-input model-tracker-date-input" data-entry-id="${normalized.id}" value="${betDateInputFromIso(normalized.scheduleDate || normalized.createdAt)}" title="Schedule date">
               </td>
-              <td>
-                <strong>${escapeHtml(normalized.matchup)}</strong>
-                <span class="bet-pick-line">${escapeHtml(normalized.outcomeLabel || normalized.pick)}${normalized.confidence != null ? ` · ${normalized.confidence}%` : ""}</span>
+              <td data-label="Game / Pick">
+                <div class="tracker-card-head">
+                  <div class="tracker-card-title">
+                    <strong>${escapeHtml(normalized.matchup)}</strong>
+                    <span class="bet-pick-line">${escapeHtml(normalized.outcomeLabel || normalized.pick)}${normalized.confidence != null ? ` · ${normalized.confidence}%` : ""}</span>
+                  </div>
+                  <div class="tracker-card-meta">
+                    <span class="bet-wl-pill ${statusClass}">${wlLabel}</span>
+                    <span class="tracker-card-pl">${profitCell}</span>
+                  </div>
+                </div>
               </td>
-              <td>
+              <td data-label="Stake">
                 <div class="bankroll-input-wrap model-tracker-input-wrap">
                   <span class="input-prefix">$</span>
                   <input type="text" inputmode="decimal" class="model-tracker-stake-input" data-entry-id="${normalized.id}" placeholder="100" value="${escapeAttr(stakeValue)}" aria-label="Stake">
                 </div>
               </td>
-              <td>${modelOddCell}</td>
-              <td>
+              <td data-label="Model odd">${modelOddCell}</td>
+              <td data-label="Your odd">
                 <input type="text" inputmode="decimal" class="model-tracker-odds-input" data-entry-id="${normalized.id}" placeholder="${escapeAttr(oddsPlaceholder)}" value="${escapeAttr(userOddsValue)}" aria-label="Your odds">
               </td>
-              <td>${edgeCell}</td>
-              <td><span class="bet-wl-pill ${statusClass}">${wlLabel}</span></td>
-              <td>${profitCell}</td>
-              <td>${actions}</td>
+              <td data-label="Edge">${edgeCell}</td>
+              <td data-label="W/L"><span class="bet-wl-pill ${statusClass}">${wlLabel}</span></td>
+              <td data-label="P/L">${profitCell}</td>
+              <td data-label="Actions">${actions}</td>
             </tr>
           `;
         })
@@ -1950,8 +1958,8 @@ function renderModelTrackerView() {
         <h2 class="section-title">Tracked picks</h2>
         <button type="button" class="btn-ghost" id="export-model-tracker-btn">Copy for spreadsheet</button>
       </div>
-      <div class="my-bets-table-wrap">
-        <table class="my-bets-table sheet-style model-tracker-table">
+      <div class="my-bets-table-wrap tracker-table-wrap">
+        <table class="my-bets-table sheet-style model-tracker-table tracker-sheet-table">
           <thead>
             <tr>
               <th>Date</th>
@@ -2947,8 +2955,8 @@ function renderGames(games) {
                 </div>
                 <div class="game-actions">
                   <span class="status-pill ${game.isLive ? "live" : ""}">${game.gameStatusText || "Scheduled"}</span>
-                  <button type="button" class="track-btn model-track-btn${modelTracked ? " tracked" : ""}" data-model-track-id="${game.eventId}"${!game.prediction?.outcomeLabel && !game.prediction?.predictedWinner ? " disabled" : ""}>${modelTracked ? "Already tracked" : "Track model pick"}</button>
-                  <button type="button" class="track-btn${logged ? " tracked" : ""}" data-event-id="${game.eventId}">${logged ? "Bet logged" : "Log bet"}</button>
+                  <button type="button" class="track-btn model-track-btn${modelTracked ? " tracked" : ""}" data-model-track-id="${game.eventId}"${!game.prediction?.outcomeLabel && !game.prediction?.predictedWinner ? " disabled" : ""}>${modelTracked ? '<span class="track-btn-label track-btn-label-long">Already tracked</span><span class="track-btn-label track-btn-label-short">Tracked</span>' : '<span class="track-btn-label track-btn-label-long">Track model pick</span><span class="track-btn-label track-btn-label-short">Track pick</span>'}</button>
+                  <button type="button" class="track-btn${logged ? " tracked" : ""}" data-event-id="${game.eventId}">${logged ? '<span class="track-btn-label track-btn-label-long">Bet logged</span><span class="track-btn-label track-btn-label-short">Logged</span>' : "Log bet"}</button>
                   <button type="button" class="share-btn" data-share-url="${shareUrl}" data-share-title="${game.prediction?.outcomeLabel || game.matchup}">Share</button>
                 </div>
               </div>

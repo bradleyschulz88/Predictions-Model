@@ -96,9 +96,18 @@
 
     <div class="page-bar shell-card">
       <nav class="view-tabs" id="view-tabs" aria-label="Dashboard views">
-        <button type="button" class="view-tab active" data-view="predictions">Predictions</button>
-        <button type="button" class="view-tab" data-view="my-bets">My Bets</button>
-        <button type="button" class="view-tab" data-view="model-tracker">Model Tracker</button>
+        <button type="button" class="view-tab active" data-view="predictions">
+          <span class="view-tab-label view-tab-label-full">Predictions</span>
+          <span class="view-tab-label view-tab-label-short">Picks</span>
+        </button>
+        <button type="button" class="view-tab" data-view="my-bets">
+          <span class="view-tab-label view-tab-label-full">My Bets</span>
+          <span class="view-tab-label view-tab-label-short">Bets</span>
+        </button>
+        <button type="button" class="view-tab" data-view="model-tracker">
+          <span class="view-tab-label view-tab-label-full">Model Tracker</span>
+          <span class="view-tab-label view-tab-label-short">Model</span>
+        </button>
       </nav>
       <label class="field field-compact page-bar-odds">
         <span>Odds</span>

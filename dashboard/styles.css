@@ -1217,6 +1217,14 @@ button:active:not(:disabled) {
   box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.2);
 }
 
+.view-tab-label-short {
+  display: none;
+}
+
+.view-tab-label {
+  display: inline;
+}
+
 .my-bets-view {
   display: flex;
   flex-direction: column;
@@ -1573,6 +1581,20 @@ button:active:not(:disabled) {
 .model-track-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+.tracker-card-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tracker-card-meta {
+  display: none;
+}
+
+.tracker-card-pl .bet-pending-label {
+  color: var(--muted);
 }
 
 .model-pick-block {
@@ -2088,6 +2110,10 @@ button:active:not(:disabled) {
   background: rgba(56, 189, 248, 0.15);
   border-color: rgba(56, 189, 248, 0.35);
   color: #bae6fd;
+}
+
+.track-btn-label-short {
+  display: none;
 }
 
 .summary-pick-status {
@@ -2759,13 +2785,24 @@ button:active:not(:disabled) {
   .view-tabs {
     flex: 1 1 100%;
     width: 100%;
+    padding: 4px;
+    gap: 4px;
   }
 
   .view-tab {
     flex: 1;
     text-align: center;
     min-height: 44px;
-    padding: 12px 10px;
+    padding: 10px 6px;
+    font-size: 0.82rem;
+  }
+
+  .view-tab-label-full {
+    display: none;
+  }
+
+  .view-tab-label-short {
+    display: inline;
   }
 
   .page-bar-odds {
@@ -2919,21 +2956,46 @@ button:active:not(:disabled) {
   }
 
   .game-actions {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
     width: 100%;
+    align-items: stretch;
+  }
+
+  .game-actions .status-pill {
+    grid-column: 1 / -1;
+    justify-self: start;
+    max-width: 100%;
+  }
+
+  .game-actions .model-track-btn {
+    grid-column: 1 / -1;
+    min-height: 44px;
+    padding: 10px 12px;
   }
 
   .track-btn,
   .share-btn {
-    flex: 1 1 calc(50% - 4px);
+    flex: unset;
     min-height: 44px;
     text-align: center;
     justify-content: center;
+    padding: 10px 12px;
+  }
+
+  .track-btn-label-long {
+    display: none;
+  }
+
+  .track-btn-label-short {
+    display: inline;
   }
 
   .bet-action-btn {
-    min-height: 36px;
-    padding: 8px 12px;
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
   }
 
   .my-bets-hero {
@@ -3006,6 +3068,199 @@ button:active:not(:disabled) {
   .brand-mark::after {
     inset: 9px;
   }
+
+  /* Tracker tables → stacked cards (no horizontal scroll) */
+  .tracker-table-wrap {
+    overflow: visible;
+    margin: 0 -2px;
+  }
+
+  .tracker-sheet-table {
+    min-width: 0 !important;
+    width: 100%;
+  }
+
+  .tracker-sheet-table thead {
+    display: none;
+  }
+
+  .tracker-sheet-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--panel-border-soft);
+    background: rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .tracker-sheet-table tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .tracker-sheet-table tbody tr.bet-won {
+    border-color: rgba(34, 197, 94, 0.28);
+    box-shadow: inset 3px 0 0 rgba(34, 197, 94, 0.75);
+  }
+
+  .tracker-sheet-table tbody tr.bet-lost {
+    border-color: rgba(239, 68, 68, 0.28);
+    box-shadow: inset 3px 0 0 rgba(239, 68, 68, 0.75);
+  }
+
+  .tracker-sheet-table tbody tr.bet-pending {
+    border-color: rgba(250, 204, 21, 0.22);
+    box-shadow: inset 3px 0 0 rgba(250, 204, 21, 0.65);
+  }
+
+  .tracker-sheet-table tbody tr:hover td {
+    background: transparent;
+  }
+
+  .tracker-sheet-table tbody td {
+    display: grid;
+    grid-template-columns: minmax(84px, 34%) 1fr;
+    gap: 8px 12px;
+    align-items: center;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--panel-border-soft);
+  }
+
+  .tracker-sheet-table tbody td::before {
+    content: attr(data-label);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    line-height: 1.3;
+  }
+
+  .tracker-sheet-table tbody td[data-label="Game / Pick"],
+  .tracker-sheet-table tbody td[data-label="Game"] {
+    display: block;
+    padding: 14px;
+    border-bottom: 1px solid var(--panel-border-soft);
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  .tracker-sheet-table tbody td[data-label="Game / Pick"]::before,
+  .tracker-sheet-table tbody td[data-label="Game"]::before {
+    display: none;
+  }
+
+  .tracker-sheet-table tbody td[data-label="Actions"] {
+    display: block;
+    padding: 12px 14px 14px;
+    border-bottom: none;
+  }
+
+  .tracker-sheet-table tbody td[data-label="Actions"]::before {
+    display: none;
+  }
+
+  .tracker-sheet-table .tracker-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--panel-border-soft);
+  }
+
+  .model-tracker-table td[data-label="W/L"],
+  .model-tracker-table td[data-label="P/L"] {
+    display: none;
+  }
+
+  .tracker-sheet-table .bet-row-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+  }
+
+  .tracker-sheet-table .bet-row-actions:has(.bet-action-btn:only-child) {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-sheet-table .bet-row-actions .bet-action-btn {
+    flex: unset;
+    width: 100%;
+    min-height: 44px;
+    border-radius: 10px;
+    font-size: 0.84rem;
+  }
+
+  .tracker-sheet-table .bet-date-input {
+    max-width: none;
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+    padding: 8px 10px;
+  }
+
+  .tracker-sheet-table .model-tracker-input-wrap {
+    min-width: 0;
+    max-width: none;
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .tracker-sheet-table .model-tracker-odds-input {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+
+  .tracker-sheet-table .empty-bets-cell {
+    display: block;
+    padding: 28px 18px;
+    text-align: center;
+    line-height: 1.5;
+    border: none;
+  }
+
+  .tracker-sheet-table .empty-bets-cell::before {
+    display: none;
+  }
+
+  .model-tracker-hero .my-bets-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .model-tracker-hero .tracker-stat {
+    padding: 10px 8px;
+  }
+
+  .model-tracker-hero .tracker-stat strong {
+    font-size: 0.95rem;
+  }
+
+  .model-tracker-hero .my-bets-note {
+    font-size: 0.84rem;
+    line-height: 1.45;
+    margin-bottom: 0;
+  }
+
+  .model-tracker-table-card .panel-card-head .section-title {
+    margin-bottom: 0;
+  }
+
+  .model-tracker-row-focus {
+    box-shadow:
+      inset 3px 0 0 rgba(74, 222, 128, 0.85),
+      0 0 0 1px rgba(74, 222, 128, 0.25) !important;
+  }
+
+  .app {
+    overflow-x: clip;
+  }
 }
 
 @media (max-width: 380px) {
@@ -3017,9 +3272,13 @@ button:active:not(:disabled) {
     grid-template-columns: 1fr;
   }
 
+  .model-tracker-hero .my-bets-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .view-tab {
-    font-size: 0.8rem;
-    padding: 10px 8px;
+    font-size: 0.78rem;
+    padding: 10px 4px;
   }
 }
 
