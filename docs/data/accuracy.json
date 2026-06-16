@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-06-16T04:30:58.164913+00:00",
+  "updatedAt": "2026-06-16T04:53:24.396411+00:00",
   "summary": {
     "last7Days": {
-      "correct": 26,
-      "total": 49,
-      "pct": 53.1,
-      "units": -0.017,
-      "roiPct": -0.0,
-      "pending": 38
+      "correct": 27,
+      "total": 50,
+      "pct": 54.0,
+      "units": 0.524,
+      "roiPct": 1.0,
+      "pending": 37
     },
     "allTime": {
-      "correct": 26,
-      "total": 49,
-      "pct": 53.1,
-      "units": -0.017,
-      "roiPct": -0.0,
-      "pending": 38
+      "correct": 27,
+      "total": 50,
+      "pct": 54.0,
+      "units": 0.524,
+      "roiPct": 1.0,
+      "pending": 37
     },
     "byLeague": {
       "mlb": {
-        "correct": 22,
-        "total": 39,
-        "pct": 56.4,
-        "units": 1.983,
-        "roiPct": 5.1,
+        "correct": 23,
+        "total": 40,
+        "pct": 57.5,
+        "units": 2.524,
+        "roiPct": 6.3,
         "pending": 0
       },
       "worldcup": {
@@ -51,6 +51,25 @@
     }
   },
   "recentResults": [
+    {
+      "eventId": "401815773",
+      "league": "mlb",
+      "scheduleDate": "2026-06-15",
+      "matchup": "Tampa Bay Rays @ Los Angeles Dodgers",
+      "predicted": "Los Angeles Dodgers",
+      "predictedSide": "home",
+      "outcomeLabel": "Los Angeles Dodgers to win",
+      "confidence": 73.6,
+      "pickOdds": -185,
+      "status": "graded",
+      "actual": "Los Angeles Dodgers",
+      "correct": true,
+      "units": 0.541,
+      "homeScore": "4",
+      "awayScore": "3",
+      "gradedAt": "2026-06-16T04:53:23.308751+00:00",
+      "date": "2026-06-15"
+    },
     {
       "eventId": "401815772",
       "league": "mlb",
@@ -1686,25 +1705,6 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-06-16"
-    },
-    {
-      "eventId": "401815773",
-      "league": "mlb",
-      "scheduleDate": "2026-06-15",
-      "matchup": "Tampa Bay Rays @ Los Angeles Dodgers",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "home",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 64.4,
-      "pickOdds": -185,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-06-15"
     }
   ],
   "picksByEventId": {
@@ -2837,15 +2837,15 @@
       "predicted": "Los Angeles Dodgers",
       "predictedSide": "home",
       "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 64.4,
+      "confidence": 73.6,
       "pickOdds": -185,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "status": "graded",
+      "actual": "Los Angeles Dodgers",
+      "correct": true,
+      "units": 0.541,
+      "homeScore": "4",
+      "awayScore": "3",
+      "gradedAt": "2026-06-16T04:53:23.308751+00:00",
       "date": "2026-06-15"
     },
     "401815768": {
