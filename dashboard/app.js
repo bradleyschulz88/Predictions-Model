@@ -85,6 +85,7 @@ const MODEL_PICKS_KEY = "predictions-dashboard-model-picks";
 const ODDS_FORMAT_KEY = "predictions-dashboard-odds-format";
 let importPreviewRows = null;
 let sheetPasteDraft = "";
+let importFileName = "";
 const AMERICAN_ODDS_LINE_KEYS = new Set([
   "home",
   "away",
@@ -614,6 +615,18 @@ function parseSheetWl(value) {
   return "pending";
 }
 
+function sanitizeSheetCell(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return "";
+  if (text.startsWith("=")) return "";
+  return text;
+}
+
+function readSheetCell(cells, index) {
+  if (index < 0 || index >= cells.length) return "";
+  return sanitizeSheetCell(cells[index]);
+}
+
 function mapSheetColumns(headers) {
   const normalized = headers.map(normalizeSheetHeader);
   const find = (...names) => normalized.findIndex((header) => names.includes(header));
@@ -652,24 +665,31 @@ function parseSheetPaste(text) {
   dataLines.forEach((cells, index) => {
     const rowNumber = headerIndex + index + 2;
     const game =
-      columns.game >= 0 ? cells[columns.game] : columns.index >= 0 ? cells[columns.index + 1] : cells[1];
-    const stake = columns.stake >= 0 ? cells[columns.stake] : cells[3];
-    const odds = columns.odds >= 0 ? cells[columns.odds] : cells[4];
-    const wl = columns.wl >= 0 ? cells[columns.wl] : cells[5];
-    const dateValue = columns.date >= 0 ? cells[columns.date] : cells[1];
+      columns.game >= 0
+        ? readSheetCell(cells, columns.game)
+        : columns.index >= 0
+          ? readSheetCell(cells, columns.index + 1)
+          : readSheetCell(cells, 1);
+    const stake = columns.stake >= 0 ? readSheetCell(cells, columns.stake) : readSheetCell(cells, 3);
+    const odds = columns.odds >= 0 ? readSheetCell(cells, columns.odds) : readSheetCell(cells, 4);
+    const wl = columns.wl >= 0 ? readSheetCell(cells, columns.wl) : readSheetCell(cells, 5);
+    const dateValue = columns.date >= 0 ? readSheetCell(cells, columns.date) : readSheetCell(cells, 1);
 
-    if (!game || !String(game).trim()) return;
+    if (!game) return;
 
     const stakeAmount = parseSheetStake(stake);
-    const decimalOdds = parseDecimalOddsInput(String(odds ?? "").replace(",", "."));
+    const decimalOdds = parseOddsInput(String(odds).replace(",", "."), "decimal");
     const status = parseSheetWl(wl);
 
     if (stakeAmount == null) {
-      errors.push(`Row ${rowNumber}: invalid stake "${stake || ""}".`);
+      errors.push(`Row ${rowNumber}: invalid stake "${stake || "(empty)"}".`);
       return;
     }
     if (decimalOdds == null) {
-      errors.push(`Row ${rowNumber}: invalid decimal odds "${odds || ""}".`);
+      const hint = String(cells[columns.odds >= 0 ? columns.odds : 4] ?? "").trim().startsWith("=")
+        ? " (looks like a formula — export CSV from Google Sheets instead)"
+        : "";
+      errors.push(`Row ${rowNumber}: invalid odds "${odds || "(empty)"}"${hint}.`);
       return;
     }
 
@@ -700,14 +720,29 @@ function parseSheetPaste(text) {
     });
   });
 
-  if (!rows.length && !errors.length) errors.push("No bet rows found. Include headers like Date, Game, Bet, Odd, W/L.");
+  if (!rows.length && !errors.length) {
+    errors.push(
+      "No bet rows found. Export from Google Sheets as CSV (File → Download → CSV), or paste values only — formula cells are ignored."
+    );
+  }
   return { rows, errors };
 }
 
+function parseSheetFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(parseSheetPaste(String(reader.result || "")));
+    reader.onerror = () => reject(new Error("Could not read that file."));
+    reader.readAsText(file);
+  });
+}
+
 function importPreviewMarkup(rows, errors) {
-  if (errors.length) {
-    return `<div class="import-errors">${errors.map((error) => `<p>${escapeHtml(error)}</p>`).join("")}</div>`;
-  }
+  const errorBlock = errors.length
+    ? `<div class="import-errors">${errors.map((error) => `<p>${escapeHtml(error)}</p>`).join("")}</div>`
+    : "";
+  if (!rows.length) return errorBlock || `<p class="field-hint">No rows to import yet.</p>`;
+
   const previewRows = rows
     .slice(0, 12)
     .map(
@@ -724,7 +759,10 @@ function importPreviewMarkup(rows, errors) {
     )
     .join("");
   const more = rows.length > 12 ? `<p class="field-hint">Showing first 12 of ${rows.length} rows.</p>` : "";
+  const warn = errors.length ? `<p class="field-hint">${errors.length} row(s) skipped — valid rows shown below.</p>` : "";
   return `
+    ${errorBlock}
+    ${warn}
     ${more}
     <div class="import-preview-wrap">
       <table class="import-preview-table">
@@ -734,6 +772,23 @@ function importPreviewMarkup(rows, errors) {
     </div>
     <button type="button" class="primary-btn" id="confirm-import-btn">Import ${rows.length} bet${rows.length === 1 ? "" : "s"}</button>
   `;
+}
+
+async function handleSheetFileUpload(file) {
+  if (!file) return;
+  try {
+    importPreviewRows = await parseSheetFile(file);
+    sheetPasteDraft = "";
+    importFileName = file.name;
+    renderMyBetsView();
+    if (importPreviewRows.rows.length) {
+      showBanner(`Loaded ${importPreviewRows.rows.length} row(s) from ${file.name}. Review and confirm import.`);
+    } else if (importPreviewRows.errors.length) {
+      showBanner(importPreviewRows.errors[0]);
+    }
+  } catch (error) {
+    showBanner(error.message || "Could not read that file.");
+  }
 }
 
 function importBetsFromRows(rows) {
@@ -754,6 +809,7 @@ function importBetsFromRows(rows) {
   saveMyBets([...imported, ...existing]);
   importPreviewRows = null;
   sheetPasteDraft = "";
+  importFileName = "";
   renderMyBetsView();
   showBanner(`Imported ${imported.length} bet${imported.length === 1 ? "" : "s"}.`);
 }
@@ -1082,12 +1138,25 @@ function renderMyBetsView() {
     </section>
 
     <section class="my-bets-import-card">
-      <h2>Import / Export</h2>
-      <p class="my-bets-note">Paste rows copied from Excel or Google Sheets. Expected columns: <strong>Date Placed, Game, Bet, Odd, W/L</strong> (P/L is recalculated).</p>
-      <textarea id="sheet-paste" class="sheet-paste" rows="5" placeholder="Paste spreadsheet rows here…">${escapeHtml(sheetPasteDraft)}</textarea>
+      <h2>Import from spreadsheet</h2>
+      <p class="my-bets-note">Export from Google Sheets: <strong>File → Download → Comma-separated values (.csv)</strong>, then upload here. Needs columns <strong>Date Placed, Game, Bet, Odd, W/L</strong> — P/L formulas are ignored and recalculated.</p>
+
+      <div class="csv-dropzone" id="csv-dropzone">
+        <input id="sheet-file" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values" hidden>
+        <p class="csv-dropzone-title">Drop your CSV here</p>
+        <p class="csv-dropzone-sub">or</p>
+        <button type="button" class="primary-btn" id="choose-csv-btn">Choose CSV file</button>
+        ${importFileName ? `<p class="csv-dropzone-file">Selected: <strong>${escapeHtml(importFileName)}</strong></p>` : ""}
+      </div>
+
+      <details class="paste-fallback">
+        <summary>Paste rows instead (values only, no formulas)</summary>
+        <textarea id="sheet-paste" class="sheet-paste" rows="5" placeholder="Paste spreadsheet rows here…">${escapeHtml(sheetPasteDraft)}</textarea>
+        <button type="button" class="bet-action-btn" id="preview-import-btn">Preview pasted rows</button>
+      </details>
+
       <div class="import-actions">
-        <button type="button" class="bet-action-btn" id="preview-import-btn">Preview import</button>
-        <button type="button" class="bet-action-btn" id="export-bets-btn">Copy for spreadsheet</button>
+        <button type="button" class="bet-action-btn" id="export-bets-btn">Copy history for spreadsheet</button>
       </div>
       <div id="import-preview" class="import-preview">${importPreview}</div>
     </section>
@@ -1224,8 +1293,34 @@ function renderMyBetsView() {
 
   myBetsViewEl.querySelector("#preview-import-btn")?.addEventListener("click", () => {
     sheetPasteDraft = myBetsViewEl.querySelector("#sheet-paste")?.value || "";
+    importFileName = "";
     importPreviewRows = parseSheetPaste(sheetPasteDraft);
     renderMyBetsView();
+  });
+
+  myBetsViewEl.querySelector("#choose-csv-btn")?.addEventListener("click", () => {
+    myBetsViewEl.querySelector("#sheet-file")?.click();
+  });
+
+  myBetsViewEl.querySelector("#sheet-file")?.addEventListener("change", async (event) => {
+    const file = event.currentTarget.files?.[0];
+    await handleSheetFileUpload(file);
+    event.currentTarget.value = "";
+  });
+
+  const dropzone = myBetsViewEl.querySelector("#csv-dropzone");
+  dropzone?.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    dropzone.classList.add("dragover");
+  });
+  dropzone?.addEventListener("dragleave", () => {
+    dropzone.classList.remove("dragover");
+  });
+  dropzone?.addEventListener("drop", async (event) => {
+    event.preventDefault();
+    dropzone.classList.remove("dragover");
+    const file = event.dataTransfer?.files?.[0];
+    if (file) await handleSheetFileUpload(file);
   });
 
   myBetsViewEl.querySelector("#confirm-import-btn")?.addEventListener("click", () => {

@@ -866,6 +866,70 @@ button:hover {
   max-width: 220px;
 }
 
+.csv-dropzone {
+  margin: 12px 0 16px;
+  padding: 28px 20px;
+  border: 2px dashed rgba(74, 222, 128, 0.35);
+  border-radius: 16px;
+  background: rgba(74, 222, 128, 0.05);
+  text-align: center;
+}
+
+.csv-dropzone.dragover {
+  border-color: var(--accent);
+  background: rgba(74, 222, 128, 0.12);
+}
+
+.csv-dropzone-title {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.csv-dropzone-sub {
+  margin: 8px 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.csv-dropzone-file {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.paste-fallback {
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.paste-fallback summary {
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.paste-fallback .sheet-paste {
+  margin-top: 8px;
+}
+
+.file-import-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.file-import-field span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.file-import-field input[type="file"] {
+  font-size: 0.86rem;
+  color: var(--text);
+}
+
 .sheet-paste {
   width: 100%;
   min-height: 110px;
