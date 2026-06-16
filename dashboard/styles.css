@@ -868,6 +868,93 @@ button:hover {
   gap: 10px;
 }
 
+.bet-type-toggle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.bet-type-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+}
+
+.bet-type-option:has(input:checked) {
+  border-color: rgba(74, 222, 128, 0.45);
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.parlay-legs-block {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.parlay-legs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.parlay-legs-header h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.parlay-leg-row {
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.parlay-leg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.parlay-leg-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.bet-legs-list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.bet-leg-line.leg-won {
+  color: #86efac;
+}
+
+.bet-leg-line.leg-lost {
+  color: #fca5a5;
+}
+
+.bet-leg-line.leg-pending {
+  color: #fde68a;
+}
+
 .my-bet-form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
