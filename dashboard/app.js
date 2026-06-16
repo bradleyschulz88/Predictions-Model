@@ -26,6 +26,7 @@ const viewTabsEl = document.getElementById("view-tabs");
 const predictionsViewEl = document.getElementById("predictions-view");
 const myBetsViewEl = document.getElementById("my-bets-view");
 const dateFieldEl = document.getElementById("date-field");
+const modelDayResultEl = document.getElementById("model-day-result");
 
 const ESPN_PATHS = {
   mlb: "baseball/mlb",
@@ -1199,6 +1200,7 @@ function switchView(view) {
   } else {
     dashboardTitle.textContent = "My Bet Tracker";
     hideBanner();
+    modelDayResultEl?.classList.add("hidden");
     renderMyBetsView();
   }
 }
@@ -1527,6 +1529,111 @@ function namesMatch(left, right) {
 
 function pickMatchesWinner(predicted, actual) {
   return namesMatch(predicted, actual);
+}
+
+function formatScheduleDayLabel(iso) {
+  if (!iso) return "this day";
+  const match = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return iso;
+  const date = new Date(`${match[1]}-${match[2]}-${match[3]}T12:00:00`);
+  if (Number.isNaN(date.getTime())) return iso;
+  return date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+}
+
+function summarizeModelDayResults(games, scheduleDate, league = sportSelect.value) {
+  const picks = new Map();
+
+  const addPick = (eventId, pick) => {
+    if (!pick) return;
+    picks.set(String(eventId), pick);
+  };
+
+  for (const game of games || []) {
+    if (!game.prediction?.predictedWinner && !game.prediction?.outcomeLabel) continue;
+    const pick = resolvePickStatus(game);
+    if (pick) addPick(game.eventId, pick);
+  }
+
+  if (accuracyData?.picksByEventId && scheduleDate) {
+    for (const [eventId, pick] of Object.entries(accuracyData.picksByEventId)) {
+      if (pick.scheduleDate !== scheduleDate) continue;
+      if (league !== "overview" && pick.league !== league) continue;
+      if (!pick.predicted && !pick.outcomeLabel) continue;
+      if (!picks.has(String(eventId))) addPick(eventId, pick);
+    }
+  }
+
+  let correct = 0;
+  let wrong = 0;
+  let pending = 0;
+
+  for (const pick of picks.values()) {
+    if (pick.status !== "graded") {
+      pending += 1;
+    } else if (pick.correct) {
+      correct += 1;
+    } else {
+      wrong += 1;
+    }
+  }
+
+  const graded = correct + wrong;
+  return {
+    correct,
+    wrong,
+    pending,
+    total: graded + pending,
+    graded,
+    pct: graded > 0 ? Math.round((correct / graded) * 1000) / 10 : null,
+  };
+}
+
+function renderModelDayResult(games) {
+  if (!modelDayResultEl || sportSelect.value === "overview" || activeView !== "predictions") {
+    modelDayResultEl?.classList.add("hidden");
+    return;
+  }
+
+  const scheduleDate = getSelectedDate();
+  const summary = summarizeModelDayResults(games, scheduleDate, sportSelect.value);
+
+  if (!summary.total) {
+    modelDayResultEl.classList.add("hidden");
+    modelDayResultEl.innerHTML = "";
+    return;
+  }
+
+  modelDayResultEl.classList.remove("hidden");
+  const dayLabel = formatScheduleDayLabel(scheduleDate);
+  const pctLabel = summary.graded > 0 ? `${summary.pct}% hit rate` : "Awaiting first result";
+  const recordLabel = summary.graded > 0 ? `${summary.correct}–${summary.wrong}` : "—";
+
+  modelDayResultEl.innerHTML = `
+    <div class="model-day-result-head">
+      <div>
+        <h2 class="section-title">Model record · ${escapeHtml(dayLabel)}</h2>
+        <p class="model-day-sub">${summary.graded} graded · ${summary.pending} pending · ${summary.total} picks total</p>
+      </div>
+      <div class="model-day-summary-pill">
+        <span class="model-day-record">${recordLabel}</span>
+        <span class="model-day-pct">${pctLabel}</span>
+      </div>
+    </div>
+    <div class="model-day-scores">
+      <article class="model-day-stat model-day-correct">
+        <span class="model-day-num">${summary.correct}</span>
+        <span class="model-day-label">Correct</span>
+      </article>
+      <article class="model-day-stat model-day-wrong">
+        <span class="model-day-num">${summary.wrong}</span>
+        <span class="model-day-label">Wrong</span>
+      </article>
+      <article class="model-day-stat model-day-pending">
+        <span class="model-day-num">${summary.pending}</span>
+        <span class="model-day-label">Pending</span>
+      </article>
+    </div>
+  `;
 }
 
 function resolvePickStatus(game) {
@@ -2251,11 +2358,13 @@ function renderGames(games) {
     gamesEl.innerHTML = `<div class="empty-state">No ${leagueLabel} games match your filters.${buildError ? ` Build error: ${buildError}` : ""}${scheduleOnly ? " Live schedule loaded — predictions appear once GitHub Actions builds that date." : ""}</div>`;
     renderTopPicks([]);
     renderStats(lastPayload || {}, 0);
+    renderModelDayResult(games || []);
     return;
   }
 
   renderTopPicks(visible);
   renderStats(lastPayload || {}, visible.length);
+  renderModelDayResult(games || []);
 
   const lineupLabel = lineupLabelForSport(sport);
   gamesEl.innerHTML = visible
@@ -2692,6 +2801,9 @@ async function loadDashboard(force = false) {
 
   try {
     const payload = await fetchDashboardPayload(params, { force });
+    if (sportSelect.value !== "overview") {
+      accuracyData = (await fetchAccuracy({ force })) ?? accuracyData;
+    }
     lastPayload = payload;
     updateFreshnessNote();
 
