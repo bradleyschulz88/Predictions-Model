@@ -86,6 +86,7 @@ const ODDS_FORMAT_KEY = "predictions-dashboard-odds-format";
 let importPreviewRows = null;
 let sheetPasteDraft = "";
 let importFileName = "";
+let importDetectedBankroll = null;
 const AMERICAN_ODDS_LINE_KEYS = new Set([
   "home",
   "away",
@@ -298,31 +299,47 @@ function defaultBetFormDraft(overrides = {}) {
 function normalizeBet(bet) {
   if (!bet) return bet;
   if (Array.isArray(bet.legs) && bet.legs.length) {
-    return {
+    const legs = bet.legs.map((leg) => ({
+      id: leg.id || createBetId(),
+      matchup: leg.matchup || "Unknown matchup",
+      pick: leg.pick || "Pick",
+      legDecimalOdds: leg.legDecimalOdds ?? null,
+      eventId: leg.eventId || null,
+      league: leg.league || null,
+      scheduleDate: leg.scheduleDate || null,
+      status: leg.status || bet.status || "pending",
+      resultWinner: leg.resultWinner || null,
+    }));
+    const legStatuses = legs.map((leg) => leg.status);
+    const derivedStatus =
+      bet.status && bet.status !== "pending"
+        ? bet.status
+        : legStatuses.some((status) => status === "lost")
+          ? "lost"
+          : legStatuses.length && legStatuses.every((status) => status === "won")
+            ? "won"
+            : bet.status || "pending";
+    return ensureBetProfit({
       ...bet,
+      id: bet.id || createBetId(),
+      createdAt: bet.createdAt || new Date().toISOString(),
       type: bet.type || "single",
-      decimalOdds: bet.decimalOdds ?? productDecimalOdds(bet.legs),
-      legs: bet.legs.map((leg) => ({
-        id: leg.id || createBetId(),
-        matchup: leg.matchup || "Unknown matchup",
-        pick: leg.pick || "Pick",
-        legDecimalOdds: leg.legDecimalOdds ?? null,
-        eventId: leg.eventId || null,
-        league: leg.league || null,
-        scheduleDate: leg.scheduleDate || null,
-        status: leg.status || "pending",
-        resultWinner: leg.resultWinner || null,
-      })),
-    };
+      status: derivedStatus,
+      decimalOdds: bet.decimalOdds ?? productDecimalOdds(legs),
+      legs,
+    });
   }
 
   const decimalOdds = bet.decimalOdds ?? americanToDecimal(bet.odds);
   const legStatus =
     bet.status === "won" ? "won" : bet.status === "lost" ? "lost" : "pending";
 
-  return {
+  return ensureBetProfit({
     ...bet,
+    id: bet.id || createBetId(),
+    createdAt: bet.createdAt || new Date().toISOString(),
     type: "single",
+    status: legStatus,
     decimalOdds,
     legs: [
       {
@@ -337,6 +354,15 @@ function normalizeBet(bet) {
         resultWinner: bet.resultWinner || null,
       },
     ],
+  });
+}
+
+function ensureBetProfit(bet) {
+  if (!bet || bet.status === "pending") return bet;
+  if (bet.profit != null && Number.isFinite(Number(bet.profit))) return bet;
+  return {
+    ...bet,
+    profit: calcBetProfitDecimal(bet.decimalOdds, bet.stake, bet.status === "won"),
   };
 }
 
@@ -640,21 +666,42 @@ function mapSheetColumns(headers) {
   };
 }
 
+function detectSheetBankroll(parsedLines, headerIndex) {
+  for (let i = 0; i < Math.min(headerIndex, 4); i += 1) {
+    const amounts = (parsedLines[i] || [])
+      .map((cell) => parseSheetStake(sanitizeSheetCell(cell)))
+      .filter((value) => value != null && value > 0);
+    if (amounts.length === 1) return amounts[0];
+  }
+  return null;
+}
+
 function parseSheetPaste(text) {
-  const lines = String(text || "")
-    .trim()
+  const cleaned = String(text || "")
+    .replace(/^\uFEFF/, "")
+    .trim();
+  const lines = cleaned
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean);
-  if (!lines.length) return { rows: [], errors: ["Paste is empty."] };
+  if (!lines.length) return { rows: [], errors: ["Paste or file is empty."], bankroll: null };
 
   const delimiter = detectSheetDelimiter(lines);
   const parsedLines = lines.map((line) => splitSheetRow(line, delimiter));
   let headerIndex = parsedLines.findIndex((cells) => {
     const normalized = cells.map(normalizeSheetHeader);
-    return normalized.includes("game") || normalized.includes("bet") || normalized.includes("odd");
+    const matches = ["game", "bet", "odd", "wl"].filter((key) => normalized.includes(key)).length;
+    return matches >= 2;
   });
+  if (headerIndex < 0) {
+    headerIndex = parsedLines.findIndex((cells) => {
+      const normalized = cells.map(normalizeSheetHeader);
+      return normalized.includes("game") || normalized.includes("bet") || normalized.includes("odd");
+    });
+  }
   if (headerIndex < 0) headerIndex = 0;
+
+  const detectedBankroll = detectSheetBankroll(parsedLines, headerIndex);
 
   const headers = parsedLines[headerIndex];
   const columns = mapSheetColumns(headers);
@@ -725,7 +772,7 @@ function parseSheetPaste(text) {
       "No bet rows found. Export from Google Sheets as CSV (File → Download → CSV), or paste values only — formula cells are ignored."
     );
   }
-  return { rows, errors };
+  return { rows, errors, bankroll: detectedBankroll };
 }
 
 function parseSheetFile(file) {
@@ -737,7 +784,7 @@ function parseSheetFile(file) {
   });
 }
 
-function importPreviewMarkup(rows, errors) {
+function importPreviewMarkup(rows, errors, bankroll) {
   const errorBlock = errors.length
     ? `<div class="import-errors">${errors.map((error) => `<p>${escapeHtml(error)}</p>`).join("")}</div>`
     : "";
@@ -760,9 +807,25 @@ function importPreviewMarkup(rows, errors) {
     .join("");
   const more = rows.length > 12 ? `<p class="field-hint">Showing first 12 of ${rows.length} rows.</p>` : "";
   const warn = errors.length ? `<p class="field-hint">${errors.length} row(s) skipped — valid rows shown below.</p>` : "";
+  const bankrollNote =
+    bankroll != null
+      ? `<p class="field-hint">Detected starting bankroll <strong>$${bankroll.toFixed(2)}</strong> — will apply on import if yours is currently $0.</p>`
+      : "";
+  const totalPl = rows.reduce((sum, row) => sum + Number(row.profit || 0), 0);
   return `
+    <div class="import-confirm-bar">
+      <div>
+        <strong>${rows.length} bet${rows.length === 1 ? "" : "s"} ready</strong>
+        <span class="import-confirm-meta">Settled P/L from file: ${formatMoney(totalPl)}</span>
+      </div>
+      <div class="import-confirm-actions">
+        <button type="button" class="primary-btn" id="confirm-import-btn">Add to bet history</button>
+        <button type="button" class="bet-action-btn" id="cancel-import-btn">Cancel</button>
+      </div>
+    </div>
     ${errorBlock}
     ${warn}
+    ${bankrollNote}
     ${more}
     <div class="import-preview-wrap">
       <table class="import-preview-table">
@@ -770,7 +833,6 @@ function importPreviewMarkup(rows, errors) {
         <tbody>${previewRows}</tbody>
       </table>
     </div>
-    <button type="button" class="primary-btn" id="confirm-import-btn">Import ${rows.length} bet${rows.length === 1 ? "" : "s"}</button>
   `;
 }
 
@@ -778,11 +840,15 @@ async function handleSheetFileUpload(file) {
   if (!file) return;
   try {
     importPreviewRows = await parseSheetFile(file);
+    importDetectedBankroll = importPreviewRows.bankroll ?? null;
     sheetPasteDraft = "";
     importFileName = file.name;
     renderMyBetsView();
     if (importPreviewRows.rows.length) {
-      showBanner(`Loaded ${importPreviewRows.rows.length} row(s) from ${file.name}. Review and confirm import.`);
+      showBanner(`Loaded ${importPreviewRows.rows.length} bet(s). Click "Add to bet history" to save them.`);
+      requestAnimationFrame(() => {
+        myBetsViewEl.querySelector("#import-preview")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
     } else if (importPreviewRows.errors.length) {
       showBanner(importPreviewRows.errors[0]);
     }
@@ -791,27 +857,58 @@ async function handleSheetFileUpload(file) {
   }
 }
 
+function finalizeImportedBet(row) {
+  const status = row.status || "pending";
+  const profit =
+    status === "pending"
+      ? null
+      : row.profit ?? calcBetProfitDecimal(row.decimalOdds, row.stake, status === "won");
+  const legs = (row.legs || []).map((leg) => ({
+    ...leg,
+    status: leg.status || status,
+  }));
+  return normalizeBet({
+    id: createBetId(),
+    createdAt: row.createdAt || new Date().toISOString(),
+    type: row.type || "single",
+    stake: row.stake,
+    decimalOdds: row.decimalOdds,
+    status,
+    profit,
+    legs,
+    imported: true,
+  });
+}
+
 function importBetsFromRows(rows) {
   const existing = loadMyBets();
-  const imported = rows.map((row) =>
-    normalizeBet({
-      id: createBetId(),
-      createdAt: row.createdAt,
-      type: "single",
-      stake: row.stake,
-      decimalOdds: row.decimalOdds,
-      status: row.status,
-      profit: row.profit,
-      legs: row.legs,
-      imported: true,
-    })
-  );
+  const imported = rows.map(finalizeImportedBet);
   saveMyBets([...imported, ...existing]);
+
+  if (importDetectedBankroll != null && loadBankrollSettings().startingBankroll <= 0) {
+    saveBankrollSettings({ startingBankroll: importDetectedBankroll });
+  }
+
   importPreviewRows = null;
+  importDetectedBankroll = null;
   sheetPasteDraft = "";
   importFileName = "";
+  hideBanner();
   renderMyBetsView();
-  showBanner(`Imported ${imported.length} bet${imported.length === 1 ? "" : "s"}.`);
+  const totalPl = imported.reduce((sum, bet) => sum + Number(bet.profit || 0), 0);
+  showBanner(
+    `Added ${imported.length} bet${imported.length === 1 ? "" : "s"} to history. Settled P/L: ${formatMoney(totalPl)}.`
+  );
+  requestAnimationFrame(() => {
+    myBetsViewEl.querySelector(".my-bets-table-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function cancelImportPreview() {
+  importPreviewRows = null;
+  importDetectedBankroll = null;
+  importFileName = "";
+  renderMyBetsView();
 }
 
 function exportBetsToClipboard(bets) {
@@ -1115,7 +1212,11 @@ function renderMyBetsView() {
     : `<tr><td colspan="7" class="empty-bets-cell">No bets yet. Log one below or paste rows from your spreadsheet.</td></tr>`;
 
   const importPreview = importPreviewRows
-    ? importPreviewMarkup(importPreviewRows.rows, importPreviewRows.errors)
+    ? importPreviewMarkup(
+        importPreviewRows.rows,
+        importPreviewRows.errors,
+        importPreviewRows.bankroll ?? importDetectedBankroll
+      )
     : "";
 
   myBetsViewEl.innerHTML = `
@@ -1161,6 +1262,26 @@ function renderMyBetsView() {
       <div id="import-preview" class="import-preview">${importPreview}</div>
     </section>
 
+    <section class="my-bets-table-card">
+      <h2>Bet history</h2>
+      <div class="my-bets-table-wrap">
+        <table class="my-bets-table sheet-style">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Game</th>
+              <th>Bet</th>
+              <th>Odd</th>
+              <th>W/L</th>
+              <th>P/L</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </section>
+
     <section class="my-bets-form-card">
       <h2>Log a bet</h2>
       <form id="my-bet-form" class="my-bet-form">
@@ -1196,26 +1317,6 @@ function renderMyBetsView() {
 
         <button type="submit" class="primary-btn">${isParlay ? "Add parlay" : "Add bet"}</button>
       </form>
-    </section>
-
-    <section class="my-bets-table-card">
-      <h2>Bet history</h2>
-      <div class="my-bets-table-wrap">
-        <table class="my-bets-table sheet-style">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Game</th>
-              <th>Bet</th>
-              <th>Odd</th>
-              <th>W/L</th>
-              <th>P/L</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>
     </section>
   `;
 
@@ -1295,7 +1396,13 @@ function renderMyBetsView() {
     sheetPasteDraft = myBetsViewEl.querySelector("#sheet-paste")?.value || "";
     importFileName = "";
     importPreviewRows = parseSheetPaste(sheetPasteDraft);
+    importDetectedBankroll = importPreviewRows.bankroll ?? null;
     renderMyBetsView();
+    if (importPreviewRows.rows.length) {
+      requestAnimationFrame(() => {
+        myBetsViewEl.querySelector("#import-preview")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
   });
 
   myBetsViewEl.querySelector("#choose-csv-btn")?.addEventListener("click", () => {
@@ -1323,10 +1430,6 @@ function renderMyBetsView() {
     if (file) await handleSheetFileUpload(file);
   });
 
-  myBetsViewEl.querySelector("#confirm-import-btn")?.addEventListener("click", () => {
-    if (importPreviewRows?.rows?.length) importBetsFromRows(importPreviewRows.rows);
-  });
-
   myBetsViewEl.querySelector("#export-bets-btn")?.addEventListener("click", async () => {
     const text = exportBetsToClipboard(loadMyBets());
     try {
@@ -1334,6 +1437,24 @@ function renderMyBetsView() {
       showBanner("Bet history copied — paste into Excel or Google Sheets.");
     } catch {
       showBanner("Could not copy automatically. Select the export text manually.");
+    }
+  });
+}
+
+function bindMyBetsImportActions() {
+  if (!myBetsViewEl || myBetsViewEl.dataset.importActionsBound) return;
+  myBetsViewEl.dataset.importActionsBound = "1";
+  myBetsViewEl.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    if (target.id === "confirm-import-btn") {
+      event.preventDefault();
+      if (importPreviewRows?.rows?.length) importBetsFromRows(importPreviewRows.rows);
+      return;
+    }
+    if (target.id === "cancel-import-btn") {
+      event.preventDefault();
+      cancelImportPreview();
     }
   });
 }
@@ -2569,6 +2690,7 @@ async function initDashboard() {
   configureStaticMode();
   registerServiceWorker();
   syncOddsFormatSelect();
+  bindMyBetsImportActions();
 
   if (IS_STATIC_HOST) {
     manifestData = await fetchManifest({ force: false });
