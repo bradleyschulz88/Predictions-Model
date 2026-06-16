@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-06-16T04:17:17.140302+00:00",
+  "updatedAt": "2026-06-16T04:30:58.164913+00:00",
   "summary": {
     "last7Days": {
       "correct": 26,
-      "total": 48,
-      "pct": 54.2,
-      "units": 0.983,
-      "roiPct": 2.0,
-      "pending": 39
+      "total": 49,
+      "pct": 53.1,
+      "units": -0.017,
+      "roiPct": -0.0,
+      "pending": 38
     },
     "allTime": {
       "correct": 26,
-      "total": 48,
-      "pct": 54.2,
-      "units": 0.983,
-      "roiPct": 2.0,
-      "pending": 39
+      "total": 49,
+      "pct": 53.1,
+      "units": -0.017,
+      "roiPct": -0.0,
+      "pending": 38
     },
     "byLeague": {
       "mlb": {
         "correct": 22,
-        "total": 38,
-        "pct": 57.9,
-        "units": 2.983,
-        "roiPct": 7.8,
+        "total": 39,
+        "pct": 56.4,
+        "units": 1.983,
+        "roiPct": 5.1,
         "pending": 0
       },
       "worldcup": {
@@ -51,6 +51,25 @@
     }
   },
   "recentResults": [
+    {
+      "eventId": "401815772",
+      "league": "mlb",
+      "scheduleDate": "2026-06-15",
+      "matchup": "Pittsburgh Pirates @ Athletics",
+      "predicted": "Pittsburgh Pirates",
+      "predictedSide": "away",
+      "outcomeLabel": "Pittsburgh Pirates to win",
+      "confidence": 57.7,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Athletics",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "11",
+      "awayScore": "2",
+      "gradedAt": "2026-06-16T04:30:56.253662+00:00",
+      "date": "2026-06-15"
+    },
     {
       "eventId": "401815771",
       "league": "mlb",
@@ -1686,25 +1705,6 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-06-15"
-    },
-    {
-      "eventId": "401815772",
-      "league": "mlb",
-      "scheduleDate": "2026-06-15",
-      "matchup": "Pittsburgh Pirates @ Athletics",
-      "predicted": "Athletics",
-      "predictedSide": "home",
-      "outcomeLabel": "Athletics to win",
-      "confidence": 56.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-06-15"
     }
   ],
   "picksByEventId": {
@@ -2891,18 +2891,18 @@
       "league": "mlb",
       "scheduleDate": "2026-06-15",
       "matchup": "Pittsburgh Pirates @ Athletics",
-      "predicted": "Athletics",
-      "predictedSide": "home",
-      "outcomeLabel": "Athletics to win",
-      "confidence": 56.3,
+      "predicted": "Pittsburgh Pirates",
+      "predictedSide": "away",
+      "outcomeLabel": "Pittsburgh Pirates to win",
+      "confidence": 57.7,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "status": "graded",
+      "actual": "Athletics",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "11",
+      "awayScore": "2",
+      "gradedAt": "2026-06-16T04:30:56.253662+00:00",
       "date": "2026-06-15"
     },
     "401815770": {
