@@ -1288,7 +1288,6 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         )
 
     model_home = sigmoid(logit)
-    implied_probs = compute_implied_probabilities(game.get("lines") or [])
     true_probs = compute_true_probabilities(
         model_home=model_home,
         enrichment=enrichment,
@@ -1296,69 +1295,20 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         league=league_config.id,
     )
 
-    market_home = implied_probs["consensus"]["home"] if implied_probs.get("available") else None
-    market_away = implied_probs["consensus"]["away"] if implied_probs.get("available") else None
-    market_draw = implied_probs["consensus"]["draw"] if implied_probs.get("available") else None
-
-    if market_home is not None and market_away is not None:
-        market_detail = (
-            f"Consensus implied {implied_probs['consensus']['homePct']}% home / "
-            f"{implied_probs['consensus']['awayPct']}% away"
-        )
-        if market_draw is not None:
-            market_detail += f" / {implied_probs['consensus']['drawPct']}% draw"
-        market_detail += f" ({implied_probs['booksUsed']} books, {implied_probs['consensus']['avgVigPct']}% avg vig)"
-        factors.append(
-            {
-                "label": "Implied probability",
-                "detail": market_detail,
-                "edge": _edge_label(market_home, market_away),
-            }
-        )
-    else:
-        factors.append(
-            {
-                "label": "Implied probability",
-                "detail": "No moneyline odds available yet",
-                "edge": "even",
-            }
-        )
-
     factors.append(
         {
-            "label": "True probability",
+            "label": "Model probability",
             "detail": (
-                f"Data-only estimate {true_probs['homePct']}% home / {true_probs['awayPct']}% away"
+                f"Data-driven estimate {true_probs['homePct']}% home / {true_probs['awayPct']}% away"
                 + (f" / {true_probs['drawPct']}% draw" if true_probs.get("drawPct") is not None else "")
             ),
             "edge": _edge_label(true_probs["home"], true_probs["away"]),
         }
     )
 
-    # Final pick blends true analytical probability with market implied when available.
-    blend_components: list[tuple[float, float]] = [(true_probs["home"], 0.65)]
-    if market_home is not None:
-        blend_components.append((market_home, 0.35))
-
-    blend_total = sum(weight for _, weight in blend_components)
-    home_prob = sum(prob * weight for prob, weight in blend_components) / blend_total
-    home_prob = clamp(home_prob)
-    away_prob = 1.0 - home_prob
-
-    draw_prob = 0.0
-    if league_config.supports_draw:
-        true_draw = true_probs.get("draw") or 0.0
-        implied_draw = market_draw or 0.0
-        if implied_draw and true_draw:
-            draw_prob = true_draw * 0.6 + implied_draw * 0.4
-        elif implied_draw:
-            draw_prob = implied_draw
-        else:
-            draw_prob = true_draw
-        draw_prob = clamp(draw_prob, 0.08, 0.40)
-        scale = 1.0 - draw_prob
-        home_prob *= scale
-        away_prob *= scale
+    home_prob = clamp(true_probs["home"])
+    away_prob = clamp(true_probs["away"])
+    draw_prob = clamp(true_probs.get("draw") or 0.0) if league_config.supports_draw else 0.0
 
     outcomes = [
         ("home", home_prob, game.get("homeTeam")),
@@ -1384,7 +1334,7 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
             0,
             {
                 "title": "Draw is the top outcome",
-                "detail": f"Model and market imply a {round(draw_prob * 100, 1)}% chance of a draw.",
+                "detail": f"Model estimates a {round(draw_prob * 100, 1)}% chance of a draw.",
                 "impact": "high",
                 "favors": "even",
                 "source": "Model",
@@ -1393,67 +1343,28 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
     why_they_win = (
         _build_why_they_win(game, reasons, predicted_winner)
         if predicted_side != "draw"
-        else f"Draw is the most likely result ({round(draw_prob * 100, 1)}%) based on market and form."
+        else f"Draw is the most likely result ({round(draw_prob * 100, 1)}%) based on form and matchup data."
     )
-
-    market_edge = _probability_edge(
-        predicted_side=predicted_side if predicted_side in {"home", "away"} else "home",
-        true_home=true_probs["home"],
-        true_away=true_probs["away"],
-        implied_home=market_home,
-        implied_away=market_away,
-    )
-    if market_edge and abs(market_edge["edgePct"]) >= 3 and predicted_side in {"home", "away"}:
-        reasons.insert(
-            0,
-            {
-                "title": "True vs implied edge",
-                "detail": (
-                    f"True probability {market_edge['truePct']}% vs implied {market_edge['impliedPct']}% "
-                    f"({market_edge['edgeLabel']})."
-                ),
-                "impact": "high",
-                "favors": predicted_side,
-                "source": "Probability model",
-            },
-        )
-
-    total_prediction = predict_total(game, game.get("lines") or [], enrichment)
-    total_implied = compute_total_implied_probabilities(game.get("lines") or [])
 
     data_sources = ["ESPN scoreboard"]
     if enrichment:
         data_sources.extend(enrichment.get("sources") or [])
-    if game.get("lines"):
-        if game.get("oddsSource") == "espn":
-            data_sources.append("ESPN betting odds")
-        elif game.get("oddsSource") == "sbr":
-            data_sources.append("SportsBookReview odds")
-        else:
-            data_sources.append("Betting odds")
     data_sources.append("Probability model")
 
-    if total_prediction and total_implied:
-        total_prediction["impliedOverPct"] = total_implied["overPct"]
-        total_prediction["impliedUnderPct"] = total_implied["underPct"]
-        total_prediction["trueOverPct"] = total_prediction.get("overPct")
-        total_prediction["trueUnderPct"] = total_prediction.get("underPct")
-        total_prediction["impliedBooksUsed"] = total_implied["booksUsed"]
-
+    pick_pct = {
+        "homePct": home_pct,
+        "awayPct": away_pct,
+        "drawPct": round(draw_prob * 100, 1) if draw_prob else None,
+        "method": "Model data only (records, form, injuries, advanced stats)",
+    }
     probabilities: dict[str, Any] = {
         "true": true_probs,
-        "implied": implied_probs if implied_probs.get("available") else {"available": False},
-        "blended": {
-            "homePct": home_pct,
-            "awayPct": away_pct,
-            "drawPct": round(draw_prob * 100, 1) if draw_prob else None,
-            "method": "65% true probability + 35% implied consensus" if market_home is not None else "True probability only",
-        },
+        "pick": pick_pct,
     }
     team_probabilities = _build_team_probabilities(
         true_probs=true_probs,
-        implied_probs=implied_probs,
-        blended=probabilities["blended"],
+        implied_probs={"available": False},
+        blended=pick_pct,
     )
 
     result: dict[str, Any] = {
@@ -1468,14 +1379,11 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         "reasons": reasons,
         "factors": factors,
         "dataSources": sorted(set(data_sources)),
-        "modelEdge": market_edge,
         "probabilities": probabilities,
         "teamProbabilities": team_probabilities,
     }
     if league_config.supports_draw and draw_prob:
         result["drawWinPct"] = round(draw_prob * 100, 1)
-    if total_prediction:
-        result["totalPick"] = total_prediction
     result["features"] = extract_prediction_features(game, result)
     return result
 

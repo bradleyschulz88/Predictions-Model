@@ -98,9 +98,8 @@ class ImpliedProbabilityTests(unittest.TestCase):
         }
         prediction = predict_game(game)
         self.assertIn("probabilities", prediction)
-        self.assertTrue(prediction["probabilities"]["implied"]["available"])
         self.assertIn("true", prediction["probabilities"])
-        self.assertIn("blended", prediction["probabilities"])
+        self.assertIn("pick", prediction["probabilities"])
         self.assertIn("teamProbabilities", prediction)
         self.assertIn("home", prediction["teamProbabilities"])
         self.assertEqual(prediction["teamProbabilities"]["home"]["truePct"], prediction["probabilities"]["true"]["homePct"])

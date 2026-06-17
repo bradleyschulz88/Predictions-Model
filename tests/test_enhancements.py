@@ -22,29 +22,20 @@ class PredictionEnhancementTests(unittest.TestCase):
         lines = [{"viewType": "Total", "currentLine": {"over": "o8.5 (-110)", "under": "u8.5 (-110)"}}]
         self.assertEqual(extract_total_line(lines), 8.5)
 
-    def test_predict_game_includes_edge_and_total_fields(self) -> None:
+    def test_predict_game_includes_model_fields(self) -> None:
         game = {
             "league": "mlb",
             "homeTeam": "Home",
             "awayTeam": "Away",
             "homeRecord": "30-20",
             "awayRecord": "20-30",
-            "lines": [
-                {
-                    "viewType": "MoneyLine",
-                    "currentLine": {"home": -150, "away": 130},
-                },
-                {
-                    "viewType": "Total",
-                    "currentLine": {"over": "o8.5 (-110)", "under": "u8.5 (-110)"},
-                },
-            ],
             "enrichment": {"homeMajorInjuries": [], "awayMajorInjuries": [{"player": "X", "status": "Out"}]},
         }
         prediction = predict_game(game)
         self.assertIn("confidenceLabel", prediction)
-        self.assertIn("modelEdge", prediction)
-        self.assertIn("totalPick", prediction)
+        self.assertIn("dataSources", prediction)
+        self.assertIn("features", prediction)
+        self.assertIn("pick", prediction["probabilities"])
 
 
 class AccuracyTrackerTests(unittest.TestCase):

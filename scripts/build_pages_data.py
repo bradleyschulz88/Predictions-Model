@@ -78,7 +78,6 @@ def build_overview(payloads: dict[str, dict]) -> dict:
                     "pick": prediction.get("outcomeLabel"),
                     "confidence": prediction.get("confidence"),
                     "confidenceLabel": prediction.get("confidenceLabel"),
-                    "modelEdge": (prediction.get("modelEdge") or {}).get("edgeLabel"),
                     "eventId": game.get("eventId"),
                 }
             )
@@ -106,7 +105,7 @@ def main() -> int:
 
         for date_value in available_dates:
             include_enrichment = True
-            include_odds = league_config.supports_sbr_odds or include_enrichment
+            include_odds = False
             try:
                 payload = build_league_payload(
                     league,

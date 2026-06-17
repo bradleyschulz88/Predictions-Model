@@ -5,7 +5,6 @@ const datePrevBtn = document.getElementById("date-prev");
 const dateNextBtn = document.getElementById("date-next");
 const dateQuickEl = document.getElementById("date-quick");
 const dateHintEl = document.getElementById("date-hint");
-const viewFilter = document.getElementById("view-filter");
 const confidenceFilter = document.getElementById("confidence-filter");
 const oddsFormatSelect = document.getElementById("odds-format");
 const teamSearch = document.getElementById("team-search");
@@ -1728,6 +1727,7 @@ function switchView(view, { skipHashUpdate = false } = {}) {
 
   filterPanelEl?.classList.toggle("hidden", !isPredictions);
   accuracyPanelEl?.classList.toggle("hidden", !isPredictions || sportSelect.value === "overview");
+  document.querySelector(".page-bar-odds")?.classList.toggle("hidden", isPredictions);
 
   if (isPredictions) {
     dashboardTitle.textContent =
@@ -2971,7 +2971,6 @@ function renderOverview() {
         <span class="rank-badge">${pick.leagueLabel}</span>
         <strong>${pick.pick || pick.matchup}</strong>
         <span class="top-pick-meta">${pick.confidence}% · ${pick.confidenceLabel || ""}</span>
-        ${pick.modelEdge ? `<span class="edge-chip">${pick.modelEdge}</span>` : ""}
       </article>
     `
     )
@@ -3040,7 +3039,6 @@ function renderTopPicks(games) {
           <div class="top-pick-rank">#${game.predictionRank}</div>
           <strong class="top-pick-label">${game.prediction?.outcomeLabel || game.matchup}</strong>
           <span class="top-pick-meta">${game.prediction?.confidence}% · ${game.prediction?.confidenceLabel || ""}</span>
-          ${game.prediction?.modelEdge?.edgeLabel ? `<span class="edge-chip">${game.prediction.modelEdge.edgeLabel}</span>` : ""}
         </article>
       `
         )
@@ -3095,8 +3093,7 @@ function pickProbabilitySummary(prediction) {
   const side = prediction.predictedSide;
   const team = prediction.teamProbabilities[side];
   if (!team?.truePct) return "";
-  const implied = team.impliedPct != null ? ` · Implied ${formatPct(team.impliedPct)}` : "";
-  return `True ${formatPct(team.truePct)}${implied}`;
+  return `Model ${formatPct(team.truePct)}`;
 }
 
 function renderTeamProbabilityTable(prediction, game) {
@@ -3111,45 +3108,37 @@ function renderTeamProbabilityTable(prediction, game) {
     rows.push({ key: "draw", label: "Draw", favored: prediction.predictedSide === "draw" });
   }
 
+  const trueP = prediction.probabilities?.true || {};
+  const componentRows = (trueP.components || [])
+    .map((item) => `<li><strong>${item.source}</strong> (${item.weightPct}% weight): ${item.homePct}% home — ${item.detail}</li>`)
+    .join("");
+
   const body = rows
     .map((row) => {
       const stats = teams[row.key] || {};
-      const edgeClass =
-        stats.edgePct > 0 ? "edge-positive" : stats.edgePct < 0 ? "edge-negative" : "";
       return `
         <tr class="${row.favored ? "prob-pick-row" : ""}">
           <td data-label="Team"><strong>${row.label}</strong>${row.favored ? ' <span class="rank-badge small">Pick</span>' : ""}</td>
-          <td data-label="True %" class="true-pct">${formatPct(stats.truePct)}</td>
-          <td data-label="Implied %" class="implied-pct">${stats.impliedPct != null ? formatPct(stats.impliedPct) : "—"}</td>
-          <td data-label="Blended %" class="blended-pct">${formatPct(stats.blendedPct)}</td>
-          <td data-label="Edge" class="edge-pct ${edgeClass}">${stats.edgeLabel || "—"}</td>
+          <td data-label="Model %" class="true-pct">${formatPct(stats.truePct ?? stats.blendedPct)}</td>
         </tr>
       `;
     })
     .join("");
 
-  const pickEdge = prediction.modelEdge;
-  const edgeNote = pickEdge
-    ? `<p class="prob-edge-line"><strong>Pick value edge:</strong> True ${formatPct(pickEdge.truePct)} vs implied ${formatPct(pickEdge.impliedPct)} <span class="edge-chip">${pickEdge.edgeLabel}</span></p>`
-    : `<p class="lineup-note">Implied % appears when moneyline odds are available.</p>`;
-
   return `
     <section class="probability-compare">
-      <h4>Probability by team (%)</h4>
+      <h4>Win probability by team</h4>
       <table class="lines-table prob-pct-table prob-sheet-table">
         <thead>
           <tr>
             <th>Team</th>
-            <th>True %</th>
-            <th>Implied %</th>
-            <th>Blended %</th>
-            <th>Edge</th>
+            <th>Model %</th>
           </tr>
         </thead>
         <tbody>${body}</tbody>
       </table>
-      ${edgeNote}
-      <p class="lineup-note"><strong>True %</strong> = model data only (records, form, injuries, advanced stats). <strong>Implied %</strong> = devigged market odds. <strong>Blended %</strong> = final pick weighting.</p>
+      ${componentRows ? `<ul class="prob-components">${componentRows}</ul>` : ""}
+      <p class="lineup-note">Model % uses records, form, injuries, lineups, advanced stats, and ESPN predictor — no betting odds.</p>
     </section>
   `;
 }
@@ -3159,63 +3148,23 @@ function renderProbabilityCompare(prediction, game) {
   if (!probs) return "";
 
   const trueP = probs.true || {};
-  const implied = probs.implied || {};
-  const blended = probs.blended || {};
-  const consensus = implied.consensus || {};
-  const edge = prediction.modelEdge;
-
-  const bookRows = (implied.books || [])
-    .map(
-      (book) =>
-        `<tr>
-          <td data-label="Book">${book.sportsbook}</td>
-          <td data-label="Home">${book.homePct}%</td>
-          <td data-label="Away">${book.awayPct}%</td>
-          <td data-label="Draw">${book.drawPct != null ? `${book.drawPct}%` : "—"}</td>
-          <td data-label="Vig">${book.vigPct}%</td>
-        </tr>`
-    )
-    .join("");
+  const pick = probs.pick || probs.blended || {};
 
   const componentRows = (trueP.components || [])
     .map((item) => `<li><strong>${item.source}</strong> (${item.weightPct}% weight): ${item.homePct}% home — ${item.detail}</li>`)
     .join("");
 
-  const edgeBlock = edge
-    ? `<p class="prob-edge-line"><strong>Value edge:</strong> True ${edge.truePct}% vs implied ${edge.impliedPct}% <span class="edge-chip">${edge.edgeLabel}</span></p>`
-    : "";
-
   return `
     <section class="probability-compare">
-      <h4>True vs implied probability</h4>
+      <h4>Model win probability</h4>
       <div class="prob-grid">
         <article class="prob-card true-card">
-          <p class="prob-card-label">True (all data)</p>
-          <p class="prob-card-values">${game.homeTeam}: <strong>${trueP.homePct ?? "—"}%</strong> · ${game.awayTeam}: <strong>${trueP.awayPct ?? "—"}%</strong>${trueP.drawPct != null ? ` · Draw: <strong>${trueP.drawPct}%</strong>` : ""}</p>
+          <p class="prob-card-label">Model estimate</p>
+          <p class="prob-card-values">${game.homeTeam}: <strong>${trueP.homePct ?? pick.homePct ?? prediction.homeWinPct ?? "—"}%</strong> · ${game.awayTeam}: <strong>${trueP.awayPct ?? pick.awayPct ?? prediction.awayWinPct ?? "—"}%</strong>${trueP.drawPct != null ? ` · Draw: <strong>${trueP.drawPct}%</strong>` : ""}</p>
           <p class="lineup-note">Records, form, injuries, advanced stats, ESPN predictor — no odds.</p>
           ${componentRows ? `<ul class="prob-components">${componentRows}</ul>` : ""}
         </article>
-        <article class="prob-card implied-card">
-          <p class="prob-card-label">Implied (market)</p>
-          ${
-            implied.available
-              ? `<p class="prob-card-values">${game.homeTeam}: <strong>${consensus.homePct}%</strong> · ${game.awayTeam}: <strong>${consensus.awayPct}%</strong>${consensus.drawPct != null ? ` · Draw: <strong>${consensus.drawPct}%</strong>` : ""}</p>
-                 <p class="lineup-note">Consensus from ${implied.booksUsed} book(s), ${consensus.avgVigPct}% avg vig removed.</p>`
-              : `<p class="lineup-note">No moneyline odds published yet.</p>`
-          }
-        </article>
-        <article class="prob-card blended-card">
-          <p class="prob-card-label">Blended pick</p>
-          <p class="prob-card-values">${game.homeTeam}: <strong>${blended.homePct ?? prediction.homeWinPct}%</strong> · ${game.awayTeam}: <strong>${blended.awayPct ?? prediction.awayWinPct}%</strong>${blended.drawPct != null ? ` · Draw: <strong>${blended.drawPct}%</strong>` : ""}</p>
-          <p class="lineup-note">${blended.method || "Final pick probability."}</p>
-        </article>
       </div>
-      ${edgeBlock}
-      ${
-        bookRows
-          ? `<table class="lines-table compact prob-sheet-table"><thead><tr><th>Book</th><th>Home</th><th>Away</th><th>Draw</th><th>Vig</th></tr></thead><tbody>${bookRows}</tbody></table>`
-          : ""
-      }
     </section>
   `;
 }
@@ -3242,20 +3191,7 @@ function renderPrediction(game) {
 
   const sources = (prediction.dataSources || []).map((source) => `<span class="source-chip">${source}</span>`).join("");
 
-  const edgeBlock = prediction.modelEdge
-    ? `<div class="edge-panel"><strong>True vs implied:</strong> ${prediction.modelEdge.truePct ?? prediction.modelEdge.modelPct}% true · ${prediction.modelEdge.impliedPct ?? prediction.modelEdge.marketPct}% implied · <span class="edge-chip">${prediction.modelEdge.edgeLabel}</span></div>`
-    : "";
-
   const probabilityCompare = renderTeamProbabilityTable(prediction, game);
-  const linesBlock = renderGameLines(game);
-
-  const totalBlock = prediction.totalPick
-    ? `<div class="total-panel"><strong>Total pick:</strong> ${prediction.totalPick.pick} (${prediction.totalPick.confidence}% confidence)<br><span class="lineup-note">${prediction.totalPick.detail}</span>${
-        prediction.totalPick.impliedOverPct != null
-          ? `<br><span class="lineup-note">True: ${prediction.totalPick.trueOverPct}% over / ${prediction.totalPick.trueUnderPct}% under · Implied: ${prediction.totalPick.impliedOverPct}% / ${prediction.totalPick.impliedUnderPct}% (${prediction.totalPick.impliedBooksUsed} books)</span>`
-          : ""
-      }</div>`
-    : "";
 
   const drawBlock = prediction.drawWinPct != null
     ? `<div class="probability-team ${drawFavored ? "favored" : ""}"><span class="probability-label">Draw</span><span class="probability-value">${prediction.drawWinPct}%</span></div>`
@@ -3284,14 +3220,11 @@ function renderPrediction(game) {
       ${liveBlock}
       ${modelPickBlock}
       ${probabilityCompare}
-      ${linesBlock}
       <div class="probability-bar ${prediction.drawWinPct != null ? "three-way" : ""}">
-        <div class="probability-team ${homeFavored ? "favored" : ""}"><span class="probability-label">${game.homeTeam || "Home"} (blended)</span><span class="probability-value">${prediction.homeWinPct}%</span></div>
+        <div class="probability-team ${homeFavored ? "favored" : ""}"><span class="probability-label">${game.homeTeam || "Home"}</span><span class="probability-value">${prediction.homeWinPct}%</span></div>
         ${drawBlock}
-        <div class="probability-team ${awayFavored ? "favored" : ""}"><span class="probability-label">${game.awayTeam || "Away"} (blended)</span><span class="probability-value">${prediction.awayWinPct}%</span></div>
+        <div class="probability-team ${awayFavored ? "favored" : ""}"><span class="probability-label">${game.awayTeam || "Away"}</span><span class="probability-value">${prediction.awayWinPct}%</span></div>
       </div>
-      ${edgeBlock}
-      ${totalBlock}
       <div class="why-panel">
         <h4>Why ${prediction.predictedSide === "draw" ? "draw" : prediction.predictedWinner}?</h4>
         <p class="why-summary">${prediction.whyTheyWin || "Analysis pending."}</p>
@@ -3432,26 +3365,6 @@ function renderGames(games) {
     if (details) details.open = true;
     target?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-}
-
-function filterPayloadByView(payload, view) {
-  if (!view || view === "Spread|MoneyLine|Total") {
-    const allowed = ["Spread", "MoneyLine", "Total"];
-    return {
-      ...payload,
-      games: (payload.games || []).map((game) => ({
-        ...game,
-        lines: (game.lines || []).filter((line) => allowed.some((name) => (line.viewType || "").includes(name))),
-      })),
-    };
-  }
-  return {
-    ...payload,
-    games: (payload.games || []).map((game) => ({
-      ...game,
-      lines: (game.lines || []).filter((line) => (line.viewType || "").includes(view)),
-    })),
-  };
 }
 
 function staticDataUrl(path, force) {
@@ -3746,7 +3659,7 @@ async function fetchDashboardPayload(params, { force = false } = {}) {
       payload._dateFallback = true;
     }
 
-    return filterPayloadByView(payload, params.get("view") || viewFilter.value);
+    return payload;
   }
 
   if (window.location.protocol === "file:") {
@@ -3784,7 +3697,6 @@ async function loadDashboard(force = false) {
   const params = new URLSearchParams({
     league: sportSelect.value,
     date: requestedDate,
-    view: viewFilter.value,
   });
 
   try {
@@ -3985,7 +3897,6 @@ async function initDashboard() {
     }
     loadDashboard(true);
   });
-  viewFilter.addEventListener("change", () => loadDashboard(true));
   dateDisplayBtn?.addEventListener("click", openDatePicker);
   datePickerInput?.addEventListener("change", () => {
     const iso = datePickerInput.value;
