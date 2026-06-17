@@ -1,8 +1,10 @@
 const sportSelect = document.getElementById("sport-select");
-const dateSelect = document.getElementById("date-select");
+const dateDisplayBtn = document.getElementById("date-display");
+const datePickerInput = document.getElementById("date-picker-input");
 const datePrevBtn = document.getElementById("date-prev");
 const dateNextBtn = document.getElementById("date-next");
 const dateQuickEl = document.getElementById("date-quick");
+const dateHintEl = document.getElementById("date-hint");
 const viewFilter = document.getElementById("view-filter");
 const confidenceFilter = document.getElementById("confidence-filter");
 const oddsFormatSelect = document.getElementById("odds-format");
@@ -76,7 +78,13 @@ let manifestData = null;
 let overviewData = null;
 let lastLiveScoreAt = null;
 let activeScheduleDate = null;
-let dateOptionsCache = [];
+let datePickerGameCount = null;
+
+const TIMEZONE_LABELS = {
+  "America/New_York": "Eastern Time",
+  "Europe/London": "UK time",
+  "Australia/Sydney": "Sydney time",
+};
 
 let activeView = "predictions";
 let betFormDraft = {
@@ -2472,34 +2480,106 @@ function defaultDateForSport(sport) {
   return leagueDateIso(sport, 0);
 }
 
-function formatDateLabel(iso, sport = sportSelect.value) {
-  const tz = leagueTimezone(sport);
+function formatTimezoneLabel(timeZone) {
+  return TIMEZONE_LABELS[timeZone] || timeZone.split("/").pop()?.replace(/_/g, " ") || timeZone;
+}
+
+function formatDateBarLabel(iso, sport = sportSelect.value, gameCount = null) {
   const today = leagueDateIso(sport, 0);
   const tomorrow = leagueDateIso(sport, 1);
   const yesterday = leagueDateIso(sport, -1);
   const date = new Date(`${iso}T12:00:00`);
-  const formatted = date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
-  const tzShort = tz.split("/").pop()?.replace("_", " ") || tz;
+  const formatted = date.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
 
-  if (iso === today) return `Schedule today · ${formatted} (${tzShort})`;
-  if (iso === tomorrow) return `Schedule tomorrow · ${formatted} (${tzShort})`;
-  if (iso === yesterday) return `Schedule yesterday · ${formatted} (${tzShort})`;
-  return `${formatted} (${tzShort})`;
+  let label;
+  if (iso === today) label = `Today · ${formatted}`;
+  else if (iso === tomorrow) label = `Tomorrow · ${formatted}`;
+  else if (iso === yesterday) label = `Yesterday · ${formatted}`;
+  else label = formatted;
+
+  if (gameCount != null && gameCount > 0) {
+    label += ` · ${gameCount} game${gameCount === 1 ? "" : "s"}`;
+  }
+  return label;
+}
+
+function formatDateChipLabel(iso, sport = sportSelect.value) {
+  const today = leagueDateIso(sport, 0);
+  const tomorrow = leagueDateIso(sport, 1);
+  const yesterday = leagueDateIso(sport, -1);
+  if (iso === today) return "Today";
+  if (iso === tomorrow) return "Tomorrow";
+  if (iso === yesterday) return "Yesterday";
+  return new Date(`${iso}T12:00:00`).toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function formatDateHint(sport) {
+  const label = SPORT_LABELS[sport] || sport;
+  const prefix = label.split(" ")[0] || label;
+  return `${prefix} schedule · ${formatTimezoneLabel(leagueTimezone(sport))}`;
 }
 
 function getSelectedDate() {
-  return activeScheduleDate || dateSelect.value || defaultDateForSport(sportSelect.value);
+  return activeScheduleDate || datePickerInput?.value || defaultDateForSport(sportSelect.value);
 }
 
-function setActiveScheduleDate(iso, { syncSelect = true } = {}) {
+function updateDateDisplayCount(count) {
+  datePickerGameCount = count > 0 ? count : null;
+  if (!dateDisplayBtn || !activeScheduleDate || sportSelect.value === "overview") return;
+  dateDisplayBtn.textContent = formatDateBarLabel(activeScheduleDate, sportSelect.value, datePickerGameCount);
+}
+
+function syncDatePickerUI() {
+  const league = sportSelect.value;
+  if (league === "overview") {
+    if (dateDisplayBtn) {
+      dateDisplayBtn.disabled = true;
+      dateDisplayBtn.textContent = "All sports view";
+    }
+    if (datePickerInput) datePickerInput.disabled = true;
+    if (dateQuickEl) dateQuickEl.innerHTML = "";
+    if (dateHintEl) dateHintEl.textContent = "";
+    updateDateNavButtons();
+    return;
+  }
+
+  const iso = activeScheduleDate || getSelectedDate() || defaultDateForSport(league);
+  const dates = availableDatesForLeague(league);
+
+  if (datePickerInput) {
+    datePickerInput.disabled = false;
+    if (dates.length) {
+      datePickerInput.min = dates[0];
+      datePickerInput.max = dates[dates.length - 1];
+    }
+    datePickerInput.value = iso;
+  }
+  if (dateDisplayBtn) {
+    dateDisplayBtn.disabled = false;
+    dateDisplayBtn.textContent = formatDateBarLabel(iso, league, datePickerGameCount);
+  }
+  if (dateHintEl) dateHintEl.textContent = formatDateHint(league);
+
+  renderDateQuickPicks();
+  updateDateNavButtons();
+}
+
+function setActiveScheduleDate(iso, { syncPicker = true } = {}) {
   if (!iso) return;
   activeScheduleDate = iso;
-  if (syncSelect) {
-    ensureDateOption(iso);
-    dateSelect.value = iso;
-    renderDateQuickPicks();
-    updateDateNavButtons();
+  if (!syncPicker) return;
+  if (datePickerInput && sportSelect.value !== "overview") {
+    datePickerInput.value = iso;
   }
+  if (dateDisplayBtn && sportSelect.value !== "overview") {
+    dateDisplayBtn.textContent = formatDateBarLabel(iso, sportSelect.value, datePickerGameCount);
+  }
+  renderDateQuickPicks();
+  updateDateNavButtons();
 }
 
 function shiftIsoDate(iso, days) {
@@ -2512,17 +2592,27 @@ function shiftIsoDate(iso, days) {
   return shifted.toISOString().slice(0, 10);
 }
 
-function ensureDateOption(iso) {
-  if (!iso || !dateSelect) return;
-  const exists = [...dateSelect.options].some((option) => option.value === iso);
-  if (exists) return;
-  const option = document.createElement("option");
-  option.value = iso;
-  option.textContent = formatDateLabel(iso, sportSelect.value);
-  dateSelect.appendChild(option);
-  dateOptionsCache = [...dateOptionsCache, iso].sort();
-}
+function renderDateQuickPicks() {
+  if (!dateQuickEl || sportSelect.value === "overview") {
+    if (dateQuickEl) dateQuickEl.innerHTML = "";
+    return;
+  }
 
+  const sport = sportSelect.value;
+  const current = getSelectedDate();
+  const quickDates = [leagueDateIso(sport, -1), leagueDateIso(sport, 0), leagueDateIso(sport, 1)];
+
+  dateQuickEl.innerHTML = quickDates
+    .map(
+      (iso) =>
+        `<button type="button" class="date-chip${iso === current ? " active" : ""}" data-date="${iso}">${formatDateChipLabel(iso, sport)}</button>`
+    )
+    .join("");
+
+  dateQuickEl.querySelectorAll(".date-chip").forEach((button) => {
+    button.addEventListener("click", () => onDateSelected(button.dataset.date));
+  });
+}
 function availableDatesForLeague(league) {
   const meta = leagueMeta(league);
   const dates = new Set(meta?.availableDates || []);
@@ -2541,30 +2631,6 @@ function availableDatesForLeague(league) {
   return [...dates].filter(Boolean).sort();
 }
 
-function renderDateQuickPicks() {
-  if (!dateQuickEl || sportSelect.value === "overview") {
-    if (dateQuickEl) dateQuickEl.innerHTML = "";
-    return;
-  }
-
-  const sport = sportSelect.value;
-  const current = getSelectedDate();
-  const quickDates = [leagueDateIso(sport, 0), leagueDateIso(sport, 1), leagueDateIso(sport, -1), defaultDateForSport(sport)]
-    .filter((iso, index, list) => iso && list.indexOf(iso) === index)
-    .sort();
-
-  dateQuickEl.innerHTML = quickDates
-    .map(
-      (iso) =>
-        `<button type="button" class="date-chip${iso === current ? " active" : ""}" data-date="${iso}">${formatDateLabel(iso, sport)}</button>`
-    )
-    .join("");
-
-  dateQuickEl.querySelectorAll(".date-chip").forEach((button) => {
-    button.addEventListener("click", () => onDateSelected(button.dataset.date));
-  });
-}
-
 function updateDateNavButtons() {
   if (!datePrevBtn || !dateNextBtn) return;
   const disabled = sportSelect.value === "overview";
@@ -2572,37 +2638,43 @@ function updateDateNavButtons() {
   dateNextBtn.disabled = disabled;
 }
 
-function populateDateSelect(league, preferredDate = null) {
-  if (sportSelect.value === "overview") {
-    dateSelect.disabled = true;
-    dateSelect.innerHTML = `<option value="">All sports view</option>`;
-    if (dateQuickEl) dateQuickEl.innerHTML = "";
-    updateDateNavButtons();
+function syncDatePicker(league, preferredDate = null) {
+  if (sportSelect.value === "overview" || league === "overview") {
+    datePickerGameCount = null;
+    syncDatePickerUI();
     return;
   }
 
   const dates = availableDatesForLeague(league);
   const preferred = preferredDate || activeScheduleDate || getSelectedDate() || defaultDateForSport(league);
   const options = [...new Set([...dates, preferred])].sort();
-  dateOptionsCache = options;
+  const currentValue = options.includes(preferred)
+    ? preferred
+    : options[options.length - 1] || defaultDateForSport(league);
 
-  const currentValue = options.includes(preferred) ? preferred : options[options.length - 1] || defaultDateForSport(league);
-  const optionsKey = options.join("|");
-  const existingKey = [...dateSelect.options].map((option) => option.value).join("|");
+  activeScheduleDate = currentValue;
+  datePickerGameCount = null;
+  syncDatePickerUI();
+}
 
-  if (optionsKey !== existingKey) {
-  dateSelect.innerHTML = options
-    .map((iso) => `<option value="${iso}">${formatDateLabel(iso, league)}</option>`)
-    .join("");
+function openDatePicker() {
+  if (!datePickerInput || datePickerInput.disabled) return;
+  if (typeof datePickerInput.showPicker === "function") {
+    try {
+      datePickerInput.showPicker();
+      return;
+    } catch {
+      // fall through to click()
+    }
   }
-
-  dateSelect.disabled = false;
-  setActiveScheduleDate(currentValue, { syncSelect: true });
+  datePickerInput.click();
 }
 
 function onDateSelected(iso) {
   if (!iso || sportSelect.value === "overview") return;
-  setActiveScheduleDate(iso, { syncSelect: true });
+  if (iso === activeScheduleDate) return;
+  datePickerGameCount = null;
+  setActiveScheduleDate(iso, { syncPicker: true });
   loadDashboard(true);
 }
 
@@ -3479,7 +3551,7 @@ async function fetchDashboardPayload(params, { force = false } = {}) {
   if (IS_STATIC_HOST) {
     manifestData = manifestData || (await fetchManifest({ force }));
     if (manifestData?.leagues?.length) {
-      populateDateSelect(league, activeScheduleDate || getSelectedDate());
+      syncDatePicker(league, activeScheduleDate || getSelectedDate());
     }
     accuracyData = await fetchAccuracy({ force });
 
@@ -3513,7 +3585,7 @@ async function fetchDashboardPayload(params, { force = false } = {}) {
     const payload = JSON.parse(body);
     if (!response.ok) throw new Error(payload.error || `Request failed (${response.status})`);
     if (league !== "overview") {
-      populateDateSelect(league, activeScheduleDate || getSelectedDate());
+      syncDatePicker(league, activeScheduleDate || getSelectedDate());
     }
     return payload;
   }
@@ -3530,7 +3602,7 @@ async function loadDashboard(force = false) {
   }
 
   const requestedDate = getSelectedDate();
-  setActiveScheduleDate(requestedDate, { syncSelect: true });
+  setActiveScheduleDate(requestedDate, { syncPicker: true });
   const params = new URLSearchParams({
     league: sportSelect.value,
     date: requestedDate,
@@ -3560,13 +3632,14 @@ async function loadDashboard(force = false) {
       lastPayload = normalizedPayload;
       updateFreshnessNote();
 
-      setActiveScheduleDate(displayDate, { syncSelect: true });
-      populateDateSelect(league, displayDate);
+      setActiveScheduleDate(displayDate, { syncPicker: true });
+      syncDatePicker(league, displayDate);
       const tz = normalizedPayload.scheduleTimezone || leagueMeta(league)?.scheduleTimezone;
       statDate.textContent = `${displayDate}${tz ? ` (${tz})` : ""}`;
 
       const games = normalizedPayload.games || [];
       renderGames(games);
+      updateDateDisplayCount(games.length);
 
       if (games.length === 0 && normalizedPayload.error) {
         showBanner(`Data build error: ${normalizedPayload.error}. Try another date or re-run GitHub Actions.`);
@@ -3627,10 +3700,10 @@ function resetAutoRefresh() {
 
 function onSportChange() {
   if (sportSelect.value === "overview") {
-    populateDateSelect("overview");
+    syncDatePicker("overview");
   } else {
     activeScheduleDate = defaultDateForSport(sportSelect.value);
-    populateDateSelect(sportSelect.value, activeScheduleDate);
+    syncDatePicker(sportSelect.value, activeScheduleDate);
   }
   loadDashboard(true);
 }
@@ -3700,13 +3773,18 @@ async function initDashboard() {
     loadDashboard(true);
   });
   viewFilter.addEventListener("change", () => loadDashboard(true));
-  dateSelect.addEventListener("change", () => onDateSelected(dateSelect.value));
+  dateDisplayBtn?.addEventListener("click", openDatePicker);
+  datePickerInput?.addEventListener("change", () => {
+    const iso = datePickerInput.value;
+    if (!iso) return;
+    onDateSelected(iso);
+  });
   datePrevBtn?.addEventListener("click", () => onDateNav(-1));
   dateNextBtn?.addEventListener("click", () => onDateNav(1));
   autoRefresh.addEventListener("change", resetAutoRefresh);
   liveScoresToggle?.addEventListener("change", resetLiveScorePolling);
 
-  populateDateSelect(sportSelect.value, defaultDateForSport(sportSelect.value));
+  syncDatePicker(sportSelect.value, defaultDateForSport(sportSelect.value));
   await loadDashboard(true);
   resetAutoRefresh();
   resetLiveScorePolling();

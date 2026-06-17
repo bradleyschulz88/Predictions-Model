@@ -277,10 +277,51 @@ summary:focus-visible {
   max-width: 100%;
 }
 
-#date-select {
-  min-width: 170px;
+.date-display-btn {
   flex: 1;
+  min-width: 0;
   max-width: 100%;
+  min-height: 42px;
+  background: var(--bg-elevated);
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+}
+
+.date-display-btn::after {
+  content: "▾";
+  margin-left: 6px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.date-display-btn:hover:not(:disabled) {
+  border-color: rgba(74, 222, 128, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.date-display-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.date-picker-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .date-controls {
@@ -290,6 +331,7 @@ summary:focus-visible {
   width: 100%;
   min-width: 0;
   max-width: 100%;
+  position: relative;
 }
 
 .date-nav-btn {
@@ -318,12 +360,19 @@ summary:focus-visible {
 }
 
 .date-quick {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
   margin-top: 6px;
   max-width: 100%;
   min-width: 0;
+}
+
+.date-hint {
+  margin: 6px 0 0;
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.35;
 }
 
 .date-chip {
@@ -331,12 +380,14 @@ summary:focus-visible {
   color: var(--muted);
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-pill);
-  padding: 5px 11px;
+  padding: 5px 8px;
   font-size: 0.76rem;
   font-weight: 500;
   text-transform: none;
   letter-spacing: 0;
   cursor: pointer;
+  text-align: center;
+  width: 100%;
   transition: background var(--transition), color var(--transition), border-color var(--transition);
 }
 
@@ -2585,10 +2636,12 @@ button:active:not(:disabled) {
     overflow: hidden;
   }
 
-  #date-select {
+  .date-display-btn {
     min-width: 0;
     flex: 1 1 0;
     width: 0;
+    font-size: 0.84rem;
+    padding: 8px 10px;
   }
 
   #refresh-btn {
@@ -2836,11 +2889,14 @@ button:active:not(:disabled) {
     min-width: 0;
   }
 
-  #date-select {
+  .date-display-btn {
     min-width: 0;
     flex: 1 1 0;
     width: 0;
     max-width: 100%;
+    min-height: 44px;
+    font-size: 0.82rem;
+    padding: 8px 10px;
   }
 
   #refresh-btn {
@@ -2881,23 +2937,16 @@ button:active:not(:disabled) {
   }
 
   .date-quick {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    scrollbar-width: none;
-  }
-
-  .date-quick::-webkit-scrollbar {
-    display: none;
   }
 
   .date-chip {
-    flex-shrink: 0;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .page-bar {

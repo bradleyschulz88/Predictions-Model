@@ -45,15 +45,17 @@
             </select>
           </label>
 
-          <label class="field" id="date-field">
+          <div class="field" id="date-field">
             <span>Date</span>
             <div class="date-controls">
               <button type="button" class="btn-icon date-nav-btn" id="date-prev" title="Previous day" aria-label="Previous day">‹</button>
-              <select id="date-select" title="Pick a schedule date"></select>
+              <button type="button" id="date-display" class="date-display-btn" title="Pick a schedule date" aria-haspopup="dialog">Pick date</button>
+              <input type="date" id="date-picker-input" class="date-picker-input" aria-hidden="true" tabindex="-1" />
               <button type="button" class="btn-icon date-nav-btn" id="date-next" title="Next day" aria-label="Next day">›</button>
             </div>
             <div class="date-quick" id="date-quick"></div>
-          </label>
+            <p class="date-hint" id="date-hint"></p>
+          </div>
 
           <button id="refresh-btn" type="button" class="btn-primary">Refresh</button>
         </div>
