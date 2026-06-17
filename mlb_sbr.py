@@ -357,7 +357,7 @@ def build_parser() -> argparse.ArgumentParser:
     dashboard.add_argument("--port", type=int, default=8765)
     dashboard.add_argument(
         "--league",
-        choices=("mlb", "nfl", "nba", "worldcup", "epl", "afl"),
+        choices=("mlb", "nfl", "nba", "wnba", "worldcup", "epl", "afl"),
         default="mlb",
         help="League to show (default: mlb)",
     )

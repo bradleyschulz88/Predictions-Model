@@ -49,6 +49,16 @@ class ScheduleDateTests(unittest.TestCase):
     def test_league_schedule_date_format(self) -> None:
         self.assertRegex(league_schedule_date("epl"), r"^\d{4}-\d{2}-\d{2}$")
 
+    def test_wnba_uses_eastern_timezone(self) -> None:
+        self.assertEqual(get_schedule_timezone("wnba"), "America/New_York")
+
+    def test_schedule_dates_include_yesterday_for_wnba(self) -> None:
+        afternoon_et = datetime(2026, 6, 15, 18, 0, tzinfo=ZoneInfo("America/New_York"))
+        with patch("schedule_dates.league_now", return_value=afternoon_et):
+            dates = schedule_dates_for_league("wnba")
+        self.assertIn("2026-06-15", dates)
+        self.assertIn("2026-06-14", dates)
+
 
 if __name__ == "__main__":
     unittest.main()

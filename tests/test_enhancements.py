@@ -60,7 +60,7 @@ class AccuracyTrackerTests(unittest.TestCase):
 class LeagueConfigTests(unittest.TestCase):
     def test_includes_new_leagues(self) -> None:
         leagues = set(list_league_ids())
-        self.assertTrue({"mlb", "nfl", "nba", "worldcup", "epl", "afl"}.issubset(leagues))
+        self.assertTrue({"mlb", "nfl", "nba", "wnba", "worldcup", "epl", "afl"}.issubset(leagues))
 
 
 class BuildPagesTests(unittest.TestCase):

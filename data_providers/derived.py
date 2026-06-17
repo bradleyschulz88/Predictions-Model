@@ -120,7 +120,7 @@ def compute_power_rating(
             defense = max(0.0, min(1.0, (3.0 - goals_against_per_game) / 2.0))
             parts.append((attack, 0.20))
             parts.append((defense, 0.15))
-    elif league in {"nba", "nfl", "afl"}:
+    elif league in {"nba", "wnba", "nfl", "afl"}:
         if goals_for_per_game is not None:
             parts.append((max(0.0, min(1.0, goals_for_per_game / 130.0)), 0.15))
 

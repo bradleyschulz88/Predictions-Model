@@ -11,10 +11,13 @@ LEAGUE_TIMEZONES: dict[str, str] = {
     "mlb": "America/New_York",
     "nfl": "America/New_York",
     "nba": "America/New_York",
+    "wnba": "America/New_York",
     "worldcup": "America/New_York",
     "epl": "Europe/London",
     "afl": "Australia/Melbourne",
 }
+
+US_SCHEDULE_LEAGUES = frozenset({"mlb", "nfl", "nba", "wnba"})
 
 # US sports: before this hour (league local), yesterday's slate may still be live.
 EARLY_SLATE_CUTOFF_HOUR = 10
@@ -38,7 +41,7 @@ def default_game_date(league: str = "mlb") -> str:
     now = league_now(league)
     today = now.date()
 
-    if league in {"mlb", "nfl", "nba"} and now.hour < EARLY_SLATE_CUTOFF_HOUR:
+    if league in US_SCHEDULE_LEAGUES and now.hour < EARLY_SLATE_CUTOFF_HOUR:
         return (today - timedelta(days=1)).isoformat()
 
     return today.isoformat()
@@ -54,7 +57,7 @@ def schedule_dates_for_league(league: str) -> list[str]:
         league_schedule_date(league, -1),
     ]
 
-    if league in {"mlb", "nfl", "nba"}:
+    if league in US_SCHEDULE_LEAGUES:
         candidates.append(league_schedule_date(league, -2))
 
     ordered: list[str] = []

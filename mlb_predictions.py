@@ -12,6 +12,7 @@ HOME_FIELD_LOGIT = {
     "mlb": 0.28,
     "nfl": 0.32,
     "nba": 0.24,
+    "wnba": 0.24,
     "worldcup": 0.35,
     "epl": 0.30,
     "afl": 0.22,
@@ -564,7 +565,7 @@ def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment:
             over_lean -= 0.06
             detail_parts.append(f"Season scoring pace ({combined:.1f} combined R/G) leans under.")
 
-    if league in {"nba", "afl"}:
+    if league in {"nba", "wnba", "afl"}:
         home_overall = win_pct_from_record(game.get("homeRecord"))
         away_overall = win_pct_from_record(game.get("awayRecord"))
         if home_overall + away_overall > 1.05:
@@ -620,7 +621,7 @@ def _home_field_detail(game: dict[str, Any]) -> str:
         return f"{game.get('homeTeam')} play at {venue}, where home sides often perform better."
     if league == "afl":
         return f"{game.get('homeTeam')} have home-ground advantage at {venue}."
-    if league == "nba":
+    if league in {"nba", "wnba"}:
         return f"{game.get('homeTeam')} have home-court advantage at {venue}."
     if league == "nfl":
         return f"{game.get('homeTeam')} play at {venue}, where home teams historically win more often."

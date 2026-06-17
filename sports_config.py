@@ -56,6 +56,17 @@ LEAGUES: dict[str, LeagueConfig] = {
         lineup_label="Key players",
         default_days_ahead=0,
     ),
+    "wnba": LeagueConfig(
+        id="wnba",
+        label="WNBA Basketball",
+        short_label="WNBA",
+        espn_path="basketball/wnba",
+        sbr_odds_slug="wnba-basketball",
+        supports_pitchers=False,
+        supports_draw=False,
+        lineup_label="Key players",
+        default_days_ahead=0,
+    ),
     "worldcup": LeagueConfig(
         id="worldcup",
         label="FIFA World Cup",
