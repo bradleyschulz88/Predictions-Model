@@ -124,7 +124,13 @@
       </label>
     </div>
 
-    <div id="banner" class="banner hidden" role="status" aria-live="polite"></div>
+    <div id="banner" class="banner hidden" role="status" aria-live="polite">
+      <p id="banner-summary" class="banner-summary"></p>
+      <details id="banner-details" class="banner-details hidden">
+        <summary>More details</summary>
+        <p id="banner-detail-text" class="banner-detail-text"></p>
+      </details>
+    </div>
 
     <div id="predictions-view">
       <section class="stats-strip" id="stats">
@@ -153,6 +159,8 @@
           <span class="stat-value stat-value-sm" id="stat-updated">—</span>
         </div>
       </section>
+
+      <section id="accuracy-panel" class="accuracy-panel hidden" aria-label="Model accuracy record"></section>
 
       <section id="model-day-result" class="model-day-result hidden" aria-label="Model pick record for this day"></section>
 

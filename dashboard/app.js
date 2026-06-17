@@ -13,6 +13,10 @@ const refreshBtn = document.getElementById("refresh-btn");
 const autoRefresh = document.getElementById("auto-refresh");
 const gamesEl = document.getElementById("games");
 const bannerEl = document.getElementById("banner");
+const bannerSummaryEl = document.getElementById("banner-summary");
+const bannerDetailsEl = document.getElementById("banner-details");
+const bannerDetailTextEl = document.getElementById("banner-detail-text");
+const filterPanelEl = document.getElementById("filter-panel");
 const topPicksEl = document.getElementById("top-picks");
 const dashboardTitle = document.getElementById("dashboard-title");
 
@@ -30,6 +34,7 @@ const myBetsViewEl = document.getElementById("my-bets-view");
 const modelTrackerViewEl = document.getElementById("model-tracker-view");
 const dateFieldEl = document.getElementById("date-field");
 const modelDayResultEl = document.getElementById("model-day-result");
+const accuracyPanelEl = document.getElementById("accuracy-panel");
 
 const ESPN_PATHS = {
   mlb: "baseball/mlb",
@@ -56,7 +61,7 @@ const LEAGUE_TIMEZONES = {
   wnba: "America/New_York",
   worldcup: "America/New_York",
   epl: "Europe/London",
-  afl: "Australia/Sydney",
+  afl: "Australia/Melbourne",
 };
 
 const SPORT_LABELS = {
@@ -83,7 +88,7 @@ let datePickerGameCount = null;
 const TIMEZONE_LABELS = {
   "America/New_York": "Eastern Time",
   "Europe/London": "UK time",
-  "Australia/Sydney": "Sydney time",
+  "Australia/Melbourne": "Melbourne time",
 };
 
 let activeView = "predictions";
@@ -1592,7 +1597,118 @@ function isBetLoggedForGame(eventId) {
   );
 }
 
-function switchView(view) {
+function viewFromHash() {
+  const hash = window.location.hash;
+  if (hash === "#my-bets") return "my-bets";
+  if (hash === "#model-tracker") return "model-tracker";
+  if (hash === "#predictions" || hash.startsWith("#game-")) return "predictions";
+  return null;
+}
+
+function updateViewHash(view) {
+  if (window.location.hash.startsWith("#game-")) return;
+  const next = view === "predictions" ? "#predictions" : `#${view}`;
+  const nextUrl = `${window.location.pathname}${window.location.search}${next}`;
+  const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  if (currentUrl !== nextUrl) {
+    history.replaceState(null, "", nextUrl);
+  }
+}
+
+function updateRefreshButtonLabel() {
+  if (!refreshBtn) return;
+  if (activeView === "my-bets" || activeView === "model-tracker") {
+    refreshBtn.textContent = loadingDashboard ? "Loading…" : "Refresh scores";
+    refreshBtn.title = "Reload live scores to auto-settle bets";
+  } else {
+    refreshBtn.textContent = loadingDashboard ? "Loading…" : "Refresh";
+    refreshBtn.title = "Reload schedule and predictions";
+  }
+}
+
+function formatAccuracyRecord(summary) {
+  if (!summary) return "—";
+  const wins = summary.correct || 0;
+  const pending = summary.pending || 0;
+  const losses = Math.max(0, (summary.total || 0) - wins - pending);
+  return `${wins}-${losses}`;
+}
+
+function renderAccuracyPanel() {
+  if (!accuracyPanelEl) return;
+  const sport = sportSelect.value;
+  if (sport === "overview" || activeView !== "predictions") {
+    accuracyPanelEl.classList.add("hidden");
+    accuracyPanelEl.innerHTML = "";
+    return;
+  }
+
+  const summary = accuracyData?.summary;
+  if (!summary) {
+    accuracyPanelEl.classList.add("hidden");
+    accuracyPanelEl.innerHTML = "";
+    return;
+  }
+
+  const last7 = summary.last7Days || {};
+  const allTime = summary.allTime || {};
+  const streak = summary.streak || {};
+  const leagueStats = summary.byLeague?.[sport];
+  const recent = (accuracyData.recentResults || []).filter((item) => item.league === sport).slice(0, 10);
+  const streakLabel =
+    streak.current && streak.type
+      ? `${streak.current} ${streak.type === "win" ? "W" : "L"} streak`
+      : "—";
+  const leagueBlock = leagueStats
+    ? `<div class="accuracy-stat-card">
+        <h3>${SPORT_LABELS[sport]?.split(" ")[0] || sport}</h3>
+        <p><strong>${formatAccuracyRecord(leagueStats)}</strong> (${leagueStats.pct ?? "—"}%)</p>
+        <p class="lineup-note">${leagueStats.units != null ? `${leagueStats.units > 0 ? "+" : ""}${Number(leagueStats.units).toFixed(2)} units` : "—"} · ROI ${leagueStats.roiPct ?? "—"}%</p>
+      </div>`
+    : `<div class="accuracy-stat-card"><h3>${SPORT_LABELS[sport]?.split(" ")[0] || sport}</h3><p class="lineup-note">No graded picks yet for this league.</p></div>`;
+
+  const recentHtml = recent.length
+    ? `<ul class="accuracy-list">${recent
+        .map((item) => {
+          const resultClass = item.correct ? "acc-correct" : "acc-wrong";
+          const resultLabel = item.correct ? "W" : "L";
+          return `<li><span class="${resultClass}">${resultLabel}</span> ${item.matchup || item.outcomeLabel || "Pick"} · ${item.confidence ?? "—"}% · ${item.scheduleDate || item.date || ""}</li>`;
+        })
+        .join("")}</ul>`
+    : `<p class="lineup-note">No recent graded picks for ${SPORT_LABELS[sport] || sport}.</p>`;
+
+  accuracyPanelEl.classList.remove("hidden");
+  accuracyPanelEl.innerHTML = `
+    <details class="accuracy-details" open>
+      <summary class="accuracy-title">Model record</summary>
+      <div class="accuracy-grid">
+        <div class="accuracy-stat-card">
+          <h3>Last 7 days</h3>
+          <p><strong>${formatAccuracyRecord(last7)}</strong> (${last7.pct ?? "—"}%)</p>
+          <p class="lineup-note">${last7.units != null ? `${last7.units > 0 ? "+" : ""}${Number(last7.units).toFixed(2)} units` : "—"} · ROI ${last7.roiPct ?? "—"}%</p>
+          <p class="lineup-note">${last7.pending || 0} pending</p>
+        </div>
+        <div class="accuracy-stat-card">
+          <h3>All time</h3>
+          <p><strong>${formatAccuracyRecord(allTime)}</strong> (${allTime.pct ?? "—"}%)</p>
+          <p class="lineup-note">${allTime.units != null ? `${allTime.units > 0 ? "+" : ""}${Number(allTime.units).toFixed(2)} units` : "—"} · ROI ${allTime.roiPct ?? "—"}%</p>
+        </div>
+        <div class="accuracy-stat-card">
+          <h3>Streak</h3>
+          <p><strong>${streakLabel}</strong></p>
+          <p class="lineup-note">Best win ${streak.bestWin ?? "—"} · Best loss ${streak.bestLoss ?? "—"}</p>
+        </div>
+        ${leagueBlock}
+      </div>
+      <details class="accuracy-recent">
+        <summary>Recent ${SPORT_LABELS[sport]?.split(" ")[0] || sport} results</summary>
+        ${recentHtml}
+      </details>
+    </details>
+  `;
+}
+
+function switchView(view, { skipHashUpdate = false } = {}) {
   if (activeView === "model-tracker" && view !== "model-tracker") {
     flushModelTrackerEditsFromDom();
   }
@@ -1610,10 +1726,8 @@ function switchView(view) {
   myBetsViewEl?.classList.toggle("hidden", !isMyBets);
   modelTrackerViewEl?.classList.toggle("hidden", !isModelTracker);
 
-  const predictionControls = [document.querySelector(".header-toolbar")];
-  predictionControls.forEach((el) => {
-    if (el) el.classList.toggle("hidden", !isPredictions);
-  });
+  filterPanelEl?.classList.toggle("hidden", !isPredictions);
+  accuracyPanelEl?.classList.toggle("hidden", !isPredictions || sportSelect.value === "overview");
 
   if (isPredictions) {
     dashboardTitle.textContent =
@@ -1623,6 +1737,7 @@ function switchView(view) {
     if (sportSelect.value === "my-bets") {
       /* legacy guard */
     }
+    renderAccuracyPanel();
     if (lastPayload) renderGames(lastPayload.games || []);
     else loadDashboard(true);
   } else if (isMyBets) {
@@ -1636,6 +1751,9 @@ function switchView(view) {
     modelDayResultEl?.classList.add("hidden");
     renderModelTrackerView();
   }
+
+  updateRefreshButtonLabel();
+  if (!skipHashUpdate) updateViewHash(view);
 }
 
 function renderMyBetsView() {
@@ -2705,9 +2823,59 @@ function renderLineChips(line) {
     .join("");
 }
 
-function showBanner(message, { autoHideMs = 0, type = "info" } = {}) {
+function renderGameLines(game) {
+  const lines = game.lines || [];
+  if (!lines.length) return "";
+
+  const rows = lines
+    .map((line) => {
+      const current = line.currentLine ? renderLineChips(line.currentLine) : "—";
+      const opening = line.openingLine ? renderLineChips(line.openingLine) : "—";
+      return `
+        <tr>
+          <td data-label="Book">${line.sportsbook || "—"}</td>
+          <td data-label="Market">${line.viewType || "—"}</td>
+          <td data-label="Current">${current}</td>
+          <td data-label="Open">${opening}</td>
+        </tr>
+      `;
+    })
+    .join("");
+
+  return `
+    <section class="detail-panel lines-panel">
+      <h4>Betting lines</h4>
+      <table class="lines-table prob-sheet-table game-lines-table">
+        <thead>
+          <tr>
+            <th>Book</th>
+            <th>Market</th>
+            <th>Current</th>
+            <th>Open</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </section>
+  `;
+}
+
+function showBanner(message, { autoHideMs = 0, type = "info", details = "" } = {}) {
   if (!bannerEl) return;
-  bannerEl.textContent = message;
+  if (bannerSummaryEl) {
+    bannerSummaryEl.textContent = message;
+  } else {
+    bannerEl.textContent = message;
+  }
+  if (bannerDetailsEl && bannerDetailTextEl) {
+    if (details) {
+      bannerDetailTextEl.textContent = details;
+      bannerDetailsEl.classList.remove("hidden");
+    } else {
+      bannerDetailTextEl.textContent = "";
+      bannerDetailsEl.classList.add("hidden");
+    }
+  }
   bannerEl.classList.remove("hidden", "banner-error", "banner-success");
   if (type === "error") bannerEl.classList.add("banner-error");
   if (type === "success") bannerEl.classList.add("banner-success");
@@ -2950,11 +3118,11 @@ function renderTeamProbabilityTable(prediction, game) {
         stats.edgePct > 0 ? "edge-positive" : stats.edgePct < 0 ? "edge-negative" : "";
       return `
         <tr class="${row.favored ? "prob-pick-row" : ""}">
-          <td><strong>${row.label}</strong>${row.favored ? ' <span class="rank-badge small">Pick</span>' : ""}</td>
-          <td class="true-pct">${formatPct(stats.truePct)}</td>
-          <td class="implied-pct">${stats.impliedPct != null ? formatPct(stats.impliedPct) : "—"}</td>
-          <td class="blended-pct">${formatPct(stats.blendedPct)}</td>
-          <td class="edge-pct ${edgeClass}">${stats.edgeLabel || "—"}</td>
+          <td data-label="Team"><strong>${row.label}</strong>${row.favored ? ' <span class="rank-badge small">Pick</span>' : ""}</td>
+          <td data-label="True %" class="true-pct">${formatPct(stats.truePct)}</td>
+          <td data-label="Implied %" class="implied-pct">${stats.impliedPct != null ? formatPct(stats.impliedPct) : "—"}</td>
+          <td data-label="Blended %" class="blended-pct">${formatPct(stats.blendedPct)}</td>
+          <td data-label="Edge" class="edge-pct ${edgeClass}">${stats.edgeLabel || "—"}</td>
         </tr>
       `;
     })
@@ -2968,7 +3136,7 @@ function renderTeamProbabilityTable(prediction, game) {
   return `
     <section class="probability-compare">
       <h4>Probability by team (%)</h4>
-      <table class="lines-table prob-pct-table">
+      <table class="lines-table prob-pct-table prob-sheet-table">
         <thead>
           <tr>
             <th>Team</th>
@@ -2999,7 +3167,13 @@ function renderProbabilityCompare(prediction, game) {
   const bookRows = (implied.books || [])
     .map(
       (book) =>
-        `<tr><td>${book.sportsbook}</td><td>${book.homePct}%</td><td>${book.awayPct}%</td><td>${book.drawPct != null ? `${book.drawPct}%` : "—"}</td><td>${book.vigPct}%</td></tr>`
+        `<tr>
+          <td data-label="Book">${book.sportsbook}</td>
+          <td data-label="Home">${book.homePct}%</td>
+          <td data-label="Away">${book.awayPct}%</td>
+          <td data-label="Draw">${book.drawPct != null ? `${book.drawPct}%` : "—"}</td>
+          <td data-label="Vig">${book.vigPct}%</td>
+        </tr>`
     )
     .join("");
 
@@ -3039,7 +3213,7 @@ function renderProbabilityCompare(prediction, game) {
       ${edgeBlock}
       ${
         bookRows
-          ? `<table class="lines-table compact"><thead><tr><th>Book</th><th>Home</th><th>Away</th><th>Draw</th><th>Vig</th></tr></thead><tbody>${bookRows}</tbody></table>`
+          ? `<table class="lines-table compact prob-sheet-table"><thead><tr><th>Book</th><th>Home</th><th>Away</th><th>Draw</th><th>Vig</th></tr></thead><tbody>${bookRows}</tbody></table>`
           : ""
       }
     </section>
@@ -3073,6 +3247,7 @@ function renderPrediction(game) {
     : "";
 
   const probabilityCompare = renderTeamProbabilityTable(prediction, game);
+  const linesBlock = renderGameLines(game);
 
   const totalBlock = prediction.totalPick
     ? `<div class="total-panel"><strong>Total pick:</strong> ${prediction.totalPick.pick} (${prediction.totalPick.confidence}% confidence)<br><span class="lineup-note">${prediction.totalPick.detail}</span>${
@@ -3109,6 +3284,7 @@ function renderPrediction(game) {
       ${liveBlock}
       ${modelPickBlock}
       ${probabilityCompare}
+      ${linesBlock}
       <div class="probability-bar ${prediction.drawWinPct != null ? "three-way" : ""}">
         <div class="probability-team ${homeFavored ? "favored" : ""}"><span class="probability-label">${game.homeTeam || "Home"} (blended)</span><span class="probability-value">${prediction.homeWinPct}%</span></div>
         ${drawBlock}
@@ -3147,12 +3323,14 @@ function renderGames(games) {
     renderTopPicks([]);
     renderStats(lastPayload || {}, 0);
     renderModelDayResult(games || []);
+    renderAccuracyPanel();
     return;
   }
 
   renderTopPicks(visible);
   renderStats(lastPayload || {}, visible.length);
   renderModelDayResult(games || []);
+  renderAccuracyPanel();
 
   const lineupLabel = lineupLabelForSport(sport);
   const hash = window.location.hash;
@@ -3596,7 +3774,7 @@ async function loadDashboard(force = false) {
   if (loadingDashboard && !force) return;
   loadingDashboard = true;
   refreshBtn.disabled = true;
-  refreshBtn.textContent = "Loading…";
+  updateRefreshButtonLabel();
   if (sportSelect.value !== "overview") {
     gamesEl.innerHTML = `<div class="empty-state loading-state">Loading ${SPORT_LABELS[sportSelect.value] || sportSelect.value}…</div>`;
   }
@@ -3644,20 +3822,47 @@ async function loadDashboard(force = false) {
       if (games.length === 0 && normalizedPayload.error) {
         showBanner(`Data build error: ${normalizedPayload.error}. Try another date or re-run GitHub Actions.`);
       } else if (IS_STATIC_HOST) {
-        let note = `Schedule for ${displayDate}${tz ? ` (${tz})` : ""}. Fixtures: GitHub snapshot when built, otherwise live ESPN in your browser.`;
-        note += ` Predictions refresh on GitHub Actions; live scores every ${manifestData?.liveScoreRefreshSeconds || 90}s.`;
-        if (tz) {
-          note += ` US sports use ${tz} calendar dates (not your local day).`;
-        }
+        const summaryParts = [`${displayDate}${tz ? ` (${formatTimezoneLabel(tz)})` : ""}`];
         if (normalizedPayload._liveFallback) {
-          note += ` Showing live ESPN for ${displayDate} — model picks appear after the next snapshot build.`;
+          summaryParts.push("live ESPN schedule");
         } else if (normalizedPayload._dateFallback) {
-          note += ` No snapshot file for ${normalizedPayload._requestedDate || displayDate}.`;
+          summaryParts.push("no snapshot for this date");
+        } else {
+          summaryParts.push(`${games.length} game${games.length === 1 ? "" : "s"}`);
         }
         if (games.length === 0) {
-          note += ` No games on ${displayDate}. Try another date or Refresh.`;
+          summaryParts.push("no games on this date");
         }
-        showBanner(note);
+
+        const detailParts = [
+          "Fixtures come from GitHub snapshots when built, otherwise live ESPN in your browser.",
+          `Predictions refresh every 30 minutes on GitHub Actions; live scores every ${manifestData?.liveScoreRefreshSeconds || 90}s.`,
+        ];
+        if (tz && US_SCHEDULE_SPORTS.has(league)) {
+          detailParts.push(`US sports use ${formatTimezoneLabel(tz)} calendar dates (not your local day).`);
+        }
+        if (normalizedPayload._liveFallback) {
+          detailParts.push(
+            `Showing live ESPN for ${displayDate} — model picks appear after the next snapshot build.`
+          );
+        } else if (normalizedPayload._dateFallback) {
+          detailParts.push(`No snapshot file for ${normalizedPayload._requestedDate || displayDate}.`);
+        }
+        if (games.length === 0) {
+          detailParts.push(`No games on ${displayDate}. Try another date or Refresh.`);
+        }
+
+        const needsBanner =
+          normalizedPayload._liveFallback ||
+          normalizedPayload._dateFallback ||
+          games.length === 0 ||
+          (normalizedPayload.sportsbookCount || 0) === 0;
+
+        if (needsBanner) {
+          showBanner(summaryParts.join(" · "), { details: detailParts.join(" ") });
+        } else {
+          hideBanner();
+        }
       } else if (games.length === 0) {
         showBanner(`No games for ${displayDate}${tz ? ` (${tz})` : ""}. Pick another date or try Refresh.`);
       } else if ((normalizedPayload.sportsbookCount || 0) === 0) {
@@ -3666,6 +3871,7 @@ async function loadDashboard(force = false) {
         hideBanner();
       }
       resetLiveScorePolling();
+      renderAccuracyPanel();
     }
   } catch (error) {
     if (sportSelect.value === "overview" && overviewData) {
@@ -3681,7 +3887,7 @@ async function loadDashboard(force = false) {
   } finally {
     loadingDashboard = false;
     refreshBtn.disabled = false;
-    refreshBtn.textContent = "Refresh";
+    updateRefreshButtonLabel();
     if (activeView === "my-bets") {
       saveMyBets(autoSettleMyBets(loadMyBets()));
       renderMyBetsView();
@@ -3705,6 +3911,7 @@ function onSportChange() {
     activeScheduleDate = defaultDateForSport(sportSelect.value);
     syncDatePicker(sportSelect.value, activeScheduleDate);
   }
+  renderAccuracyPanel();
   loadDashboard(true);
 }
 
@@ -3740,6 +3947,12 @@ async function initDashboard() {
       const view = button.dataset.view;
       if (view && view !== activeView) switchView(view);
     });
+  });
+  window.addEventListener("hashchange", () => {
+    const hashView = viewFromHash();
+    if (hashView && hashView !== activeView) {
+      switchView(hashView, { skipHashUpdate: true });
+    }
   });
   oddsFormatSelect?.addEventListener("change", () => {
     const previousFormat = getOddsFormat();
@@ -3785,6 +3998,14 @@ async function initDashboard() {
   liveScoresToggle?.addEventListener("change", resetLiveScorePolling);
 
   syncDatePicker(sportSelect.value, defaultDateForSport(sportSelect.value));
+
+  const initialView = viewFromHash();
+  if (initialView && initialView !== activeView) {
+    switchView(initialView, { skipHashUpdate: true });
+  } else {
+    updateRefreshButtonLabel();
+  }
+
   await loadDashboard(true);
   resetAutoRefresh();
   resetLiveScorePolling();

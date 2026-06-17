@@ -23,6 +23,15 @@ def dates_for_league(league: str) -> list[str]:
     return schedule_dates_for_league(league)
 
 
+def include_enrichment_for_date(date_value: str, default_date: str) -> bool:
+    try:
+        current = date.fromisoformat(date_value)
+        default = date.fromisoformat(default_date)
+    except ValueError:
+        return date_value == default_date
+    return abs((current - default).days) <= 1
+
+
 def build_league_payload(
     league: str,
     date_value: str,
@@ -100,7 +109,7 @@ def main() -> int:
         primary_payload: dict | None = None
 
         for date_value in available_dates:
-            include_enrichment = date_value == default_date
+            include_enrichment = include_enrichment_for_date(date_value, default_date)
             include_odds = league_config.supports_sbr_odds or include_enrichment
             try:
                 payload = build_league_payload(

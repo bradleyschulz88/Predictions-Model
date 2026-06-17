@@ -92,6 +92,14 @@ class BuildPagesTests(unittest.TestCase):
         self.assertEqual(len(overview["leagues"]), 2)
         self.assertGreaterEqual(overview["topPicksOverall"][0]["confidence"], overview["topPicksOverall"][1]["confidence"])
 
+    def test_include_enrichment_for_near_dates(self) -> None:
+        from scripts.build_pages_data import include_enrichment_for_date
+
+        self.assertTrue(include_enrichment_for_date("2026-06-16", "2026-06-16"))
+        self.assertTrue(include_enrichment_for_date("2026-06-15", "2026-06-16"))
+        self.assertTrue(include_enrichment_for_date("2026-06-17", "2026-06-16"))
+        self.assertFalse(include_enrichment_for_date("2026-06-13", "2026-06-16"))
+
 
 if __name__ == "__main__":
     unittest.main()

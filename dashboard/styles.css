@@ -577,6 +577,27 @@ button:active:not(:disabled) {
   line-height: 1.45;
 }
 
+.banner-summary {
+  margin: 0;
+}
+
+.banner-details {
+  margin-top: 8px;
+}
+
+.banner-details summary {
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: #e0f2fe;
+}
+
+.banner-detail-text {
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #cbd5e1;
+}
+
 .banner.banner-error {
   background: rgba(248, 113, 113, 0.12);
   border-color: rgba(248, 113, 113, 0.35);
@@ -731,8 +752,17 @@ button:active:not(:disabled) {
   -webkit-overflow-scrolling: touch;
 }
 
-.probability-compare .lines-table {
+.probability-compare .lines-table:not(.prob-sheet-table) {
   min-width: 520px;
+}
+
+.lines-panel {
+  margin: 0 20px 14px;
+}
+
+.lines-panel .line-chip {
+  display: inline-block;
+  margin: 2px 4px 2px 0;
 }
 
 .probability-compare h4 {
@@ -2088,9 +2118,50 @@ button:active:not(:disabled) {
   border: 1px solid var(--panel-border);
 }
 
+.accuracy-details > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.accuracy-details > summary::-webkit-details-marker {
+  display: none;
+}
+
 .accuracy-title {
   margin: 0 0 12px;
   font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.accuracy-stat-card {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--panel-border);
+}
+
+.accuracy-stat-card h3 {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.accuracy-stat-card p {
+  margin: 0 0 4px;
+}
+
+.accuracy-recent {
+  margin-top: 14px;
+}
+
+.accuracy-recent > summary {
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
 .accuracy-grid {
@@ -3115,9 +3186,70 @@ button:active:not(:disabled) {
   .total-panel,
   .model-pick-block,
   .live-score,
-  .final-score {
+  .final-score,
+  .lines-panel {
     margin-left: 0;
     margin-right: 0;
+  }
+
+  .probability-compare {
+    overflow-x: visible;
+  }
+
+  .prob-sheet-table {
+    min-width: 0;
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .prob-sheet-table thead {
+    display: none;
+  }
+
+  .prob-sheet-table tbody tr {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--panel-border);
+  }
+
+  .prob-sheet-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+    border: none;
+    text-align: right;
+  }
+
+  .prob-sheet-table tbody td::before {
+    content: attr(data-label);
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: left;
+    flex: 0 0 42%;
+  }
+
+  .prob-sheet-table tbody td[data-label="Team"],
+  .prob-sheet-table tbody td[data-label="Book"] {
+    display: block;
+    text-align: left;
+    padding-top: 0;
+    font-size: 0.95rem;
+  }
+
+  .prob-sheet-table tbody td[data-label="Team"]::before,
+  .prob-sheet-table tbody td[data-label="Book"]::before {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .prob-sheet-table .line-chip {
+    display: block;
+    text-align: right;
+    margin: 2px 0;
   }
 
   .why-panel,
