@@ -8,7 +8,14 @@ from pathlib import Path
 
 from espn_client import parse_scoreboard
 from mlb_data import fetch_dashboard_data
-from mlb_predictions import apply_predictions, predict_game
+from mlb_predictions import (
+    _injury_logit_adjustment,
+    _lineup_logit_adjustment,
+    _streak_logit_adjustment,
+    apply_predictions,
+    extract_prediction_features,
+    predict_game,
+)
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 ESPN_FIXTURE = FIXTURES / "espn_scoreboard_20260616.json"
@@ -41,6 +48,39 @@ class PredictionModelTests(unittest.TestCase):
         self.assertTrue(payload["topPick"])
         self.assertIn("prediction", payload["games"][0])
         self.assertEqual(payload["games"][0]["predictionRank"], 1)
+
+    def test_weighted_injury_adjustment_prefers_qb_injury(self) -> None:
+        enrichment = {
+            "homeMajorInjuries": [{"player": "Starting QB", "status": "Out", "detail": "quarterback"}],
+            "awayMajorInjuries": [],
+        }
+        self.assertLess(_injury_logit_adjustment(enrichment, "nfl"), 0)
+        flipped = {
+            "homeMajorInjuries": [],
+            "awayMajorInjuries": [{"player": "Starting QB", "status": "Out", "detail": "quarterback"}],
+        }
+        self.assertGreater(_injury_logit_adjustment(flipped, "nfl"), 0)
+
+    def test_lineup_adjustment_uses_confirmed_starters(self) -> None:
+        game = {
+            "homeLineup": {"batters": [{"order": 1}, {"order": 2}, {"order": 3}]},
+            "awayLineup": {"batters": [{"order": 1}]},
+        }
+        self.assertGreater(_lineup_logit_adjustment(game, "mlb"), 0)
+
+    def test_prediction_includes_feature_vector(self) -> None:
+        game = {
+            "league": "mlb",
+            "homeTeam": "Home",
+            "awayTeam": "Away",
+            "homeRecord": "30-20",
+            "awayRecord": "20-30",
+            "enrichment": {},
+        }
+        prediction = predict_game(game)
+        self.assertIn("features", prediction)
+        self.assertEqual(prediction["features"]["league"], "mlb")
+        self.assertIn("recordDiff", prediction["features"])
 
 
 if __name__ == "__main__":

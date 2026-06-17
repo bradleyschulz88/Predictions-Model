@@ -182,6 +182,7 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 "outcomeLabel": prediction.get("outcomeLabel"),
                 "confidence": prediction.get("confidence"),
                 "pickOdds": extract_pick_american_odds(game, prediction.get("predictedSide")),
+                "features": prediction.get("features"),
                 "recordedAt": payload.get("fetchedAt"),
             }
 

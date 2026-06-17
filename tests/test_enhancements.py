@@ -56,6 +56,31 @@ class AccuracyTrackerTests(unittest.TestCase):
             self.assertIn("summary", accuracy)
             self.assertTrue((data_dir / "predictions_log.json").is_file())
 
+    def test_record_predictions_stores_features(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            data_dir = Path(tmp)
+            payload = {
+                "league": "mlb",
+                "scheduleDate": "2026-06-16",
+                "fetchedAt": "now",
+                "games": [
+                    {
+                        "eventId": "1",
+                        "matchup": "A @ B",
+                        "prediction": {
+                            "predictedWinner": "B",
+                            "predictedSide": "home",
+                            "outcomeLabel": "B to win",
+                            "confidence": 62.0,
+                            "features": {"recordDiff": 0.1, "league": "mlb"},
+                        },
+                    }
+                ],
+            }
+            record_predictions(data_dir, [payload])
+            log = json.loads((data_dir / "predictions_log.json").read_text(encoding="utf-8"))
+            self.assertEqual(log["predictions"]["1"]["features"]["recordDiff"], 0.1)
+
 
 class LeagueConfigTests(unittest.TestCase):
     def test_includes_new_leagues(self) -> None:
@@ -92,13 +117,12 @@ class BuildPagesTests(unittest.TestCase):
         self.assertEqual(len(overview["leagues"]), 2)
         self.assertGreaterEqual(overview["topPicksOverall"][0]["confidence"], overview["topPicksOverall"][1]["confidence"])
 
-    def test_include_enrichment_for_near_dates(self) -> None:
+    def test_include_enrichment_for_all_dates(self) -> None:
         from scripts.build_pages_data import include_enrichment_for_date
 
         self.assertTrue(include_enrichment_for_date("2026-06-16", "2026-06-16"))
-        self.assertTrue(include_enrichment_for_date("2026-06-15", "2026-06-16"))
-        self.assertTrue(include_enrichment_for_date("2026-06-17", "2026-06-16"))
-        self.assertFalse(include_enrichment_for_date("2026-06-13", "2026-06-16"))
+        self.assertTrue(include_enrichment_for_date("2026-06-13", "2026-06-16"))
+        self.assertTrue(include_enrichment_for_date("2026-06-20", "2026-06-16"))
 
 
 if __name__ == "__main__":

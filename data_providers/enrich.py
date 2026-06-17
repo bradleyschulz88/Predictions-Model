@@ -11,6 +11,9 @@ from data_providers.derived import (
     parse_weather_impact,
     series_win_pct,
 )
+from data_providers.league_metrics import enrich_league_metrics
+from data_providers.mlb_pitcher import enrich_mlb_pitching_context
+from data_providers.schedule_advanced import compute_schedule_flags
 from data_providers.espn_advanced import (
     fetch_espn_standings,
     fetch_espn_team_directory,
@@ -122,6 +125,18 @@ def enrich_games_with_providers(
             "summary": (series or {}).get("summary"),
             "seriesScore": (series or {}).get("seriesScore"),
         }
+
+        enrichment["homeScheduleFlags"] = compute_schedule_flags(games, home_team, game.get("startDate"))
+        enrichment["awayScheduleFlags"] = compute_schedule_flags(games, away_team, game.get("startDate"))
+        enrichment["leagueMetrics"] = enrich_league_metrics(
+            game,
+            league=league,
+            home_profile=home_profile,
+            away_profile=away_profile,
+        )
+
+        if league == "mlb":
+            enrichment["mlbPitching"] = enrich_mlb_pitching_context(game, verify_ssl=verify_ssl)
 
         provider_sources = sorted(
             {

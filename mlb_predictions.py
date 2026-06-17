@@ -8,6 +8,13 @@ from typing import Any
 
 from sports_config import get_league
 
+from data_providers.league_metrics import (
+    league_metrics_logit_adjustment,
+    soccer_draw_probability,
+)
+from data_providers.mlb_pitcher import mlb_pitching_logit_adjustment
+from data_providers.schedule_advanced import schedule_flags_logit_adjustment
+
 HOME_FIELD_LOGIT = {
     "mlb": 0.28,
     "nfl": 0.32,
@@ -189,6 +196,7 @@ def compute_true_probabilities(
     model_home: float,
     enrichment: dict[str, Any],
     league_config: Any,
+    league: str = "mlb",
 ) -> dict[str, Any]:
     components: list[dict[str, Any]] = [
         {
@@ -250,8 +258,16 @@ def compute_true_probabilities(
 
     draw_true = 0.0
     if league_config.supports_draw:
-        parity = 1.0 - abs(home_true - away_true)
-        draw_true = clamp(DEFAULT_DRAW_PROB * (0.75 + 0.5 * parity), 0.08, 0.32)
+        draw_true = clamp(
+            soccer_draw_probability(
+                league=league,
+                home_true=home_true,
+                away_true=away_true,
+                enrichment=enrichment,
+            ),
+            0.08,
+            0.32,
+        )
         scale = 1.0 - draw_true
         home_true *= scale
         away_true *= scale
@@ -439,10 +455,107 @@ def confidence_label(confidence_pct: float) -> str:
     return "Coin flip"
 
 
-def _injury_logit_adjustment(enrichment: dict[str, Any]) -> float:
-    home_major = len(enrichment.get("homeMajorInjuries") or [])
-    away_major = len(enrichment.get("awayMajorInjuries") or [])
-    return (away_major - home_major) * 0.18
+def _injury_role_weight(injury: dict[str, Any], league: str) -> float:
+    detail = f"{injury.get('player', '')} {injury.get('detail', '')} {injury.get('status', '')}".lower()
+    weight = 1.0
+    if league == "nfl" and any(token in detail for token in ("quarterback", " qb")):
+        weight = 2.5
+    elif league == "mlb" and "pitcher" in detail:
+        weight = 2.0
+    elif league in {"nba", "wnba"} and any(token in detail for token in ("out", "doubtful")):
+        weight = 1.4
+    status = (injury.get("status") or "").lower()
+    if any(token in status for token in ("out", "il", "suspended")):
+        weight *= 1.15
+    return weight
+
+
+def _weighted_injury_score(injuries: list[dict[str, Any]], league: str) -> float:
+    return sum(_injury_role_weight(injury, league) for injury in injuries)
+
+
+def _injury_logit_adjustment(enrichment: dict[str, Any], league: str = "mlb") -> float:
+    home_load = _weighted_injury_score(enrichment.get("homeMajorInjuries") or [], league)
+    away_load = _weighted_injury_score(enrichment.get("awayMajorInjuries") or [], league)
+    return (away_load - home_load) * 0.18
+
+
+def _streak_score(profile: dict[str, Any]) -> float:
+    streak_type = profile.get("streakType")
+    streak_num = profile.get("streakNumber")
+    if streak_num is None or not streak_type:
+        return 0.0
+    sign = 1.0 if str(streak_type).lower() == "win" else -1.0
+    return sign * min(5.0, float(streak_num)) * 0.04
+
+
+def _streak_logit_adjustment(enrichment: dict[str, Any]) -> float:
+    home = _streak_score(enrichment.get("homeAdvanced") or {})
+    away = _streak_score(enrichment.get("awayAdvanced") or {})
+    return max(-0.25, min(0.25, home - away))
+
+
+def _lineup_logit_adjustment(game: dict[str, Any], league: str) -> float:
+    home_batters = (game.get("homeLineup") or {}).get("batters") or []
+    away_batters = (game.get("awayLineup") or {}).get("batters") or []
+    if not home_batters and not away_batters:
+        return 0.0
+    home_confirmed = sum(1 for batter in home_batters if batter.get("order"))
+    away_confirmed = sum(1 for batter in away_batters if batter.get("order"))
+    if home_confirmed == 0 and away_confirmed == 0:
+        return 0.0
+    multiplier = 0.035 if league == "mlb" else 0.02
+    return max(-0.25, min(0.25, (home_confirmed - away_confirmed) * multiplier))
+
+
+def _weather_win_logit_adjustment(game: dict[str, Any], enrichment: dict[str, Any], league: str) -> float:
+    if league != "mlb":
+        return 0.0
+    venue = (game.get("venueName") or "").lower()
+    if any(token in venue for token in ("dome", "roof", "tropicana", "minute maid")):
+        return 0.0
+    run_env = (enrichment.get("weatherImpact") or {}).get("runEnvironmentAdj") or 0.0
+    return max(-0.12, min(0.12, run_env * 2.0))
+
+
+def extract_prediction_features(game: dict[str, Any], prediction: dict[str, Any]) -> dict[str, Any]:
+    enrichment = game.get("enrichment") or {}
+    league = _league_id(game)
+    home_adv = enrichment.get("homeAdvanced") or {}
+    away_adv = enrichment.get("awayAdvanced") or {}
+    implied = (prediction.get("probabilities") or {}).get("implied") or {}
+    consensus = implied.get("consensus") or {}
+    true_probs = (prediction.get("probabilities") or {}).get("true") or {}
+
+    return {
+        "league": league,
+        "recordDiff": round(
+            win_pct_from_record(game.get("homeRecord")) - win_pct_from_record(game.get("awayRecord")),
+            4,
+        ),
+        "splitDiff": round(
+            win_pct_from_record(game.get("homeHomeRecord"), 0.5)
+            - win_pct_from_record(game.get("awayRoadRecord"), 0.5),
+            4,
+        ),
+        "homePower": home_adv.get("powerRating"),
+        "awayPower": away_adv.get("powerRating"),
+        "homeInjuryLoad": round(_weighted_injury_score(enrichment.get("homeMajorInjuries") or [], league), 2),
+        "awayInjuryLoad": round(_weighted_injury_score(enrichment.get("awayMajorInjuries") or [], league), 2),
+        "homeRest": (enrichment.get("restDays") or {}).get("home"),
+        "awayRest": (enrichment.get("restDays") or {}).get("away"),
+        "homeBackToBack": (enrichment.get("homeScheduleFlags") or {}).get("backToBack"),
+        "awayBackToBack": (enrichment.get("awayScheduleFlags") or {}).get("backToBack"),
+        "impliedHome": consensus.get("homePct"),
+        "impliedAway": consensus.get("awayPct"),
+        "trueHome": true_probs.get("homePct"),
+        "trueAway": true_probs.get("awayPct"),
+        "confidence": prediction.get("confidence"),
+        "predictedSide": prediction.get("predictedSide"),
+        "hasLineup": bool((game.get("homeLineup") or {}).get("batters") or (game.get("awayLineup") or {}).get("batters")),
+        "mlbPitching": enrichment.get("mlbPitching"),
+        "leagueMetrics": enrichment.get("leagueMetrics"),
+    }
 
 
 def _advanced_logit_adjustment(enrichment: dict[str, Any]) -> float:
@@ -1035,18 +1148,90 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
             }
         )
 
-    injury_adj = _injury_logit_adjustment(enrichment)
+    injury_adj = _injury_logit_adjustment(enrichment, league_config.id)
     if injury_adj:
         logit += injury_adj
-        home_major = len(enrichment.get("homeMajorInjuries") or [])
-        away_major = len(enrichment.get("awayMajorInjuries") or [])
+        home_load = _weighted_injury_score(enrichment.get("homeMajorInjuries") or [], league_config.id)
+        away_load = _weighted_injury_score(enrichment.get("awayMajorInjuries") or [], league_config.id)
         factors.append(
             {
                 "label": "Injury impact",
-                "detail": f"Major injuries: home {home_major} vs away {away_major}",
+                "detail": f"Weighted injury load: home {home_load:.1f} vs away {away_load:.1f}",
                 "edge": "home" if injury_adj > 0 else "away" if injury_adj < 0 else "even",
             }
         )
+
+    streak_adj = _streak_logit_adjustment(enrichment)
+    if streak_adj:
+        logit += streak_adj
+        factors.append(
+            {
+                "label": "Win/loss streak",
+                "detail": "MLB.com / standings streak momentum",
+                "edge": "home" if streak_adj > 0 else "away" if streak_adj < 0 else "even",
+            }
+        )
+
+    lineup_adj = _lineup_logit_adjustment(game, league_config.id)
+    if lineup_adj:
+        logit += lineup_adj
+        factors.append(
+            {
+                "label": "Lineup confirmation",
+                "detail": "Confirmed starters in posted lineup",
+                "edge": "home" if lineup_adj > 0 else "away" if lineup_adj < 0 else "even",
+            }
+        )
+
+    weather_adj = _weather_win_logit_adjustment(game, enrichment, league_config.id)
+    if weather_adj:
+        logit += weather_adj
+        factors.append(
+            {
+                "label": "Weather (outdoor)",
+                "detail": (enrichment.get("weatherImpact") or {}).get("summary") or "Weather-adjusted edge",
+                "edge": "home" if weather_adj > 0 else "away" if weather_adj < 0 else "even",
+            }
+        )
+
+    schedule_adj = schedule_flags_logit_adjustment(enrichment)
+    if schedule_adj:
+        logit += schedule_adj
+        home_flags = enrichment.get("homeScheduleFlags") or {}
+        away_flags = enrichment.get("awayScheduleFlags") or {}
+        factors.append(
+            {
+                "label": "Schedule fatigue",
+                "detail": (
+                    f"Home B2B={home_flags.get('backToBack')} · Away B2B={away_flags.get('backToBack')}"
+                ),
+                "edge": "home" if schedule_adj > 0 else "away" if schedule_adj < 0 else "even",
+            }
+        )
+
+    league_adj = league_metrics_logit_adjustment(enrichment, league_config.id)
+    if league_adj:
+        logit += league_adj
+        metrics = enrichment.get("leagueMetrics") or {}
+        factors.append(
+            {
+                "label": "League advanced metrics",
+                "detail": str(metrics) if metrics else "Pace/efficiency/xG proxies",
+                "edge": "home" if league_adj > 0 else "away" if league_adj < 0 else "even",
+            }
+        )
+
+    if league_config.id == "mlb":
+        mlb_pitch_adj = mlb_pitching_logit_adjustment(game, enrichment)
+        if mlb_pitch_adj:
+            logit += mlb_pitch_adj
+            factors.append(
+                {
+                    "label": "Pitcher/bullpen depth",
+                    "detail": "MLB Stats API SP and bullpen ERA context",
+                    "edge": "home" if mlb_pitch_adj > 0 else "away" if mlb_pitch_adj < 0 else "even",
+                }
+            )
 
     advanced_adj = _advanced_logit_adjustment(enrichment)
     if advanced_adj:
@@ -1108,6 +1293,7 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         model_home=model_home,
         enrichment=enrichment,
         league_config=league_config,
+        league=league_config.id,
     )
 
     market_home = implied_probs["consensus"]["home"] if implied_probs.get("available") else None
@@ -1290,6 +1476,7 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         result["drawWinPct"] = round(draw_prob * 100, 1)
     if total_prediction:
         result["totalPick"] = total_prediction
+    result["features"] = extract_prediction_features(game, result)
     return result
 
 
