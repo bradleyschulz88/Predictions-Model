@@ -13,7 +13,7 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 from mlb_cache import DASHBOARD_CACHE, dashboard_cache_key
-from mlb_data import fetch_dashboard_data
+from mlb_data import fetch_dashboard_data, strip_betting_lines_for_display
 from sbr_client import SBRClientError
 
 DASHBOARD_DIR = Path(__file__).resolve().parent / "dashboard"
@@ -105,7 +105,7 @@ def create_handler(config: DashboardConfig) -> type[BaseHTTPRequestHandler]:
                     response = dict(cached_payload)
                     response["fromCache"] = True
                     response["cacheAgeSeconds"] = round(age or 0, 1)
-                    self._send_json(response)
+                    self._send_json(strip_betting_lines_for_display(response))
                     return
 
             try:
@@ -124,7 +124,7 @@ def create_handler(config: DashboardConfig) -> type[BaseHTTPRequestHandler]:
                 payload["fromCache"] = False
                 payload["cacheAgeSeconds"] = 0
                 DASHBOARD_CACHE.set(cache_key, payload)
-                self._send_json(payload)
+                self._send_json(strip_betting_lines_for_display(payload))
             except SBRClientError as exc:
                 cached_payload = DASHBOARD_CACHE.get(cache_key)
                 if cached_payload is not None:
@@ -134,7 +134,7 @@ def create_handler(config: DashboardConfig) -> type[BaseHTTPRequestHandler]:
                     response["stale"] = True
                     response["cacheAgeSeconds"] = round(age or 0, 1)
                     response["refreshError"] = str(exc)
-                    self._send_json(response)
+                    self._send_json(strip_betting_lines_for_display(response))
                     return
                 self._send_api_error(str(exc))
             except Exception as exc:
@@ -146,7 +146,7 @@ def create_handler(config: DashboardConfig) -> type[BaseHTTPRequestHandler]:
                     response["stale"] = True
                     response["cacheAgeSeconds"] = round(age or 0, 1)
                     response["refreshError"] = str(exc)
-                    self._send_json(response)
+                    self._send_json(strip_betting_lines_for_display(response))
                     return
                 self._send_api_error(f"Unexpected server error: {exc}")
 

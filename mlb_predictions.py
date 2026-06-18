@@ -197,6 +197,7 @@ def compute_true_probabilities(
     enrichment: dict[str, Any],
     league_config: Any,
     league: str = "mlb",
+    lines: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     components: list[dict[str, Any]] = [
         {
@@ -253,8 +254,22 @@ def compute_true_probabilities(
 
     weight_total = sum(item["weight"] for item in components)
     home_true = sum(item["home"] * item["weight"] for item in components) / weight_total
-    home_true = clamp(home_true)
     away_true = 1.0 - home_true
+
+    implied = compute_implied_probabilities(lines or [])
+    if implied.get("available"):
+        market_home = implied["consensus"]["home"]
+        market_away = implied["consensus"]["away"]
+        market_weight = 0.10
+        home_true = home_true * (1.0 - market_weight) + market_home * market_weight
+        away_true = away_true * (1.0 - market_weight) + market_away * market_weight
+        total = home_true + away_true
+        if total > 0:
+            home_true /= total
+            away_true /= total
+
+    home_true = clamp(home_true)
+    away_true = clamp(away_true)
 
     draw_true = 0.0
     if league_config.supports_draw:
@@ -926,25 +941,6 @@ def _build_reasons(
             }
         )
 
-    market_home, market_away, market_draw = extract_moneyline_probs(game.get("lines") or [])
-    if market_home is not None and market_away is not None:
-        market_side = "home" if market_home >= market_away else "away"
-        if market_side == predicted_side:
-            draw_note = f", draw {market_draw * 100:.1f}%" if market_draw is not None else ""
-            source = "ESPN" if game.get("oddsSource") == "espn" else "SportsBookReview"
-            reasons.append(
-                {
-                    "title": "Betting market leans the same way",
-                    "detail": (
-                        f"Moneylines imply {market_home * 100:.1f}% for {game.get('homeTeam')} "
-                        f"and {market_away * 100:.1f}% for {game.get('awayTeam')}{draw_note}."
-                    ),
-                    "impact": "high",
-                    "favors": predicted_side,
-                    "source": source,
-                }
-            )
-
     if enrichment.get("weather"):
         reasons.append(
             {
@@ -1293,6 +1289,7 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         enrichment=enrichment,
         league_config=league_config,
         league=league_config.id,
+        lines=game.get("lines") or [],
     )
 
     factors.append(

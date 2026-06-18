@@ -114,16 +114,6 @@ let sheetPasteDraft = "";
 let importFileName = "";
 let importDetectedBankroll = null;
 let bannerTimer = null;
-const AMERICAN_ODDS_LINE_KEYS = new Set([
-  "home",
-  "away",
-  "draw",
-  "homeOdds",
-  "awayOdds",
-  "drawOdds",
-  "overOdds",
-  "underOdds",
-]);
 
 function createBetId() {
   return `bet-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -371,31 +361,17 @@ function convertBetFormDraftOddsFormat(newFormat, oldFormat = getOddsFormat()) {
   };
 }
 
-function looksLikeAmericanOdds(value) {
-  const num = Number(value);
-  return Number.isFinite(num) && (num >= 100 || num <= -100);
-}
-
-function isAmericanOddsLineKey(key) {
-  const normalized = String(key || "").toLowerCase();
-  if (AMERICAN_ODDS_LINE_KEYS.has(normalized)) return true;
-  return normalized.endsWith("odds");
-}
-
-function formatLineChipValue(key, value) {
-  if (value == null) return value;
-  const num = Number(value);
-  if (Number.isFinite(num) && (isAmericanOddsLineKey(key) || looksLikeAmericanOdds(num))) {
-    return formatOddsDisplay(americanToDecimal(num), getOddsFormat());
-  }
-  if (typeof value === "string") {
-    return value.replace(/\(([+-]?\d{3,})\)/g, (match, odds) => {
-      const decimal = americanToDecimal(Number(odds));
-      if (decimal == null) return match;
-      return `(${formatOddsDisplay(decimal, getOddsFormat())})`;
-    });
-  }
-  return value;
+function stripBettingLinesFromPayload(payload) {
+  if (!payload) return payload;
+  return {
+    ...payload,
+    sportsbooks: undefined,
+    sportsbookCount: undefined,
+    games: (payload.games || []).map((game) => {
+      const { lines, oddsSource, ...rest } = game;
+      return rest;
+    }),
+  };
 }
 
 function productDecimalOdds(legs) {
@@ -585,59 +561,6 @@ function saveBankrollSettings(settings) {
   }
 }
 
-function lineOddsValue(line, ...keys) {
-  if (!line || typeof line !== "object") return null;
-  for (const key of keys) {
-    const value = line[key];
-    if (value == null || value === "") continue;
-    const num = Number(value);
-    if (Number.isFinite(num) && num !== 0) return num;
-  }
-  return null;
-}
-
-function extractPickAmericanOdds(game, predictedSide) {
-  if (!["home", "away", "draw"].includes(predictedSide)) return null;
-  const keyOptions = {
-    home: ["home", "homeOdds"],
-    away: ["away", "awayOdds"],
-    draw: ["draw", "drawOdds"],
-  }[predictedSide];
-
-  for (const line of game?.lines || []) {
-    if (!(line.viewType || "").includes("MoneyLine")) continue;
-    const current = line.currentLine || line.openingLine;
-    if (!current || typeof current !== "object") continue;
-    const odds = lineOddsValue(current, ...keyOptions);
-    if (odds != null) return Math.round(odds);
-  }
-  return null;
-}
-
-function extractModelDecimalOddsFromGame(game) {
-  const side = game?.prediction?.predictedSide;
-  if (side) {
-    const american = extractPickAmericanOdds(game, side);
-    if (american != null) return americanToDecimal(american);
-  }
-  const eventId = String(game?.eventId || "");
-  const serverPick = accuracyData?.picksByEventId?.[eventId];
-  if (serverPick?.pickOdds != null) {
-    return americanToDecimal(serverPick.pickOdds);
-  }
-  return null;
-}
-
-function formatModelEdge(modelDecimal, userDecimal) {
-  const model = Number(modelDecimal);
-  const user = Number(userDecimal);
-  if (!Number.isFinite(model) || !Number.isFinite(user) || model <= 1 || user <= 1) return "—";
-  const pct = Math.round((user / model - 1) * 1000) / 10;
-  const sign = pct >= 0 ? "+" : "";
-  const edgeClass = pct >= 0 ? "edge-positive" : "edge-negative";
-  return `<span class="model-edge ${edgeClass}">${sign}${pct}% vs mkt</span>`;
-}
-
 function normalizeModelTrackerEntry(entry) {
   if (!entry) return entry;
   const stakeRaw = entry.stake;
@@ -815,7 +738,6 @@ function addModelTrackerFromGame(game) {
     pick: game.prediction.outcomeLabel || game.prediction.predictedWinner || "",
     outcomeLabel: game.prediction.outcomeLabel || "",
     confidence: game.prediction.confidence ?? null,
-    modelDecimalOdds: extractModelDecimalOddsFromGame(game),
     userDecimalOdds: null,
     stake: null,
     status: "pending",
@@ -884,17 +806,11 @@ function settleModelTrackerManual(entryId, won) {
 }
 
 function exportModelTrackerToClipboard(entries) {
-  const header = ["Date", "Game", "Pick", "Stake", "Model Odd", "Your Odd", "Edge", "W/L", "P/L"].join("\t");
+  const header = ["Date", "Game", "Pick", "Stake", "Odds", "W/L", "P/L"].join("\t");
   const lines = entries.map((entry) => {
     const normalized = normalizeModelTrackerEntry(entry);
     const wl = normalized.status === "won" ? "W" : normalized.status === "lost" ? "L" : "";
-    const model = normalized.modelDecimalOdds != null ? formatDecimalOdds(normalized.modelDecimalOdds) : "";
     const user = normalized.userDecimalOdds != null ? formatDecimalOdds(normalized.userDecimalOdds) : "";
-    let edge = "";
-    if (normalized.modelDecimalOdds != null && normalized.userDecimalOdds != null) {
-      const pct = Math.round((normalized.userDecimalOdds / normalized.modelDecimalOdds - 1) * 1000) / 10;
-      edge = `${pct >= 0 ? "+" : ""}${pct}%`;
-    }
     const profit =
       normalized.profit != null
         ? formatPlainMoney(normalized.profit)
@@ -914,9 +830,7 @@ function exportModelTrackerToClipboard(entries) {
       normalized.matchup,
       normalized.outcomeLabel || normalized.pick,
       normalized.stake != null ? normalized.stake.toFixed(2) : "",
-      model,
       user,
-      edge,
       wl,
       profit,
     ].join("\t");
@@ -2081,11 +1995,6 @@ function renderModelTrackerView() {
               : normalized.profit != null
                 ? `<strong class="${normalized.profit >= 0 ? "acc-correct" : "acc-wrong"}">${formatPlainMoney(normalized.profit)}</strong>`
                 : `<span class="bet-pending-label">—</span>`;
-          const edgeCell = formatModelEdge(normalized.modelDecimalOdds, normalized.userDecimalOdds);
-          const modelOddCell =
-            normalized.modelDecimalOdds != null
-              ? formatOddsDisplay(normalized.modelDecimalOdds, oddsFormat)
-              : "—";
           const stakeValue =
             normalized.stake != null && Number.isFinite(Number(normalized.stake))
               ? Number(normalized.stake).toFixed(2)
@@ -2129,11 +2038,9 @@ function renderModelTrackerView() {
                   <input type="text" inputmode="decimal" class="model-tracker-stake-input" data-entry-id="${normalized.id}" placeholder="100" value="${escapeAttr(stakeValue)}" aria-label="Stake">
                 </div>
               </td>
-              <td data-label="Model odd">${modelOddCell}</td>
-              <td data-label="Your odd">
+              <td data-label="Odds">
                 <input type="text" inputmode="decimal" class="model-tracker-odds-input" data-entry-id="${normalized.id}" placeholder="${escapeAttr(oddsPlaceholder)}" value="${escapeAttr(userOddsValue)}" aria-label="Your odds">
               </td>
-              <td data-label="Edge">${edgeCell}</td>
               <td data-label="W/L"><span class="bet-wl-pill ${statusClass}">${wlLabel}</span></td>
               <td data-label="P/L">${profitCell}</td>
               <td data-label="Actions">${actions}</td>
@@ -2141,14 +2048,14 @@ function renderModelTrackerView() {
           `;
         })
         .join("")
-    : `<tr><td colspan="9" class="empty-bets-cell">No tracked picks yet. Add picks from the Predictions tab using <strong>Track model pick</strong>.</td></tr>`;
+    : `<tr><td colspan="7" class="empty-bets-cell">No tracked picks yet. Add picks from the Predictions tab using <strong>Track model pick</strong>.</td></tr>`;
 
   modelTrackerViewEl.innerHTML = `
     <section class="my-bets-hero model-tracker-hero">
       <div class="my-bets-hero-head">
         <div>
           <h2 class="section-title">Model picks</h2>
-          <p class="my-bets-note">Track model picks you take — enter your stake and the odds you got. Model odds are for comparison only.</p>
+          <p class="my-bets-note">Track model picks you take — enter your stake and the odds you got.</p>
         </div>
         <label class="field bankroll-field">
           <span>Starting bankroll</span>
@@ -2202,9 +2109,7 @@ function renderModelTrackerView() {
               <th>Date</th>
               <th>Game / Pick</th>
               <th>Stake</th>
-              <th>Model odd</th>
-              <th>Your odd</th>
-              <th>Edge</th>
+              <th>Odds</th>
               <th>W/L</th>
               <th>P/L</th>
               <th></th>
@@ -2815,51 +2720,6 @@ function formatDateTime(value) {
   });
 }
 
-function renderLineChips(line) {
-  if (line == null) return "—";
-  if (typeof line !== "object") return `<span class="line-chip">${line}</span>`;
-  return Object.entries(line)
-    .map(([key, value]) => `<span class="line-chip">${key}: ${formatLineChipValue(key, value)}</span>`)
-    .join("");
-}
-
-function renderGameLines(game) {
-  const lines = game.lines || [];
-  if (!lines.length) return "";
-
-  const rows = lines
-    .map((line) => {
-      const current = line.currentLine ? renderLineChips(line.currentLine) : "—";
-      const opening = line.openingLine ? renderLineChips(line.openingLine) : "—";
-      return `
-        <tr>
-          <td data-label="Book">${line.sportsbook || "—"}</td>
-          <td data-label="Market">${line.viewType || "—"}</td>
-          <td data-label="Current">${current}</td>
-          <td data-label="Open">${opening}</td>
-        </tr>
-      `;
-    })
-    .join("");
-
-  return `
-    <section class="detail-panel lines-panel">
-      <h4>Betting lines</h4>
-      <table class="lines-table prob-sheet-table game-lines-table">
-        <thead>
-          <tr>
-            <th>Book</th>
-            <th>Market</th>
-            <th>Current</th>
-            <th>Open</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </section>
-  `;
-}
-
 function showBanner(message, { autoHideMs = 0, type = "info", details = "" } = {}) {
   if (!bannerEl) return;
   if (bannerSummaryEl) {
@@ -3138,7 +2998,7 @@ function renderTeamProbabilityTable(prediction, game) {
         <tbody>${body}</tbody>
       </table>
       ${componentRows ? `<ul class="prob-components">${componentRows}</ul>` : ""}
-      <p class="lineup-note">Model % uses records, form, injuries, lineups, advanced stats, and ESPN predictor — no betting odds.</p>
+      <p class="lineup-note">Model % uses records, form, injuries, lineups, and advanced stats.</p>
     </section>
   `;
 }
@@ -3161,7 +3021,7 @@ function renderProbabilityCompare(prediction, game) {
         <article class="prob-card true-card">
           <p class="prob-card-label">Model estimate</p>
           <p class="prob-card-values">${game.homeTeam}: <strong>${trueP.homePct ?? pick.homePct ?? prediction.homeWinPct ?? "—"}%</strong> · ${game.awayTeam}: <strong>${trueP.awayPct ?? pick.awayPct ?? prediction.awayWinPct ?? "—"}%</strong>${trueP.drawPct != null ? ` · Draw: <strong>${trueP.drawPct}%</strong>` : ""}</p>
-          <p class="lineup-note">Records, form, injuries, advanced stats, ESPN predictor — no odds.</p>
+          <p class="lineup-note">Records, form, injuries, advanced stats, and ESPN predictor.</p>
           ${componentRows ? `<ul class="prob-components">${componentRows}</ul>` : ""}
         </article>
       </div>
@@ -3700,7 +3560,7 @@ async function loadDashboard(force = false) {
   });
 
   try {
-    const payload = await fetchDashboardPayload(params, { force });
+    const payload = stripBettingLinesFromPayload(await fetchDashboardPayload(params, { force }));
     if (sportSelect.value !== "overview") {
       accuracyData = (await fetchAccuracy({ force })) ?? accuracyData;
     }
@@ -3767,8 +3627,7 @@ async function loadDashboard(force = false) {
         const needsBanner =
           normalizedPayload._liveFallback ||
           normalizedPayload._dateFallback ||
-          games.length === 0 ||
-          (normalizedPayload.sportsbookCount || 0) === 0;
+          games.length === 0;
 
         if (needsBanner) {
           showBanner(summaryParts.join(" · "), { details: detailParts.join(" ") });
@@ -3777,8 +3636,6 @@ async function loadDashboard(force = false) {
         }
       } else if (games.length === 0) {
         showBanner(`No games for ${displayDate}${tz ? ` (${tz})` : ""}. Pick another date or try Refresh.`);
-      } else if ((normalizedPayload.sportsbookCount || 0) === 0) {
-        showBanner("Games ranked by win probability. Odds appear when ESPN or sportsbooks publish them.");
       } else {
         hideBanner();
       }

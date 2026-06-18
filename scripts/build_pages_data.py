@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from accuracy_tracker import grade_predictions, record_predictions  # noqa: E402
-from mlb_data import fetch_dashboard_data  # noqa: E402
+from mlb_data import fetch_dashboard_data, strip_betting_lines_for_display  # noqa: E402
 from schedule_dates import default_game_date, get_schedule_timezone, schedule_dates_for_league  # noqa: E402
 from sports_config import LEAGUES, get_league, list_league_ids  # noqa: E402
 
@@ -105,7 +105,7 @@ def main() -> int:
 
         for date_value in available_dates:
             include_enrichment = True
-            include_odds = False
+            include_odds = True
             try:
                 payload = build_league_payload(
                     league,
@@ -125,18 +125,19 @@ def main() -> int:
                     "fetchedAt": datetime.now(timezone.utc).isoformat(),
                 }
 
+            display_payload = strip_betting_lines_for_display(payload)
             dated_name = f"{league}_{date_value}.json"
             dated_path = OUTPUT_DIR / dated_name
-            dated_path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
+            dated_path.write_text(json.dumps(display_payload, indent=2, default=str), encoding="utf-8")
             date_files[date_value] = f"data/{dated_name}"
             print(f"Wrote {dated_path} ({payload.get('gameCount', 0)} games)", flush=True)
             if payload.get("gameCount", 0) > 0:
                 payloads_for_accuracy.append(payload)
 
             if date_value == default_date:
-                primary_payload = payload
+                primary_payload = display_payload
                 (OUTPUT_DIR / f"{league}.json").write_text(
-                    json.dumps(payload, indent=2, default=str),
+                    json.dumps(display_payload, indent=2, default=str),
                     encoding="utf-8",
                 )
 

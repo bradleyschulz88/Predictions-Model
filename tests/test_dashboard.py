@@ -17,6 +17,7 @@ from mlb_data import (
     default_game_date,
     fetch_dashboard_data,
     load_page_props_from_file,
+    strip_betting_lines_for_display,
 )
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
@@ -36,6 +37,17 @@ class ESPNDataTests(unittest.TestCase):
         payload = fetch_dashboard_data(fixture=ESPN_FIXTURE, include_odds=False, league="mlb")
         self.assertEqual(payload["source"], "espn")
         self.assertEqual(payload["gameCount"], 15)
+
+    def test_strip_betting_lines_for_display(self) -> None:
+        payload = {
+            "sportsbookCount": 2,
+            "sportsbooks": ["BookA"],
+            "games": [{"eventId": "1", "lines": [{"viewType": "MoneyLine"}], "oddsSource": "espn"}],
+        }
+        cleaned = strip_betting_lines_for_display(payload)
+        self.assertNotIn("sportsbookCount", cleaned)
+        self.assertNotIn("lines", cleaned["games"][0])
+        self.assertNotIn("oddsSource", cleaned["games"][0])
 
     def test_default_game_date_uses_league_timezone(self) -> None:
         self.assertRegex(default_game_date("mlb"), r"^\d{4}-\d{2}-\d{2}$")

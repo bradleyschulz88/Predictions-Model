@@ -219,6 +219,21 @@ def build_dashboard_payload_from_espn_games(
     return finalize_dashboard_payload(games, url=url, source="espn", league=league)
 
 
+def strip_betting_lines_for_display(payload: dict[str, Any]) -> dict[str, Any]:
+    """Remove sportsbook line data from client-facing payloads."""
+    cleaned = dict(payload)
+    cleaned.pop("sportsbooks", None)
+    cleaned.pop("sportsbookCount", None)
+    display_games: list[dict[str, Any]] = []
+    for game in payload.get("games") or []:
+        display_game = dict(game)
+        display_game.pop("lines", None)
+        display_game.pop("oddsSource", None)
+        display_games.append(display_game)
+    cleaned["games"] = display_games
+    return cleaned
+
+
 def finalize_dashboard_payload(
     games: list[dict[str, Any]],
     *,
