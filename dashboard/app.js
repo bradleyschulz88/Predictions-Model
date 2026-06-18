@@ -2448,13 +2448,21 @@ function renderModelDayResult(games) {
 function resolvePickStatus(game) {
   const eventId = String(game.eventId || "");
   const serverPick = accuracyData?.picksByEventId?.[eventId];
+  const liveScores =
+    game.homeScore != null && game.awayScore != null
+      ? { homeScore: game.homeScore, awayScore: game.awayScore }
+      : null;
+
+  const withLiveScores = (pick) => (pick && liveScores ? { ...pick, ...liveScores } : pick);
+
   if (serverPick?.status === "graded") {
-    cacheModelPick(eventId, serverPick);
-    return serverPick;
+    const merged = withLiveScores(serverPick);
+    cacheModelPick(eventId, merged);
+    return merged;
   }
 
   const cached = loadModelPickCache()[eventId];
-  if (cached?.status === "graded") return cached;
+  if (cached?.status === "graded") return withLiveScores(cached);
 
   const actual = winnerFromGame(game);
   if (actual && game.prediction?.predictedWinner) {
@@ -2474,56 +2482,58 @@ function resolvePickStatus(game) {
     return pick;
   }
 
-  if (serverPick) return serverPick;
+  if (serverPick) return withLiveScores(serverPick);
   if (game.prediction?.predictedWinner) {
     return {
       status: "pending",
       predicted: game.prediction.predictedWinner,
       outcomeLabel: game.prediction.outcomeLabel,
       confidence: game.prediction.confidence,
+      ...(liveScores || {}),
     };
   }
   return null;
 }
 
+function pickTeamAbbrev(game, prediction) {
+  if (!prediction) return "—";
+  if (prediction.predictedSide === "home") return teamAbbrev(game.homeTeam);
+  if (prediction.predictedSide === "away") return teamAbbrev(game.awayTeam);
+  if (prediction.predictedSide === "draw") return "DRAW";
+  const label = prediction.outcomeLabel || "";
+  const match = label.match(/^(.+?)\s+to\s+win/i);
+  if (match) return teamAbbrev(match[1]);
+  return teamAbbrev(label) || label.slice(0, 10);
+}
+
+function renderGameScoreLine(game) {
+  if (game.homeScore == null || game.awayScore == null) return "";
+  const away = teamAbbrev(game.awayTeam);
+  const home = teamAbbrev(game.homeTeam);
+  const prefix = game.isFinal ? "Final" : game.isLive ? "Live" : "Score";
+  const cls = game.isLive ? "game-score-line live" : game.isFinal ? "game-score-line final" : "game-score-line";
+  return `<p class="${cls}" data-live-score="${game.eventId}">${prefix}: ${away} <span class="tabular-nums">${game.awayScore}</span> – ${home} <span class="tabular-nums">${game.homeScore}</span></p>`;
+}
+
 function renderPickStatusBadge(game) {
   const pick = resolvePickStatus(game);
   if (!pick) return "";
-  const score =
-    pick.homeScore != null && pick.awayScore != null
-      ? ` · ${game.awayTeam} ${pick.awayScore}–${pick.homeScore} ${game.homeTeam}`
-      : "";
   if (pick.status === "pending") {
-    return `<span class="pick-status pick-pending">Awaiting result</span>`;
+    return `<span class="pick-status pick-pending">${game.isLive ? "In progress" : "Awaiting result"}</span>`;
   }
   if (pick.correct) {
-    return `<span class="pick-status pick-won">✓ Correct · ${pick.actual} won${score}</span>`;
+    return `<span class="pick-status pick-won">Correct</span>`;
   }
-  return `<span class="pick-status pick-lost">✗ Wrong · ${pick.actual} won${score}</span>`;
+  return `<span class="pick-status pick-lost">Wrong</span>`;
 }
 
 function renderModelPickBlock(game) {
-  const prediction = game.prediction;
-  if (!prediction?.outcomeLabel) return "";
   const pick = resolvePickStatus(game);
-  let resultHtml = "";
-  if (pick?.status === "graded") {
-    const score =
-      pick.homeScore != null && pick.awayScore != null
-        ? `<p class="model-pick-score">Final: ${game.awayTeam} ${pick.awayScore} – ${pick.homeScore} ${game.homeTeam}</p>`
-        : "";
-    resultHtml = pick.correct
-      ? `<p class="model-pick-result pick-won">Result: <strong>${pick.actual}</strong> won — model was correct</p>${score}`
-      : `<p class="model-pick-result pick-lost">Result: <strong>${pick.actual}</strong> won — model was wrong</p>${score}`;
-  } else {
-    resultHtml = `<p class="model-pick-result pick-pending">Result pending — pick stays here after the game finishes</p>`;
-  }
-  return `
-    <div class="model-pick-block">
-      <p class="model-pick-heading"><span class="model-pick-label">Model pick</span> <strong>${prediction.outcomeLabel}</strong> · ${prediction.confidence}%</p>
-      ${resultHtml}
-    </div>
-  `;
+  if (!pick || pick.status !== "graded") return "";
+  const actual = pick.actual || "Winner";
+  return pick.correct
+    ? `<p class="model-pick-result pick-won">${escapeHtml(actual)} won — model was correct</p>`
+    : `<p class="model-pick-result pick-lost">${escapeHtml(actual)} won — model was wrong</p>`;
 }
 
 function leagueTimezone(sport) {
@@ -3020,21 +3030,41 @@ function patchLiveScoreDom(games) {
   if (!gamesEl || activeView !== "predictions") return false;
   let patched = false;
   for (const game of games || []) {
-    const node = gamesEl.querySelector(`[data-live-score="${game.eventId}"]`);
-    if (!node || game.homeScore == null) continue;
+    if (game.homeScore == null) continue;
     const away = teamAbbrev(game.awayTeam);
     const home = teamAbbrev(game.homeTeam);
-    const next = `${away} ${game.awayScore} @ ${home} ${game.homeScore}`;
-    const current = node.textContent?.replace(/\s+/g, " ").trim();
-    if (current !== next) {
-      node.innerHTML = `${away} <span class="tabular-nums">${game.awayScore}</span> @ ${home} <span class="tabular-nums">${game.homeScore}</span>`;
-      node.classList.add("score-live", "score-updated");
-      patched = true;
-    }
+    const nodes = gamesEl.querySelectorAll(`[data-live-score="${game.eventId}"]`);
+    if (!nodes.length) continue;
+
+    nodes.forEach((node) => {
+      if (node.classList.contains("scoreboard-teams")) {
+        const next = `${away} ${game.awayScore} @ ${home} ${game.homeScore}`;
+        const current = node.textContent?.replace(/\s+/g, " ").trim();
+        if (current !== next) {
+          node.innerHTML = `${away} <span class="tabular-nums">${game.awayScore}</span> @ ${home} <span class="tabular-nums">${game.homeScore}</span>`;
+          node.classList.add("score-live", "score-updated");
+          patched = true;
+        }
+      } else if (node.classList.contains("game-score-line")) {
+        const prefix = game.isFinal ? "Final" : game.isLive ? "Live" : "Score";
+        const next = `${prefix}: ${away} ${game.awayScore} – ${home} ${game.homeScore}`;
+        const current = node.textContent?.replace(/\s+/g, " ").trim();
+        if (current !== next) {
+          node.innerHTML = `${prefix}: ${away} <span class="tabular-nums">${game.awayScore}</span> – ${home} <span class="tabular-nums">${game.homeScore}</span>`;
+          node.classList.add("score-updated");
+          patched = true;
+        }
+      }
+    });
+
     const timeEl = gamesEl.querySelector(`[data-live-time="${game.eventId}"]`);
-    if (timeEl && game.gameStatusText) {
-      timeEl.textContent = game.isLive ? "LIVE" : game.gameStatusText;
-      if (game.isLive) timeEl.classList.add("featured-pick-live");
+    if (timeEl) {
+      const nextTime = game.isLive ? "LIVE" : formatGameTimeShort(game.startDate);
+      if (timeEl.textContent !== nextTime) {
+        timeEl.textContent = nextTime;
+        timeEl.classList.toggle("scoreboard-live-badge", game.isLive);
+        patched = true;
+      }
     }
     const featuredTime = document.querySelector(`[data-featured-time="${game.eventId}"]`);
     if (featuredTime && game.isLive) {
@@ -3355,9 +3385,6 @@ function renderPrediction(game) {
   const prediction = game.prediction;
   if (!prediction) return "";
 
-  const homeFavored = prediction.predictedSide === "home";
-  const awayFavored = prediction.predictedSide === "away";
-  const drawFavored = prediction.predictedSide === "draw";
   const labelClass = prediction.confidenceLabel === "Strong pick" ? "label-strong" : prediction.confidenceLabel === "Lean" ? "label-lean" : "label-coin";
 
   const factors = (prediction.factors || [])
@@ -3374,46 +3401,27 @@ function renderPrediction(game) {
   const sources = (prediction.dataSources || []).map((source) => `<span class="source-chip">${source}</span>`).join("");
 
   const probabilityCompare = renderTeamProbabilityTable(prediction, game);
-
-  const drawBlock = prediction.drawWinPct != null
-    ? `<div class="probability-team ${drawFavored ? "favored" : ""}"><span class="probability-label">Draw</span><span class="probability-value">${prediction.drawWinPct}%</span></div>`
-    : "";
-
-  const liveBlock =
-    game.isLive && game.homeScore != null
-      ? `<div class="live-score">${game.awayTeam} ${game.awayScore} – ${game.homeScore} ${game.homeTeam}</div>`
-      : game.isFinal && game.homeScore != null
-        ? `<div class="final-score">Final: ${game.awayTeam} ${game.awayScore} – ${game.homeScore} ${game.homeTeam}</div>`
-        : "";
-
-  const modelPickBlock = renderModelPickBlock(game);
+  const pickResult = renderModelPickBlock(game);
 
   return `
-    <section class="prediction-panel">
-      <div class="prediction-head">
-        <div>
-          <span class="rank-badge">#${gameDisplayRank(game)}</span>
+    <section class="prediction-panel prediction-panel-compact">
+      <div class="details-status-row">
+        ${renderGameScoreLine(game)}
+        <div class="details-status-meta">
           <span class="confidence-label ${labelClass}">${prediction.confidenceLabel || ""}</span>
-          <h3 class="prediction-title">${prediction.outcomeLabel}</h3>
-          <p class="prediction-subtitle">${formatConfidenceDisplay(prediction.confidence)}% confidence · sorted highest to lowest</p>
+          ${renderPickStatusBadge(game)}
         </div>
-        <div class="confidence-ring-wrap">${renderConfidenceRing(prediction.confidence)}</div>
       </div>
-      ${liveBlock}
-      ${modelPickBlock}
+      <p class="prediction-detail-pick">${escapeHtml(prediction.outcomeLabel)} <span class="prediction-detail-pct">${formatConfidenceDisplay(prediction.confidence)}% model confidence</span></p>
+      ${pickResult}
       ${probabilityCompare}
-      <div class="probability-bar ${prediction.drawWinPct != null ? "three-way" : ""}">
-        <div class="probability-team ${homeFavored ? "favored" : ""}"><span class="probability-label">${game.homeTeam || "Home"}</span><span class="probability-value">${prediction.homeWinPct}%</span></div>
-        ${drawBlock}
-        <div class="probability-team ${awayFavored ? "favored" : ""}"><span class="probability-label">${game.awayTeam || "Away"}</span><span class="probability-value">${prediction.awayWinPct}%</span></div>
-      </div>
       <div class="why-panel">
         <h4>Why ${prediction.predictedSide === "draw" ? "draw" : prediction.predictedWinner}?</h4>
         <p class="why-summary">${prediction.whyTheyWin || "Analysis pending."}</p>
         ${reasons ? `<ul class="why-list">${reasons}</ul>` : ""}
         ${sources ? `<div class="source-list">${sources}</div>` : ""}
       </div>
-      <div class="factor-list">${factors}</div>
+      ${factors ? `<div class="factor-list">${factors}</div>` : ""}
     </section>
   `;
 }
@@ -3465,11 +3473,12 @@ function renderGames(games) {
       if (pitchers) metaParts.push(pitchers);
 
       const shareUrl = `${window.location.origin}${window.location.pathname}#game-${game.eventId}`;
-      const pickBadge = renderPickStatusBadge(game);
       const logged = isBetLoggedForGame(game.eventId);
       const modelTracked = isModelPickTracked(game.eventId);
       const detailsOpen = hashGameId && String(game.eventId) === hashGameId;
       const timeLabel = game.isLive ? "LIVE" : formatGameTimeShort(game.startDate);
+      const pickShort = pickTeamAbbrev(game, prediction);
+      const confLabel = prediction?.confidenceLabel === "Strong pick" ? "Strong" : prediction?.confidenceLabel === "Lean" ? "Lean" : "";
 
       return `
         <article class="scoreboard-row game-card ${game.isLive ? "game-live" : ""}${game.isFinal ? " game-final" : ""}" id="game-${game.eventId}" data-game-id="${game.eventId}">
@@ -3479,25 +3488,21 @@ function renderGames(games) {
               <div class="scoreboard-matchup-block">
                 ${renderScoreboardTeams(game)}
                 ${renderScoreboardProbBar(prediction)}
+                <div class="scoreboard-summary-chips">${renderCoverageChips(game)}</div>
               </div>
               <div class="scoreboard-pick-block">
                 <span class="scoreboard-pick-label">Pick</span>
-                <span class="scoreboard-pick-value">${escapeHtml(prediction?.outcomeLabel || "—")}</span>
-                <span class="scoreboard-pick-conf ${labelClass}" data-live-time="${game.eventId}">${formatConfidenceDisplay(prediction?.confidence || 0)}% · ${timeLabel}</span>
+                <span class="scoreboard-pick-value" title="${escapeAttr(prediction?.outcomeLabel || "")}">${escapeHtml(pickShort)} <span class="tabular-nums">${formatConfidenceDisplay(prediction?.confidence || 0)}%</span></span>
+                <span class="scoreboard-pick-conf">
+                  ${confLabel ? `<span class="confidence-label ${labelClass}">${confLabel}</span>` : ""}
+                  <span class="scoreboard-time${game.isLive ? " scoreboard-live-badge" : ""}" data-live-time="${game.eventId}">${timeLabel}</span>
+                </span>
               </div>
             </summary>
-            <div class="scoreboard-meta-row">
-              ${renderCoverageChips(game)}
-              ${pickBadge ? `<span class="summary-pick-status">${pickBadge}</span>` : ""}
-              <span class="confidence-label ${labelClass}">${prediction?.confidenceLabel || ""}</span>
-            </div>
             <div class="scoreboard-details-body game-details-body">
               ${renderPrediction(game)}
-              <div class="game-head">
-                <div>
-                  <h2 class="matchup">${game.matchup || "Unknown matchup"}</h2>
-                  <p class="meta">${metaParts.join(" · ")}</p>
-                </div>
+              <div class="game-head game-head-compact">
+                <p class="meta">${metaParts.join(" · ")}</p>
                 <div class="game-actions">
                   <span class="status-pill ${game.isLive ? "live" : ""}">${game.gameStatusText || "Scheduled"}</span>
                   <button type="button" class="track-btn model-track-btn${modelTracked ? " tracked" : ""}" data-model-track-id="${game.eventId}"${!prediction?.outcomeLabel && !prediction?.predictedWinner ? " disabled" : ""}>${modelTracked ? '<span class="track-btn-label track-btn-label-long">Already tracked</span><span class="track-btn-label track-btn-label-short">Tracked</span>' : '<span class="track-btn-label track-btn-label-long">Track model pick</span><span class="track-btn-label track-btn-label-short">Track pick</span>'}</button>

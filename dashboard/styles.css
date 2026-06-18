@@ -4125,26 +4125,154 @@ button:active:not(:disabled) {
   color: var(--muted);
 }
 
-.scoreboard-pick-value {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--accent-bright);
+.scoreboard-summary-chips {
+  margin-top: 6px;
+}
+
+.scoreboard-summary-chips .coverage-chips {
+  gap: 3px;
 }
 
 .scoreboard-pick-conf {
-  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
   color: var(--muted);
 }
 
-.scoreboard-meta-row {
+.scoreboard-pick-value {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent-bright);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.scoreboard-time {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.scoreboard-live-badge {
+  color: var(--live);
+  font-weight: 700;
+}
+
+.scoreboard-details-body {
+  padding: var(--space-3);
+  border-top: 1px solid var(--panel-border-soft);
+}
+
+.prediction-panel-compact {
+  background: transparent;
+  padding: 0;
+  margin-bottom: var(--space-3);
+}
+
+.prediction-panel-compact .prediction-head,
+.prediction-panel-compact .confidence-ring-wrap {
+  display: none;
+}
+
+.details-status-row {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
   flex-wrap: wrap;
+  margin-bottom: var(--space-2);
+}
+
+.details-status-meta {
+  display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 0 var(--space-3) var(--space-3);
-  margin-top: calc(-1 * var(--space-1));
+  flex-shrink: 0;
 }
+
+.game-score-line {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.game-score-line.live {
+  color: var(--live);
+}
+
+.game-score-line.final {
+  color: var(--text);
+}
+
+.prediction-detail-pick {
+  margin: 0 0 var(--space-3);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.prediction-detail-pct {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.game-head-compact {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--panel-border-soft);
+  margin-top: var(--space-2);
+}
+
+.game-head-compact .meta {
+  margin: 0 0 var(--space-2);
+}
+
+.pick-status {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.pick-status.pick-pending {
+  color: var(--live);
+}
+
+.scoreboard-meta-row {
+  display: none;
+}
+
+details[open] .scoreboard-summary-chips {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .scoreboard-pick-value {
+    font-size: 0.92rem;
+    white-space: normal;
+  }
+
+  .scoreboard-summary-chips .coverage-chip {
+    font-size: 0.6rem;
+    padding: 2px 5px;
+  }
+
+  .details-status-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 
 .coverage-chips {
   display: flex;
