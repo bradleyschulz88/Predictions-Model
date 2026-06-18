@@ -81,6 +81,17 @@ function isWashedOutInProgress({ name, state, attendance, totalRuns, startDate }
   return elapsedMinutes >= STALE_SCORELESS_MINUTES;
 }
 
+function inferAttendanceForStatus(attendance, { statusName, homeScore, awayScore, startDate }) {
+  if (attendance != null) return attendance;
+  if (statusName !== "STATUS_IN_PROGRESS") return null;
+  const runs = Number(homeScore ?? 0) + Number(awayScore ?? 0);
+  const started = startDate ? new Date(startDate) : null;
+  const elapsed = started && !Number.isNaN(started.getTime()) ? (Date.now() - started.getTime()) / 60000 : null;
+  if (runs === 0) return 0;
+  if (runs <= 2 && elapsed != null && elapsed >= STALE_LIVE_MINUTES) return 0;
+  return null;
+}
+
 function normalizeEspnStatus(status, { startDate = null, attendance = null, notes = null, homeScore = null, awayScore = null } = {}) {
   const name = status?.name || "";
   const state = status?.state || "";
@@ -103,42 +114,50 @@ function normalizeEspnStatus(status, { startDate = null, attendance = null, note
   const totalRuns = home != null && away != null && !Number.isNaN(home) && !Number.isNaN(away) ? home + away : null;
   const started = startDate ? new Date(startDate) : null;
   const elapsedMinutes = started && !Number.isNaN(started.getTime()) ? (Date.now() - started.getTime()) / 60000 : null;
+  const effectiveAttendance = inferAttendanceForStatus(attendance, {
+    statusName: name,
+    homeScore,
+    awayScore,
+    startDate,
+  });
 
   let isLive = name === "STATUS_IN_PROGRESS" && state === "in" && !isVoided && !isSuspended;
   let isWashedOut = false;
 
   if (isLive) {
-    if (isWashedOutInProgress({ name, state, attendance, totalRuns, startDate })) {
+    if (isWashedOutInProgress({ name, state, attendance: effectiveAttendance, totalRuns, startDate })) {
       isLive = false;
       isWashedOut = true;
       isDelayed = true;
       isVoided = true;
     } else if (
-      attendance === 0 &&
+      effectiveAttendance === 0 &&
       elapsedMinutes != null &&
       elapsedMinutes >= STALE_LIVE_MINUTES &&
       totalRuns != null &&
-      totalRuns <= 1
+      totalRuns <= 2
     ) {
       isLive = false;
       isWashedOut = true;
       isDelayed = true;
       isVoided = true;
-    } else if (attendance === 0 && elapsedMinutes != null && elapsedMinutes >= STALE_LIVE_MINUTES * 2 && totalRuns != null && totalRuns > 1) {
+    } else if (effectiveAttendance === 0 && elapsedMinutes != null && elapsedMinutes >= STALE_LIVE_MINUTES * 2 && totalRuns != null && totalRuns > 2) {
       isLive = false;
       isDelayed = true;
+      isWashedOut = true;
+      isVoided = true;
     }
   }
 
   if (!isLive && name === "STATUS_IN_PROGRESS" && state === "in") {
     isWashedOut =
       isWashedOut ||
-      isWashedOutInProgress({ name, state, attendance, totalRuns, startDate }) ||
-      (attendance === 0 &&
+      isWashedOutInProgress({ name, state, attendance: effectiveAttendance, totalRuns, startDate }) ||
+      (effectiveAttendance === 0 &&
         elapsedMinutes != null &&
         elapsedMinutes >= STALE_LIVE_MINUTES &&
         totalRuns != null &&
-        totalRuns <= 1);
+        totalRuns <= 2);
     if (isWashedOut) {
       isDelayed = true;
       isVoided = true;
@@ -165,7 +184,7 @@ function normalizeEspnStatus(status, { startDate = null, attendance = null, note
     isDelayed,
     isVoided: isVoided || isWashedOut,
     isWashedOut,
-    attendance,
+    attendance: effectiveAttendance ?? attendance,
   };
 }
 
@@ -180,20 +199,12 @@ function refreshGameStatusFlags(game) {
       : statusName === "STATUS_SCHEDULED"
         ? "pre"
         : "post";
-  const inferredAttendance =
-    game.attendance != null
-      ? game.attendance
-      : statusName === "STATUS_IN_PROGRESS"
-        ? (() => {
-            const runs = Number(game.homeScore ?? 0) + Number(game.awayScore ?? 0);
-            const started = game.startDate ? new Date(game.startDate) : null;
-            const elapsed =
-              started && !Number.isNaN(started.getTime()) ? (Date.now() - started.getTime()) / 60000 : null;
-            if (runs === 0) return 0;
-            if (runs <= 1 && elapsed != null && elapsed >= STALE_LIVE_MINUTES) return 0;
-            return null;
-          })()
-        : null;
+  const inferredAttendance = inferAttendanceForStatus(game.attendance, {
+    statusName,
+    homeScore: game.homeScore,
+    awayScore: game.awayScore,
+    startDate: game.startDate,
+  });
 
   const flags = normalizeEspnStatus(
     {
@@ -2530,6 +2541,7 @@ function summarizeModelDayResults(games, scheduleDate, league = sportSelect.valu
   };
 
   for (const game of games || []) {
+    if (isUnplayableGame(refreshGameStatusFlags(game))) continue;
     if (!game.prediction?.predictedWinner && !game.prediction?.outcomeLabel) continue;
     const pick = resolvePickStatus(game);
     if (pick) addPick(game.eventId, pick);
@@ -3204,10 +3216,40 @@ function renderCoverageChips(game) {
   return `<div class="coverage-chips">${chips}</div>`;
 }
 
+function visiblePickIds(games) {
+  return prepareGamesForDisplay(games).map((game) => String(game.eventId));
+}
+
+function pickVisibilityChanged(beforeGames, afterGames) {
+  const before = visiblePickIds(beforeGames);
+  const after = visiblePickIds(afterGames);
+  if (before.length !== after.length) return true;
+  return before.some((id, index) => id !== after[index]);
+}
+
+function hasMaterialStatusChange(beforeGames, afterGames) {
+  const beforeMap = new Map((beforeGames || []).map((game) => [String(game.eventId), refreshGameStatusFlags(game)]));
+  for (const game of afterGames || []) {
+    const after = refreshGameStatusFlags(game);
+    const before = beforeMap.get(String(game.eventId));
+    if (!before) continue;
+    if (before.isLive !== after.isLive) return true;
+    if (before.isFinal !== after.isFinal) return true;
+    if (before.isWashedOut !== after.isWashedOut) return true;
+    if (before.isVoided !== after.isVoided) return true;
+    if (before.isPostponed !== after.isPostponed) return true;
+    if (before.isDelayed !== after.isDelayed) return true;
+    if ((before.homeScore == null) !== (after.homeScore == null)) return true;
+    if ((before.awayScore == null) !== (after.awayScore == null)) return true;
+  }
+  return false;
+}
+
 function patchLiveScoreDom(games) {
   if (!gamesEl || activeView !== "predictions") return false;
+  const visible = prepareGamesForDisplay(games);
   let patched = false;
-  for (const game of games || []) {
+  for (const game of visible) {
     if (game.homeScore == null) continue;
     const away = teamAbbrev(game.awayTeam);
     const home = teamAbbrev(game.homeTeam);
@@ -3247,13 +3289,17 @@ function patchLiveScoreDom(games) {
       }
     }
     const featuredTime = document.querySelector(`[data-featured-time="${game.eventId}"]`);
-    if (featuredTime && game.isLive) {
-      featuredTime.textContent = "LIVE";
-      featuredTime.classList.add("featured-pick-live");
+    if (featuredTime) {
+      const nextFeaturedTime = game.isLive ? "LIVE" : formatGameTimeShort(game.startDate);
+      if (featuredTime.textContent !== nextFeaturedTime) {
+        featuredTime.textContent = nextFeaturedTime;
+        featuredTime.classList.toggle("featured-pick-live", game.isLive);
+        patched = true;
+      }
     }
   }
   if (patched && statLive) {
-    const tiers = summarizePickTiers(games);
+    const tiers = summarizePickTiers(visible);
     statLive.textContent = String(tiers.live);
   }
   return patched;
@@ -4040,14 +4086,20 @@ async function refreshLiveScores() {
     const liveScores = await fetchLiveScoresFromEspn(league, dateValue);
     if (!liveScores) return;
     lastLiveScoreAt = Date.now();
-    const mergedGames = mergeLiveScores(lastPayload.games, liveScores);
+    const gamesBefore = lastPayload.games;
+    const mergedGames = mergeLiveScores(gamesBefore, liveScores);
     lastPayload = { ...lastPayload, games: mergedGames };
     saveMyBets(autoSettleMyBets(loadMyBets()));
     saveModelTracker(autoSettleModelBets(loadModelTracker()));
     if (activeView === "predictions") {
-      const patched = patchLiveScoreDom(mergedGames);
-      if (!patched) renderGames(mergedGames);
-      else renderStats(lastPayload, prepareGamesForDisplay(mergedGames));
+      const needsFullRender = pickVisibilityChanged(gamesBefore, mergedGames) || hasMaterialStatusChange(gamesBefore, mergedGames);
+      if (needsFullRender) {
+        renderGames(mergedGames);
+      } else {
+        const patched = patchLiveScoreDom(mergedGames);
+        if (!patched) renderGames(mergedGames);
+        else renderStats(lastPayload, prepareGamesForDisplay(mergedGames));
+      }
     } else if (activeView === "my-bets") {
       renderMyBetsView();
     } else if (activeView === "model-tracker") {

@@ -85,6 +85,32 @@ def _is_washed_out_in_progress(
     return elapsed_minutes >= STALE_SCORELESS_MINUTES
 
 
+def _infer_attendance(
+    attendance: int | None,
+    *,
+    name: str,
+    home_score: Any,
+    away_score: Any,
+    start_date: str | None,
+    now: datetime | None = None,
+) -> int | None:
+    if attendance is not None:
+        return attendance
+    if name != STATUS_IN_PROGRESS:
+        return None
+    total_runs = _total_runs(home_score, away_score)
+    started = parse_iso_datetime(start_date)
+    if not started:
+        return None
+    reference = now or datetime.now(timezone.utc)
+    elapsed_minutes = (reference - started).total_seconds() / 60
+    if total_runs == 0:
+        return 0
+    if total_runs is not None and total_runs <= 2 and elapsed_minutes >= STALE_LIVE_MINUTES:
+        return 0
+    return None
+
+
 def normalize_espn_status(
     status_type: dict[str, Any],
     *,
@@ -119,11 +145,19 @@ def normalize_espn_status(
     started = parse_iso_datetime(start_date)
     reference = now or datetime.now(timezone.utc)
     elapsed_minutes = (reference - started).total_seconds() / 60 if started else None
+    effective_attendance = _infer_attendance(
+        attendance,
+        name=name,
+        home_score=home_score,
+        away_score=away_score,
+        start_date=start_date,
+        now=reference,
+    )
 
     if is_live and _is_washed_out_in_progress(
         name=name,
         state=state,
-        attendance=attendance,
+        attendance=effective_attendance,
         total_runs=total_runs,
         start_date=start_date,
         now=reference,
@@ -134,36 +168,38 @@ def normalize_espn_status(
         is_voided = True
     elif (
         is_live
-        and attendance == 0
+        and effective_attendance == 0
         and elapsed_minutes is not None
         and elapsed_minutes >= STALE_LIVE_MINUTES
         and total_runs is not None
-        and total_runs <= 1
+        and total_runs <= 2
     ):
-        # Rainouts often linger as IN_PROGRESS with 0-1 total runs and attendance still 0.
+        # Rainouts often linger as IN_PROGRESS with phantom 0-2 total runs and attendance still 0.
         is_live = False
         is_washed_out = True
         is_delayed = True
         is_voided = True
-    elif is_live and attendance == 0 and elapsed_minutes is not None:
+    elif is_live and effective_attendance == 0 and elapsed_minutes is not None:
         if elapsed_minutes >= STALE_LIVE_MINUTES * 2 and total_runs not in (None, 0):
             is_live = False
             is_delayed = True
+            is_washed_out = True
+            is_voided = True
 
     if not is_live and name == STATUS_IN_PROGRESS and state == "in":
         is_washed_out = is_washed_out or _is_washed_out_in_progress(
             name=name,
             state=state,
-            attendance=attendance,
+            attendance=effective_attendance,
             total_runs=total_runs,
             start_date=start_date,
             now=reference,
         ) or (
-            attendance == 0
+            effective_attendance == 0
             and elapsed_minutes is not None
             and elapsed_minutes >= STALE_LIVE_MINUTES
             and total_runs is not None
-            and total_runs <= 1
+            and total_runs <= 2
         )
         if is_washed_out:
             is_delayed = True
@@ -194,5 +230,5 @@ def normalize_espn_status(
         "isDelayed": is_delayed,
         "isVoided": is_voided or is_washed_out,
         "isWashedOut": is_washed_out,
-        "attendance": attendance,
+        "attendance": effective_attendance if effective_attendance is not None else attendance,
     }

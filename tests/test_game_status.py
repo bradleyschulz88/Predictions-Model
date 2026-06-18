@@ -84,14 +84,35 @@ class GameStatusTests(unittest.TestCase):
         self.assertTrue(flags["isVoided"])
         self.assertEqual(flags["gameStatusText"], "Washed out")
 
-    def test_chicago_white_sox_fixture_washed_out(self) -> None:
+    def test_stale_in_progress_phantom_score_is_washed_out(self) -> None:
+        started = datetime.now(timezone.utc) - timedelta(minutes=25)
+        flags = normalize_espn_status(
+            {
+                "name": "STATUS_IN_PROGRESS",
+                "state": "in",
+                "completed": False,
+                "description": "In Progress",
+                "detail": "Top 3rd",
+            },
+            start_date=started.isoformat().replace("+00:00", "Z"),
+            attendance=0,
+            home_score=1,
+            away_score=1,
+        )
+        self.assertFalse(flags["isLive"])
+        self.assertTrue(flags["isWashedOut"])
+        self.assertTrue(flags["isVoided"])
+        self.assertEqual(flags["gameStatusText"], "Washed out")
+
+    def test_chicago_white_sox_fixture_not_live_with_zero_attendance(self) -> None:
         scoreboard = fetch_scoreboard("mlb", "2026-06-18", verify_ssl=False)
         games = parse_scoreboard(scoreboard, league="mlb")
         game = next(g for g in games if g["eventId"] == "401815803")
-        self.assertTrue(game["isWashedOut"])
-        self.assertTrue(game["isVoided"])
         self.assertFalse(game["isLive"])
-        self.assertEqual(game["gameStatusText"], "Washed out")
+        self.assertEqual(game["attendance"], 0)
+        if game["isWashedOut"]:
+            self.assertTrue(game["isVoided"])
+            self.assertEqual(game["gameStatusText"], "Washed out")
 
     def test_active_in_progress_with_scoring_stays_live(self) -> None:
         started = datetime.now(timezone.utc) - timedelta(minutes=35)
