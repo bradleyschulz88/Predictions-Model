@@ -61,6 +61,89 @@ const COVERAGE_LABELS = {
   impliedOdds: "Odds",
 };
 
+const STALE_LIVE_MINUTES = 20;
+const STALE_SCORELESS_MINUTES = 10;
+
+function parseEspnNoteText(notes) {
+  if (!Array.isArray(notes)) return "";
+  return notes
+    .map((note) => [note?.headline, note?.text, note?.description].filter(Boolean).join(" "))
+    .join(" ");
+}
+
+function normalizeEspnStatus(status, { startDate = null, attendance = null, notes = null, homeScore = null, awayScore = null } = {}) {
+  const name = status?.name || "";
+  const state = status?.state || "";
+  const completed = Boolean(status?.completed);
+  const description = status?.description || status?.shortDetail || "Scheduled";
+  const detail = status?.detail || status?.shortDetail || description;
+  const blob = [name, description, detail, parseEspnNoteText(notes)].join(" ").toLowerCase();
+
+  const isPostponed = name === "STATUS_POSTPONED" || blob.includes("postpon");
+  const isCanceled = name === "STATUS_CANCELED" || name === "STATUS_CANCELLED" || blob.includes("canceled") || blob.includes("cancelled");
+  const isSuspended = name === "STATUS_SUSPENDED" || blob.includes("suspend");
+  let isDelayed = name === "STATUS_DELAYED" || blob.includes("delay");
+  const isVoided = isPostponed || isCanceled;
+
+  const isFinal = completed || name === "STATUS_FINAL";
+  const isScheduled = name === "STATUS_SCHEDULED" || state === "pre";
+
+  let isLive = name === "STATUS_IN_PROGRESS" && state === "in" && !isVoided && !isSuspended;
+
+  if (isLive) {
+    const started = startDate ? new Date(startDate) : null;
+    const elapsedMinutes = started && !Number.isNaN(started.getTime()) ? (Date.now() - started.getTime()) / 60000 : null;
+    const home = homeScore != null ? Number(homeScore) : null;
+    const away = awayScore != null ? Number(awayScore) : null;
+    const totalRuns = home != null && away != null && !Number.isNaN(home) && !Number.isNaN(away) ? home + away : null;
+
+    if (attendance === 0 && elapsedMinutes != null) {
+      const staleCutoff = totalRuns == null || totalRuns === 0 ? STALE_SCORELESS_MINUTES : STALE_LIVE_MINUTES;
+      if (elapsedMinutes >= staleCutoff && (totalRuns == null || totalRuns === 0)) {
+        isLive = false;
+        isDelayed = true;
+      } else if (elapsedMinutes >= STALE_LIVE_MINUTES * 2 && totalRuns != null && totalRuns > 0) {
+        isLive = false;
+        isDelayed = true;
+      }
+    }
+  }
+
+  let gameStatusText = description;
+  if (isPostponed) gameStatusText = "Postponed";
+  else if (isCanceled) gameStatusText = "Canceled";
+  else if (isSuspended) gameStatusText = "Suspended";
+  else if (isDelayed && !isLive) gameStatusText = detail || "Delayed";
+
+  return {
+    statusType: name,
+    gameStatusText,
+    gameStatusDetail: detail,
+    isLive,
+    isFinal,
+    isScheduled,
+    isPostponed,
+    isCanceled,
+    isSuspended,
+    isDelayed,
+    isVoided,
+  };
+}
+
+function isGameVoided(game) {
+  return Boolean(game?.isVoided || game?.isPostponed || game?.isCanceled);
+}
+
+function gameStatusLabel(game) {
+  if (game?.isLive) return "LIVE";
+  if (game?.isFinal) return "Final";
+  if (game?.isPostponed) return "Postponed";
+  if (game?.isCanceled) return "Canceled";
+  if (game?.isSuspended) return "Suspended";
+  if (game?.isDelayed) return game.gameStatusText || "Delayed";
+  return game?.gameStatusText || "Scheduled";
+}
+
 const ESPN_PATHS = {
   mlb: "baseball/mlb",
   nfl: "football/nfl",
@@ -2316,6 +2399,7 @@ function bindMyBetsImportActions() {
 }
 
 function winnerFromGame(game) {
+  if (isGameVoided(game)) return null;
   if (!game?.isFinal || game.homeScore == null || game.awayScore == null) return null;
   const home = Number(game.homeScore);
   const away = Number(game.awayScore);
@@ -2507,6 +2591,9 @@ function pickTeamAbbrev(game, prediction) {
 }
 
 function renderGameScoreLine(game) {
+  if (isGameVoided(game)) {
+    return `<p class="game-score-line voided">${escapeHtml(gameStatusLabel(game))}</p>`;
+  }
   if (game.homeScore == null || game.awayScore == null) return "";
   const away = teamAbbrev(game.awayTeam);
   const home = teamAbbrev(game.homeTeam);
@@ -2518,8 +2605,11 @@ function renderGameScoreLine(game) {
 function renderPickStatusBadge(game) {
   const pick = resolvePickStatus(game);
   if (!pick) return "";
+  if (isGameVoided(game)) {
+    return `<span class="pick-status pick-voided">${escapeHtml(gameStatusLabel(game))}</span>`;
+  }
   if (pick.status === "pending") {
-    return `<span class="pick-status pick-pending">${game.isLive ? "In progress" : "Awaiting result"}</span>`;
+    return `<span class="pick-status pick-pending">${game.isLive ? "In progress" : game.isDelayed ? "Delayed" : "Awaiting result"}</span>`;
   }
   if (pick.correct) {
     return `<span class="pick-status pick-won">Correct</span>`;
@@ -3059,10 +3149,12 @@ function patchLiveScoreDom(games) {
 
     const timeEl = gamesEl.querySelector(`[data-live-time="${game.eventId}"]`);
     if (timeEl) {
-      const nextTime = game.isLive ? "LIVE" : formatGameTimeShort(game.startDate);
+      const nextTime = game.isLive ? "LIVE" : gameStatusLabel(game);
       if (timeEl.textContent !== nextTime) {
         timeEl.textContent = nextTime;
         timeEl.classList.toggle("scoreboard-live-badge", game.isLive);
+        timeEl.classList.toggle("scoreboard-voided-badge", isGameVoided(game));
+        timeEl.classList.toggle("scoreboard-delayed-badge", Boolean(game.isDelayed && !game.isLive));
         patched = true;
       }
     }
@@ -3476,12 +3568,13 @@ function renderGames(games) {
       const logged = isBetLoggedForGame(game.eventId);
       const modelTracked = isModelPickTracked(game.eventId);
       const detailsOpen = hashGameId && String(game.eventId) === hashGameId;
-      const timeLabel = game.isLive ? "LIVE" : formatGameTimeShort(game.startDate);
+      const timeLabel = game.isLive ? "LIVE" : gameStatusLabel(game);
       const pickShort = pickTeamAbbrev(game, prediction);
       const confLabel = prediction?.confidenceLabel === "Strong pick" ? "Strong" : prediction?.confidenceLabel === "Lean" ? "Lean" : "";
+      const rowStateClass = game.isLive ? " game-live" : game.isFinal ? " game-final" : isGameVoided(game) ? " game-voided" : game.isDelayed ? " game-delayed" : "";
 
       return `
-        <article class="scoreboard-row game-card ${game.isLive ? "game-live" : ""}${game.isFinal ? " game-final" : ""}" id="game-${game.eventId}" data-game-id="${game.eventId}">
+        <article class="scoreboard-row game-card${rowStateClass}" id="game-${game.eventId}" data-game-id="${game.eventId}">
           <details class="game-details"${detailsOpen ? " open" : ""}>
             <summary class="scoreboard-summary game-summary-bar">
               <span class="scoreboard-rank" aria-label="Rank ${gameDisplayRank(game)}">#${gameDisplayRank(game)}</span>
@@ -3495,7 +3588,7 @@ function renderGames(games) {
                 <span class="scoreboard-pick-value" title="${escapeAttr(prediction?.outcomeLabel || "")}">${escapeHtml(pickShort)} <span class="tabular-nums">${formatConfidenceDisplay(prediction?.confidence || 0)}%</span></span>
                 <span class="scoreboard-pick-conf">
                   ${confLabel ? `<span class="confidence-label ${labelClass}">${confLabel}</span>` : ""}
-                  <span class="scoreboard-time${game.isLive ? " scoreboard-live-badge" : ""}" data-live-time="${game.eventId}">${timeLabel}</span>
+                  <span class="scoreboard-time${game.isLive ? " scoreboard-live-badge" : isGameVoided(game) ? " scoreboard-voided-badge" : game.isDelayed ? " scoreboard-delayed-badge" : ""}" data-live-time="${game.eventId}">${escapeHtml(timeLabel)}</span>
                 </span>
               </div>
             </summary>
@@ -3504,7 +3597,7 @@ function renderGames(games) {
               <div class="game-head game-head-compact">
                 <p class="meta">${metaParts.join(" · ")}</p>
                 <div class="game-actions">
-                  <span class="status-pill ${game.isLive ? "live" : ""}">${game.gameStatusText || "Scheduled"}</span>
+                  <span class="status-pill ${game.isLive ? "live" : ""}${isGameVoided(game) ? " voided" : ""}${game.isDelayed ? " delayed" : ""}">${escapeHtml(game.gameStatusText || "Scheduled")}</span>
                   <button type="button" class="track-btn model-track-btn${modelTracked ? " tracked" : ""}" data-model-track-id="${game.eventId}"${!prediction?.outcomeLabel && !prediction?.predictedWinner ? " disabled" : ""}>${modelTracked ? '<span class="track-btn-label track-btn-label-long">Already tracked</span><span class="track-btn-label track-btn-label-short">Tracked</span>' : '<span class="track-btn-label track-btn-label-long">Track model pick</span><span class="track-btn-label track-btn-label-short">Track pick</span>'}</button>
                   <button type="button" class="track-btn${logged ? " tracked" : ""}" data-event-id="${game.eventId}">${logged ? '<span class="track-btn-label track-btn-label-long">Bet logged</span><span class="track-btn-label track-btn-label-short">Logged</span>' : "Log bet"}</button>
                   <button type="button" class="share-btn" data-share-url="${shareUrl}" data-share-title="${prediction?.outcomeLabel || game.matchup}">Share</button>
@@ -3617,6 +3710,13 @@ function parseEspnScoreboard(data, league) {
     const awayTeam = away?.team?.displayName;
     const homeTeam = home?.team?.displayName;
     const status = event.status?.type || {};
+    const statusFlags = normalizeEspnStatus(status, {
+      startDate: competition.date || event.date,
+      attendance: competition.attendance,
+      notes: competition.notes,
+      homeScore: home?.score,
+      awayScore: away?.score,
+    });
 
     games.push({
       league,
@@ -3626,12 +3726,20 @@ function parseEspnScoreboard(data, league) {
       awayTeam,
       homeTeam,
       matchup: awayTeam && homeTeam ? `${awayTeam} @ ${homeTeam}` : event.name,
-      gameStatusText: status.description || status.shortDetail || "Scheduled",
+      gameStatusText: statusFlags.gameStatusText,
+      gameStatusDetail: statusFlags.gameStatusDetail,
+      statusType: statusFlags.statusType,
       venueName: competition.venue?.fullName,
       awayScore: away?.score,
       homeScore: home?.score,
-      isLive: status.state === "in",
-      isFinal: Boolean(status.completed) || status.state === "post",
+      isLive: statusFlags.isLive,
+      isFinal: statusFlags.isFinal,
+      isScheduled: statusFlags.isScheduled,
+      isPostponed: statusFlags.isPostponed,
+      isCanceled: statusFlags.isCanceled,
+      isSuspended: statusFlags.isSuspended,
+      isDelayed: statusFlags.isDelayed,
+      isVoided: statusFlags.isVoided,
       lines: [],
       source: "espn-live",
     });
@@ -3772,12 +3880,27 @@ async function fetchLiveScoresFromEspn(league, dateValue) {
       if (competitor.homeAway === "away") away = competitor;
     }
     const status = event.status?.type || {};
+    const statusFlags = normalizeEspnStatus(status, {
+      startDate: competition.date || event.date,
+      attendance: competition.attendance,
+      notes: competition.notes,
+      homeScore: home?.score,
+      awayScore: away?.score,
+    });
     scores[String(event.id)] = {
       awayScore: away?.score,
       homeScore: home?.score,
-      isLive: status.state === "in",
-      isFinal: Boolean(status.completed) || status.state === "post",
-      gameStatusText: status.description || status.shortDetail,
+      isLive: statusFlags.isLive,
+      isFinal: statusFlags.isFinal,
+      isScheduled: statusFlags.isScheduled,
+      isPostponed: statusFlags.isPostponed,
+      isCanceled: statusFlags.isCanceled,
+      isSuspended: statusFlags.isSuspended,
+      isDelayed: statusFlags.isDelayed,
+      isVoided: statusFlags.isVoided,
+      gameStatusText: statusFlags.gameStatusText,
+      gameStatusDetail: statusFlags.gameStatusDetail,
+      statusType: statusFlags.statusType,
     };
   }
   return scores;

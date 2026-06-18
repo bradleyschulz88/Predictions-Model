@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from game_status import normalize_espn_status
 from sbr_client import SBRClientError, get_text
 from sports_config import LeagueConfig, get_league
 
@@ -122,14 +123,22 @@ def parse_scoreboard(scoreboard: dict[str, Any], *, league: LeagueConfig | str) 
         home_team = (home.get("team") or {}).get("displayName")
         venue = (competition.get("venue") or {}).get("fullName")
 
-        status = (event.get("status") or {}).get("type") or {}
-        status_state = status.get("state") or ""
         away_records = away.get("records")
         home_records = home.get("records")
         away_record = _record_by_type(away_records, "total", "standingsoverall")
         home_record = _record_by_type(home_records, "total", "standingsoverall")
         away_road_record = _record_by_type(away_records, "road", "away")
         home_home_record = _record_by_type(home_records, "home")
+
+        status = (event.get("status") or {}).get("type") or {}
+        status_flags = normalize_espn_status(
+            status,
+            start_date=competition.get("date") or event.get("date"),
+            attendance=competition.get("attendance"),
+            notes=competition.get("notes"),
+            home_score=home.get("score"),
+            away_score=away.get("score"),
+        )
 
         game: dict[str, Any] = {
             "league": league_config.id,
@@ -139,7 +148,9 @@ def parse_scoreboard(scoreboard: dict[str, Any], *, league: LeagueConfig | str) 
             "awayTeam": away_team,
             "homeTeam": home_team,
             "matchup": f"{away_team} @ {home_team}" if away_team and home_team else event.get("name"),
-            "gameStatusText": status.get("description") or status.get("shortDetail") or "Scheduled",
+            "gameStatusText": status_flags["gameStatusText"],
+            "gameStatusDetail": status_flags["gameStatusDetail"],
+            "statusType": status_flags["statusType"],
             "venueName": venue,
             "broadcast": _format_broadcasts(competition.get("broadcasts")),
             "awayRecord": away_record,
@@ -148,8 +159,14 @@ def parse_scoreboard(scoreboard: dict[str, Any], *, league: LeagueConfig | str) 
             "homeHomeRecord": home_home_record,
             "awayScore": away.get("score"),
             "homeScore": home.get("score"),
-            "isLive": status_state == "in",
-            "isFinal": bool(status.get("completed")) or status_state == "post",
+            "isLive": status_flags["isLive"],
+            "isFinal": status_flags["isFinal"],
+            "isScheduled": status_flags["isScheduled"],
+            "isPostponed": status_flags["isPostponed"],
+            "isCanceled": status_flags["isCanceled"],
+            "isSuspended": status_flags["isSuspended"],
+            "isDelayed": status_flags["isDelayed"],
+            "isVoided": status_flags["isVoided"],
             "source": "espn",
             "viewTypes": [],
             "lines": [],
