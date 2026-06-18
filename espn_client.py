@@ -167,6 +167,8 @@ def parse_scoreboard(scoreboard: dict[str, Any], *, league: LeagueConfig | str) 
             "isSuspended": status_flags["isSuspended"],
             "isDelayed": status_flags["isDelayed"],
             "isVoided": status_flags["isVoided"],
+            "isWashedOut": status_flags["isWashedOut"],
+            "attendance": status_flags.get("attendance"),
             "source": "espn",
             "viewTypes": [],
             "lines": [],

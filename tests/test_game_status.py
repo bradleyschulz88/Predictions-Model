@@ -52,7 +52,7 @@ class GameStatusTests(unittest.TestCase):
                 "state": "in",
                 "completed": False,
                 "description": "In Progress",
-                "detail": "Top 1st",
+                "detail": "End 1st",
             },
             start_date=started.isoformat().replace("+00:00", "Z"),
             attendance=0,
@@ -60,7 +60,38 @@ class GameStatusTests(unittest.TestCase):
             away_score=0,
         )
         self.assertFalse(flags["isLive"])
-        self.assertTrue(flags["isDelayed"])
+        self.assertTrue(flags["isWashedOut"])
+        self.assertTrue(flags["isVoided"])
+        self.assertEqual(flags["gameStatusText"], "Washed out")
+
+    def test_low_score_attendance_zero_after_twenty_minutes_is_washed_out(self) -> None:
+        started = datetime.now(timezone.utc) - timedelta(minutes=22)
+        flags = normalize_espn_status(
+            {
+                "name": "STATUS_IN_PROGRESS",
+                "state": "in",
+                "completed": False,
+                "description": "In Progress",
+                "detail": "Top 2nd",
+            },
+            start_date=started.isoformat().replace("+00:00", "Z"),
+            attendance=0,
+            home_score=0,
+            away_score=1,
+        )
+        self.assertFalse(flags["isLive"])
+        self.assertTrue(flags["isWashedOut"])
+        self.assertTrue(flags["isVoided"])
+        self.assertEqual(flags["gameStatusText"], "Washed out")
+
+    def test_chicago_white_sox_fixture_washed_out(self) -> None:
+        scoreboard = fetch_scoreboard("mlb", "2026-06-18", verify_ssl=False)
+        games = parse_scoreboard(scoreboard, league="mlb")
+        game = next(g for g in games if g["eventId"] == "401815803")
+        self.assertTrue(game["isWashedOut"])
+        self.assertTrue(game["isVoided"])
+        self.assertFalse(game["isLive"])
+        self.assertEqual(game["gameStatusText"], "Washed out")
 
     def test_active_in_progress_with_scoring_stays_live(self) -> None:
         started = datetime.now(timezone.utc) - timedelta(minutes=35)

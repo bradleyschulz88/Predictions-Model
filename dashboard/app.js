@@ -71,6 +71,16 @@ function parseEspnNoteText(notes) {
     .join(" ");
 }
 
+function isWashedOutInProgress({ name, state, attendance, totalRuns, startDate }) {
+  if (name !== "STATUS_IN_PROGRESS" || state !== "in") return false;
+  if (attendance != null && attendance !== 0) return false;
+  if (totalRuns != null && totalRuns !== 0) return false;
+  const started = startDate ? new Date(startDate) : null;
+  if (!started || Number.isNaN(started.getTime())) return false;
+  const elapsedMinutes = (Date.now() - started.getTime()) / 60000;
+  return elapsedMinutes >= STALE_SCORELESS_MINUTES;
+}
+
 function normalizeEspnStatus(status, { startDate = null, attendance = null, notes = null, homeScore = null, awayScore = null } = {}) {
   const name = status?.name || "";
   const state = status?.state || "";
@@ -83,29 +93,55 @@ function normalizeEspnStatus(status, { startDate = null, attendance = null, note
   const isCanceled = name === "STATUS_CANCELED" || name === "STATUS_CANCELLED" || blob.includes("canceled") || blob.includes("cancelled");
   const isSuspended = name === "STATUS_SUSPENDED" || blob.includes("suspend");
   let isDelayed = name === "STATUS_DELAYED" || blob.includes("delay");
-  const isVoided = isPostponed || isCanceled;
+  let isVoided = isPostponed || isCanceled;
 
   const isFinal = completed || name === "STATUS_FINAL";
   const isScheduled = name === "STATUS_SCHEDULED" || state === "pre";
 
+  const home = homeScore != null ? Number(homeScore) : null;
+  const away = awayScore != null ? Number(awayScore) : null;
+  const totalRuns = home != null && away != null && !Number.isNaN(home) && !Number.isNaN(away) ? home + away : null;
+  const started = startDate ? new Date(startDate) : null;
+  const elapsedMinutes = started && !Number.isNaN(started.getTime()) ? (Date.now() - started.getTime()) / 60000 : null;
+
   let isLive = name === "STATUS_IN_PROGRESS" && state === "in" && !isVoided && !isSuspended;
+  let isWashedOut = false;
 
   if (isLive) {
-    const started = startDate ? new Date(startDate) : null;
-    const elapsedMinutes = started && !Number.isNaN(started.getTime()) ? (Date.now() - started.getTime()) / 60000 : null;
-    const home = homeScore != null ? Number(homeScore) : null;
-    const away = awayScore != null ? Number(awayScore) : null;
-    const totalRuns = home != null && away != null && !Number.isNaN(home) && !Number.isNaN(away) ? home + away : null;
+    if (isWashedOutInProgress({ name, state, attendance, totalRuns, startDate })) {
+      isLive = false;
+      isWashedOut = true;
+      isDelayed = true;
+      isVoided = true;
+    } else if (
+      attendance === 0 &&
+      elapsedMinutes != null &&
+      elapsedMinutes >= STALE_LIVE_MINUTES &&
+      totalRuns != null &&
+      totalRuns <= 1
+    ) {
+      isLive = false;
+      isWashedOut = true;
+      isDelayed = true;
+      isVoided = true;
+    } else if (attendance === 0 && elapsedMinutes != null && elapsedMinutes >= STALE_LIVE_MINUTES * 2 && totalRuns != null && totalRuns > 1) {
+      isLive = false;
+      isDelayed = true;
+    }
+  }
 
-    if (attendance === 0 && elapsedMinutes != null) {
-      const staleCutoff = totalRuns == null || totalRuns === 0 ? STALE_SCORELESS_MINUTES : STALE_LIVE_MINUTES;
-      if (elapsedMinutes >= staleCutoff && (totalRuns == null || totalRuns === 0)) {
-        isLive = false;
-        isDelayed = true;
-      } else if (elapsedMinutes >= STALE_LIVE_MINUTES * 2 && totalRuns != null && totalRuns > 0) {
-        isLive = false;
-        isDelayed = true;
-      }
+  if (!isLive && name === "STATUS_IN_PROGRESS" && state === "in") {
+    isWashedOut =
+      isWashedOut ||
+      isWashedOutInProgress({ name, state, attendance, totalRuns, startDate }) ||
+      (attendance === 0 &&
+        elapsedMinutes != null &&
+        elapsedMinutes >= STALE_LIVE_MINUTES &&
+        totalRuns != null &&
+        totalRuns <= 1);
+    if (isWashedOut) {
+      isDelayed = true;
+      isVoided = true;
     }
   }
 
@@ -113,7 +149,8 @@ function normalizeEspnStatus(status, { startDate = null, attendance = null, note
   if (isPostponed) gameStatusText = "Postponed";
   else if (isCanceled) gameStatusText = "Canceled";
   else if (isSuspended) gameStatusText = "Suspended";
-  else if (isDelayed && !isLive) gameStatusText = detail || "Delayed";
+  else if (isWashedOut) gameStatusText = "Washed out";
+  else if (isDelayed && !isLive) gameStatusText = "Delayed";
 
   return {
     statusType: name,
@@ -126,21 +163,72 @@ function normalizeEspnStatus(status, { startDate = null, attendance = null, note
     isCanceled,
     isSuspended,
     isDelayed,
-    isVoided,
+    isVoided: isVoided || isWashedOut,
+    isWashedOut,
+    attendance,
   };
 }
 
+function refreshGameStatusFlags(game) {
+  if (!game) return game;
+  const statusName =
+    game.statusType ||
+    (game.isPostponed ? "STATUS_POSTPONED" : game.isFinal ? "STATUS_FINAL" : game.isLive ? "STATUS_IN_PROGRESS" : "STATUS_SCHEDULED");
+  const statusState =
+    statusName === "STATUS_IN_PROGRESS"
+      ? "in"
+      : statusName === "STATUS_SCHEDULED"
+        ? "pre"
+        : "post";
+  const inferredAttendance =
+    game.attendance != null
+      ? game.attendance
+      : statusName === "STATUS_IN_PROGRESS"
+        ? (() => {
+            const runs = Number(game.homeScore ?? 0) + Number(game.awayScore ?? 0);
+            const started = game.startDate ? new Date(game.startDate) : null;
+            const elapsed =
+              started && !Number.isNaN(started.getTime()) ? (Date.now() - started.getTime()) / 60000 : null;
+            if (runs === 0) return 0;
+            if (runs <= 1 && elapsed != null && elapsed >= STALE_LIVE_MINUTES) return 0;
+            return null;
+          })()
+        : null;
+
+  const flags = normalizeEspnStatus(
+    {
+      name: statusName,
+      state: statusState,
+      completed: game.isFinal && statusName === "STATUS_FINAL",
+      description: game.gameStatusText,
+      detail: game.gameStatusDetail || game.gameStatusText,
+    },
+    {
+      startDate: game.startDate,
+      attendance: inferredAttendance,
+      homeScore: game.homeScore,
+      awayScore: game.awayScore,
+    }
+  );
+  return { ...game, ...flags };
+}
+
 function isGameVoided(game) {
-  return Boolean(game?.isVoided || game?.isPostponed || game?.isCanceled);
+  return Boolean(game?.isVoided || game?.isWashedOut || game?.isPostponed || game?.isCanceled);
+}
+
+function isUnplayableGame(game) {
+  return Boolean(isGameVoided(game) || game?.isSuspended);
 }
 
 function gameStatusLabel(game) {
   if (game?.isLive) return "LIVE";
+  if (game?.isWashedOut) return "Washed out";
   if (game?.isFinal) return "Final";
   if (game?.isPostponed) return "Postponed";
   if (game?.isCanceled) return "Canceled";
   if (game?.isSuspended) return "Suspended";
-  if (game?.isDelayed) return game.gameStatusText || "Delayed";
+  if (game?.isDelayed) return "Delayed";
   return game?.gameStatusText || "Scheduled";
 }
 
@@ -3187,10 +3275,17 @@ function gameDisplayRank(game) {
 }
 
 function prepareGamesForDisplay(games) {
-  const filtered = filterGames(games);
-  return [...filtered]
+  const refreshed = (games || []).map(refreshGameStatusFlags);
+  const filtered = filterGames(refreshed);
+  const playable = filtered.filter((game) => !isUnplayableGame(game));
+  return [...playable]
     .sort((left, right) => (right.prediction?.confidence ?? 0) - (left.prediction?.confidence ?? 0))
     .map((game, index) => ({ ...game, displayRank: index + 1 }));
+}
+
+function countRemovedGames(games) {
+  const refreshed = (games || []).map(refreshGameStatusFlags);
+  return filterGames(refreshed).filter((game) => isUnplayableGame(game)).length;
 }
 
 function renderStats(payload, visibleGames, { topPick, gameCount } = {}) {
@@ -3526,7 +3621,9 @@ function renderGames(games) {
 
   const sport = sportSelect.value;
   const leagueLabel = SPORT_LABELS[sport] || "games";
-  const visible = prepareGamesForDisplay(games);
+  const refreshedGames = (games || []).map(refreshGameStatusFlags);
+  const visible = prepareGamesForDisplay(refreshedGames);
+  const removedCount = countRemovedGames(refreshedGames);
 
   if (!visible.length) {
     const scheduleOnly = lastPayload?.liveScheduleOnly;
@@ -3534,17 +3631,32 @@ function renderGames(games) {
     const displayDate = getSelectedDate();
     const tz = lastPayload?.scheduleTimezone || leagueMeta(sport)?.scheduleTimezone;
     const sourceHint = describeScheduleSource(lastPayload);
-    gamesEl.innerHTML = `<div class="empty-state">No ${leagueLabel} games match your filters for ${displayDate}${tz ? ` (${tz})` : ""}. Source: ${sourceHint}.${buildError ? ` Build error: ${buildError}` : ""}${scheduleOnly ? " Live ESPN schedule loaded — predictions appear once GitHub Actions builds that date." : ""}</div>`;
+    const removedNote = removedCount
+      ? ` ${removedCount} game${removedCount === 1 ? " was" : "s were"} washed out or postponed and removed from picks.`
+      : "";
+    gamesEl.innerHTML = `<div class="empty-state">No ${leagueLabel} picks available for ${displayDate}${tz ? ` (${tz})` : ""}.${removedNote} Source: ${sourceHint}.${buildError ? ` Build error: ${buildError}` : ""}${scheduleOnly ? " Live ESPN schedule loaded — predictions appear once GitHub Actions builds that date." : ""}</div>`;
     renderTopPicks([]);
-    renderStats(lastPayload || {}, []);
-    renderModelDayResult(games || []);
+    renderStats(lastPayload || {}, [], { gameCount: refreshedGames.length });
+    renderModelDayResult(refreshedGames);
+    if (removedCount) {
+      showBanner(`${removedCount} game${removedCount === 1 ? "" : "s"} washed out or postponed — removed from picks.`, {
+        autoHideMs: 10000,
+        type: "success",
+      });
+    }
     return;
   }
 
   const topPickLabel = visible[0]?.prediction?.outcomeLabel;
   renderTopPicks(visible);
-  renderStats(lastPayload || {}, visible, { topPick: topPickLabel });
-  renderModelDayResult(games || []);
+  renderStats(lastPayload || {}, visible, { topPick: topPickLabel, gameCount: refreshedGames.length });
+  renderModelDayResult(refreshedGames);
+  if (removedCount) {
+    showBanner(`${removedCount} game${removedCount === 1 ? "" : "s"} washed out or postponed — removed from picks.`, {
+      autoHideMs: 8000,
+      type: "success",
+    });
+  }
 
   const lineupLabel = lineupLabelForSport(sport);
   const hash = window.location.hash;
@@ -3740,6 +3852,8 @@ function parseEspnScoreboard(data, league) {
       isSuspended: statusFlags.isSuspended,
       isDelayed: statusFlags.isDelayed,
       isVoided: statusFlags.isVoided,
+      isWashedOut: statusFlags.isWashedOut,
+      attendance: statusFlags.attendance,
       lines: [],
       source: "espn-live",
     });
@@ -3898,6 +4012,8 @@ async function fetchLiveScoresFromEspn(league, dateValue) {
       isSuspended: statusFlags.isSuspended,
       isDelayed: statusFlags.isDelayed,
       isVoided: statusFlags.isVoided,
+      isWashedOut: statusFlags.isWashedOut,
+      attendance: statusFlags.attendance,
       gameStatusText: statusFlags.gameStatusText,
       gameStatusDetail: statusFlags.gameStatusDetail,
       statusType: statusFlags.statusType,

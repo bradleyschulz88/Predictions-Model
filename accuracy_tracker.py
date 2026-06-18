@@ -198,7 +198,7 @@ def _prediction_matches_actual(predicted: str | None, actual: str | None) -> boo
 
 
 def _winner_from_game(game: dict[str, Any]) -> str | None:
-    if game.get("isVoided") or game.get("isPostponed") or game.get("isCanceled"):
+    if game.get("isVoided") or game.get("isPostponed") or game.get("isCanceled") or game.get("isWashedOut"):
         return None
     if not game.get("isFinal"):
         return None

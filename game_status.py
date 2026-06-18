@@ -61,6 +61,30 @@ def _total_runs(home_score: Any, away_score: Any) -> int | None:
         return None
 
 
+def _is_washed_out_in_progress(
+    *,
+    name: str,
+    state: str,
+    attendance: int | None,
+    total_runs: int | None,
+    start_date: str | None,
+    now: datetime | None = None,
+) -> bool:
+    """ESPN rainouts often stay STATUS_IN_PROGRESS with 0-0 and attendance 0."""
+    if name != STATUS_IN_PROGRESS or state != "in":
+        return False
+    if attendance not in (0, None):
+        return False
+    if total_runs not in (None, 0):
+        return False
+    started = parse_iso_datetime(start_date)
+    if not started:
+        return False
+    reference = now or datetime.now(timezone.utc)
+    elapsed_minutes = (reference - started).total_seconds() / 60
+    return elapsed_minutes >= STALE_SCORELESS_MINUTES
+
+
 def normalize_espn_status(
     status_type: dict[str, Any],
     *,
@@ -90,22 +114,60 @@ def normalize_espn_status(
     is_scheduled = name == STATUS_SCHEDULED or state == "pre"
 
     is_live = name == STATUS_IN_PROGRESS and state == "in" and not is_voided and not is_suspended
+    is_washed_out = False
+    total_runs = _total_runs(home_score, away_score)
+    started = parse_iso_datetime(start_date)
+    reference = now or datetime.now(timezone.utc)
+    elapsed_minutes = (reference - started).total_seconds() / 60 if started else None
 
-    if is_live:
-        started = parse_iso_datetime(start_date)
-        reference = now or datetime.now(timezone.utc)
-        elapsed_minutes = (reference - started).total_seconds() / 60 if started else None
-        total_runs = _total_runs(home_score, away_score)
+    if is_live and _is_washed_out_in_progress(
+        name=name,
+        state=state,
+        attendance=attendance,
+        total_runs=total_runs,
+        start_date=start_date,
+        now=reference,
+    ):
+        is_live = False
+        is_washed_out = True
+        is_delayed = True
+        is_voided = True
+    elif (
+        is_live
+        and attendance == 0
+        and elapsed_minutes is not None
+        and elapsed_minutes >= STALE_LIVE_MINUTES
+        and total_runs is not None
+        and total_runs <= 1
+    ):
+        # Rainouts often linger as IN_PROGRESS with 0-1 total runs and attendance still 0.
+        is_live = False
+        is_washed_out = True
+        is_delayed = True
+        is_voided = True
+    elif is_live and attendance == 0 and elapsed_minutes is not None:
+        if elapsed_minutes >= STALE_LIVE_MINUTES * 2 and total_runs not in (None, 0):
+            is_live = False
+            is_delayed = True
 
-        # ESPN often leaves rainouts stuck at IN_PROGRESS with attendance still at 0.
-        if attendance == 0 and elapsed_minutes is not None:
-            stale_cutoff = STALE_SCORELESS_MINUTES if total_runs in (None, 0) else STALE_LIVE_MINUTES
-            if elapsed_minutes >= stale_cutoff and total_runs in (None, 0):
-                is_live = False
-                is_delayed = True
-            elif elapsed_minutes >= STALE_LIVE_MINUTES * 2 and total_runs not in (None, 0):
-                is_live = False
-                is_delayed = True
+    if not is_live and name == STATUS_IN_PROGRESS and state == "in":
+        is_washed_out = is_washed_out or _is_washed_out_in_progress(
+            name=name,
+            state=state,
+            attendance=attendance,
+            total_runs=total_runs,
+            start_date=start_date,
+            now=reference,
+        ) or (
+            attendance == 0
+            and elapsed_minutes is not None
+            and elapsed_minutes >= STALE_LIVE_MINUTES
+            and total_runs is not None
+            and total_runs <= 1
+        )
+        if is_washed_out:
+            is_delayed = True
+            is_voided = True
 
     game_status_text = str(description)
     if is_postponed:
@@ -114,8 +176,10 @@ def normalize_espn_status(
         game_status_text = "Canceled"
     elif is_suspended:
         game_status_text = "Suspended"
+    elif is_washed_out:
+        game_status_text = "Washed out"
     elif is_delayed and not is_live:
-        game_status_text = str(detail) if detail else "Delayed"
+        game_status_text = "Delayed"
 
     return {
         "statusType": name,
@@ -128,5 +192,7 @@ def normalize_espn_status(
         "isCanceled": is_canceled,
         "isSuspended": is_suspended,
         "isDelayed": is_delayed,
-        "isVoided": is_voided,
+        "isVoided": is_voided or is_washed_out,
+        "isWashedOut": is_washed_out,
+        "attendance": attendance,
     }
