@@ -7,6 +7,7 @@ import argparse
 import json
 import sys
 from collections import defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -14,6 +15,10 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from accuracy_tracker import ACCURACY_FILE, LOG_FILE  # noqa: E402
+
+CALIBRATION_FILE = "calibration.json"
+STRONG_THRESHOLD = 68
+LEAN_THRESHOLD = 57
 
 
 def _load_json(path: Path, default: Any) -> Any:
@@ -28,11 +33,11 @@ def _load_json(path: Path, default: Any) -> Any:
 def _bucket_confidence(confidence: float | None) -> str:
     if confidence is None:
         return "unknown"
-    if confidence >= 65:
-        return "strong_65+"
-    if confidence >= 55:
-        return "lean_55+"
-    return "coin_<55"
+    if confidence >= STRONG_THRESHOLD:
+        return "strong_68+"
+    if confidence >= LEAN_THRESHOLD:
+        return "lean_57+"
+    return "coin_<57"
 
 
 def _calibration_buckets(graded: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -53,15 +58,37 @@ def _calibration_buckets(graded: list[dict[str, Any]]) -> list[dict[str, Any]]:
         count = bucket["count"]
         if not count:
             continue
+        avg_predicted = round(bucket["predicted"] / count * 100, 1)
+        actual_win = round(bucket["actual"] / count * 100, 1)
         rows.append(
             {
                 "confidenceRange": key,
                 "picks": count,
-                "avgPredictedPct": round(bucket["predicted"] / count * 100, 1),
-                "actualWinPct": round(bucket["actual"] / count * 100, 1),
+                "avgPredictedPct": avg_predicted,
+                "actualWinPct": actual_win,
+                "overconfidencePct": round(avg_predicted - actual_win, 1),
             }
         )
     return rows
+
+
+def _coverage_breakdown(graded: list[dict[str, Any]]) -> dict[str, Any]:
+    flags = ("restData", "scheduleFlags", "impliedOdds", "lineup", "espnPredictor")
+    breakdown: dict[str, dict[str, Any]] = {}
+    for record in graded:
+        coverage = (record.get("features") or {}).get("dataCoverage") or {}
+        for flag in flags:
+            bucket = breakdown.setdefault(flag, {"with": 0, "without": 0, "winsWith": 0, "winsWithout": 0})
+            has_flag = bool(coverage.get(flag))
+            if has_flag:
+                bucket["with"] += 1
+                if record.get("correct"):
+                    bucket["winsWith"] += 1
+            else:
+                bucket["without"] += 1
+                if record.get("correct"):
+                    bucket["winsWithout"] += 1
+    return breakdown
 
 
 def summarize_predictions(data_dir: Path) -> dict[str, Any]:
@@ -73,7 +100,7 @@ def summarize_predictions(data_dir: Path) -> dict[str, Any]:
     pending: list[dict[str, Any]] = []
     for event_id, pending_pick in (log.get("predictions") or {}).items():
         record = picks_by_event.get(event_id) or {"status": "pending", **pending_pick}
-        merged = {**pending_pick, **record}
+        merged = {**pending_pick, **record, "eventId": event_id}
         if merged.get("status") == "graded":
             graded.append(merged)
         else:
@@ -114,9 +141,24 @@ def summarize_predictions(data_dir: Path) -> dict[str, Any]:
     feature_coverage = {
         "withFeatures": sum(1 for item in log.get("predictions", {}).values() if item.get("features")),
         "totalLogged": len(log.get("predictions") or {}),
+        "withRestData": sum(
+            1
+            for item in log.get("predictions", {}).values()
+            if (item.get("features") or {}).get("dataCoverage", {}).get("restData")
+        ),
     }
 
+    calibration = _calibration_buckets(graded)
+    avg_overconfidence = None
+    if calibration:
+        avg_overconfidence = round(
+            sum(row["overconfidencePct"] for row in calibration) / len(calibration),
+            1,
+        )
+
     return {
+        "builtAt": datetime.now(timezone.utc).isoformat(),
+        "thresholds": {"strong": STRONG_THRESHOLD, "lean": LEAN_THRESHOLD},
         "summary": {
             "graded": total_graded,
             "correct": total_correct,
@@ -125,11 +167,20 @@ def summarize_predictions(data_dir: Path) -> dict[str, Any]:
             "roiPct": round(total_units / total_graded * 100, 1) if total_graded else None,
             "pending": len(pending),
             "featureCoverage": feature_coverage,
+            "avgOverconfidencePct": avg_overconfidence,
         },
         "byLeague": dict(by_league),
         "byConfidence": dict(by_confidence),
-        "calibration": _calibration_buckets(graded),
+        "calibration": calibration,
+        "coverageBreakdown": _coverage_breakdown(graded),
     }
+
+
+def write_calibration_report(data_dir: Path) -> dict[str, Any]:
+    report = summarize_predictions(data_dir)
+    output_path = data_dir / CALIBRATION_FILE
+    output_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    return report
 
 
 def main() -> int:
@@ -141,11 +192,15 @@ def main() -> int:
         help="Directory containing predictions_log.json and accuracy.json",
     )
     parser.add_argument("--json", action="store_true", help="Print full JSON report")
+    parser.add_argument("--write", action="store_true", help=f"Write {CALIBRATION_FILE} to data dir")
     args = parser.parse_args()
 
-    report = summarize_predictions(args.data_dir)
-    if args.json:
-        print(json.dumps(report, indent=2))
+    report = write_calibration_report(args.data_dir) if args.write else summarize_predictions(args.data_dir)
+    if args.json or args.write:
+        if not args.write:
+            print(json.dumps(report, indent=2))
+        else:
+            print(f"Wrote {args.data_dir / CALIBRATION_FILE}")
         return 0
 
     summary = report["summary"]
@@ -157,6 +212,7 @@ def main() -> int:
     print(f"  Pending:      {summary['pending']}")
     coverage = summary["featureCoverage"]
     print(f"  Feature log:  {coverage['withFeatures']}/{coverage['totalLogged']}")
+    print(f"  Rest data:    {coverage.get('withRestData', 0)}/{coverage['totalLogged']}")
 
     print("\nBy league")
     for league, stats in sorted(report["byLeague"].items()):

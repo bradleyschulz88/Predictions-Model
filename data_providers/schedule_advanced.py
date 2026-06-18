@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from typing import Any
+
+from espn_client import fetch_scoreboard, parse_scoreboard
+
+_ROLLING_CACHE: dict[tuple[str, str, int], list[dict[str, Any]]] = {}
 
 
 def _parse_start(value: str | None) -> datetime | None:
@@ -70,3 +74,56 @@ def schedule_flags_logit_adjustment(enrichment: dict[str, Any]) -> float:
         adjustment += 0.08
 
     return max(-0.35, min(0.35, adjustment))
+
+
+def _iso_date(value: str) -> date:
+    return date.fromisoformat(value)
+
+
+def fetch_rolling_schedule_games(
+    league: str,
+    date_value: str,
+    *,
+    lookback_days: int = 7,
+    current_games: list[dict[str, Any]] | None = None,
+    retries: int = 2,
+    retry_delay: float = 0.5,
+    verify_ssl: bool = True,
+) -> list[dict[str, Any]]:
+    """Fetch prior scoreboard days plus the current slate for rest/B2B context."""
+    cache_key = (league, date_value, lookback_days)
+    if cache_key in _ROLLING_CACHE:
+        return _ROLLING_CACHE[cache_key]
+
+    merged: dict[str, dict[str, Any]] = {}
+    anchor = _iso_date(date_value)
+
+    for offset in range(-lookback_days, 1):
+        day = (anchor + timedelta(days=offset)).isoformat()
+        try:
+            scoreboard = fetch_scoreboard(
+                league,
+                day,
+                retries=retries,
+                retry_delay=retry_delay,
+                verify_ssl=verify_ssl,
+            )
+            for game in parse_scoreboard(scoreboard, league=league):
+                event_id = str(game.get("eventId") or "")
+                if event_id:
+                    merged[event_id] = game
+        except Exception:
+            continue
+
+    for game in current_games or []:
+        event_id = str(game.get("eventId") or "")
+        if event_id:
+            merged[event_id] = game
+
+    games = sorted(merged.values(), key=lambda item: item.get("startDate") or "")
+    _ROLLING_CACHE[cache_key] = games
+    return games
+
+
+def clear_rolling_schedule_cache() -> None:
+    _ROLLING_CACHE.clear()

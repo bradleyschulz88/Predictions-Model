@@ -13,6 +13,7 @@ from espn_client import ESPNClientError, fetch_scoreboard, parse_scoreboard
 from espn_enrichment import enrich_game, enrich_games, ensure_espn_odds_on_games
 from data_providers import enrich_games_with_providers
 from mlb_predictions import apply_predictions
+from data_providers.schedule_advanced import clear_rolling_schedule_cache, fetch_rolling_schedule_games
 from schedule_dates import default_game_date, get_schedule_timezone
 from sbr_client import SBRClientError, build_odds_url, get_game_rows, get_page_props
 from sports_config import LEAGUES, get_league
@@ -349,6 +350,15 @@ def fetch_dashboard_data(
     games = parse_scoreboard(scoreboard, league=league)
 
     if include_enrichment:
+        schedule_context = fetch_rolling_schedule_games(
+            league,
+            date_value,
+            lookback_days=7,
+            current_games=games,
+            retries=retries,
+            retry_delay=retry_delay,
+            verify_ssl=verify_ssl,
+        )
         enrich_games(
             games,
             retries=retries,
@@ -358,10 +368,12 @@ def fetch_dashboard_data(
         enrich_games_with_providers(
             games,
             league=league,
+            schedule_context_games=schedule_context,
             retries=retries,
             retry_delay=retry_delay,
             verify_ssl=verify_ssl,
         )
+        clear_rolling_schedule_cache()
 
     if include_odds and league_config.supports_sbr_odds:
         merge_sbr_odds_into_games(

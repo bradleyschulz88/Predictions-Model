@@ -204,7 +204,7 @@ def compute_true_probabilities(
             "source": "Analytics model",
             "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
             "home": model_home,
-            "weight": 0.50,
+            "weight": 1.0,
         }
     ]
 
@@ -218,37 +218,7 @@ def compute_true_probabilities(
                     "source": "ESPN Matchup Predictor",
                     "detail": f"{espn_home:.1f}% / {espn_away:.1f}%",
                     "home": espn_home / espn_total,
-                    "weight": 0.25,
-                }
-            )
-
-    home_adv = enrichment.get("homeAdvanced") or {}
-    away_adv = enrichment.get("awayAdvanced") or {}
-    home_power = home_adv.get("powerRating")
-    away_power = away_adv.get("powerRating")
-    if home_power is not None and away_power is not None and (home_power + away_power) > 0:
-        components.append(
-            {
-                "source": "Power rating composite",
-                "detail": f"{home_power:.3f} vs {away_power:.3f}",
-                "home": home_power / (home_power + away_power),
-                "weight": 0.15,
-            }
-        )
-
-    home_form = enrichment.get("homeLastFive") or {}
-    away_form = enrichment.get("awayLastFive") or {}
-    home_form_pct = _last_five_pct(home_form.get("record"))
-    away_form_pct = _last_five_pct(away_form.get("record"))
-    if home_form_pct is not None and away_form_pct is not None and home_form_pct >= 0 and away_form_pct >= 0:
-        form_total = home_form_pct + away_form_pct
-        if form_total > 0:
-            components.append(
-                {
-                    "source": "Recent form",
-                    "detail": f"{home_form.get('record')} vs {away_form.get('record')}",
-                    "home": home_form_pct / form_total,
-                    "weight": 0.10,
+                    "weight": 0.35,
                 }
             )
 
@@ -462,10 +432,15 @@ def extract_total_line(lines: list[dict[str, Any]]) -> float | None:
     return None
 
 
+def calibrate_probability(prob: float) -> float:
+    """Pull extreme probabilities toward 50% to reduce overconfidence."""
+    return clamp(0.5 + (prob - 0.5) * 0.88)
+
+
 def confidence_label(confidence_pct: float) -> str:
-    if confidence_pct >= 65:
+    if confidence_pct >= 68:
         return "Strong pick"
-    if confidence_pct >= 55:
+    if confidence_pct >= 57:
         return "Lean"
     return "Coin flip"
 
@@ -538,9 +513,24 @@ def extract_prediction_features(game: dict[str, Any], prediction: dict[str, Any]
     league = _league_id(game)
     home_adv = enrichment.get("homeAdvanced") or {}
     away_adv = enrichment.get("awayAdvanced") or {}
-    implied = (prediction.get("probabilities") or {}).get("implied") or {}
-    consensus = implied.get("consensus") or {}
+    implied = compute_implied_probabilities(game.get("lines") or [])
+    consensus = implied.get("consensus") or {} if implied.get("available") else {}
     true_probs = (prediction.get("probabilities") or {}).get("true") or {}
+    rest_days = enrichment.get("restDays") or {}
+    home_flags = enrichment.get("homeScheduleFlags") or {}
+    away_flags = enrichment.get("awayScheduleFlags") or {}
+
+    data_coverage = {
+        "lineup": bool((game.get("homeLineup") or {}).get("batters") or (game.get("awayLineup") or {}).get("batters")),
+        "injuries": bool(enrichment.get("homeMajorInjuries") or enrichment.get("awayMajorInjuries")),
+        "espnPredictor": enrichment.get("espnPredictorHome") is not None,
+        "advancedStats": home_adv.get("powerRating") is not None or away_adv.get("powerRating") is not None,
+        "restData": rest_days.get("home") is not None and rest_days.get("away") is not None,
+        "scheduleFlags": bool(home_flags or away_flags),
+        "mlbPitching": bool(enrichment.get("mlbPitching")),
+        "leagueMetrics": bool((enrichment.get("leagueMetrics") or {}).keys() - {"league"}),
+        "impliedOdds": bool(implied.get("available")),
+    }
 
     return {
         "league": league,
@@ -557,17 +547,18 @@ def extract_prediction_features(game: dict[str, Any], prediction: dict[str, Any]
         "awayPower": away_adv.get("powerRating"),
         "homeInjuryLoad": round(_weighted_injury_score(enrichment.get("homeMajorInjuries") or [], league), 2),
         "awayInjuryLoad": round(_weighted_injury_score(enrichment.get("awayMajorInjuries") or [], league), 2),
-        "homeRest": (enrichment.get("restDays") or {}).get("home"),
-        "awayRest": (enrichment.get("restDays") or {}).get("away"),
-        "homeBackToBack": (enrichment.get("homeScheduleFlags") or {}).get("backToBack"),
-        "awayBackToBack": (enrichment.get("awayScheduleFlags") or {}).get("backToBack"),
+        "homeRest": rest_days.get("home"),
+        "awayRest": rest_days.get("away"),
+        "homeBackToBack": home_flags.get("backToBack"),
+        "awayBackToBack": away_flags.get("backToBack"),
         "impliedHome": consensus.get("homePct"),
         "impliedAway": consensus.get("awayPct"),
         "trueHome": true_probs.get("homePct"),
         "trueAway": true_probs.get("awayPct"),
         "confidence": prediction.get("confidence"),
         "predictedSide": prediction.get("predictedSide"),
-        "hasLineup": bool((game.get("homeLineup") or {}).get("batters") or (game.get("awayLineup") or {}).get("batters")),
+        "hasLineup": data_coverage["lineup"],
+        "dataCoverage": data_coverage,
         "mlbPitching": enrichment.get("mlbPitching"),
         "leagueMetrics": enrichment.get("leagueMetrics"),
     }
@@ -1117,15 +1108,32 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
     )
 
     if league_config.supports_pitchers and home_era is not None and away_era is not None:
+        pitching = enrichment.get("mlbPitching") or {}
+        home_fip = pitching.get("homePitcherFip") or home_pitcher.get("fip")
+        away_fip = pitching.get("awayPitcherFip") or away_pitcher.get("fip")
+        home_recent = pitching.get("homePitcherRecentEra")
+        away_recent = pitching.get("awayPitcherRecentEra")
+
         era_diff = away_era - home_era
         logit += era_diff * 0.38
+        if home_fip is not None and away_fip is not None:
+            logit += (away_fip - home_fip) * 0.22
+        if home_recent is not None and away_recent is not None:
+            logit += (away_recent - home_recent) * 0.25
+
+        detail_parts = [
+            f"{home_pitcher.get('name') or 'Home SP'} ({home_era:.2f} ERA",
+            f"{away_pitcher.get('name') or 'Away SP'} ({away_era:.2f} ERA",
+        ]
+        if home_fip is not None and away_fip is not None:
+            detail_parts[0] += f", {home_fip:.2f} FIP"
+            detail_parts[1] += f", {away_fip:.2f} FIP"
+        detail_parts[0] += ")"
+        detail_parts[1] += ")"
         factors.append(
             {
                 "label": "Starting pitching",
-                "detail": (
-                    f"{home_pitcher.get('name') or 'Home SP'} ({home_era:.2f} ERA) vs "
-                    f"{away_pitcher.get('name') or 'Away SP'} ({away_era:.2f} ERA)"
-                ),
+                "detail": f"{detail_parts[0]} vs {detail_parts[1]}",
                 "edge": _edge_label(-home_era, -away_era),
             }
         )
@@ -1303,9 +1311,18 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         }
     )
 
-    home_prob = clamp(true_probs["home"])
-    away_prob = clamp(true_probs["away"])
-    draw_prob = clamp(true_probs.get("draw") or 0.0) if league_config.supports_draw else 0.0
+    home_prob = calibrate_probability(clamp(true_probs["home"]))
+    away_prob = calibrate_probability(clamp(true_probs["away"]))
+    draw_prob = (
+        calibrate_probability(clamp(true_probs.get("draw") or 0.0))
+        if league_config.supports_draw
+        else 0.0
+    )
+    prob_total = home_prob + away_prob + draw_prob
+    if prob_total > 0:
+        home_prob /= prob_total
+        away_prob /= prob_total
+        draw_prob /= prob_total
 
     outcomes = [
         ("home", home_prob, game.get("homeTeam")),
@@ -1354,13 +1371,15 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         "drawPct": round(draw_prob * 100, 1) if draw_prob else None,
         "method": "Model data only (records, form, injuries, advanced stats)",
     }
+    implied_probs = compute_implied_probabilities(game.get("lines") or [])
     probabilities: dict[str, Any] = {
         "true": true_probs,
         "pick": pick_pct,
+        "implied": implied_probs if implied_probs.get("available") else {"available": False},
     }
     team_probabilities = _build_team_probabilities(
         true_probs=true_probs,
-        implied_probs={"available": False},
+        implied_probs=probabilities["implied"],
         blended=pick_pct,
     )
 

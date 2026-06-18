@@ -47,6 +47,20 @@ def enrich_league_metrics(
             metrics["goalDiffEdge"] = home_gd - away_gd
         metrics["drawBaseRate"] = LEAGUE_DRAW_BASE_RATES.get(league, DEFAULT_DRAW_RATE)
 
+    if league == "mlb":
+        home_rd = home_profile.get("runDifferential")
+        away_rd = away_profile.get("runDifferential")
+        home_ops = home_profile.get("opsProxy")
+        away_ops = away_profile.get("opsProxy")
+        home_era = home_profile.get("era")
+        away_era = away_profile.get("era")
+        if home_rd is not None and away_rd is not None:
+            metrics["runDiffEdge"] = home_rd - away_rd
+        if home_ops is not None and away_ops is not None:
+            metrics["opsEdge"] = round(home_ops - away_ops, 3)
+        if home_era is not None and away_era is not None:
+            metrics["eraEdge"] = round(away_era - home_era, 2)
+
     return metrics
 
 
@@ -68,6 +82,17 @@ def league_metrics_logit_adjustment(enrichment: dict[str, Any], league: str) -> 
         edge = metrics.get("goalDiffEdge")
         if edge is not None:
             adjustment += max(-0.4, min(0.4, edge * 0.01))
+
+    if league == "mlb":
+        run_edge = metrics.get("runDiffEdge")
+        if run_edge is not None:
+            adjustment += max(-0.35, min(0.35, run_edge * 0.002))
+        ops_edge = metrics.get("opsEdge")
+        if ops_edge is not None:
+            adjustment += max(-0.25, min(0.25, ops_edge * 0.8))
+        era_edge = metrics.get("eraEdge")
+        if era_edge is not None:
+            adjustment += max(-0.25, min(0.25, era_edge * 0.08))
 
     return max(-0.45, min(0.45, adjustment))
 

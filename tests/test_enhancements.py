@@ -36,6 +36,8 @@ class PredictionEnhancementTests(unittest.TestCase):
         self.assertIn("dataSources", prediction)
         self.assertIn("features", prediction)
         self.assertIn("pick", prediction["probabilities"])
+        self.assertIn("implied", prediction["probabilities"])
+        self.assertIn("dataCoverage", prediction["features"])
 
 
 class AccuracyTrackerTests(unittest.TestCase):

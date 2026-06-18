@@ -6,6 +6,7 @@ import unittest
 
 from mlb_predictions import (
     american_odds_to_implied,
+    calibrate_probability,
     compute_implied_probabilities,
     compute_true_probabilities,
     predict_game,
@@ -73,7 +74,16 @@ class ImpliedProbabilityTests(unittest.TestCase):
         )
         self.assertIn("homePct", true_probs)
         self.assertGreater(true_probs["homePct"], 50.0)
-        self.assertTrue(true_probs["components"])
+        sources = {item["source"] for item in true_probs["components"]}
+        self.assertIn("Analytics model", sources)
+        self.assertIn("ESPN Matchup Predictor", sources)
+        self.assertNotIn("Power rating composite", sources)
+        self.assertNotIn("Recent form", sources)
+
+    def test_calibrate_probability_pulls_toward_fifty(self) -> None:
+        self.assertLess(calibrate_probability(0.9), 0.9)
+        self.assertGreater(calibrate_probability(0.9), 0.5)
+        self.assertAlmostEqual(calibrate_probability(0.5), 0.5, places=3)
 
     def test_predict_game_includes_probabilities(self) -> None:
         game = {
@@ -100,6 +110,9 @@ class ImpliedProbabilityTests(unittest.TestCase):
         self.assertIn("probabilities", prediction)
         self.assertIn("true", prediction["probabilities"])
         self.assertIn("pick", prediction["probabilities"])
+        self.assertTrue(prediction["probabilities"]["implied"]["available"])
+        self.assertIn("dataCoverage", prediction["features"])
+        self.assertTrue(prediction["features"]["dataCoverage"]["impliedOdds"])
         self.assertIn("teamProbabilities", prediction)
         self.assertIn("home", prediction["teamProbabilities"])
         self.assertEqual(prediction["teamProbabilities"]["home"]["truePct"], prediction["probabilities"]["true"]["homePct"])

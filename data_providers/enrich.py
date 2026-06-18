@@ -37,6 +37,7 @@ def enrich_games_with_providers(
     games: list[dict[str, Any]],
     *,
     league: str,
+    schedule_context_games: list[dict[str, Any]] | None = None,
     retries: int = 2,
     retry_delay: float = 0.5,
     verify_ssl: bool = True,
@@ -44,6 +45,8 @@ def enrich_games_with_providers(
 ) -> list[dict[str, Any]]:
     if not games:
         return games
+
+    context_games = schedule_context_games if schedule_context_games is not None else games
 
     try:
         team_directory = fetch_espn_team_directory(league, verify_ssl=verify_ssl)
@@ -108,8 +111,8 @@ def enrich_games_with_providers(
             form_pct=away_form,
         )
 
-        home_rest = compute_rest_days(games, home_team, game.get("startDate"))
-        away_rest = compute_rest_days(games, away_team, game.get("startDate"))
+        home_rest = compute_rest_days(context_games, home_team, game.get("startDate"))
+        away_rest = compute_rest_days(context_games, away_team, game.get("startDate"))
         weather = parse_weather_impact(enrichment.get("weather"))
         series = enrichment.get("seasonSeries")
         home_h2h = series_win_pct(series, home_team)
@@ -126,8 +129,8 @@ def enrich_games_with_providers(
             "seriesScore": (series or {}).get("seriesScore"),
         }
 
-        enrichment["homeScheduleFlags"] = compute_schedule_flags(games, home_team, game.get("startDate"))
-        enrichment["awayScheduleFlags"] = compute_schedule_flags(games, away_team, game.get("startDate"))
+        enrichment["homeScheduleFlags"] = compute_schedule_flags(context_games, home_team, game.get("startDate"))
+        enrichment["awayScheduleFlags"] = compute_schedule_flags(context_games, away_team, game.get("startDate"))
         enrichment["leagueMetrics"] = enrich_league_metrics(
             game,
             league=league,

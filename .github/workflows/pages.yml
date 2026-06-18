@@ -41,6 +41,9 @@ jobs:
           cp dashboard/manifest.json docs/manifest.json
           cp dashboard/sw.js docs/sw.js
 
+      - name: Run tests
+        run: python -m unittest discover -s tests -q
+
       - name: Build dashboard JSON
         run: python scripts/build_pages_data.py
 
