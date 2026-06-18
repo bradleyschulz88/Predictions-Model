@@ -1,23 +1,39 @@
 {
-  "updatedAt": "2026-06-18T16:26:08.623017+00:00",
+  "updatedAt": "2026-06-18T18:43:47.006148+00:00",
   "summary": {
     "last7Days": {
       "correct": 61,
-      "total": 98,
-      "pct": 62.2,
-      "units": 14.352,
-      "roiPct": 14.6,
-      "pending": 39
+      "total": 100,
+      "pct": 61.0,
+      "units": 12.352,
+      "roiPct": 12.4,
+      "pending": 37
     },
     "allTime": {
       "correct": 61,
-      "total": 98,
-      "pct": 62.2,
-      "units": 14.352,
-      "roiPct": 14.6,
-      "pending": 39
+      "total": 100,
+      "pct": 61.0,
+      "units": 12.352,
+      "roiPct": 12.4,
+      "pending": 37
     },
     "byLeague": {
+      "worldcup": {
+        "correct": 10,
+        "total": 18,
+        "pct": 55.6,
+        "units": -0.16,
+        "roiPct": -0.9,
+        "pending": 0
+      },
+      "mlb": {
+        "correct": 41,
+        "total": 70,
+        "pct": 58.6,
+        "units": 4.512,
+        "roiPct": 6.4,
+        "pending": 0
+      },
       "afl": {
         "correct": 1,
         "total": 1,
@@ -26,28 +42,12 @@
         "roiPct": 100.0,
         "pending": 0
       },
-      "worldcup": {
-        "correct": 10,
-        "total": 17,
-        "pct": 58.8,
-        "units": 0.84,
-        "roiPct": 4.9,
-        "pending": 0
-      },
       "wnba": {
         "correct": 9,
         "total": 10,
         "pct": 90.0,
         "units": 8.0,
         "roiPct": 80.0,
-        "pending": 0
-      },
-      "mlb": {
-        "correct": 41,
-        "total": 69,
-        "pct": 59.4,
-        "units": 5.512,
-        "roiPct": 8.0,
         "pending": 0
       },
       "nba": {
@@ -67,6 +67,44 @@
     }
   },
   "recentResults": [
+    {
+      "eventId": "760438",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-18",
+      "matchup": "South Africa @ Czechia",
+      "predicted": "Czechia",
+      "predictedSide": "home",
+      "outcomeLabel": "Czechia to win",
+      "confidence": 56.5,
+      "pickOdds": -115,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "1",
+      "gradedAt": "2026-06-18T18:43:46.889063+00:00",
+      "date": "2026-06-18"
+    },
+    {
+      "eventId": "401815805",
+      "league": "mlb",
+      "scheduleDate": "2026-06-18",
+      "matchup": "San Francisco Giants @ Atlanta Braves",
+      "predicted": "Atlanta Braves",
+      "predictedSide": "home",
+      "outcomeLabel": "Atlanta Braves to win",
+      "confidence": 89.6,
+      "pickOdds": -140,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "0",
+      "awayScore": "0",
+      "gradedAt": "2026-06-18T18:43:41.826972+00:00",
+      "date": "2026-06-18"
+    },
     {
       "eventId": "1133604",
       "league": "afl",
@@ -2464,25 +2502,6 @@
       "date": "2026-06-18"
     },
     {
-      "eventId": "760438",
-      "league": "worldcup",
-      "scheduleDate": "2026-06-18",
-      "matchup": "South Africa @ Czechia",
-      "predicted": "South Africa",
-      "predictedSide": "away",
-      "outcomeLabel": "South Africa to win",
-      "confidence": 41.2,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-06-18"
-    },
-    {
       "eventId": "401857002",
       "league": "wnba",
       "scheduleDate": "2026-06-18",
@@ -2605,25 +2624,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Boston Red Sox to win",
       "confidence": 54.8,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-06-18"
-    },
-    {
-      "eventId": "401815805",
-      "league": "mlb",
-      "scheduleDate": "2026-06-18",
-      "matchup": "San Francisco Giants @ Atlanta Braves",
-      "predicted": "Atlanta Braves",
-      "predictedSide": "home",
-      "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 90.3,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -4354,15 +4354,15 @@
       "predicted": "Atlanta Braves",
       "predictedSide": "home",
       "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 90.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 89.6,
+      "pickOdds": -140,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "0",
+      "awayScore": "0",
+      "gradedAt": "2026-06-18T18:43:41.826972+00:00",
       "date": "2026-06-18"
     },
     "401815803": {
@@ -4522,18 +4522,18 @@
       "league": "worldcup",
       "scheduleDate": "2026-06-18",
       "matchup": "South Africa @ Czechia",
-      "predicted": "South Africa",
-      "predictedSide": "away",
-      "outcomeLabel": "South Africa to win",
-      "confidence": 41.2,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "predicted": "Czechia",
+      "predictedSide": "home",
+      "outcomeLabel": "Czechia to win",
+      "confidence": 56.5,
+      "pickOdds": -115,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "1",
+      "gradedAt": "2026-06-18T18:43:46.889063+00:00",
       "date": "2026-06-18"
     },
     "760439": {
