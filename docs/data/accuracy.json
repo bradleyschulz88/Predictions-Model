@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-06-18T00:54:33.741094+00:00",
+  "updatedAt": "2026-06-18T01:03:53.919834+00:00",
   "summary": {
     "last7Days": {
       "correct": 50,
-      "total": 82,
-      "pct": 61.0,
-      "units": 9.049,
-      "roiPct": 11.0,
-      "pending": 31
+      "total": 83,
+      "pct": 60.2,
+      "units": 8.049,
+      "roiPct": 9.7,
+      "pending": 30
     },
     "allTime": {
       "correct": 50,
-      "total": 82,
-      "pct": 61.0,
-      "units": 9.049,
-      "roiPct": 11.0,
-      "pending": 31
+      "total": 83,
+      "pct": 60.2,
+      "units": 8.049,
+      "roiPct": 9.7,
+      "pending": 30
     },
     "byLeague": {
+      "worldcup": {
+        "correct": 9,
+        "total": 16,
+        "pct": 56.2,
+        "units": 0.537,
+        "roiPct": 3.4,
+        "pending": 0
+      },
       "wnba": {
         "correct": 3,
         "total": 4,
         "pct": 75.0,
         "units": 2.0,
         "roiPct": 50.0,
-        "pending": 0
-      },
-      "worldcup": {
-        "correct": 9,
-        "total": 15,
-        "pct": 60.0,
-        "units": 1.537,
-        "roiPct": 10.2,
         "pending": 0
       },
       "mlb": {
@@ -59,6 +59,25 @@
     }
   },
   "recentResults": [
+    {
+      "eventId": "760434",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-17",
+      "matchup": "Panama @ Ghana",
+      "predicted": "Panama",
+      "predictedSide": "away",
+      "outcomeLabel": "Panama to win",
+      "confidence": 55.5,
+      "pickOdds": 230,
+      "status": "graded",
+      "actual": "Ghana",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "0",
+      "gradedAt": "2026-06-18T01:03:53.879974+00:00",
+      "date": "2026-06-17"
+    },
     {
       "eventId": "401856995",
       "league": "wnba",
@@ -1943,25 +1962,6 @@
       "date": "2026-06-17"
     },
     {
-      "eventId": "760434",
-      "league": "worldcup",
-      "scheduleDate": "2026-06-17",
-      "matchup": "Panama @ Ghana",
-      "predicted": "Panama",
-      "predictedSide": "away",
-      "outcomeLabel": "Panama to win",
-      "confidence": 41.2,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-06-17"
-    },
-    {
       "eventId": "401857001",
       "league": "wnba",
       "scheduleDate": "2026-06-17",
@@ -3833,15 +3833,15 @@
       "predicted": "Panama",
       "predictedSide": "away",
       "outcomeLabel": "Panama to win",
-      "confidence": 41.2,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 55.5,
+      "pickOdds": 230,
+      "status": "graded",
+      "actual": "Ghana",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "0",
+      "gradedAt": "2026-06-18T01:03:53.879974+00:00",
       "date": "2026-06-17"
     },
     "760436": {
