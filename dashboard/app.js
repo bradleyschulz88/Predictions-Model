@@ -2447,6 +2447,16 @@ function filterGamesForScheduleDate(games, scheduleDate, league) {
 
 function applyScheduleDateToPayload(payload, scheduleDate, league) {
   if (!payload || !scheduleDate || !league) return payload;
+  const snapshotMatchesDate = payload.scheduleDate === scheduleDate;
+  const shouldFilterByStartDate =
+    payload._liveFallback ||
+    payload.liveScheduleOnly ||
+    payload.source === "espn-live" ||
+    (payload.scheduleDate && !snapshotMatchesDate);
+  if (!shouldFilterByStartDate) {
+    const games = payload.games || [];
+    return { ...payload, games, gameCount: games.length };
+  }
   const games = filterGamesForScheduleDate(payload.games || [], scheduleDate, league);
   return {
     ...payload,
@@ -2772,13 +2782,24 @@ function filterGames(games) {
   });
 }
 
-function renderStats(payload, visibleCount) {
+function gameDisplayRank(game) {
+  return game?.displayRank ?? game?.predictionRank ?? "?";
+}
+
+function prepareGamesForDisplay(games) {
+  const filtered = filterGames(games);
+  return [...filtered]
+    .sort((left, right) => (right.prediction?.confidence ?? 0) - (left.prediction?.confidence ?? 0))
+    .map((game, index) => ({ ...game, displayRank: index + 1 }));
+}
+
+function renderStats(payload, visibleCount, { topPick } = {}) {
   statGames.textContent = visibleCount ?? payload.gameCount ?? 0;
   const sport = sportSelect.value;
   const displayDate = getSelectedDate() || payload.scheduleDate || "—";
   const tz = payload.scheduleTimezone || leagueMeta(sport)?.scheduleTimezone;
   statDate.textContent = displayDate !== "—" && tz ? `${displayDate} (${tz})` : displayDate;
-  statTopPick.textContent = payload.topPick || "—";
+  statTopPick.textContent = topPick || payload.topPick || "—";
   statLeague.textContent =
     sport === "overview" ? "All sports" : payload.leagueLabel || SPORT_LABELS[sport] || "—";
   statUpdated.textContent = formatDateTime(payload.fetchedAt);
@@ -2895,8 +2916,8 @@ function renderTopPicks(games) {
       ${top
         .map(
           (game) => `
-        <article class="top-pick-card ${rankTierClass(game.predictionRank)}">
-          <div class="top-pick-rank">#${game.predictionRank}</div>
+        <article class="top-pick-card ${rankTierClass(gameDisplayRank(game))}">
+          <div class="top-pick-rank">#${gameDisplayRank(game)}</div>
           <strong class="top-pick-label">${game.prediction?.outcomeLabel || game.matchup}</strong>
           <span class="top-pick-meta">${game.prediction?.confidence}% · ${game.prediction?.confidenceLabel || ""}</span>
         </article>
@@ -3070,7 +3091,7 @@ function renderPrediction(game) {
     <section class="prediction-panel">
       <div class="prediction-head">
         <div>
-          <span class="rank-badge">#${game.predictionRank || "?"}</span>
+          <span class="rank-badge">#${gameDisplayRank(game)}</span>
           <span class="confidence-label ${labelClass}">${prediction.confidenceLabel || ""}</span>
           <h3 class="prediction-title">${prediction.outcomeLabel}</h3>
           <p class="prediction-subtitle">${formatConfidenceDisplay(prediction.confidence)}% confidence · sorted highest to lowest</p>
@@ -3104,7 +3125,7 @@ function renderGames(games) {
 
   const sport = sportSelect.value;
   const leagueLabel = SPORT_LABELS[sport] || "games";
-  const visible = filterGames(games);
+  const visible = prepareGamesForDisplay(games);
 
   if (!visible.length) {
     const scheduleOnly = lastPayload?.liveScheduleOnly;
@@ -3120,8 +3141,9 @@ function renderGames(games) {
     return;
   }
 
+  const topPickLabel = visible[0]?.prediction?.outcomeLabel;
   renderTopPicks(visible);
-  renderStats(lastPayload || {}, visible.length);
+  renderStats(lastPayload || {}, visible.length, { topPick: topPickLabel });
   renderModelDayResult(games || []);
   renderAccuracyPanel();
 
@@ -3145,10 +3167,10 @@ function renderGames(games) {
       const detailsOpen = hashGameId && String(game.eventId) === hashGameId;
 
       return `
-        <article class="game-card ${rankTierClass(game.predictionRank)}${game.isLive ? " game-live" : ""}${game.isFinal ? " game-final" : ""}" id="game-${game.eventId}">
+        <article class="game-card ${rankTierClass(gameDisplayRank(game))}${game.isLive ? " game-live" : ""}${game.isFinal ? " game-final" : ""}" id="game-${game.eventId}">
           <details class="game-details"${detailsOpen ? " open" : ""}>
             <summary class="game-summary-bar">
-              <span class="rank-badge small ${rankTierClass(game.predictionRank)}">#${game.predictionRank || "?"}</span>
+              <span class="rank-badge small ${rankTierClass(gameDisplayRank(game))}">#${gameDisplayRank(game)}</span>
               <span class="summary-main">
                 <span class="summary-matchup">${game.matchup || "Unknown"}</span>
                 <span class="summary-pick">${game.prediction?.outcomeLabel || ""} · ${pickProbabilitySummary(game.prediction) || `${game.prediction?.confidence || "?"}%`}</span>
