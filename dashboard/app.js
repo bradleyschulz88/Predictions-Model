@@ -6,20 +6,33 @@ const dateNextBtn = document.getElementById("date-next");
 const dateQuickEl = document.getElementById("date-quick");
 const dateHintEl = document.getElementById("date-hint");
 const confidenceFilter = document.getElementById("confidence-filter");
+const confidenceFilterMobile = document.getElementById("confidence-filter-mobile");
 const oddsFormatSelect = document.getElementById("odds-format");
 const teamSearch = document.getElementById("team-search");
+const teamSearchMobile = document.getElementById("team-search-mobile");
 const refreshBtn = document.getElementById("refresh-btn");
 const autoRefresh = document.getElementById("auto-refresh");
+const autoRefreshMobile = document.getElementById("auto-refresh-mobile");
 const gamesEl = document.getElementById("games");
 const bannerEl = document.getElementById("banner");
 const bannerSummaryEl = document.getElementById("banner-summary");
 const bannerDetailsEl = document.getElementById("banner-details");
 const bannerDetailTextEl = document.getElementById("banner-detail-text");
-const filterPanelEl = document.getElementById("filter-panel");
+const filterPanelDesktopEl = document.getElementById("filter-panel-desktop");
+const filterOpenBtn = document.getElementById("filter-open-btn");
+const filterCloseBtn = document.getElementById("filter-close-btn");
+const filterSheetEl = document.getElementById("filter-sheet");
+const filterSheetBackdropEl = document.getElementById("filter-sheet-backdrop");
+const filterApplyBtn = document.getElementById("filter-apply-btn");
 const topPicksEl = document.getElementById("top-picks");
 const dashboardTitle = document.getElementById("dashboard-title");
+const statsEl = document.getElementById("stats");
 
 const statGames = document.getElementById("stat-games");
+const statPicks = document.getElementById("stat-picks");
+const statStrong = document.getElementById("stat-strong");
+const statLean = document.getElementById("stat-lean");
+const statLive = document.getElementById("stat-live");
 const statTopPick = document.getElementById("stat-top-pick");
 const statLeague = document.getElementById("stat-league");
 const statDate = document.getElementById("stat-date");
@@ -27,13 +40,26 @@ const statUpdated = document.getElementById("stat-updated");
 const statFreshness = document.getElementById("stat-freshness");
 const freshnessNote = document.getElementById("freshness-note");
 const liveScoresToggle = document.getElementById("live-scores");
+const liveScoresToggleMobile = document.getElementById("live-scores-mobile");
 const viewTabsEl = document.getElementById("view-tabs");
 const predictionsViewEl = document.getElementById("predictions-view");
+const accuracyViewEl = document.getElementById("accuracy-view");
 const myBetsViewEl = document.getElementById("my-bets-view");
 const modelTrackerViewEl = document.getElementById("model-tracker-view");
 const dateFieldEl = document.getElementById("date-field");
 const modelDayResultEl = document.getElementById("model-day-result");
-const accuracyPanelEl = document.getElementById("accuracy-panel");
+
+const COVERAGE_LABELS = {
+  lineup: "Lineup",
+  injuries: "Injuries",
+  espnPredictor: "ESPN",
+  advancedStats: "Adv",
+  restData: "Rest",
+  scheduleFlags: "Sched",
+  mlbPitching: "Pitch",
+  leagueMetrics: "League",
+  impliedOdds: "Odds",
+};
 
 const ESPN_PATHS = {
   mlb: "baseball/mlb",
@@ -78,6 +104,7 @@ let liveScoresTimer = null;
 let loadingDashboard = false;
 let lastPayload = null;
 let accuracyData = null;
+let calibrationData = null;
 let manifestData = null;
 let overviewData = null;
 let lastLiveScoreAt = null;
@@ -1514,13 +1541,20 @@ function viewFromHash() {
   const hash = window.location.hash;
   if (hash === "#my-bets") return "my-bets";
   if (hash === "#model-tracker") return "model-tracker";
+  if (hash === "#accuracy") return "accuracy";
   if (hash === "#predictions" || hash.startsWith("#game-")) return "predictions";
   return null;
 }
 
 function updateViewHash(view) {
   if (window.location.hash.startsWith("#game-")) return;
-  const next = view === "predictions" ? "#predictions" : `#${view}`;
+  const hashMap = {
+    predictions: "#predictions",
+    accuracy: "#accuracy",
+    "my-bets": "#my-bets",
+    "model-tracker": "#model-tracker",
+  };
+  const next = hashMap[view] || "#predictions";
   const nextUrl = `${window.location.pathname}${window.location.search}${next}`;
   const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
   if (currentUrl !== nextUrl) {
@@ -1533,6 +1567,9 @@ function updateRefreshButtonLabel() {
   if (activeView === "my-bets" || activeView === "model-tracker") {
     refreshBtn.textContent = loadingDashboard ? "Loading…" : "Refresh scores";
     refreshBtn.title = "Reload live scores to auto-settle bets";
+  } else if (activeView === "accuracy") {
+    refreshBtn.textContent = loadingDashboard ? "Loading…" : "Refresh";
+    refreshBtn.title = "Reload accuracy and calibration data";
   } else {
     refreshBtn.textContent = loadingDashboard ? "Loading…" : "Refresh";
     refreshBtn.title = "Reload schedule and predictions";
@@ -1547,38 +1584,77 @@ function formatAccuracyRecord(summary) {
   return `${wins}-${losses}`;
 }
 
-function renderAccuracyPanel() {
-  if (!accuracyPanelEl) return;
+function renderCalibrationChart(buckets) {
+  if (!buckets?.length) {
+    return `<p class="lineup-note">No calibration buckets yet — need more graded picks.</p>`;
+  }
+
+  const width = 640;
+  const height = 220;
+  const pad = { top: 16, right: 16, bottom: 36, left: 40 };
+  const chartW = width - pad.left - pad.right;
+  const chartH = height - pad.top - pad.bottom;
+  const barGap = 8;
+  const barW = Math.max(12, (chartW - barGap * (buckets.length - 1)) / buckets.length);
+
+  const bars = buckets
+    .map((row, index) => {
+      const x = pad.left + index * (barW + barGap);
+      const predH = (row.avgPredictedPct / 100) * chartH;
+      const actH = (row.actualWinPct / 100) * chartH;
+      const predY = pad.top + chartH - predH;
+      const actY = pad.top + chartH - actH;
+      const label = row.confidenceRange;
+      return `
+        <g>
+          <rect x="${x}" y="${predY}" width="${barW / 2 - 1}" height="${predH}" fill="var(--info)" opacity="0.85" rx="2" />
+          <rect x="${x + barW / 2 + 1}" y="${actY}" width="${barW / 2 - 1}" height="${actH}" fill="var(--accent)" opacity="0.9" rx="2" />
+          <text x="${x + barW / 2}" y="${height - 10}" text-anchor="middle" fill="var(--muted)" font-size="10">${label}</text>
+        </g>
+      `;
+    })
+    .join("");
+
+  return `
+    <svg class="calibration-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Calibration chart comparing predicted and actual win rates by confidence bucket">
+      <line x1="${pad.left}" y1="${pad.top + chartH}" x2="${width - pad.right}" y2="${pad.top + chartH}" stroke="var(--panel-border)" />
+      <text x="${pad.left - 8}" y="${pad.top + 8}" text-anchor="end" fill="var(--muted)" font-size="10">100%</text>
+      <text x="${pad.left - 8}" y="${pad.top + chartH}" text-anchor="end" fill="var(--muted)" font-size="10">0%</text>
+      ${bars}
+    </svg>
+    <div class="calibration-legend">
+      <span class="legend-predicted">Predicted</span>
+      <span class="legend-actual">Actual</span>
+    </div>
+  `;
+}
+
+function renderAccuracyView() {
+  if (!accuracyViewEl) return;
+
   const sport = sportSelect.value;
-  if (sport === "overview" || activeView !== "predictions") {
-    accuracyPanelEl.classList.add("hidden");
-    accuracyPanelEl.innerHTML = "";
+  if (sport === "overview") {
+    accuracyViewEl.innerHTML = `<div class="accuracy-empty"><strong>Pick a league</strong>Select a sport to view model accuracy and calibration.</div>`;
     return;
   }
 
   const summary = accuracyData?.summary;
-  if (!summary) {
-    accuracyPanelEl.classList.add("hidden");
-    accuracyPanelEl.innerHTML = "";
+  const leagueStats = summary?.byLeague?.[sport];
+  const last7 = summary?.last7Days || {};
+  const allTime = summary?.allTime || {};
+  const recent = (accuracyData?.recentResults || []).filter((item) => item.league === sport).slice(0, 10);
+  const calSummary = calibrationData?.summary;
+  const calBuckets = (calibrationData?.calibration || []).filter((row) => row.picks >= 3);
+
+  if (!summary && !calSummary) {
+    accuracyViewEl.innerHTML = `
+      <div class="accuracy-empty">
+        <strong>Accuracy data not loaded</strong>
+        Run <code>python scripts/build_pages_data.py</code> or wait for the next GitHub Actions build to generate accuracy.json and calibration.json.
+      </div>
+    `;
     return;
   }
-
-  const last7 = summary.last7Days || {};
-  const allTime = summary.allTime || {};
-  const streak = summary.streak || {};
-  const leagueStats = summary.byLeague?.[sport];
-  const recent = (accuracyData.recentResults || []).filter((item) => item.league === sport).slice(0, 10);
-  const streakLabel =
-    streak.current && streak.type
-      ? `${streak.current} ${streak.type === "win" ? "W" : "L"} streak`
-      : "—";
-  const leagueBlock = leagueStats
-    ? `<div class="accuracy-stat-card">
-        <h3>${SPORT_LABELS[sport]?.split(" ")[0] || sport}</h3>
-        <p><strong>${formatAccuracyRecord(leagueStats)}</strong> (${leagueStats.pct ?? "—"}%)</p>
-        <p class="lineup-note">${leagueStats.units != null ? `${leagueStats.units > 0 ? "+" : ""}${Number(leagueStats.units).toFixed(2)} units` : "—"} · ROI ${leagueStats.roiPct ?? "—"}%</p>
-      </div>`
-    : `<div class="accuracy-stat-card"><h3>${SPORT_LABELS[sport]?.split(" ")[0] || sport}</h3><p class="lineup-note">No graded picks yet for this league.</p></div>`;
 
   const recentHtml = recent.length
     ? `<ul class="accuracy-list">${recent
@@ -1590,35 +1666,45 @@ function renderAccuracyPanel() {
         .join("")}</ul>`
     : `<p class="lineup-note">No recent graded picks for ${SPORT_LABELS[sport] || sport}.</p>`;
 
-  accuracyPanelEl.classList.remove("hidden");
-  accuracyPanelEl.innerHTML = `
-    <details class="accuracy-details" open>
-      <summary class="accuracy-title">Model record</summary>
-      <div class="accuracy-grid">
-        <div class="accuracy-stat-card">
-          <h3>Last 7 days</h3>
-          <p><strong>${formatAccuracyRecord(last7)}</strong> (${last7.pct ?? "—"}%)</p>
-          <p class="lineup-note">${last7.units != null ? `${last7.units > 0 ? "+" : ""}${Number(last7.units).toFixed(2)} units` : "—"} · ROI ${last7.roiPct ?? "—"}%</p>
-          <p class="lineup-note">${last7.pending || 0} pending</p>
+  const leagueBlock = leagueStats
+    ? `<div class="accuracy-metric"><span class="accuracy-metric-label">${SPORT_LABELS[sport]?.split(" ")[0] || sport}</span><span class="accuracy-metric-value">${formatAccuracyRecord(leagueStats)}</span><span class="lineup-note">${leagueStats.pct ?? "—"}% hit rate</span></div>`
+    : "";
+
+  accuracyViewEl.innerHTML = `
+    <section class="accuracy-hero">
+      <h2 class="section-title">Model accuracy · ${escapeHtml(SPORT_LABELS[sport] || sport)}</h2>
+      <div class="accuracy-summary-grid">
+        <div class="accuracy-metric">
+          <span class="accuracy-metric-label">Hit rate (all time)</span>
+          <span class="accuracy-metric-value">${allTime.pct ?? calSummary?.winPct ?? "—"}%</span>
+          <span class="lineup-note">${formatAccuracyRecord(allTime)} graded</span>
         </div>
-        <div class="accuracy-stat-card">
-          <h3>All time</h3>
-          <p><strong>${formatAccuracyRecord(allTime)}</strong> (${allTime.pct ?? "—"}%)</p>
-          <p class="lineup-note">${allTime.units != null ? `${allTime.units > 0 ? "+" : ""}${Number(allTime.units).toFixed(2)} units` : "—"} · ROI ${allTime.roiPct ?? "—"}%</p>
+        <div class="accuracy-metric">
+          <span class="accuracy-metric-label">Last 7 days</span>
+          <span class="accuracy-metric-value">${last7.pct ?? "—"}%</span>
+          <span class="lineup-note">${formatAccuracyRecord(last7)} · ${last7.pending || 0} pending</span>
         </div>
-        <div class="accuracy-stat-card">
-          <h3>Streak</h3>
-          <p><strong>${streakLabel}</strong></p>
-          <p class="lineup-note">Best win ${streak.bestWin ?? "—"} · Best loss ${streak.bestLoss ?? "—"}</p>
+        <div class="accuracy-metric">
+          <span class="accuracy-metric-label">Brier / overconf.</span>
+          <span class="accuracy-metric-value">${calSummary?.avgOverconfidencePct != null ? `${calSummary.avgOverconfidencePct}%` : "—"}</span>
+          <span class="lineup-note">${calSummary?.graded ?? 0} picks in calibration</span>
         </div>
         ${leagueBlock}
       </div>
-      <details class="accuracy-recent">
-        <summary>Recent ${SPORT_LABELS[sport]?.split(" ")[0] || sport} results</summary>
-        ${recentHtml}
-      </details>
-    </details>
+    </section>
+    <section class="calibration-chart">
+      <h3>Calibration (predicted vs actual)</h3>
+      ${calBuckets.length ? renderCalibrationChart(calBuckets) : `<div class="accuracy-empty"><strong>Calibration pending</strong>Need more graded picks. Re-run the build to refresh calibration.json.</div>`}
+    </section>
+    <section class="accuracy-hero">
+      <h3 class="section-title">Recent results</h3>
+      ${recentHtml}
+    </section>
   `;
+}
+
+function renderAccuracyPanel() {
+  if (activeView === "accuracy") renderAccuracyView();
 }
 
 function switchView(view, { skipHashUpdate = false } = {}) {
@@ -1628,6 +1714,7 @@ function switchView(view, { skipHashUpdate = false } = {}) {
 
   activeView = view;
   const isPredictions = view === "predictions";
+  const isAccuracy = view === "accuracy";
   const isMyBets = view === "my-bets";
   const isModelTracker = view === "model-tracker";
 
@@ -1636,24 +1723,26 @@ function switchView(view, { skipHashUpdate = false } = {}) {
   });
 
   predictionsViewEl?.classList.toggle("hidden", !isPredictions);
+  accuracyViewEl?.classList.toggle("hidden", !isAccuracy);
   myBetsViewEl?.classList.toggle("hidden", !isMyBets);
   modelTrackerViewEl?.classList.toggle("hidden", !isModelTracker);
 
-  filterPanelEl?.classList.toggle("hidden", !isPredictions);
-  accuracyPanelEl?.classList.toggle("hidden", !isPredictions || sportSelect.value === "overview");
-  document.querySelector(".page-bar-odds")?.classList.toggle("hidden", isPredictions);
+  filterPanelDesktopEl?.classList.toggle("hidden", !isPredictions);
+  filterOpenBtn?.classList.toggle("hidden", !isPredictions);
+  document.querySelector(".page-bar-odds")?.classList.toggle("hidden", isPredictions || isAccuracy);
 
   if (isPredictions) {
     dashboardTitle.textContent =
       sportSelect.value === "overview"
-        ? "All Sports Predictions"
-        : `${SPORT_LABELS[sportSelect.value] || "Sports"} Predictions`;
-    if (sportSelect.value === "my-bets") {
-      /* legacy guard */
-    }
-    renderAccuracyPanel();
+        ? "All Sports"
+        : `${SPORT_LABELS[sportSelect.value] || "Sports"}`;
     if (lastPayload) renderGames(lastPayload.games || []);
     else loadDashboard(true);
+  } else if (isAccuracy) {
+    dashboardTitle.textContent = "Model Accuracy";
+    hideBanner();
+    modelDayResultEl?.classList.add("hidden");
+    renderAccuracyView();
   } else if (isMyBets) {
     dashboardTitle.textContent = "My Bet Tracker";
     hideBanner();
@@ -2050,6 +2139,33 @@ function renderModelTrackerView() {
         .join("")
     : `<tr><td colspan="7" class="empty-bets-cell">No tracked picks yet. Add picks from the Predictions tab using <strong>Track model pick</strong>.</td></tr>`;
 
+  const mobileCards = sortedEntries.length
+    ? sortedEntries
+        .map((entry) => {
+          const normalized = normalizeModelTrackerEntry(entry);
+          const chipClass =
+            normalized.status === "won" ? "won" : normalized.status === "lost" ? "lost" : "pending";
+          const wlLabel = normalized.status === "won" ? "W" : normalized.status === "lost" ? "L" : "Pending";
+          const profitLabel =
+            normalized.status === "pending" || normalized.profit == null
+              ? "—"
+              : formatPlainMoney(normalized.profit);
+          return `
+            <article class="tracker-mobile-card" data-entry-id="${normalized.id}">
+              <div class="tracker-mobile-card-head">
+                <div>
+                  <div class="tracker-mobile-card-title">${escapeHtml(normalized.matchup)}</div>
+                  <div class="tracker-mobile-card-meta">${escapeHtml(normalized.outcomeLabel || normalized.pick)}${normalized.confidence != null ? ` · ${normalized.confidence}%` : ""}</div>
+                </div>
+                <span class="tracker-status-chip ${chipClass}">${wlLabel}</span>
+              </div>
+              <div class="tracker-mobile-card-meta">${betDateInputFromIso(normalized.scheduleDate || normalized.createdAt)} · P/L ${profitLabel}</div>
+            </article>
+          `;
+        })
+        .join("")
+    : `<p class="empty-state">No tracked picks yet.</p>`;
+
   modelTrackerViewEl.innerHTML = `
     <section class="my-bets-hero model-tracker-hero">
       <div class="my-bets-hero-head">
@@ -2103,6 +2219,7 @@ function renderModelTrackerView() {
         <button type="button" class="btn-ghost" id="export-model-tracker-btn">Copy for spreadsheet</button>
       </div>
       <div class="my-bets-table-wrap tracker-table-wrap">
+        <div class="tracker-mobile-cards">${mobileCards}</div>
         <table class="my-bets-table sheet-style model-tracker-table tracker-sheet-table">
           <thead>
             <tr>
@@ -2770,9 +2887,170 @@ function lineupLabelForSport(sport) {
   return sport === "mlb" ? "Batting lineup" : "Key players";
 }
 
+function getFilterValues() {
+  return {
+    minConfidence: Number(confidenceFilter?.value || confidenceFilterMobile?.value || 0),
+    query: (teamSearch?.value || teamSearchMobile?.value || "").trim().toLowerCase(),
+  };
+}
+
+function syncFilterControlsFromDesktop() {
+  if (confidenceFilterMobile && confidenceFilter) {
+    confidenceFilterMobile.value = confidenceFilter.value;
+  }
+  if (teamSearchMobile && teamSearch) {
+    teamSearchMobile.value = teamSearch.value;
+  }
+  if (liveScoresToggleMobile && liveScoresToggle) {
+    liveScoresToggleMobile.checked = liveScoresToggle.checked;
+  }
+  if (autoRefreshMobile && autoRefresh) {
+    autoRefreshMobile.checked = autoRefresh.checked;
+  }
+}
+
+function applyFilterControlsFromMobile() {
+  if (confidenceFilter && confidenceFilterMobile) {
+    confidenceFilter.value = confidenceFilterMobile.value;
+  }
+  if (teamSearch && teamSearchMobile) {
+    teamSearch.value = teamSearchMobile.value;
+  }
+  if (liveScoresToggle && liveScoresToggleMobile) {
+    liveScoresToggle.checked = liveScoresToggleMobile.checked;
+    resetLiveScorePolling();
+  }
+  if (autoRefresh && autoRefreshMobile) {
+    autoRefresh.checked = autoRefreshMobile.checked;
+    resetAutoRefresh();
+  }
+}
+
+function openFilterSheet() {
+  syncFilterControlsFromDesktop();
+  filterSheetEl?.classList.remove("hidden");
+  filterSheetBackdropEl?.classList.remove("hidden");
+  filterCloseBtn?.focus();
+}
+
+function closeFilterSheet() {
+  filterSheetEl?.classList.add("hidden");
+  filterSheetBackdropEl?.classList.add("hidden");
+}
+
+function showLoadingSkeletons() {
+  statsEl?.setAttribute("aria-busy", "true");
+  gamesEl?.setAttribute("aria-busy", "true");
+  statsEl?.classList.add("skeleton-strip");
+  statsEl?.querySelectorAll(".stat-value").forEach((el) => {
+    el.dataset.prevText = el.textContent;
+    el.textContent = "—";
+    el.classList.add("skeleton-item");
+  });
+  if (gamesEl) {
+    gamesEl.innerHTML = Array.from({ length: 5 })
+      .map(() => `<div class="skeleton-item"></div>`)
+      .join("");
+    gamesEl.classList.add("skeleton-list");
+  }
+  topPicksEl?.classList.add("hidden");
+}
+
+function summarizePickTiers(games) {
+  let strong = 0;
+  let lean = 0;
+  let live = 0;
+  for (const game of games || []) {
+    const confidence = game.prediction?.confidence;
+    if (confidence == null) continue;
+    if (confidence >= 68) strong += 1;
+    else if (confidence >= 57) lean += 1;
+    if (game.isLive) live += 1;
+  }
+  return { strong, lean, live, picks: (games || []).filter((g) => g.prediction?.outcomeLabel).length };
+}
+
+function teamAbbrev(name) {
+  if (!name) return "—";
+  const words = String(name).trim().split(/\s+/);
+  if (words.length === 1) return words[0].slice(0, 3).toUpperCase();
+  return words.map((w) => w[0]).join("").slice(0, 4).toUpperCase();
+}
+
+function formatGameTimeShort(startDate) {
+  if (!startDate) return "TBD";
+  const date = new Date(startDate);
+  if (Number.isNaN(date.getTime())) return "TBD";
+  return date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+}
+
+function renderScoreboardTeams(game) {
+  const away = teamAbbrev(game.awayTeam);
+  const home = teamAbbrev(game.homeTeam);
+  const hasScore = game.homeScore != null && game.awayScore != null;
+  if (hasScore && (game.isLive || game.isFinal)) {
+    const scoreClass = game.isLive ? "score-live" : "";
+    return `<p class="scoreboard-teams ${scoreClass}" data-live-score="${game.eventId}">${away} <span class="tabular-nums">${game.awayScore}</span> @ ${home} <span class="tabular-nums">${game.homeScore}</span></p>`;
+  }
+  return `<p class="scoreboard-teams">${away} @ ${home}</p>`;
+}
+
+function renderScoreboardProbBar(prediction) {
+  const homePct = Number(prediction?.homeWinPct ?? 50);
+  const awayPct = Number(prediction?.awayWinPct ?? 50);
+  const total = homePct + awayPct || 100;
+  const homeWidth = Math.round((homePct / total) * 100);
+  const awayWidth = 100 - homeWidth;
+  return `<div class="scoreboard-prob-bar" aria-hidden="true"><span class="scoreboard-prob-away" style="width:${awayWidth}%"></span><span class="scoreboard-prob-home" style="width:${homeWidth}%"></span></div>`;
+}
+
+function renderCoverageChips(game) {
+  const coverage = game.prediction?.features?.dataCoverage;
+  if (!coverage) return "";
+  const chips = Object.entries(COVERAGE_LABELS)
+    .map(([key, label]) => {
+      const on = Boolean(coverage[key]);
+      return `<span class="coverage-chip${on ? " on" : ""}">${label}</span>`;
+    })
+    .join("");
+  return `<div class="coverage-chips">${chips}</div>`;
+}
+
+function patchLiveScoreDom(games) {
+  if (!gamesEl || activeView !== "predictions") return false;
+  let patched = false;
+  for (const game of games || []) {
+    const node = gamesEl.querySelector(`[data-live-score="${game.eventId}"]`);
+    if (!node || game.homeScore == null) continue;
+    const away = teamAbbrev(game.awayTeam);
+    const home = teamAbbrev(game.homeTeam);
+    const next = `${away} ${game.awayScore} @ ${home} ${game.homeScore}`;
+    const current = node.textContent?.replace(/\s+/g, " ").trim();
+    if (current !== next) {
+      node.innerHTML = `${away} <span class="tabular-nums">${game.awayScore}</span> @ ${home} <span class="tabular-nums">${game.homeScore}</span>`;
+      node.classList.add("score-live", "score-updated");
+      patched = true;
+    }
+    const timeEl = gamesEl.querySelector(`[data-live-time="${game.eventId}"]`);
+    if (timeEl && game.gameStatusText) {
+      timeEl.textContent = game.isLive ? "LIVE" : game.gameStatusText;
+      if (game.isLive) timeEl.classList.add("featured-pick-live");
+    }
+    const featuredTime = document.querySelector(`[data-featured-time="${game.eventId}"]`);
+    if (featuredTime && game.isLive) {
+      featuredTime.textContent = "LIVE";
+      featuredTime.classList.add("featured-pick-live");
+    }
+  }
+  if (patched && statLive) {
+    const tiers = summarizePickTiers(games);
+    statLive.textContent = String(tiers.live);
+  }
+  return patched;
+}
+
 function filterGames(games) {
-  const minConfidence = Number(confidenceFilter.value || 0);
-  const query = (teamSearch.value || "").trim().toLowerCase();
+  const { minConfidence, query } = getFilterValues();
   return (games || []).filter((game) => {
     const confidence = game.prediction?.confidence;
     if (confidence != null && confidence < minConfidence) return false;
@@ -2793,26 +3071,45 @@ function prepareGamesForDisplay(games) {
     .map((game, index) => ({ ...game, displayRank: index + 1 }));
 }
 
-function renderStats(payload, visibleCount, { topPick } = {}) {
-  statGames.textContent = visibleCount ?? payload.gameCount ?? 0;
+function renderStats(payload, visibleGames, { topPick, gameCount } = {}) {
+  const games = visibleGames || [];
+  const tiers = summarizePickTiers(games);
+  const displayCount = gameCount ?? games.length ?? payload.gameCount ?? 0;
+  statGames.textContent = displayCount;
+  if (statPicks) statPicks.textContent = tiers.picks;
+  if (statStrong) statStrong.textContent = tiers.strong;
+  if (statLean) statLean.textContent = tiers.lean;
+  if (statLive) statLive.textContent = tiers.live;
+
   const sport = sportSelect.value;
   const displayDate = getSelectedDate() || payload.scheduleDate || "—";
   const tz = payload.scheduleTimezone || leagueMeta(sport)?.scheduleTimezone;
-  statDate.textContent = displayDate !== "—" && tz ? `${displayDate} (${tz})` : displayDate;
-  statTopPick.textContent = topPick || payload.topPick || "—";
-  statLeague.textContent =
-    sport === "overview" ? "All sports" : payload.leagueLabel || SPORT_LABELS[sport] || "—";
-  statUpdated.textContent = formatDateTime(payload.fetchedAt);
-  dashboardTitle.textContent =
-    sport === "overview" ? "All Sports Predictions" : `${payload.leagueLabel || SPORT_LABELS[sport] || "Sports"} Predictions`;
-
-  if (lastLiveScoreAt) {
-    const seconds = Math.round((Date.now() - lastLiveScoreAt) / 1000);
-    const scoreNote = liveScoresToggle?.checked ? ` · scores ${seconds}s ago` : "";
-    statFreshness.textContent = `${describeScheduleSource(payload)}${scoreNote}`;
-  } else {
-    statFreshness.textContent = describeScheduleSource(payload);
+  if (statDate) statDate.textContent = displayDate !== "—" && tz ? `${displayDate} (${tz})` : displayDate;
+  if (statTopPick) statTopPick.textContent = topPick || payload.topPick || games[0]?.prediction?.outcomeLabel || "—";
+  if (statLeague) {
+    statLeague.textContent =
+      sport === "overview" ? "All sports" : payload.leagueLabel || SPORT_LABELS[sport] || "—";
   }
+  if (statUpdated) statUpdated.textContent = formatDateTime(payload.fetchedAt);
+  dashboardTitle.textContent =
+    sport === "overview" ? "All Sports" : `${payload.leagueLabel || SPORT_LABELS[sport] || "Sports"}`;
+
+  if (statFreshness) {
+    if (lastLiveScoreAt) {
+      const seconds = Math.round((Date.now() - lastLiveScoreAt) / 1000);
+      const scoreNote = liveScoresToggle?.checked ? ` · scores ${seconds}s ago` : "";
+      statFreshness.textContent = `${describeScheduleSource(payload)}${scoreNote}`;
+    } else {
+      statFreshness.textContent = describeScheduleSource(payload);
+    }
+  }
+
+  statsEl?.classList.remove("skeleton-strip");
+  statsEl?.setAttribute("aria-busy", "false");
+  statsEl?.querySelectorAll(".stat-value.skeleton-item").forEach((el) => {
+    el.classList.remove("skeleton-item");
+    if (el.dataset.prevText) delete el.dataset.prevText;
+  });
 }
 
 function renderOverview() {
@@ -2829,7 +3126,8 @@ function renderOverview() {
       fetchedAt: overviewData.builtAt,
       leagueLabel: "All sports",
     },
-    totalGames
+    [],
+    { gameCount: totalGames }
   );
 
   const leagueCards = (overviewData.leagues || [])
@@ -2900,31 +3198,34 @@ function renderConfidenceRing(confidence) {
 }
 
 function renderTopPicks(games) {
-  const top = (games || []).slice(0, 3);
-  if (!top.length) {
+  const top = (games || [])[0];
+  if (!top?.prediction?.outcomeLabel) {
     topPicksEl.classList.add("hidden");
     topPicksEl.innerHTML = "";
     return;
   }
+
+  const rank = gameDisplayRank(top);
+  const prediction = top.prediction;
+  const labelClass = prediction.confidenceLabel === "Strong pick" ? "label-strong" : prediction.confidenceLabel === "Lean" ? "label-lean" : "";
+  const timeLabel = top.isLive
+    ? `<span class="featured-pick-time featured-pick-live" data-featured-time="${top.eventId}">LIVE</span>`
+    : `<span class="featured-pick-time" data-featured-time="${top.eventId}">${formatGameTimeShort(top.startDate)}</span>`;
+
   topPicksEl.classList.remove("hidden");
   topPicksEl.innerHTML = `
-    <div class="top-picks-head">
-      <h2 class="top-picks-title">Top picks today</h2>
-      <p class="top-picks-sub">Highest-confidence model selections</p>
-    </div>
-    <div class="top-picks-grid">
-      ${top
-        .map(
-          (game) => `
-        <article class="top-pick-card ${rankTierClass(gameDisplayRank(game))}">
-          <div class="top-pick-rank">#${gameDisplayRank(game)}</div>
-          <strong class="top-pick-label">${game.prediction?.outcomeLabel || game.matchup}</strong>
-          <span class="top-pick-meta">${game.prediction?.confidence}% · ${game.prediction?.confidenceLabel || ""}</span>
-        </article>
-      `
-        )
-        .join("")}
-    </div>
+    <article class="featured-pick-card">
+      <div class="featured-pick-rank ${rankTierClass(rank)}" aria-label="Rank ${rank}">#${rank}</div>
+      <div class="featured-pick-matchup">
+        <p class="featured-pick-teams">${escapeHtml(top.matchup || `${top.awayTeam} @ ${top.homeTeam}`)}</p>
+        <p class="featured-pick-pick">Pick: <strong>${escapeHtml(prediction.outcomeLabel)}</strong> · ${formatConfidenceDisplay(prediction.confidence)}%</p>
+        ${renderScoreboardProbBar(prediction)}
+      </div>
+      <div class="featured-pick-side">
+        ${timeLabel}
+        <div class="featured-pick-confidence ${labelClass}">${prediction.confidenceLabel || ""}</div>
+      </div>
+    </article>
   `;
 }
 
@@ -3135,24 +3436,27 @@ function renderGames(games) {
     const sourceHint = describeScheduleSource(lastPayload);
     gamesEl.innerHTML = `<div class="empty-state">No ${leagueLabel} games match your filters for ${displayDate}${tz ? ` (${tz})` : ""}. Source: ${sourceHint}.${buildError ? ` Build error: ${buildError}` : ""}${scheduleOnly ? " Live ESPN schedule loaded — predictions appear once GitHub Actions builds that date." : ""}</div>`;
     renderTopPicks([]);
-    renderStats(lastPayload || {}, 0);
+    renderStats(lastPayload || {}, []);
     renderModelDayResult(games || []);
-    renderAccuracyPanel();
     return;
   }
 
   const topPickLabel = visible[0]?.prediction?.outcomeLabel;
   renderTopPicks(visible);
-  renderStats(lastPayload || {}, visible.length, { topPick: topPickLabel });
+  renderStats(lastPayload || {}, visible, { topPick: topPickLabel });
   renderModelDayResult(games || []);
-  renderAccuracyPanel();
 
   const lineupLabel = lineupLabelForSport(sport);
   const hash = window.location.hash;
   const hashGameId = hash.startsWith("#game-") ? hash.slice("#game-".length) : null;
 
+  gamesEl.classList.remove("skeleton-list");
+  gamesEl.setAttribute("aria-busy", "false");
+
   gamesEl.innerHTML = visible
     .map((game) => {
+      const prediction = game.prediction;
+      const labelClass = prediction?.confidenceLabel === "Strong pick" ? "label-strong" : prediction?.confidenceLabel === "Lean" ? "label-lean" : "label-coin";
       const records = game.awayRecord || game.homeRecord ? `${game.awayTeam} ${game.awayRecord || "—"} · ${game.homeTeam} ${game.homeRecord || "—"}` : null;
       const pitchers = sport === "mlb" && (game.awayPitcher?.name || game.homePitcher?.name) ? `SP: ${game.awayPitcher?.name || "TBD"} vs ${game.homePitcher?.name || "TBD"}` : null;
       const metaParts = [formatDateTime(game.startDate), game.venueName || "Venue TBD"];
@@ -3165,20 +3469,29 @@ function renderGames(games) {
       const logged = isBetLoggedForGame(game.eventId);
       const modelTracked = isModelPickTracked(game.eventId);
       const detailsOpen = hashGameId && String(game.eventId) === hashGameId;
+      const timeLabel = game.isLive ? "LIVE" : formatGameTimeShort(game.startDate);
 
       return `
-        <article class="game-card ${rankTierClass(gameDisplayRank(game))}${game.isLive ? " game-live" : ""}${game.isFinal ? " game-final" : ""}" id="game-${game.eventId}">
+        <article class="scoreboard-row game-card ${game.isLive ? "game-live" : ""}${game.isFinal ? " game-final" : ""}" id="game-${game.eventId}" data-game-id="${game.eventId}">
           <details class="game-details"${detailsOpen ? " open" : ""}>
-            <summary class="game-summary-bar">
-              <span class="rank-badge small ${rankTierClass(gameDisplayRank(game))}">#${gameDisplayRank(game)}</span>
-              <span class="summary-main">
-                <span class="summary-matchup">${game.matchup || "Unknown"}</span>
-                <span class="summary-pick">${game.prediction?.outcomeLabel || ""} · ${pickProbabilitySummary(game.prediction) || `${game.prediction?.confidence || "?"}%`}</span>
-              </span>
-              ${pickBadge ? `<span class="summary-pick-status">${pickBadge}</span>` : ""}
-              <span class="summary-chevron" aria-hidden="true"></span>
+            <summary class="scoreboard-summary game-summary-bar">
+              <span class="scoreboard-rank" aria-label="Rank ${gameDisplayRank(game)}">#${gameDisplayRank(game)}</span>
+              <div class="scoreboard-matchup-block">
+                ${renderScoreboardTeams(game)}
+                ${renderScoreboardProbBar(prediction)}
+              </div>
+              <div class="scoreboard-pick-block">
+                <span class="scoreboard-pick-label">Pick</span>
+                <span class="scoreboard-pick-value">${escapeHtml(prediction?.outcomeLabel || "—")}</span>
+                <span class="scoreboard-pick-conf ${labelClass}" data-live-time="${game.eventId}">${formatConfidenceDisplay(prediction?.confidence || 0)}% · ${timeLabel}</span>
+              </div>
             </summary>
-            <div class="game-details-body">
+            <div class="scoreboard-meta-row">
+              ${renderCoverageChips(game)}
+              ${pickBadge ? `<span class="summary-pick-status">${pickBadge}</span>` : ""}
+              <span class="confidence-label ${labelClass}">${prediction?.confidenceLabel || ""}</span>
+            </div>
+            <div class="scoreboard-details-body game-details-body">
               ${renderPrediction(game)}
               <div class="game-head">
                 <div>
@@ -3187,9 +3500,9 @@ function renderGames(games) {
                 </div>
                 <div class="game-actions">
                   <span class="status-pill ${game.isLive ? "live" : ""}">${game.gameStatusText || "Scheduled"}</span>
-                  <button type="button" class="track-btn model-track-btn${modelTracked ? " tracked" : ""}" data-model-track-id="${game.eventId}"${!game.prediction?.outcomeLabel && !game.prediction?.predictedWinner ? " disabled" : ""}>${modelTracked ? '<span class="track-btn-label track-btn-label-long">Already tracked</span><span class="track-btn-label track-btn-label-short">Tracked</span>' : '<span class="track-btn-label track-btn-label-long">Track model pick</span><span class="track-btn-label track-btn-label-short">Track pick</span>'}</button>
+                  <button type="button" class="track-btn model-track-btn${modelTracked ? " tracked" : ""}" data-model-track-id="${game.eventId}"${!prediction?.outcomeLabel && !prediction?.predictedWinner ? " disabled" : ""}>${modelTracked ? '<span class="track-btn-label track-btn-label-long">Already tracked</span><span class="track-btn-label track-btn-label-short">Tracked</span>' : '<span class="track-btn-label track-btn-label-long">Track model pick</span><span class="track-btn-label track-btn-label-short">Track pick</span>'}</button>
                   <button type="button" class="track-btn${logged ? " tracked" : ""}" data-event-id="${game.eventId}">${logged ? '<span class="track-btn-label track-btn-label-long">Bet logged</span><span class="track-btn-label track-btn-label-short">Logged</span>' : "Log bet"}</button>
-                  <button type="button" class="share-btn" data-share-url="${shareUrl}" data-share-title="${game.prediction?.outcomeLabel || game.matchup}">Share</button>
+                  <button type="button" class="share-btn" data-share-url="${shareUrl}" data-share-title="${prediction?.outcomeLabel || game.matchup}">Share</button>
                 </div>
               </div>
               ${renderLineups(game, lineupLabel)}
@@ -3483,11 +3796,14 @@ async function refreshLiveScores() {
     const liveScores = await fetchLiveScoresFromEspn(league, dateValue);
     if (!liveScores) return;
     lastLiveScoreAt = Date.now();
-    lastPayload = { ...lastPayload, games: mergeLiveScores(lastPayload.games, liveScores) };
+    const mergedGames = mergeLiveScores(lastPayload.games, liveScores);
+    lastPayload = { ...lastPayload, games: mergedGames };
     saveMyBets(autoSettleMyBets(loadMyBets()));
     saveModelTracker(autoSettleModelBets(loadModelTracker()));
     if (activeView === "predictions") {
-      renderGames(lastPayload.games);
+      const patched = patchLiveScoreDom(mergedGames);
+      if (!patched) renderGames(mergedGames);
+      else renderStats(lastPayload, prepareGamesForDisplay(mergedGames));
     } else if (activeView === "my-bets") {
       renderMyBetsView();
     } else if (activeView === "model-tracker") {
@@ -3518,6 +3834,16 @@ async function fetchAccuracy({ force = false } = {}) {
   }
 }
 
+async function fetchCalibration({ force = false } = {}) {
+  try {
+    const response = await fetch(staticDataUrl("data/calibration.json", force));
+    if (!response.ok) return null;
+    return response.json();
+  } catch {
+    return null;
+  }
+}
+
 async function fetchDashboardPayload(params, { force = false } = {}) {
   const league = params.get("league") || sportSelect.value;
 
@@ -3527,6 +3853,7 @@ async function fetchDashboardPayload(params, { force = false } = {}) {
       syncDatePicker(league, activeScheduleDate || getSelectedDate());
     }
     accuracyData = await fetchAccuracy({ force });
+    calibrationData = (await fetchCalibration({ force })) ?? calibrationData;
 
     if (league === "overview") {
       overviewData = await fetchOverview({ force });
@@ -3570,7 +3897,9 @@ async function loadDashboard(force = false) {
   loadingDashboard = true;
   refreshBtn.disabled = true;
   updateRefreshButtonLabel();
-  if (sportSelect.value !== "overview") {
+  if (sportSelect.value !== "overview" && activeView === "predictions") {
+    showLoadingSkeletons();
+  } else if (sportSelect.value !== "overview") {
     gamesEl.innerHTML = `<div class="empty-state loading-state">Loading ${SPORT_LABELS[sportSelect.value] || sportSelect.value}…</div>`;
   }
 
@@ -3585,6 +3914,7 @@ async function loadDashboard(force = false) {
     const payload = stripBettingLinesFromPayload(await fetchDashboardPayload(params, { force }));
     if (sportSelect.value !== "overview") {
       accuracyData = (await fetchAccuracy({ force })) ?? accuracyData;
+      calibrationData = (await fetchCalibration({ force })) ?? calibrationData;
     }
 
     if (sportSelect.value === "overview") {
@@ -3610,7 +3940,11 @@ async function loadDashboard(force = false) {
       statDate.textContent = `${displayDate}${tz ? ` (${tz})` : ""}`;
 
       const games = normalizedPayload.games || [];
-      renderGames(games);
+      if (activeView === "predictions") {
+        renderGames(games);
+      } else if (activeView === "accuracy") {
+        renderAccuracyView();
+      }
       updateDateDisplayCount(games.length);
 
       if (games.length === 0 && normalizedPayload.error) {
@@ -3702,7 +4036,7 @@ function onSportChange() {
     activeScheduleDate = defaultDateForSport(sportSelect.value);
     syncDatePicker(sportSelect.value, activeScheduleDate);
   }
-  renderAccuracyPanel();
+  if (activeView === "accuracy") renderAccuracyView();
   loadDashboard(true);
 }
 
@@ -3767,8 +4101,16 @@ async function initDashboard() {
       renderGames(lastPayload.games || []);
     }
   });
-  confidenceFilter.addEventListener("change", () => renderGames(lastPayload?.games || []));
-  teamSearch.addEventListener("input", () => renderGames(lastPayload?.games || []));
+  confidenceFilter?.addEventListener("change", () => renderGames(lastPayload?.games || []));
+  teamSearch?.addEventListener("input", () => renderGames(lastPayload?.games || []));
+  filterOpenBtn?.addEventListener("click", openFilterSheet);
+  filterCloseBtn?.addEventListener("click", closeFilterSheet);
+  filterSheetBackdropEl?.addEventListener("click", closeFilterSheet);
+  filterApplyBtn?.addEventListener("click", () => {
+    applyFilterControlsFromMobile();
+    closeFilterSheet();
+    renderGames(lastPayload?.games || []);
+  });
   refreshBtn.addEventListener("click", () => {
     if (activeView === "my-bets") {
       loadDashboard(true);
@@ -3784,7 +4126,7 @@ async function initDashboard() {
   });
   datePrevBtn?.addEventListener("click", () => onDateNav(-1));
   dateNextBtn?.addEventListener("click", () => onDateNav(1));
-  autoRefresh.addEventListener("change", resetAutoRefresh);
+  autoRefresh?.addEventListener("change", resetAutoRefresh);
   liveScoresToggle?.addEventListener("change", resetLiveScorePolling);
 
   syncDatePicker(sportSelect.value, defaultDateForSport(sportSelect.value));
