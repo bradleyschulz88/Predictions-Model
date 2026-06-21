@@ -46,6 +46,14 @@ class ScheduleDateTests(unittest.TestCase):
         self.assertIn("2026-06-14", dates)
         self.assertIn("2026-06-16", dates)
 
+    def test_schedule_dates_include_upcoming_week_for_mlb(self) -> None:
+        afternoon_et = datetime(2026, 6, 15, 18, 0, tzinfo=ZoneInfo("America/New_York"))
+        with patch("schedule_dates.league_now", return_value=afternoon_et):
+            dates = schedule_dates_for_league("mlb")
+        self.assertIn("2026-06-12", dates)
+        self.assertIn("2026-06-22", dates)
+        self.assertGreaterEqual(len(dates), 10)
+
     def test_league_schedule_date_format(self) -> None:
         self.assertRegex(league_schedule_date("epl"), r"^\d{4}-\d{2}-\d{2}$")
 

@@ -1,1 +1,2 @@
-# No third-party packages required (Python 3.10+ stdlib only).
+# Core runtime uses stdlib only. certifi improves HTTPS reliability in CI (optional locally).
+certifi>=2024.0.0

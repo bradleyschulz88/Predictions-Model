@@ -63,6 +63,8 @@ const COVERAGE_LABELS = {
 
 const STALE_LIVE_MINUTES = 20;
 const STALE_SCORELESS_MINUTES = 10;
+const SCHEDULE_LOOKBACK_DAYS = 3;
+const SCHEDULE_LOOKAHEAD_DAYS = 7;
 
 function parseEspnNoteText(notes) {
   if (!Array.isArray(notes)) return "";
@@ -2819,10 +2821,6 @@ function leagueDateIso(sport, daysAhead = 0) {
 
 function defaultDateForSport(sport) {
   const tz = leagueTimezone(sport);
-  const meta = leagueMeta(sport);
-  if (meta?.defaultDate) {
-    return meta.defaultDate;
-  }
   const { hour } = leagueDateParts(tz);
   if (US_SCHEDULE_SPORTS.has(sport) && hour < 10) {
     return leagueDateIso(sport, -1);
@@ -2950,7 +2948,10 @@ function renderDateQuickPicks() {
 
   const sport = sportSelect.value;
   const current = getSelectedDate();
-  const quickDates = [leagueDateIso(sport, -1), leagueDateIso(sport, 0), leagueDateIso(sport, 1)];
+  const quickDates = [];
+  for (let offset = -1; offset <= Math.min(3, SCHEDULE_LOOKAHEAD_DAYS); offset += 1) {
+    quickDates.push(leagueDateIso(sport, offset));
+  }
 
   dateQuickEl.innerHTML = quickDates
     .map(
@@ -2968,7 +2969,7 @@ function availableDatesForLeague(league) {
   const dates = new Set(meta?.availableDates || []);
 
   dates.add(defaultDateForSport(league));
-  for (let offset = -3; offset <= 7; offset += 1) {
+  for (let offset = -SCHEDULE_LOOKBACK_DAYS; offset <= SCHEDULE_LOOKAHEAD_DAYS; offset += 1) {
     dates.add(leagueDateIso(league, offset));
   }
 
@@ -2998,9 +2999,12 @@ function syncDatePicker(league, preferredDate = null) {
   const dates = availableDatesForLeague(league);
   const preferred = preferredDate || activeScheduleDate || getSelectedDate() || defaultDateForSport(league);
   const options = [...new Set([...dates, preferred])].sort();
+  const today = defaultDateForSport(league);
   const currentValue = options.includes(preferred)
     ? preferred
-    : options[options.length - 1] || defaultDateForSport(league);
+    : options.includes(today)
+      ? today
+      : options[options.length - 1] || today;
 
   activeScheduleDate = currentValue;
   datePickerGameCount = null;
@@ -4068,6 +4072,26 @@ async function fetchLiveScoresFromEspn(league, dateValue) {
   return scores;
 }
 
+function scheduleListChanged(beforeGames, afterGames) {
+  const beforeIds = (beforeGames || []).map((game) => String(game.eventId)).sort().join(",");
+  const afterIds = (afterGames || []).map((game) => String(game.eventId)).sort().join(",");
+  return beforeIds !== afterIds;
+}
+
+function mergeLiveSchedule(games, liveGames) {
+  const merged = new Map((games || []).map((game) => [String(game.eventId), { ...game }]));
+  for (const liveGame of liveGames || []) {
+    const eventId = String(liveGame.eventId);
+    const existing = merged.get(eventId);
+    if (existing) {
+      merged.set(eventId, { ...existing, ...liveGame, prediction: existing.prediction ?? liveGame.prediction });
+    } else {
+      merged.set(eventId, { ...liveGame });
+    }
+  }
+  return [...merged.values()].sort((left, right) => String(left.startDate || "").localeCompare(String(right.startDate || "")));
+}
+
 function mergeLiveScores(games, liveScores) {
   if (!liveScores) return games;
   return (games || []).map((game) => {
@@ -4078,21 +4102,55 @@ function mergeLiveScores(games, liveScores) {
 }
 
 async function refreshLiveScores() {
-  if (!liveScoresToggle?.checked || !lastPayload?.games?.length || sportSelect.value === "overview") return;
+  if (!liveScoresToggle?.checked || sportSelect.value === "overview") return;
 
   const league = sportSelect.value;
-  const dateValue = lastPayload.scheduleDate || getSelectedDate();
+  const dateValue = lastPayload?.scheduleDate || getSelectedDate();
+  if (!dateValue) return;
+
   try {
-    const liveScores = await fetchLiveScoresFromEspn(league, dateValue);
-    if (!liveScores) return;
+    const livePayload = await fetchEspnSchedule(league, dateValue);
+    const liveGames = livePayload?.games || [];
+    const gamesBefore = lastPayload?.games || [];
+
+    if (!gamesBefore.length && liveGames.length) {
+      lastLiveScoreAt = Date.now();
+      lastPayload = {
+        ...(lastPayload || {}),
+        league,
+        leagueLabel: SPORT_LABELS[league] || league,
+        scheduleDate: dateValue,
+        games: liveGames,
+        gameCount: liveGames.length,
+        _liveFallback: true,
+        liveScheduleOnly: true,
+        source: "espn-live",
+      };
+      if (activeView === "predictions") renderGames(liveGames);
+      return;
+    }
+
+    if (!gamesBefore.length) return;
+
+    let mergedGames;
+    if (liveGames.length) {
+      mergedGames = mergeLiveSchedule(gamesBefore, liveGames);
+    } else {
+      const liveScores = await fetchLiveScoresFromEspn(league, dateValue);
+      if (!liveScores) return;
+      mergedGames = mergeLiveScores(gamesBefore, liveScores);
+    }
+    if (!mergedGames.length) return;
+
     lastLiveScoreAt = Date.now();
-    const gamesBefore = lastPayload.games;
-    const mergedGames = mergeLiveScores(gamesBefore, liveScores);
-    lastPayload = { ...lastPayload, games: mergedGames };
+    lastPayload = { ...lastPayload, games: mergedGames, gameCount: mergedGames.length };
     saveMyBets(autoSettleMyBets(loadMyBets()));
     saveModelTracker(autoSettleModelBets(loadModelTracker()));
     if (activeView === "predictions") {
-      const needsFullRender = pickVisibilityChanged(gamesBefore, mergedGames) || hasMaterialStatusChange(gamesBefore, mergedGames);
+      const needsFullRender =
+        scheduleListChanged(gamesBefore, mergedGames) ||
+        pickVisibilityChanged(gamesBefore, mergedGames) ||
+        hasMaterialStatusChange(gamesBefore, mergedGames);
       if (needsFullRender) {
         renderGames(mergedGames);
       } else {

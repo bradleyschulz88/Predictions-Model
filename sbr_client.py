@@ -49,6 +49,17 @@ def build_matchup_url(matchup_id: int | str) -> str:
     return f"{SBR_MATCHUP_BASE}{matchup_id}"
 
 
+def _ssl_context(verify_ssl: bool) -> ssl.SSLContext | None:
+    if not verify_ssl:
+        return ssl._create_unverified_context()
+    try:
+        import certifi
+
+        return ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        return None
+
+
 def get_text(
     url: str,
     *,
@@ -60,7 +71,7 @@ def get_text(
 ) -> str:
     """Fetch page HTML with retries and basic rate-limit spacing."""
     last_error: Exception | None = None
-    context = None if verify_ssl else ssl._create_unverified_context()
+    context = _ssl_context(verify_ssl)
 
     for attempt in range(retries):
         if attempt > 0:

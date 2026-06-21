@@ -22,6 +22,11 @@ US_SCHEDULE_LEAGUES = frozenset({"mlb", "nfl", "nba", "wnba"})
 # US sports: before this hour (league local), yesterday's slate may still be live.
 EARLY_SLATE_CUTOFF_HOUR = 10
 
+# How many calendar days to pre-build in GitHub Actions (lookback / lookahead from today).
+SCHEDULE_BUILD_LOOKBACK_DAYS = 3
+SCHEDULE_BUILD_LOOKAHEAD_DAYS = 7
+SCHEDULE_BUILD_LOOKBACK_DAYS_NON_US = 2
+
 
 def get_schedule_timezone(league: str) -> str:
     return LEAGUE_TIMEZONES.get(league, "UTC")
@@ -50,15 +55,10 @@ def default_game_date(league: str = "mlb") -> str:
 def schedule_dates_for_league(league: str) -> list[str]:
     """Candidate dates to pre-build or show in the date picker."""
     default = default_game_date(league)
-    candidates = [
-        default,
-        league_schedule_date(league, 0),
-        league_schedule_date(league, 1),
-        league_schedule_date(league, -1),
-    ]
-
-    if league in US_SCHEDULE_LEAGUES:
-        candidates.append(league_schedule_date(league, -2))
+    lookback = SCHEDULE_BUILD_LOOKBACK_DAYS if league in US_SCHEDULE_LEAGUES else SCHEDULE_BUILD_LOOKBACK_DAYS_NON_US
+    candidates = [default]
+    for offset in range(-lookback, SCHEDULE_BUILD_LOOKAHEAD_DAYS + 1):
+        candidates.append(league_schedule_date(league, offset))
 
     ordered: list[str] = []
     for candidate in candidates:

@@ -35,9 +35,10 @@ def build_league_payload(
     *,
     include_enrichment: bool,
     include_odds: bool,
+    verify_ssl: bool = True,
 ) -> dict:
     print(
-        f"Building {league} for {date_value} (enrichment={include_enrichment}, odds={include_odds})...",
+        f"Building {league} for {date_value} (enrichment={include_enrichment}, odds={include_odds}, ssl={verify_ssl})...",
         flush=True,
     )
     return fetch_dashboard_data(
@@ -48,8 +49,38 @@ def build_league_payload(
         include_enrichment=include_enrichment,
         retries=2,
         retry_delay=0.5,
-        verify_ssl=True,
+        verify_ssl=verify_ssl,
     )
+
+
+def build_league_payload_resilient(
+    league: str,
+    date_value: str,
+    *,
+    include_enrichment: bool,
+    include_odds: bool,
+) -> dict:
+    """Try verified TLS first; retry without verification on certificate errors."""
+    try:
+        return build_league_payload(
+            league,
+            date_value,
+            include_enrichment=include_enrichment,
+            include_odds=include_odds,
+            verify_ssl=True,
+        )
+    except Exception as exc:
+        message = str(exc).lower()
+        if "ssl" not in message and "certificate" not in message:
+            raise
+        print(f"Warning: SSL error for {league} {date_value}, retrying without verify: {exc}", flush=True)
+        return build_league_payload(
+            league,
+            date_value,
+            include_enrichment=include_enrichment,
+            include_odds=include_odds,
+            verify_ssl=False,
+        )
 
 
 def build_overview(payloads: dict[str, dict]) -> dict:
@@ -108,7 +139,7 @@ def main() -> int:
             include_enrichment = True
             include_odds = True
             try:
-                payload = build_league_payload(
+                payload = build_league_payload_resilient(
                     league,
                     date_value,
                     include_enrichment=include_enrichment,
