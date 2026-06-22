@@ -117,6 +117,30 @@ class BuildPagesTests(unittest.TestCase):
         self.assertTrue(include_enrichment_for_date("2026-06-13", "2026-06-16"))
         self.assertTrue(include_enrichment_for_date("2026-06-20", "2026-06-16"))
 
+    def test_build_league_payload_resilient_retries_on_ssl(self) -> None:
+        from unittest.mock import patch
+
+        from scripts.build_pages_data import build_league_payload_resilient
+
+        calls: list[bool] = []
+
+        def fake_build(*_args, verify_ssl=True, **_kwargs):
+            calls.append(verify_ssl)
+            if verify_ssl:
+                raise RuntimeError("SSL: CERTIFICATE_VERIFY_FAILED")
+            return {"gameCount": 1, "games": [{"eventId": "1", "prediction": {"outcomeLabel": "Test"}}]}
+
+        with patch("scripts.build_pages_data.build_league_payload", side_effect=fake_build):
+            payload = build_league_payload_resilient(
+                "mlb",
+                "2026-06-21",
+                include_enrichment=True,
+                include_odds=False,
+            )
+
+        self.assertEqual(calls, [True, False])
+        self.assertEqual(payload["gameCount"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -3385,7 +3385,7 @@ function enrichPayloadWithPredictions(payload, league, scheduleDate) {
     ...payload,
     games: hydratedGames,
     gameCount: hydratedGames.length,
-    topPick: hydratedGames.find((game) => game.prediction?.outcomeLabel)?.prediction?.outcomeLabel || payload.topPick,
+    topPick: hydratedGames.find((game) => gameHasPrediction(game))?.prediction?.outcomeLabel || payload.topPick,
     liveScheduleOnly: pickCount > 0 ? false : payload.liveScheduleOnly,
     _liveFallback: pickCount > 0 ? false : payload._liveFallback,
   };
@@ -4017,54 +4017,68 @@ async function fetchEspnSchedule(league, dateValue) {
 async function fetchStaticPayloadForDate(league, dateValue, { force = false } = {}) {
   const meta = leagueMeta(league);
   const candidatePaths = [
-    meta?.dateFiles?.[dateValue],
-    `data/${league}_${dateValue}.json`,
-  ].filter(Boolean);
+    ...new Set(
+      [meta?.dateFiles?.[dateValue], `data/${league}_${dateValue}.json`]
+        .filter(Boolean)
+        .map((filePath) => String(filePath).replace(/^\//, ""))
+    ),
+  ];
 
-  let emptyDatePayload = null;
+  let snapshotPayload = null;
+  let snapshotWithPredictions = null;
 
   for (const filePath of candidatePaths) {
-    const response = await fetch(staticDataUrl(String(filePath).replace(/^\//, ""), force));
+    const response = await fetch(staticDataUrl(filePath, force));
     if (!response.ok) continue;
     const payload = await response.json();
     const gameCount = payload.gameCount ?? payload.games?.length ?? 0;
     const matchesDate = (payload.scheduleDate || dateValue) === dateValue;
-    if (matchesDate && gameCount > 0) {
-      if (countGamesWithPredictions(payload.games) > 0) {
-        return payload;
-      }
-      if (!emptyDatePayload) emptyDatePayload = payload;
-      continue;
+    if (!matchesDate) continue;
+    if (gameCount > 0 && countGamesWithPredictions(payload.games) > 0) {
+      snapshotWithPredictions = payload;
+      break;
     }
-    if (matchesDate && !emptyDatePayload) {
-      emptyDatePayload = payload;
-    }
+    if (!snapshotPayload) snapshotPayload = payload;
   }
 
+  if (snapshotWithPredictions) return snapshotWithPredictions;
+
   const livePayload = await fetchEspnSchedule(league, dateValue);
-  if (livePayload && (livePayload.gameCount ?? livePayload.games?.length ?? 0) > 0) {
+  const liveGames = livePayload?.games || [];
+
+  if (snapshotPayload?.games?.length) {
+    const mergedGames = liveGames.length ? mergeLiveSchedule(snapshotPayload.games, liveGames) : snapshotPayload.games;
+    return {
+      ...snapshotPayload,
+      scheduleDate: dateValue,
+      games: mergedGames,
+      gameCount: mergedGames.length,
+      fetchedAt: livePayload?.fetchedAt || snapshotPayload.fetchedAt,
+      _requestedDate: dateValue,
+      _liveFallback: Boolean(liveGames.length),
+      liveScheduleOnly: countGamesWithPredictions(mergedGames) === 0,
+    };
+  }
+
+  if (livePayload && liveGames.length > 0) {
     livePayload._requestedDate = dateValue;
     livePayload._liveFallback = true;
     return livePayload;
   }
 
-  if (emptyDatePayload) {
-    emptyDatePayload.scheduleDate = dateValue;
-    if (livePayload) {
-      emptyDatePayload._liveFallback = true;
-      emptyDatePayload.games = livePayload.games || [];
-      emptyDatePayload.gameCount = livePayload.gameCount ?? emptyDatePayload.games.length;
-      emptyDatePayload.fetchedAt = livePayload.fetchedAt;
-      emptyDatePayload.liveScheduleOnly = true;
-    }
-    return emptyDatePayload;
+  if (snapshotPayload) {
+    snapshotPayload.scheduleDate = dateValue;
+    return snapshotPayload;
   }
 
   let fallbackPayload = null;
   const fallbackResponse = await fetch(staticDataUrl(`data/${league}.json`, force));
   if (fallbackResponse.ok) {
     fallbackPayload = await fallbackResponse.json();
-    if (fallbackPayload.scheduleDate === dateValue) {
+    if (
+      fallbackPayload.scheduleDate === dateValue &&
+      countGamesWithPredictions(fallbackPayload.games) > 0
+    ) {
       return fallbackPayload;
     }
   }
@@ -4165,7 +4179,8 @@ function mergeLiveSchedule(games, liveGames) {
     const eventId = String(liveGame.eventId);
     const existing = merged.get(eventId);
     if (existing) {
-      merged.set(eventId, { ...existing, ...liveGame, prediction: existing.prediction ?? liveGame.prediction });
+      const prediction = existing.prediction ?? liveGame.prediction;
+      merged.set(eventId, { ...existing, ...liveGame, prediction });
     } else {
       merged.set(eventId, { ...liveGame });
     }
@@ -4196,18 +4211,23 @@ async function refreshLiveScores() {
 
     if (!gamesBefore.length && liveGames.length) {
       lastLiveScoreAt = Date.now();
-      lastPayload = {
-        ...(lastPayload || {}),
+      lastPayload = enrichPayloadWithPredictions(
+        {
+          ...(lastPayload || {}),
+          league,
+          leagueLabel: SPORT_LABELS[league] || league,
+          scheduleDate: dateValue,
+          games: liveGames,
+          gameCount: liveGames.length,
+          _liveFallback: true,
+          liveScheduleOnly: true,
+          source: "espn-live",
+          fetchedAt: livePayload?.fetchedAt || new Date().toISOString(),
+        },
         league,
-        leagueLabel: SPORT_LABELS[league] || league,
-        scheduleDate: dateValue,
-        games: liveGames,
-        gameCount: liveGames.length,
-        _liveFallback: true,
-        liveScheduleOnly: true,
-        source: "espn-live",
-      };
-      if (activeView === "predictions") renderGames(liveGames);
+        dateValue
+      );
+      if (activeView === "predictions") renderGames(lastPayload.games || liveGames);
       return;
     }
 

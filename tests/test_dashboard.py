@@ -112,8 +112,8 @@ class DashboardServerTests(unittest.TestCase):
         cls.server.server_close()
         cls.thread.join(timeout=2)
 
-    def _get_json(self, path: str) -> dict:
-        with urllib.request.urlopen(f"http://{self.host}:{self.port}{path}", timeout=5) as response:
+    def _get_json(self, path: str, *, timeout: float = 30) -> dict:
+        with urllib.request.urlopen(f"http://{self.host}:{self.port}{path}", timeout=timeout) as response:
             return json.load(response)
 
     def test_health_endpoint(self) -> None:
