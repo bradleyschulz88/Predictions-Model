@@ -1,18 +1,18 @@
 {
-  "builtAt": "2026-06-15T23:16:51.465747+00:00",
+  "builtAt": "2026-06-22T00:13:13.741581+00:00",
   "leagues": [
     {
       "id": "mlb",
       "label": "MLB Baseball",
-      "scheduleDate": "2026-06-15",
-      "gameCount": 0,
-      "topPick": null,
-      "topConfidence": null
+      "scheduleDate": "2026-06-21",
+      "gameCount": 15,
+      "topPick": "Pittsburgh Pirates to win",
+      "topConfidence": 88.9
     },
     {
       "id": "nfl",
       "label": "NFL Football",
-      "scheduleDate": "2026-06-15",
+      "scheduleDate": "2026-06-21",
       "gameCount": 0,
       "topPick": null,
       "topConfidence": null
@@ -20,23 +20,31 @@
     {
       "id": "nba",
       "label": "NBA Basketball",
-      "scheduleDate": "2026-06-15",
+      "scheduleDate": "2026-06-21",
       "gameCount": 0,
       "topPick": null,
       "topConfidence": null
+    },
+    {
+      "id": "wnba",
+      "label": "WNBA Basketball",
+      "scheduleDate": "2026-06-21",
+      "gameCount": 3,
+      "topPick": "New York Liberty to win",
+      "topConfidence": 86.2
     },
     {
       "id": "worldcup",
       "label": "FIFA World Cup",
-      "scheduleDate": "2026-06-15",
-      "gameCount": 0,
-      "topPick": null,
-      "topConfidence": null
+      "scheduleDate": "2026-06-21",
+      "gameCount": 5,
+      "topPick": "Japan to win",
+      "topConfidence": 70.1
     },
     {
       "id": "epl",
       "label": "English Premier League",
-      "scheduleDate": "2026-06-16",
+      "scheduleDate": "2026-06-22",
       "gameCount": 0,
       "topPick": null,
       "topConfidence": null
@@ -44,11 +52,84 @@
     {
       "id": "afl",
       "label": "AFL",
-      "scheduleDate": "2026-06-16",
+      "scheduleDate": "2026-06-22",
       "gameCount": 0,
       "topPick": null,
       "topConfidence": null
     }
   ],
-  "topPicksOverall": []
+  "topPicksOverall": [
+    {
+      "league": "mlb",
+      "leagueLabel": "MLB Baseball",
+      "matchup": "Pittsburgh Pirates @ Colorado Rockies",
+      "pick": "Pittsburgh Pirates to win",
+      "confidence": 88.9,
+      "confidenceLabel": "Strong pick",
+      "eventId": "401815849"
+    },
+    {
+      "league": "mlb",
+      "leagueLabel": "MLB Baseball",
+      "matchup": "New York Mets @ Philadelphia Phillies",
+      "pick": "Philadelphia Phillies to win",
+      "confidence": 88.3,
+      "confidenceLabel": "Strong pick",
+      "eventId": "401815842"
+    },
+    {
+      "league": "mlb",
+      "leagueLabel": "MLB Baseball",
+      "matchup": "Minnesota Twins @ Arizona Diamondbacks",
+      "pick": "Arizona Diamondbacks to win",
+      "confidence": 87.8,
+      "confidenceLabel": "Strong pick",
+      "eventId": "401815853"
+    },
+    {
+      "league": "wnba",
+      "leagueLabel": "WNBA Basketball",
+      "matchup": "New York Liberty @ Los Angeles Sparks",
+      "pick": "New York Liberty to win",
+      "confidence": 86.2,
+      "confidenceLabel": "Strong pick",
+      "eventId": "401857011"
+    },
+    {
+      "league": "wnba",
+      "leagueLabel": "WNBA Basketball",
+      "matchup": "Golden State Valkyries @ Las Vegas Aces",
+      "pick": "Las Vegas Aces to win",
+      "confidence": 81.2,
+      "confidenceLabel": "Strong pick",
+      "eventId": "401857009"
+    },
+    {
+      "league": "worldcup",
+      "leagueLabel": "FIFA World Cup",
+      "matchup": "Japan @ Tunisia",
+      "pick": "Japan to win",
+      "confidence": 70.1,
+      "confidenceLabel": "Strong pick",
+      "eventId": "760449"
+    },
+    {
+      "league": "worldcup",
+      "leagueLabel": "FIFA World Cup",
+      "matchup": "Saudi Arabia @ Spain",
+      "pick": "Spain to win",
+      "confidence": 70.1,
+      "confidenceLabel": "Strong pick",
+      "eventId": "760453"
+    },
+    {
+      "league": "wnba",
+      "leagueLabel": "WNBA Basketball",
+      "matchup": "Washington Mystics @ Minnesota Lynx",
+      "pick": "Minnesota Lynx to win",
+      "confidence": 57.6,
+      "confidenceLabel": "Lean",
+      "eventId": "401857010"
+    }
+  ]
 }

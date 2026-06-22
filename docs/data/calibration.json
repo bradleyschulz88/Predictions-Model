@@ -1,0 +1,180 @@
+{
+  "builtAt": "2026-06-22T00:13:13.739643+00:00",
+  "thresholds": {
+    "strong": 68,
+    "lean": 57
+  },
+  "summary": {
+    "graded": 105,
+    "correct": 65,
+    "winPct": 61.9,
+    "units": 14.723,
+    "roiPct": 14.0,
+    "pending": 236,
+    "featureCoverage": {
+      "withFeatures": 301,
+      "totalLogged": 341,
+      "withRestData": 281
+    },
+    "avgOverconfidencePct": 5.9
+  },
+  "byLeague": {
+    "mlb": {
+      "correct": 44,
+      "total": 74,
+      "units": 6.312,
+      "pending": 144,
+      "winPct": 59.5,
+      "roiPct": 8.5
+    },
+    "worldcup": {
+      "correct": 11,
+      "total": 19,
+      "units": 0.411,
+      "pending": 47,
+      "winPct": 57.9,
+      "roiPct": 2.2
+    },
+    "nba": {
+      "correct": 0,
+      "total": 1,
+      "units": -1.0,
+      "pending": 0,
+      "winPct": 0.0,
+      "roiPct": -100.0
+    },
+    "afl": {
+      "correct": 1,
+      "total": 1,
+      "units": 1.0,
+      "pending": 13,
+      "winPct": 100.0,
+      "roiPct": 100.0
+    },
+    "wnba": {
+      "correct": 9,
+      "total": 10,
+      "units": 8.0,
+      "pending": 32,
+      "winPct": 90.0,
+      "roiPct": 80.0
+    }
+  },
+  "byConfidence": {
+    "strong_68+": {
+      "correct": 33,
+      "total": 44,
+      "units": 15.617,
+      "winPct": 75.0
+    },
+    "lean_57+": {
+      "correct": 24,
+      "total": 36,
+      "units": 9.627,
+      "winPct": 66.7
+    },
+    "coin_<57": {
+      "correct": 8,
+      "total": 25,
+      "units": -10.521,
+      "winPct": 32.0
+    }
+  },
+  "calibration": [
+    {
+      "confidenceRange": "50-54",
+      "picks": 14,
+      "avgPredictedPct": 48.3,
+      "actualWinPct": 28.6,
+      "overconfidencePct": 19.7
+    },
+    {
+      "confidenceRange": "55-59",
+      "picks": 12,
+      "avgPredictedPct": 54.8,
+      "actualWinPct": 41.7,
+      "overconfidencePct": 13.1
+    },
+    {
+      "confidenceRange": "60-64",
+      "picks": 20,
+      "avgPredictedPct": 59.6,
+      "actualWinPct": 70.0,
+      "overconfidencePct": -10.4
+    },
+    {
+      "confidenceRange": "65-69",
+      "picks": 13,
+      "avgPredictedPct": 64.2,
+      "actualWinPct": 53.8,
+      "overconfidencePct": 10.4
+    },
+    {
+      "confidenceRange": "70-74",
+      "picks": 15,
+      "avgPredictedPct": 69.7,
+      "actualWinPct": 80.0,
+      "overconfidencePct": -10.3
+    },
+    {
+      "confidenceRange": "75-79",
+      "picks": 8,
+      "avgPredictedPct": 75.3,
+      "actualWinPct": 75.0,
+      "overconfidencePct": 0.3
+    },
+    {
+      "confidenceRange": "80-84",
+      "picks": 9,
+      "avgPredictedPct": 79.5,
+      "actualWinPct": 77.8,
+      "overconfidencePct": 1.7
+    },
+    {
+      "confidenceRange": "85-89",
+      "picks": 6,
+      "avgPredictedPct": 84.9,
+      "actualWinPct": 83.3,
+      "overconfidencePct": 1.6
+    },
+    {
+      "confidenceRange": "90-94",
+      "picks": 8,
+      "avgPredictedPct": 89.7,
+      "actualWinPct": 62.5,
+      "overconfidencePct": 27.2
+    }
+  ],
+  "coverageBreakdown": {
+    "restData": {
+      "with": 56,
+      "without": 49,
+      "winsWith": 38,
+      "winsWithout": 27
+    },
+    "scheduleFlags": {
+      "with": 65,
+      "without": 40,
+      "winsWith": 45,
+      "winsWithout": 20
+    },
+    "impliedOdds": {
+      "with": 50,
+      "without": 55,
+      "winsWith": 33,
+      "winsWithout": 32
+    },
+    "lineup": {
+      "with": 64,
+      "without": 41,
+      "winsWith": 45,
+      "winsWithout": 20
+    },
+    "espnPredictor": {
+      "with": 0,
+      "without": 105,
+      "winsWith": 0,
+      "winsWithout": 65
+    }
+  }
+}

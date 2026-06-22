@@ -1,0 +1,1116 @@
+{
+  "url": "espn://australian-football/afl/scoreboard?dates=20260621",
+  "source": "espn",
+  "league": "afl",
+  "leagueLabel": "AFL",
+  "leagues": [
+    {
+      "id": "mlb",
+      "label": "MLB Baseball",
+      "shortLabel": "MLB"
+    },
+    {
+      "id": "nfl",
+      "label": "NFL Football",
+      "shortLabel": "NFL"
+    },
+    {
+      "id": "nba",
+      "label": "NBA Basketball",
+      "shortLabel": "NBA"
+    },
+    {
+      "id": "wnba",
+      "label": "WNBA Basketball",
+      "shortLabel": "WNBA"
+    },
+    {
+      "id": "worldcup",
+      "label": "FIFA World Cup",
+      "shortLabel": "World Cup"
+    },
+    {
+      "id": "epl",
+      "label": "English Premier League",
+      "shortLabel": "EPL"
+    },
+    {
+      "id": "afl",
+      "label": "AFL",
+      "shortLabel": "AFL"
+    }
+  ],
+  "scheduleDate": "2026-06-21",
+  "gameCount": 2,
+  "statusCounts": {
+    "Final": 2
+  },
+  "topPick": "North Melbourne to win",
+  "games": [
+    {
+      "league": "afl",
+      "leagueLabel": "AFL",
+      "eventId": "1133609",
+      "startDate": "2026-06-21T03:10Z",
+      "awayTeam": "North Melbourne",
+      "homeTeam": "Richmond",
+      "matchup": "North Melbourne @ Richmond",
+      "gameStatusText": "Final",
+      "gameStatusDetail": "Final",
+      "statusType": "STATUS_FINAL",
+      "venueName": "MCG",
+      "broadcast": null,
+      "awayRecord": "7-7",
+      "homeRecord": "2-12",
+      "awayRoadRecord": "7-7",
+      "homeHomeRecord": "2-12",
+      "awayScore": "73",
+      "homeScore": "48",
+      "isLive": false,
+      "isFinal": true,
+      "isScheduled": false,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 0,
+      "source": "espn",
+      "viewTypes": [],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": "1-4",
+          "results": [
+            "L",
+            "L",
+            "W",
+            "L",
+            "L"
+          ],
+          "games": [
+            {
+              "result": "L",
+              "score": "98-61",
+              "opponent": "Adelaide Crows"
+            },
+            {
+              "result": "L",
+              "score": "109-73",
+              "opponent": "St Kilda"
+            },
+            {
+              "result": "W",
+              "score": "74-56",
+              "opponent": "Essendon"
+            },
+            {
+              "result": "L",
+              "score": "170-56",
+              "opponent": "Sydney Swans"
+            },
+            {
+              "result": "L",
+              "score": "115-80",
+              "opponent": "Brisbane Lions"
+            }
+          ]
+        },
+        "awayLastFive": {
+          "record": "2-3",
+          "results": [
+            "L",
+            "L",
+            "W",
+            "L",
+            "W"
+          ],
+          "games": [
+            {
+              "result": "L",
+              "score": "105-97",
+              "opponent": "Sydney Swans"
+            },
+            {
+              "result": "L",
+              "score": "133-65",
+              "opponent": "Adelaide Crows"
+            },
+            {
+              "result": "W",
+              "score": "111-105",
+              "opponent": "Gold Coast SUNS"
+            },
+            {
+              "result": "L",
+              "score": "155-31",
+              "opponent": "Fremantle"
+            },
+            {
+              "result": "W",
+              "score": "74-73",
+              "opponent": "West Coast Eagles"
+            }
+          ]
+        },
+        "seasonSeries": null,
+        "weather": null,
+        "homeInjuries": [],
+        "awayInjuries": [],
+        "homeMajorInjuries": [],
+        "awayMajorInjuries": [],
+        "homeKeyInjuries": [],
+        "awayKeyInjuries": [],
+        "homeLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Jayden Short",
+              "position": "INT"
+            },
+            {
+              "order": null,
+              "name": "Tom Brown",
+              "position": "HBFR"
+            },
+            {
+              "order": null,
+              "name": "Sam Banks",
+              "position": "CHB"
+            },
+            {
+              "order": null,
+              "name": "Tim Taranto",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Seth Campbell",
+              "position": "R"
+            },
+            {
+              "order": null,
+              "name": "Dion Prestia",
+              "position": "RR"
+            },
+            {
+              "order": null,
+              "name": "James Trezise",
+              "position": "WR"
+            },
+            {
+              "order": null,
+              "name": "Ben Miller",
+              "position": "FB"
+            },
+            {
+              "order": null,
+              "name": "Sam Cumming",
+              "position": "INT"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Caleb Daniel",
+              "position": "CHB"
+            },
+            {
+              "order": null,
+              "name": "Harry Sheezel",
+              "position": "R"
+            },
+            {
+              "order": null,
+              "name": "Luke Parker",
+              "position": "BPR"
+            },
+            {
+              "order": null,
+              "name": "Jy Simpkin",
+              "position": "WL"
+            },
+            {
+              "order": null,
+              "name": "Colby McKercher",
+              "position": "HBFR"
+            },
+            {
+              "order": null,
+              "name": "Charlie Spargo",
+              "position": "HFFR"
+            },
+            {
+              "order": null,
+              "name": "Cooper Harvey",
+              "position": "INT"
+            },
+            {
+              "order": null,
+              "name": "Luke Davies-Uniacke",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Jacob Konstanty",
+              "position": "WR"
+            }
+          ]
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [],
+          "powerRating": 0.20000000000000004,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [],
+          "powerRating": 0.4000000000000001,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": 7,
+          "away": null
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": null,
+          "seriesScore": null
+        },
+        "homeScheduleFlags": {
+          "restDays": 7,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 1
+        },
+        "awayScheduleFlags": {
+          "restDays": null,
+          "backToBack": false,
+          "threeInFour": false
+        },
+        "leagueMetrics": {
+          "league": "afl"
+        }
+      },
+      "homeLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Jayden Short",
+            "position": "INT"
+          },
+          {
+            "order": null,
+            "name": "Tom Brown",
+            "position": "HBFR"
+          },
+          {
+            "order": null,
+            "name": "Sam Banks",
+            "position": "CHB"
+          },
+          {
+            "order": null,
+            "name": "Tim Taranto",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Seth Campbell",
+            "position": "R"
+          },
+          {
+            "order": null,
+            "name": "Dion Prestia",
+            "position": "RR"
+          },
+          {
+            "order": null,
+            "name": "James Trezise",
+            "position": "WR"
+          },
+          {
+            "order": null,
+            "name": "Ben Miller",
+            "position": "FB"
+          },
+          {
+            "order": null,
+            "name": "Sam Cumming",
+            "position": "INT"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Caleb Daniel",
+            "position": "CHB"
+          },
+          {
+            "order": null,
+            "name": "Harry Sheezel",
+            "position": "R"
+          },
+          {
+            "order": null,
+            "name": "Luke Parker",
+            "position": "BPR"
+          },
+          {
+            "order": null,
+            "name": "Jy Simpkin",
+            "position": "WL"
+          },
+          {
+            "order": null,
+            "name": "Colby McKercher",
+            "position": "HBFR"
+          },
+          {
+            "order": null,
+            "name": "Charlie Spargo",
+            "position": "HFFR"
+          },
+          {
+            "order": null,
+            "name": "Cooper Harvey",
+            "position": "INT"
+          },
+          {
+            "order": null,
+            "name": "Luke Davies-Uniacke",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Jacob Konstanty",
+            "position": "WR"
+          }
+        ]
+      },
+      "homeMajorInjuries": [],
+      "awayMajorInjuries": [],
+      "prediction": {
+        "predictedWinner": "North Melbourne",
+        "predictedSide": "away",
+        "homeWinPct": 12.2,
+        "awayWinPct": 87.8,
+        "confidence": 87.8,
+        "confidenceLabel": "Strong pick",
+        "outcomeLabel": "North Melbourne to win",
+        "whyTheyWin": "North Melbourne are projected to win because Richmond (2-12, 14.3%) have outplayed North Melbourne (7-7, 50.0%) across the full season.; Composite rating favors North Melbourne: 0.200 vs 0.400 (ESPN + MLB.com + form).; Richmond are 2-12 at home while North Melbourne are 7-7 on the road.",
+        "reasons": [
+          {
+            "title": "Better season record",
+            "detail": "Richmond (2-12, 14.3%) have outplayed North Melbourne (7-7, 50.0%) across the full season.",
+            "impact": "high",
+            "favors": "away"
+          },
+          {
+            "title": "Power rating edge",
+            "detail": "Composite rating favors North Melbourne: 0.200 vs 0.400 (ESPN + MLB.com + form).",
+            "impact": "high",
+            "favors": "away",
+            "source": "Multi-source"
+          },
+          {
+            "title": "Favorable home/road split",
+            "detail": "Richmond are 2-12 at home while North Melbourne are 7-7 on the road.",
+            "impact": "medium",
+            "favors": "away"
+          },
+          {
+            "title": "Recent form trending up",
+            "detail": "North Melbourne are 2-3 in their last five (L-L-W-L-W) while Richmond are 1-4.",
+            "impact": "medium",
+            "favors": "away",
+            "source": "ESPN"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "Richmond 2-12 vs North Melbourne 7-7",
+            "edge": "away"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home 2-12 vs away 7-7",
+            "edge": "away"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Last five games",
+            "detail": "Richmond 1-4 vs North Melbourne 2-3",
+            "edge": "away"
+          },
+          {
+            "label": "Advanced team profile",
+            "detail": "Power 0.200 vs 0.400 (ESPN/MLB.com)",
+            "edge": "away"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 7.0% home / 93.0% away",
+            "edge": "away"
+          }
+        ],
+        "dataSources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "Key players",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.07043673089281707,
+            "away": 0.9295632691071829,
+            "draw": null,
+            "homePct": 7.0,
+            "awayPct": 93.0,
+            "drawPct": null,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 7.0,
+                "weightPct": 100.0
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 12.2,
+            "awayPct": 87.8,
+            "drawPct": null,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": false
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 7.0,
+            "impliedPct": null,
+            "blendedPct": 12.2,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "away": {
+            "truePct": 93.0,
+            "impliedPct": null,
+            "blendedPct": 87.8,
+            "edgePct": null,
+            "edgeLabel": null
+          }
+        },
+        "features": {
+          "league": "afl",
+          "recordDiff": -0.3571,
+          "splitDiff": -0.3571,
+          "homePower": 0.20000000000000004,
+          "awayPower": 0.4000000000000001,
+          "homeInjuryLoad": 0,
+          "awayInjuryLoad": 0,
+          "homeRest": 7,
+          "awayRest": null,
+          "homeBackToBack": false,
+          "awayBackToBack": false,
+          "impliedHome": null,
+          "impliedAway": null,
+          "trueHome": 7.0,
+          "trueAway": 93.0,
+          "confidence": 87.8,
+          "predictedSide": "away",
+          "hasLineup": true,
+          "dataCoverage": {
+            "lineup": true,
+            "injuries": false,
+            "espnPredictor": false,
+            "advancedStats": true,
+            "restData": false,
+            "scheduleFlags": true,
+            "mlbPitching": false,
+            "leagueMetrics": false,
+            "impliedOdds": false
+          },
+          "mlbPitching": null,
+          "leagueMetrics": {
+            "league": "afl"
+          }
+        }
+      },
+      "predictionRank": 1
+    },
+    {
+      "league": "afl",
+      "leagueLabel": "AFL",
+      "eventId": "1133610",
+      "startDate": "2026-06-21T05:15Z",
+      "awayTeam": "Western Bulldogs",
+      "homeTeam": "St Kilda",
+      "matchup": "Western Bulldogs @ St Kilda",
+      "gameStatusText": "Final",
+      "gameStatusDetail": "Final",
+      "statusType": "STATUS_FINAL",
+      "venueName": "Marvel Stadium",
+      "broadcast": null,
+      "awayRecord": "9-6",
+      "homeRecord": "6-9",
+      "awayRoadRecord": "9-6",
+      "homeHomeRecord": "6-9",
+      "awayScore": "83",
+      "homeScore": "61",
+      "isLive": false,
+      "isFinal": true,
+      "isScheduled": false,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 0,
+      "source": "espn",
+      "viewTypes": [],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": "2-3",
+          "results": [
+            "W",
+            "L",
+            "L",
+            "L",
+            "W"
+          ],
+          "games": [
+            {
+              "result": "W",
+              "score": "109-73",
+              "opponent": "Richmond"
+            },
+            {
+              "result": "L",
+              "score": "104-74",
+              "opponent": "Fremantle"
+            },
+            {
+              "result": "L",
+              "score": "119-67",
+              "opponent": "Hawthorn"
+            },
+            {
+              "result": "L",
+              "score": "104-102",
+              "opponent": "Sydney Swans"
+            },
+            {
+              "result": "W",
+              "score": "96-88",
+              "opponent": "GWS GIANTS"
+            }
+          ]
+        },
+        "awayLastFive": {
+          "record": "3-2",
+          "results": [
+            "L",
+            "W",
+            "W",
+            "W",
+            "L"
+          ],
+          "games": [
+            {
+              "result": "L",
+              "score": "74-62",
+              "opponent": "Carlton"
+            },
+            {
+              "result": "W",
+              "score": "93-90",
+              "opponent": "Melbourne"
+            },
+            {
+              "result": "W",
+              "score": "97-93",
+              "opponent": "Collingwood"
+            },
+            {
+              "result": "W",
+              "score": "77-71",
+              "opponent": "Hawthorn"
+            },
+            {
+              "result": "L",
+              "score": "121-64",
+              "opponent": "Adelaide Crows"
+            }
+          ]
+        },
+        "seasonSeries": null,
+        "weather": null,
+        "homeInjuries": [],
+        "awayInjuries": [],
+        "homeMajorInjuries": [],
+        "awayMajorInjuries": [],
+        "homeKeyInjuries": [],
+        "awayKeyInjuries": [],
+        "homeLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Nasiah Wanganeen-Milera",
+              "position": "R"
+            },
+            {
+              "order": null,
+              "name": "Bradley Hill",
+              "position": "INT"
+            },
+            {
+              "order": null,
+              "name": "Hugo Garcia",
+              "position": "RR"
+            },
+            {
+              "order": null,
+              "name": "Marcus Windhager",
+              "position": "CHB"
+            },
+            {
+              "order": null,
+              "name": "Callum Wilkie",
+              "position": "FB"
+            },
+            {
+              "order": null,
+              "name": "Darcy Wilson",
+              "position": "WL"
+            },
+            {
+              "order": null,
+              "name": "Jack Macrae",
+              "position": "INT"
+            },
+            {
+              "order": null,
+              "name": "Mason Wood",
+              "position": "WR"
+            },
+            {
+              "order": null,
+              "name": "Rowan Marshall",
+              "position": "INT"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Marcus Bontempelli",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Bailey Dale",
+              "position": "HBFR"
+            },
+            {
+              "order": null,
+              "name": "Matthew Kennedy",
+              "position": "HFFL"
+            },
+            {
+              "order": null,
+              "name": "Joel Freijah",
+              "position": "INT"
+            },
+            {
+              "order": null,
+              "name": "Tom Liberatore",
+              "position": "RR"
+            },
+            {
+              "order": null,
+              "name": "Ed Richards",
+              "position": "R"
+            },
+            {
+              "order": null,
+              "name": "Ryley Sanders",
+              "position": "WR"
+            },
+            {
+              "order": null,
+              "name": "Cooper Hynes",
+              "position": "INT"
+            },
+            {
+              "order": null,
+              "name": "Connor Budarick",
+              "position": "HBFL"
+            }
+          ]
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [],
+          "powerRating": 0.4000000000000001,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [],
+          "powerRating": 0.6,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": 7,
+          "away": null
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": null,
+          "seriesScore": null
+        },
+        "homeScheduleFlags": {
+          "restDays": 7,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 1
+        },
+        "awayScheduleFlags": {
+          "restDays": null,
+          "backToBack": false,
+          "threeInFour": false
+        },
+        "leagueMetrics": {
+          "league": "afl"
+        }
+      },
+      "homeLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Nasiah Wanganeen-Milera",
+            "position": "R"
+          },
+          {
+            "order": null,
+            "name": "Bradley Hill",
+            "position": "INT"
+          },
+          {
+            "order": null,
+            "name": "Hugo Garcia",
+            "position": "RR"
+          },
+          {
+            "order": null,
+            "name": "Marcus Windhager",
+            "position": "CHB"
+          },
+          {
+            "order": null,
+            "name": "Callum Wilkie",
+            "position": "FB"
+          },
+          {
+            "order": null,
+            "name": "Darcy Wilson",
+            "position": "WL"
+          },
+          {
+            "order": null,
+            "name": "Jack Macrae",
+            "position": "INT"
+          },
+          {
+            "order": null,
+            "name": "Mason Wood",
+            "position": "WR"
+          },
+          {
+            "order": null,
+            "name": "Rowan Marshall",
+            "position": "INT"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Marcus Bontempelli",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Bailey Dale",
+            "position": "HBFR"
+          },
+          {
+            "order": null,
+            "name": "Matthew Kennedy",
+            "position": "HFFL"
+          },
+          {
+            "order": null,
+            "name": "Joel Freijah",
+            "position": "INT"
+          },
+          {
+            "order": null,
+            "name": "Tom Liberatore",
+            "position": "RR"
+          },
+          {
+            "order": null,
+            "name": "Ed Richards",
+            "position": "R"
+          },
+          {
+            "order": null,
+            "name": "Ryley Sanders",
+            "position": "WR"
+          },
+          {
+            "order": null,
+            "name": "Cooper Hynes",
+            "position": "INT"
+          },
+          {
+            "order": null,
+            "name": "Connor Budarick",
+            "position": "HBFL"
+          }
+        ]
+      },
+      "homeMajorInjuries": [],
+      "awayMajorInjuries": [],
+      "prediction": {
+        "predictedWinner": "Western Bulldogs",
+        "predictedSide": "away",
+        "homeWinPct": 19.6,
+        "awayWinPct": 80.4,
+        "confidence": 80.4,
+        "confidenceLabel": "Strong pick",
+        "outcomeLabel": "Western Bulldogs to win",
+        "whyTheyWin": "Western Bulldogs are projected to win because St Kilda (6-9, 40.0%) have outplayed Western Bulldogs (9-6, 60.0%) across the full season.; Composite rating favors Western Bulldogs: 0.400 vs 0.600 (ESPN + MLB.com + form).; St Kilda are 6-9 at home while Western Bulldogs are 9-6 on the road.",
+        "reasons": [
+          {
+            "title": "Better season record",
+            "detail": "St Kilda (6-9, 40.0%) have outplayed Western Bulldogs (9-6, 60.0%) across the full season.",
+            "impact": "high",
+            "favors": "away"
+          },
+          {
+            "title": "Power rating edge",
+            "detail": "Composite rating favors Western Bulldogs: 0.400 vs 0.600 (ESPN + MLB.com + form).",
+            "impact": "high",
+            "favors": "away",
+            "source": "Multi-source"
+          },
+          {
+            "title": "Favorable home/road split",
+            "detail": "St Kilda are 6-9 at home while Western Bulldogs are 9-6 on the road.",
+            "impact": "medium",
+            "favors": "away"
+          },
+          {
+            "title": "Recent form trending up",
+            "detail": "Western Bulldogs are 3-2 in their last five (L-W-W-W-L) while St Kilda are 2-3.",
+            "impact": "medium",
+            "favors": "away",
+            "source": "ESPN"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "St Kilda 6-9 vs Western Bulldogs 9-6",
+            "edge": "away"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home 6-9 vs away 9-6",
+            "edge": "away"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Last five games",
+            "detail": "St Kilda 2-3 vs Western Bulldogs 3-2",
+            "edge": "away"
+          },
+          {
+            "label": "Advanced team profile",
+            "detail": "Power 0.400 vs 0.600 (ESPN/MLB.com)",
+            "edge": "away"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 15.4% home / 84.6% away",
+            "edge": "away"
+          }
+        ],
+        "dataSources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "Key players",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.1544652650835348,
+            "away": 0.8455347349164652,
+            "draw": null,
+            "homePct": 15.4,
+            "awayPct": 84.6,
+            "drawPct": null,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 15.4,
+                "weightPct": 100.0
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 19.6,
+            "awayPct": 80.4,
+            "drawPct": null,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": false
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 15.4,
+            "impliedPct": null,
+            "blendedPct": 19.6,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "away": {
+            "truePct": 84.6,
+            "impliedPct": null,
+            "blendedPct": 80.4,
+            "edgePct": null,
+            "edgeLabel": null
+          }
+        },
+        "features": {
+          "league": "afl",
+          "recordDiff": -0.2,
+          "splitDiff": -0.2,
+          "homePower": 0.4000000000000001,
+          "awayPower": 0.6,
+          "homeInjuryLoad": 0,
+          "awayInjuryLoad": 0,
+          "homeRest": 7,
+          "awayRest": null,
+          "homeBackToBack": false,
+          "awayBackToBack": false,
+          "impliedHome": null,
+          "impliedAway": null,
+          "trueHome": 15.4,
+          "trueAway": 84.6,
+          "confidence": 80.4,
+          "predictedSide": "away",
+          "hasLineup": true,
+          "dataCoverage": {
+            "lineup": true,
+            "injuries": false,
+            "espnPredictor": false,
+            "advancedStats": true,
+            "restData": false,
+            "scheduleFlags": true,
+            "mlbPitching": false,
+            "leagueMetrics": false,
+            "impliedOdds": false
+          },
+          "mlbPitching": null,
+          "leagueMetrics": {
+            "league": "afl"
+          }
+        }
+      },
+      "predictionRank": 2
+    }
+  ],
+  "fetchedAt": "2026-06-22T00:11:21.927616+00:00",
+  "scheduleTimezone": "Australia/Melbourne",
+  "defaultScheduleDate": "2026-06-22"
+}

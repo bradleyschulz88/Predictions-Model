@@ -1,5 +1,5 @@
 {
-  "url": "espn://soccer/fifa.world/scoreboard?dates=20260621",
+  "url": "espn://soccer/fifa.world/scoreboard?dates=20260619",
   "source": "espn",
   "league": "worldcup",
   "leagueLabel": "FIFA World Cup",
@@ -40,33 +40,32 @@
       "shortLabel": "AFL"
     }
   ],
-  "scheduleDate": "2026-06-21",
-  "gameCount": 5,
+  "scheduleDate": "2026-06-19",
+  "gameCount": 4,
   "statusCounts": {
-    "Full Time": 4,
-    "Scheduled": 1
+    "Full Time": 4
   },
-  "topPick": "Japan to win",
+  "topPick": "United States to win",
   "games": [
     {
       "league": "worldcup",
       "leagueLabel": "FIFA World Cup",
-      "eventId": "760449",
-      "startDate": "2026-06-21T04:00Z",
-      "awayTeam": "Japan",
-      "homeTeam": "Tunisia",
-      "matchup": "Japan @ Tunisia",
+      "eventId": "760442",
+      "startDate": "2026-06-19T19:00Z",
+      "awayTeam": "Australia",
+      "homeTeam": "United States",
+      "matchup": "Australia @ United States",
       "gameStatusText": "Full Time",
       "gameStatusDetail": "FT",
       "statusType": "STATUS_FULL_TIME",
-      "venueName": "Estadio BBVA",
-      "broadcast": "FS1, Tele, FOX One",
-      "awayRecord": "1-1-0",
-      "homeRecord": "0-0-2",
-      "awayRoadRecord": "1-1-0",
-      "homeHomeRecord": "0-0-2",
-      "awayScore": "4",
-      "homeScore": "0",
+      "venueName": "Lumen Field",
+      "broadcast": "FOX, Tele, FOX One",
+      "awayRecord": "1-0-1",
+      "homeRecord": "2-0-0",
+      "awayRoadRecord": "1-0-1",
+      "homeHomeRecord": "2-0-0",
+      "awayScore": "0",
+      "homeScore": "2",
       "isLive": false,
       "isFinal": true,
       "isScheduled": false,
@@ -76,7 +75,7 @@
       "isDelayed": false,
       "isVoided": false,
       "isWashedOut": false,
-      "attendance": 51243,
+      "attendance": 66925,
       "source": "espn",
       "viewTypes": [
         "MoneyLine",
@@ -87,48 +86,48 @@
         "espnPredictorHome": null,
         "espnPredictorAway": null,
         "homeLastFive": {
-          "record": "0-1-4",
+          "record": "2-3",
           "results": [
-            "D",
             "L",
             "L",
+            "W",
             "L",
-            "L"
+            "W"
           ],
           "games": [
             {
-              "result": "D",
-              "score": "0-0",
-              "opponent": "Canada"
-            },
-            {
               "result": "L",
-              "score": "1-0",
-              "opponent": "Austria"
-            },
-            {
-              "result": "L",
-              "score": "5-0",
+              "score": "5-2",
               "opponent": "Belgium"
             },
             {
               "result": "L",
-              "score": "5-1",
-              "opponent": "Sweden"
+              "score": "2-0",
+              "opponent": "Portugal"
+            },
+            {
+              "result": "W",
+              "score": "3-2",
+              "opponent": "Senegal"
             },
             {
               "result": "L",
-              "score": "4-0",
-              "opponent": "Japan"
+              "score": "2-1",
+              "opponent": "Germany"
+            },
+            {
+              "result": "W",
+              "score": "4-1",
+              "opponent": "Paraguay"
             }
           ]
         },
         "awayLastFive": {
-          "record": "4-1-0",
+          "record": "3-1-1",
           "results": [
             "W",
             "W",
-            "W",
+            "L",
             "D",
             "W"
           ],
@@ -136,33 +135,33 @@
             {
               "result": "W",
               "score": "1-0",
-              "opponent": "Scotland"
+              "opponent": "Cameroon"
             },
             {
               "result": "W",
-              "score": "1-0",
-              "opponent": "England"
+              "score": "5-1",
+              "opponent": "Cura\u00e7ao"
             },
             {
-              "result": "W",
+              "result": "L",
               "score": "1-0",
-              "opponent": "Iceland"
+              "opponent": "Mexico"
             },
             {
               "result": "D",
-              "score": "2-2",
-              "opponent": "Netherlands"
+              "score": "1-1",
+              "opponent": "Switzerland"
             },
             {
               "result": "W",
-              "score": "4-0",
-              "opponent": "Tunisia"
+              "score": "2-0",
+              "opponent": "T\u00fcrkiye"
             }
           ]
         },
         "seasonSeries": {
           "title": "Head-to-head",
-          "summary": "Tunisia 1-3 in recent meetings",
+          "summary": "United States 2-0 in recent meetings",
           "seriesScore": null
         },
         "weather": null,
@@ -179,48 +178,48 @@
           "batters": [
             {
               "order": null,
-              "name": "Aymen Dahmen",
+              "name": "Matt Freese",
               "position": "G"
             },
             {
               "order": null,
-              "name": "Montassar Talbi",
+              "name": "Chris Richards",
               "position": "CD"
             },
             {
               "order": null,
-              "name": "Omar Rekik",
+              "name": "Tim Ream",
               "position": "CD-L"
             },
             {
               "order": null,
-              "name": "Dylan Bronn",
+              "name": "Alex Freeman",
               "position": "CD-R"
             },
             {
               "order": null,
-              "name": "Ellyes Skhiri",
+              "name": "Malik Tillman",
               "position": "CM-L"
             },
             {
               "order": null,
-              "name": "Anis Slimane",
+              "name": "Weston McKennie",
               "position": "CM-R"
             },
             {
               "order": null,
-              "name": "Ali Abdi",
+              "name": "Tyler Adams",
+              "position": "AM"
+            },
+            {
+              "order": null,
+              "name": "Antonee Robinson",
               "position": "LM"
             },
             {
               "order": null,
-              "name": "Yan Valery",
+              "name": "Sergi\u00f1o Dest",
               "position": "RM"
-            },
-            {
-              "order": null,
-              "name": "Sebastian Tounekti",
-              "position": "F"
             }
           ]
         },
@@ -231,48 +230,48 @@
           "batters": [
             {
               "order": null,
-              "name": "Zion Suzuki",
+              "name": "Patrick Beach",
               "position": "G"
             },
             {
               "order": null,
-              "name": "Kou Itakura",
+              "name": "Harry Souttar",
               "position": "CD"
             },
             {
               "order": null,
-              "name": "Hiroki Ito",
+              "name": "Cameron Burgess",
               "position": "CD-L"
             },
             {
               "order": null,
-              "name": "Takehiro Tomiyasu",
+              "name": "Alessandro Circati",
               "position": "CD-R"
             },
             {
               "order": null,
-              "name": "Ao Tanaka",
+              "name": "Jordan Bos",
+              "position": "LB"
+            },
+            {
+              "order": null,
+              "name": "Jacob Italiano",
+              "position": "RB"
+            },
+            {
+              "order": null,
+              "name": "Paul Okon-Engstler",
               "position": "CM-L"
             },
             {
               "order": null,
-              "name": "Kaishu Sano",
+              "name": "Aiden O'Neill",
               "position": "CM-R"
             },
             {
               "order": null,
-              "name": "Keito Nakamura",
+              "name": "Nishan Velupillay",
               "position": "LM"
-            },
-            {
-              "order": null,
-              "name": "Ritsu Doan",
-              "position": "RM"
-            },
-            {
-              "order": null,
-              "name": "Ayase Ueda",
-              "position": "F"
             }
           ]
         },
@@ -281,22 +280,22 @@
             "sportsbook": "DraftKings",
             "viewType": "MoneyLine",
             "currentLine": {
-              "home": 800,
-              "away": -225,
-              "draw": 330
+              "home": -180,
+              "away": 500,
+              "draw": 320
             },
             "openingLine": {
-              "home": 360,
-              "away": -115,
-              "draw": 240
+              "home": -135,
+              "away": 350,
+              "draw": 300
             }
           },
           {
             "sportsbook": "DraftKings",
             "viewType": "Spread",
             "currentLine": {
-              "home": "+1.5 (-180)",
-              "away": "-1.5 (+140)"
+              "home": "-0.5 (-185)",
+              "away": "+0.5 (+145)"
             }
           },
           {
@@ -324,21 +323,21 @@
             "ESPN standings",
             "ESPN team stats"
           ],
-          "wins": 0,
-          "losses": 2,
-          "points": 0.0,
-          "goalDifference": -8.0,
-          "pointsPerGame": 0.5,
-          "goalsAgainstPerGame": 4.5,
+          "wins": 2,
+          "losses": 0,
+          "points": 6.0,
+          "goalDifference": 5.0,
+          "pointsPerGame": 3.0,
+          "goalsAgainstPerGame": 0.5,
           "battingAvg": null,
           "onBasePct": null,
           "sluggingPct": null,
           "era": null,
           "runsScored": null,
           "runsAllowed": null,
-          "powerRating": 0.05925925925925926,
+          "powerRating": 0.8666666666666667,
           "opsProxy": null,
-          "winPct": 0.0
+          "winPct": 1.0
         },
         "awayAdvanced": {
           "sources": [
@@ -346,10 +345,10 @@
             "ESPN team stats"
           ],
           "wins": 1,
-          "losses": 0,
-          "points": 4.0,
-          "goalDifference": 4.0,
-          "pointsPerGame": 3.0,
+          "losses": 1,
+          "points": 3.0,
+          "goalDifference": 0.0,
+          "pointsPerGame": 1.0,
           "goalsAgainstPerGame": 1.0,
           "battingAvg": null,
           "onBasePct": null,
@@ -357,663 +356,9 @@
           "era": null,
           "runsScored": null,
           "runsAllowed": null,
-          "powerRating": 0.7833333333333334,
+          "powerRating": 0.5907407407407407,
           "opsProxy": null,
           "winPct": 0.5
-        },
-        "restDays": {
-          "home": 6,
-          "away": 6
-        },
-        "weatherImpact": null,
-        "headToHead": {
-          "homeSeriesWinPct": null,
-          "awaySeriesWinPct": null,
-          "summary": "Tunisia 1-3 in recent meetings",
-          "seriesScore": null
-        },
-        "homeScheduleFlags": {
-          "restDays": 6,
-          "backToBack": false,
-          "threeInFour": false,
-          "gamesLast4Days": 1
-        },
-        "awayScheduleFlags": {
-          "restDays": 7,
-          "backToBack": false,
-          "threeInFour": false,
-          "gamesLast4Days": 1
-        },
-        "leagueMetrics": {
-          "league": "worldcup",
-          "goalDiffEdge": -12.0,
-          "drawBaseRate": 0.22
-        }
-      },
-      "homeLineup": {
-        "status": "confirmed",
-        "source": "espn_roster",
-        "note": "Starting lineup from ESPN.",
-        "batters": [
-          {
-            "order": null,
-            "name": "Aymen Dahmen",
-            "position": "G"
-          },
-          {
-            "order": null,
-            "name": "Montassar Talbi",
-            "position": "CD"
-          },
-          {
-            "order": null,
-            "name": "Omar Rekik",
-            "position": "CD-L"
-          },
-          {
-            "order": null,
-            "name": "Dylan Bronn",
-            "position": "CD-R"
-          },
-          {
-            "order": null,
-            "name": "Ellyes Skhiri",
-            "position": "CM-L"
-          },
-          {
-            "order": null,
-            "name": "Anis Slimane",
-            "position": "CM-R"
-          },
-          {
-            "order": null,
-            "name": "Ali Abdi",
-            "position": "LM"
-          },
-          {
-            "order": null,
-            "name": "Yan Valery",
-            "position": "RM"
-          },
-          {
-            "order": null,
-            "name": "Sebastian Tounekti",
-            "position": "F"
-          }
-        ]
-      },
-      "awayLineup": {
-        "status": "confirmed",
-        "source": "espn_roster",
-        "note": "Starting lineup from ESPN.",
-        "batters": [
-          {
-            "order": null,
-            "name": "Zion Suzuki",
-            "position": "G"
-          },
-          {
-            "order": null,
-            "name": "Kou Itakura",
-            "position": "CD"
-          },
-          {
-            "order": null,
-            "name": "Hiroki Ito",
-            "position": "CD-L"
-          },
-          {
-            "order": null,
-            "name": "Takehiro Tomiyasu",
-            "position": "CD-R"
-          },
-          {
-            "order": null,
-            "name": "Ao Tanaka",
-            "position": "CM-L"
-          },
-          {
-            "order": null,
-            "name": "Kaishu Sano",
-            "position": "CM-R"
-          },
-          {
-            "order": null,
-            "name": "Keito Nakamura",
-            "position": "LM"
-          },
-          {
-            "order": null,
-            "name": "Ritsu Doan",
-            "position": "RM"
-          },
-          {
-            "order": null,
-            "name": "Ayase Ueda",
-            "position": "F"
-          }
-        ]
-      },
-      "homeMajorInjuries": [],
-      "awayMajorInjuries": [],
-      "prediction": {
-        "predictedWinner": "Japan",
-        "predictedSide": "away",
-        "homeWinPct": 9.7,
-        "awayWinPct": 70.1,
-        "confidence": 70.1,
-        "confidenceLabel": "Strong pick",
-        "outcomeLabel": "Japan to win",
-        "whyTheyWin": "Japan are projected to win because Tunisia (0-0-2, 0.0%) have outplayed Japan (1-1-0, 75.0%) across the full season.; Composite rating favors Japan: 0.059 vs 0.783 (ESPN + MLB.com + form).; Tunisia are 0-0-2 at home while Japan are 1-1-0 on the road.",
-        "reasons": [
-          {
-            "title": "Better season record",
-            "detail": "Tunisia (0-0-2, 0.0%) have outplayed Japan (1-1-0, 75.0%) across the full season.",
-            "impact": "high",
-            "favors": "away"
-          },
-          {
-            "title": "Power rating edge",
-            "detail": "Composite rating favors Japan: 0.059 vs 0.783 (ESPN + MLB.com + form).",
-            "impact": "high",
-            "favors": "away",
-            "source": "Multi-source"
-          },
-          {
-            "title": "Favorable home/road split",
-            "detail": "Tunisia are 0-0-2 at home while Japan are 1-1-0 on the road.",
-            "impact": "medium",
-            "favors": "away"
-          },
-          {
-            "title": "Recent form trending up",
-            "detail": "Japan are 4-1-0 in their last five (W-W-W-D-W) while Tunisia are 0-1-4.",
-            "impact": "medium",
-            "favors": "away",
-            "source": "ESPN"
-          },
-          {
-            "title": "Goal difference edge",
-            "detail": "Tunisia GD -8 vs Japan +4.",
-            "impact": "medium",
-            "favors": "away",
-            "source": "ESPN"
-          }
-        ],
-        "factors": [
-          {
-            "label": "Season record",
-            "detail": "Tunisia 0-0-2 vs Japan 1-1-0",
-            "edge": "away"
-          },
-          {
-            "label": "Home/road splits",
-            "detail": "Home 0-0-2 vs away 1-1-0",
-            "edge": "away"
-          },
-          {
-            "label": "Home-field advantage",
-            "detail": "Historical home edge applied",
-            "edge": "home"
-          },
-          {
-            "label": "Last five games",
-            "detail": "Tunisia 0-1-4 vs Japan 4-1-0",
-            "edge": "away"
-          },
-          {
-            "label": "League advanced metrics",
-            "detail": "{'league': 'worldcup', 'goalDiffEdge': -12.0, 'drawBaseRate': 0.22}",
-            "edge": "away"
-          },
-          {
-            "label": "Advanced team profile",
-            "detail": "Power 0.059 vs 0.783 (ESPN/MLB.com)",
-            "edge": "away"
-          },
-          {
-            "label": "Model probability",
-            "detail": "Data-driven estimate 4.1% home / 78.3% away / 17.6% draw",
-            "edge": "away"
-          }
-        ],
-        "dataSources": [
-          "Derived schedule metrics",
-          "ESPN betting odds",
-          "ESPN game summary",
-          "ESPN head-to-head",
-          "ESPN injury report",
-          "ESPN last-five form",
-          "ESPN scoreboard",
-          "ESPN standings",
-          "ESPN team stats",
-          "Key players",
-          "Probability model"
-        ],
-        "probabilities": {
-          "true": {
-            "home": 0.0412,
-            "away": 0.7827999999999999,
-            "draw": 0.17600000000000002,
-            "homePct": 4.1,
-            "awayPct": 78.3,
-            "drawPct": 17.6,
-            "components": [
-              {
-                "source": "Analytics model",
-                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 0.0,
-                "weightPct": 100.0
-              }
-            ]
-          },
-          "pick": {
-            "homePct": 9.7,
-            "awayPct": 70.1,
-            "drawPct": 20.1,
-            "method": "Model data only (records, form, injuries, advanced stats)"
-          },
-          "implied": {
-            "available": true,
-            "booksUsed": 1,
-            "books": [
-              {
-                "sportsbook": "DraftKings",
-                "homePct": 10.7,
-                "awayPct": 66.8,
-                "drawPct": 22.4,
-                "vigPct": 3.6
-              }
-            ],
-            "consensus": {
-              "home": 0.10725249424405219,
-              "away": 0.6682655410590944,
-              "draw": 0.22448196469685341,
-              "homePct": 10.7,
-              "awayPct": 66.8,
-              "drawPct": 22.4,
-              "rawHomePct": 11.1,
-              "rawAwayPct": 69.2,
-              "avgVigPct": 3.6
-            }
-          }
-        },
-        "teamProbabilities": {
-          "home": {
-            "truePct": 4.1,
-            "impliedPct": 10.7,
-            "blendedPct": 9.7,
-            "edgePct": -6.6,
-            "edgeLabel": "-6.6%"
-          },
-          "away": {
-            "truePct": 78.3,
-            "impliedPct": 66.8,
-            "blendedPct": 70.1,
-            "edgePct": 11.5,
-            "edgeLabel": "+11.5%"
-          },
-          "draw": {
-            "truePct": 17.6,
-            "impliedPct": 22.4,
-            "blendedPct": 20.1,
-            "edgePct": -4.8,
-            "edgeLabel": "-4.8%"
-          }
-        },
-        "drawWinPct": 20.1,
-        "features": {
-          "league": "worldcup",
-          "recordDiff": -0.75,
-          "splitDiff": -0.75,
-          "homePower": 0.05925925925925926,
-          "awayPower": 0.7833333333333334,
-          "homeInjuryLoad": 0,
-          "awayInjuryLoad": 0,
-          "homeRest": 6,
-          "awayRest": 6,
-          "homeBackToBack": false,
-          "awayBackToBack": false,
-          "impliedHome": 10.7,
-          "impliedAway": 66.8,
-          "trueHome": 4.1,
-          "trueAway": 78.3,
-          "confidence": 70.1,
-          "predictedSide": "away",
-          "hasLineup": true,
-          "dataCoverage": {
-            "lineup": true,
-            "injuries": false,
-            "espnPredictor": false,
-            "advancedStats": true,
-            "restData": true,
-            "scheduleFlags": true,
-            "mlbPitching": false,
-            "leagueMetrics": true,
-            "impliedOdds": true
-          },
-          "mlbPitching": null,
-          "leagueMetrics": {
-            "league": "worldcup",
-            "goalDiffEdge": -12.0,
-            "drawBaseRate": 0.22
-          }
-        }
-      },
-      "predictionRank": 1
-    },
-    {
-      "league": "worldcup",
-      "leagueLabel": "FIFA World Cup",
-      "eventId": "760453",
-      "startDate": "2026-06-21T16:00Z",
-      "awayTeam": "Saudi Arabia",
-      "homeTeam": "Spain",
-      "matchup": "Saudi Arabia @ Spain",
-      "gameStatusText": "Full Time",
-      "gameStatusDetail": "FT",
-      "statusType": "STATUS_FULL_TIME",
-      "venueName": "Mercedes-Benz Stadium",
-      "broadcast": "FOX, Tele, FOX One",
-      "awayRecord": "0-1-1",
-      "homeRecord": "1-1-0",
-      "awayRoadRecord": "0-1-1",
-      "homeHomeRecord": "1-1-0",
-      "awayScore": "0",
-      "homeScore": "4",
-      "isLive": false,
-      "isFinal": true,
-      "isScheduled": false,
-      "isPostponed": false,
-      "isCanceled": false,
-      "isSuspended": false,
-      "isDelayed": false,
-      "isVoided": false,
-      "isWashedOut": false,
-      "attendance": 68239,
-      "source": "espn",
-      "viewTypes": [
-        "MoneyLine",
-        "Spread",
-        "Total"
-      ],
-      "enrichment": {
-        "espnPredictorHome": null,
-        "espnPredictorAway": null,
-        "homeLastFive": {
-          "record": "2-3-0",
-          "results": [
-            "W",
-            "D",
-            "D",
-            "W",
-            "D"
-          ],
-          "games": [
-            {
-              "result": "W",
-              "score": "3-0",
-              "opponent": "Serbia"
-            },
-            {
-              "result": "D",
-              "score": "0-0",
-              "opponent": "Egypt"
-            },
-            {
-              "result": "D",
-              "score": "1-1",
-              "opponent": "Iraq"
-            },
-            {
-              "result": "W",
-              "score": "3-1",
-              "opponent": "Peru"
-            },
-            {
-              "result": "D",
-              "score": "0-0",
-              "opponent": "Cape Verde"
-            }
-          ]
-        },
-        "awayLastFive": {
-          "record": "1-2-2",
-          "results": [
-            "L",
-            "L",
-            "W",
-            "D",
-            "D"
-          ],
-          "games": [
-            {
-              "result": "L",
-              "score": "2-1",
-              "opponent": "Serbia"
-            },
-            {
-              "result": "L",
-              "score": "2-1",
-              "opponent": "Ecuador"
-            },
-            {
-              "result": "W",
-              "score": "3-0",
-              "opponent": "Puerto Rico"
-            },
-            {
-              "result": "D",
-              "score": "0-0",
-              "opponent": "Senegal"
-            },
-            {
-              "result": "D",
-              "score": "1-1",
-              "opponent": "Uruguay"
-            }
-          ]
-        },
-        "seasonSeries": {
-          "title": "Head-to-head",
-          "summary": "Spain 3-0 in recent meetings",
-          "seriesScore": null
-        },
-        "weather": null,
-        "homeInjuries": [],
-        "awayInjuries": [],
-        "homeMajorInjuries": [],
-        "awayMajorInjuries": [],
-        "homeKeyInjuries": [],
-        "awayKeyInjuries": [],
-        "homeLineup": {
-          "status": "confirmed",
-          "source": "espn_roster",
-          "note": "Starting lineup from ESPN.",
-          "batters": [
-            {
-              "order": null,
-              "name": "Unai Sim\u00f3n",
-              "position": "G"
-            },
-            {
-              "order": null,
-              "name": "Aymeric Laporte",
-              "position": "CD-L"
-            },
-            {
-              "order": null,
-              "name": "Pau Cubars\u00ed",
-              "position": "CD-R"
-            },
-            {
-              "order": null,
-              "name": "Marc Cucurella",
-              "position": "LB"
-            },
-            {
-              "order": null,
-              "name": "Pedro Porro",
-              "position": "RB"
-            },
-            {
-              "order": null,
-              "name": "Rodri ",
-              "position": "CM"
-            },
-            {
-              "order": null,
-              "name": "Pedri ",
-              "position": "LM"
-            },
-            {
-              "order": null,
-              "name": "Dani Olmo",
-              "position": "RM"
-            },
-            {
-              "order": null,
-              "name": "Mikel Oyarzabal",
-              "position": "F"
-            }
-          ]
-        },
-        "awayLineup": {
-          "status": "confirmed",
-          "source": "espn_roster",
-          "note": "Starting lineup from ESPN.",
-          "batters": [
-            {
-              "order": null,
-              "name": "Mohammed Al-Owais",
-              "position": "G"
-            },
-            {
-              "order": null,
-              "name": "Ali Lajami",
-              "position": "CD"
-            },
-            {
-              "order": null,
-              "name": "Hassan Al-Tambakti",
-              "position": "CD-L"
-            },
-            {
-              "order": null,
-              "name": "Abdulelah Al-Amri",
-              "position": "CD-R"
-            },
-            {
-              "order": null,
-              "name": "Moteb Al-Harbi",
-              "position": "LB"
-            },
-            {
-              "order": null,
-              "name": "Saud Abdulhamid",
-              "position": "RB"
-            },
-            {
-              "order": null,
-              "name": "Nasser Al-Dawsari",
-              "position": "CM-L"
-            },
-            {
-              "order": null,
-              "name": "Abdullah Al-Khaibari",
-              "position": "CM-R"
-            },
-            {
-              "order": null,
-              "name": "Salem Al-Dawsari",
-              "position": "LM"
-            }
-          ]
-        },
-        "espnOdds": [
-          {
-            "sportsbook": "DraftKings",
-            "viewType": "MoneyLine",
-            "currentLine": {
-              "home": -900,
-              "away": 2000,
-              "draw": 1000
-            },
-            "openingLine": {
-              "home": -700,
-              "away": 1900,
-              "draw": 750
-            }
-          },
-          {
-            "sportsbook": "DraftKings",
-            "viewType": "Spread",
-            "currentLine": {
-              "home": "-2.5 (-125)",
-              "away": "+2.5 (+100)"
-            }
-          },
-          {
-            "sportsbook": "DraftKings",
-            "viewType": "Total",
-            "currentLine": {
-              "over": "o3.5 (-115)",
-              "under": "u3.5 (-110)"
-            }
-          }
-        ],
-        "sources": [
-          "Derived schedule metrics",
-          "ESPN betting odds",
-          "ESPN game summary",
-          "ESPN head-to-head",
-          "ESPN injury report",
-          "ESPN last-five form",
-          "ESPN standings",
-          "ESPN team stats",
-          "Key players"
-        ],
-        "homeAdvanced": {
-          "sources": [
-            "ESPN standings",
-            "ESPN team stats"
-          ],
-          "wins": 1,
-          "losses": 0,
-          "points": 4.0,
-          "goalDifference": 4.0,
-          "pointsPerGame": 2.0,
-          "goalsAgainstPerGame": 0.0,
-          "battingAvg": null,
-          "onBasePct": null,
-          "sluggingPct": null,
-          "era": null,
-          "runsScored": null,
-          "runsAllowed": null,
-          "powerRating": 0.6648148148148147,
-          "opsProxy": null,
-          "winPct": 0.5
-        },
-        "awayAdvanced": {
-          "sources": [
-            "ESPN standings",
-            "ESPN team stats"
-          ],
-          "wins": 0,
-          "losses": 1,
-          "points": 1.0,
-          "goalDifference": -4.0,
-          "pointsPerGame": 0.5,
-          "goalsAgainstPerGame": 2.5,
-          "battingAvg": null,
-          "onBasePct": null,
-          "sluggingPct": null,
-          "era": null,
-          "runsScored": null,
-          "runsAllowed": null,
-          "powerRating": 0.1675925925925926,
-          "opsProxy": null,
-          "winPct": 0.0
         },
         "restDays": {
           "home": 6,
@@ -1023,7 +368,7 @@
         "headToHead": {
           "homeSeriesWinPct": null,
           "awaySeriesWinPct": null,
-          "summary": "Spain 3-0 in recent meetings",
+          "summary": "United States 2-0 in recent meetings",
           "seriesScore": null
         },
         "homeScheduleFlags": {
@@ -1033,18 +378,18 @@
           "gamesLast4Days": 1
         },
         "awayScheduleFlags": {
-          "restDays": 6,
+          "restDays": 5,
           "backToBack": false,
           "threeInFour": false,
           "gamesLast4Days": 1
         },
         "leagueMetrics": {
           "league": "worldcup",
-          "goalDiffEdge": 8.0,
+          "goalDiffEdge": 5.0,
           "drawBaseRate": 0.22
         },
         "notes": [
-          "Rest edge: Spain (6d) vs Saudi Arabia (5d)."
+          "Rest edge: United States (6d) vs Australia (5d)."
         ]
       },
       "homeLineup": {
@@ -1054,48 +399,48 @@
         "batters": [
           {
             "order": null,
-            "name": "Unai Sim\u00f3n",
+            "name": "Matt Freese",
             "position": "G"
           },
           {
             "order": null,
-            "name": "Aymeric Laporte",
+            "name": "Chris Richards",
+            "position": "CD"
+          },
+          {
+            "order": null,
+            "name": "Tim Ream",
             "position": "CD-L"
           },
           {
             "order": null,
-            "name": "Pau Cubars\u00ed",
+            "name": "Alex Freeman",
             "position": "CD-R"
           },
           {
             "order": null,
-            "name": "Marc Cucurella",
-            "position": "LB"
+            "name": "Malik Tillman",
+            "position": "CM-L"
           },
           {
             "order": null,
-            "name": "Pedro Porro",
-            "position": "RB"
+            "name": "Weston McKennie",
+            "position": "CM-R"
           },
           {
             "order": null,
-            "name": "Rodri ",
-            "position": "CM"
+            "name": "Tyler Adams",
+            "position": "AM"
           },
           {
             "order": null,
-            "name": "Pedri ",
+            "name": "Antonee Robinson",
             "position": "LM"
           },
           {
             "order": null,
-            "name": "Dani Olmo",
+            "name": "Sergi\u00f1o Dest",
             "position": "RM"
-          },
-          {
-            "order": null,
-            "name": "Mikel Oyarzabal",
-            "position": "F"
           }
         ]
       },
@@ -1106,47 +451,47 @@
         "batters": [
           {
             "order": null,
-            "name": "Mohammed Al-Owais",
+            "name": "Patrick Beach",
             "position": "G"
           },
           {
             "order": null,
-            "name": "Ali Lajami",
+            "name": "Harry Souttar",
             "position": "CD"
           },
           {
             "order": null,
-            "name": "Hassan Al-Tambakti",
+            "name": "Cameron Burgess",
             "position": "CD-L"
           },
           {
             "order": null,
-            "name": "Abdulelah Al-Amri",
+            "name": "Alessandro Circati",
             "position": "CD-R"
           },
           {
             "order": null,
-            "name": "Moteb Al-Harbi",
+            "name": "Jordan Bos",
             "position": "LB"
           },
           {
             "order": null,
-            "name": "Saud Abdulhamid",
+            "name": "Jacob Italiano",
             "position": "RB"
           },
           {
             "order": null,
-            "name": "Nasser Al-Dawsari",
+            "name": "Paul Okon-Engstler",
             "position": "CM-L"
           },
           {
             "order": null,
-            "name": "Abdullah Al-Khaibari",
+            "name": "Aiden O'Neill",
             "position": "CM-R"
           },
           {
             "order": null,
-            "name": "Salem Al-Dawsari",
+            "name": "Nishan Velupillay",
             "position": "LM"
           }
         ]
@@ -1154,64 +499,57 @@
       "homeMajorInjuries": [],
       "awayMajorInjuries": [],
       "prediction": {
-        "predictedWinner": "Spain",
+        "predictedWinner": "United States",
         "predictedSide": "home",
         "homeWinPct": 70.1,
         "awayWinPct": 9.7,
         "confidence": 70.1,
         "confidenceLabel": "Strong pick",
-        "outcomeLabel": "Spain to win",
-        "whyTheyWin": "Spain are projected to win because Spain (1-1-0, 75.0%) have outplayed Saudi Arabia (0-1-1, 25.0%) across the full season.; Composite rating favors Spain: 0.665 vs 0.168 (ESPN + MLB.com + form).; Spain are 1-1-0 at home while Saudi Arabia are 0-1-1 on the road.",
+        "outcomeLabel": "United States to win",
+        "whyTheyWin": "United States are projected to win because United States (2-0-0, 100.0%) have outplayed Australia (1-0-1, 50.0%) across the full season.; Composite rating favors United States: 0.867 vs 0.591 (ESPN + MLB.com + form).; United States are 2-0-0 at home while Australia are 1-0-1 on the road.",
         "reasons": [
           {
             "title": "Better season record",
-            "detail": "Spain (1-1-0, 75.0%) have outplayed Saudi Arabia (0-1-1, 25.0%) across the full season.",
+            "detail": "United States (2-0-0, 100.0%) have outplayed Australia (1-0-1, 50.0%) across the full season.",
             "impact": "high",
             "favors": "home"
           },
           {
             "title": "Power rating edge",
-            "detail": "Composite rating favors Spain: 0.665 vs 0.168 (ESPN + MLB.com + form).",
+            "detail": "Composite rating favors United States: 0.867 vs 0.591 (ESPN + MLB.com + form).",
             "impact": "high",
             "favors": "home",
             "source": "Multi-source"
           },
           {
             "title": "Favorable home/road split",
-            "detail": "Spain are 1-1-0 at home while Saudi Arabia are 0-1-1 on the road.",
+            "detail": "United States are 2-0-0 at home while Australia are 1-0-1 on the road.",
             "impact": "medium",
             "favors": "home"
           },
           {
-            "title": "Recent form trending up",
-            "detail": "Spain are 2-3-0 in their last five (W-D-D-W-D) while Saudi Arabia are 1-2-2.",
-            "impact": "medium",
-            "favors": "home",
-            "source": "ESPN"
-          },
-          {
             "title": "Head-to-head history",
-            "detail": "In the regular-season series: Spain 3-0 in recent meetings (None).",
+            "detail": "In the regular-season series: United States 2-0 in recent meetings (None).",
             "impact": "medium",
             "favors": "home",
             "source": "ESPN"
           },
           {
             "title": "Goal difference edge",
-            "detail": "Spain GD +4 vs Saudi Arabia -4.",
+            "detail": "United States GD +5 vs Australia +0.",
             "impact": "medium",
             "favors": "home",
             "source": "ESPN"
           },
           {
             "title": "Home-field advantage",
-            "detail": "Spain play at Mercedes-Benz Stadium, where home sides often perform better.",
+            "detail": "United States play at Lumen Field, where home sides often perform better.",
             "impact": "low",
             "favors": "home"
           },
           {
             "title": "Rest advantage",
-            "detail": "Spain have 6 days rest vs 5 for Saudi Arabia.",
+            "detail": "United States have 6 days rest vs 5 for Australia.",
             "impact": "low",
             "favors": "home",
             "source": "Schedule"
@@ -1220,12 +558,12 @@
         "factors": [
           {
             "label": "Season record",
-            "detail": "Spain 1-1-0 vs Saudi Arabia 0-1-1",
+            "detail": "United States 2-0-0 vs Australia 1-0-1",
             "edge": "home"
           },
           {
             "label": "Home/road splits",
-            "detail": "Home 1-1-0 vs away 0-1-1",
+            "detail": "Home 2-0-0 vs away 1-0-1",
             "edge": "home"
           },
           {
@@ -1235,17 +573,17 @@
           },
           {
             "label": "Last five games",
-            "detail": "Spain 2-3-0 vs Saudi Arabia 1-2-2",
-            "edge": "home"
+            "detail": "United States 2-3 vs Australia 3-1-1",
+            "edge": "away"
           },
           {
             "label": "League advanced metrics",
-            "detail": "{'league': 'worldcup', 'goalDiffEdge': 8.0, 'drawBaseRate': 0.22}",
+            "detail": "{'league': 'worldcup', 'goalDiffEdge': 5.0, 'drawBaseRate': 0.22}",
             "edge": "home"
           },
           {
             "label": "Advanced team profile",
-            "detail": "Power 0.665 vs 0.168 (ESPN/MLB.com)",
+            "detail": "Power 0.867 vs 0.591 (ESPN/MLB.com)",
             "edge": "home"
           },
           {
@@ -1284,7 +622,7 @@
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 99.9,
+                "homePct": 98.9,
                 "weightPct": 100.0
               }
             ]
@@ -1301,46 +639,46 @@
             "books": [
               {
                 "sportsbook": "DraftKings",
-                "homePct": 86.7,
-                "awayPct": 4.6,
-                "drawPct": 8.8,
-                "vigPct": 3.85
+                "homePct": 61.4,
+                "awayPct": 15.9,
+                "drawPct": 22.7,
+                "vigPct": 4.76
               }
             ],
             "consensus": {
-              "home": 0.8666110879533138,
-              "away": 0.04585243851604835,
-              "draw": 0.08753647353063776,
-              "homePct": 86.7,
-              "awayPct": 4.6,
-              "drawPct": 8.8,
-              "rawHomePct": 90.0,
-              "rawAwayPct": 4.8,
-              "avgVigPct": 3.85
+              "home": 0.6136363636363636,
+              "away": 0.15909090909090906,
+              "draw": 0.22727272727272724,
+              "homePct": 61.4,
+              "awayPct": 15.9,
+              "drawPct": 22.7,
+              "rawHomePct": 64.3,
+              "rawAwayPct": 16.7,
+              "avgVigPct": 4.76
             }
           }
         },
         "teamProbabilities": {
           "home": {
             "truePct": 78.3,
-            "impliedPct": 86.7,
+            "impliedPct": 61.4,
             "blendedPct": 70.1,
-            "edgePct": -8.4,
-            "edgeLabel": "-8.4%"
+            "edgePct": 16.9,
+            "edgeLabel": "+16.9%"
           },
           "away": {
             "truePct": 4.1,
-            "impliedPct": 4.6,
+            "impliedPct": 15.9,
             "blendedPct": 9.7,
-            "edgePct": -0.5,
-            "edgeLabel": "-0.5%"
+            "edgePct": -11.8,
+            "edgeLabel": "-11.8%"
           },
           "draw": {
             "truePct": 17.6,
-            "impliedPct": 8.8,
+            "impliedPct": 22.7,
             "blendedPct": 20.1,
-            "edgePct": 8.8,
-            "edgeLabel": "+8.8%"
+            "edgePct": -5.1,
+            "edgeLabel": "-5.1%"
           }
         },
         "drawWinPct": 20.1,
@@ -1348,16 +686,16 @@
           "league": "worldcup",
           "recordDiff": 0.5,
           "splitDiff": 0.5,
-          "homePower": 0.6648148148148147,
-          "awayPower": 0.1675925925925926,
+          "homePower": 0.8666666666666667,
+          "awayPower": 0.5907407407407407,
           "homeInjuryLoad": 0,
           "awayInjuryLoad": 0,
           "homeRest": 6,
           "awayRest": 5,
           "homeBackToBack": false,
           "awayBackToBack": false,
-          "impliedHome": 86.7,
-          "impliedAway": 4.6,
+          "impliedHome": 61.4,
+          "impliedAway": 15.9,
           "trueHome": 78.3,
           "trueAway": 4.1,
           "confidence": 70.1,
@@ -1377,32 +715,32 @@
           "mlbPitching": null,
           "leagueMetrics": {
             "league": "worldcup",
-            "goalDiffEdge": 8.0,
+            "goalDiffEdge": 5.0,
             "drawBaseRate": 0.22
           }
         }
       },
-      "predictionRank": 2
+      "predictionRank": 1
     },
     {
       "league": "worldcup",
       "leagueLabel": "FIFA World Cup",
-      "eventId": "760451",
-      "startDate": "2026-06-21T19:00Z",
-      "awayTeam": "Iran",
-      "homeTeam": "Belgium",
-      "matchup": "Iran @ Belgium",
+      "eventId": "760444",
+      "startDate": "2026-06-20T00:30Z",
+      "awayTeam": "Haiti",
+      "homeTeam": "Brazil",
+      "matchup": "Haiti @ Brazil",
       "gameStatusText": "Full Time",
       "gameStatusDetail": "FT",
       "statusType": "STATUS_FULL_TIME",
-      "venueName": "SoFi Stadium",
-      "broadcast": "FS1, Tele, FOX One",
-      "awayRecord": "0-2-0",
-      "homeRecord": "0-2-0",
-      "awayRoadRecord": "0-2-0",
-      "homeHomeRecord": "0-2-0",
+      "venueName": "Lincoln Financial Field",
+      "broadcast": "FOX, Tele, FOX One",
+      "awayRecord": "0-0-2",
+      "homeRecord": "1-1-0",
+      "awayRoadRecord": "0-0-2",
+      "homeHomeRecord": "1-1-0",
       "awayScore": "0",
-      "homeScore": "0",
+      "homeScore": "3",
       "isLive": false,
       "isFinal": true,
       "isScheduled": false,
@@ -1412,7 +750,7 @@
       "isDelayed": false,
       "isVoided": false,
       "isWashedOut": false,
-      "attendance": 70317,
+      "attendance": 68324,
       "source": "espn",
       "viewTypes": [
         "MoneyLine",
@@ -1423,80 +761,84 @@
         "espnPredictorHome": null,
         "espnPredictorAway": null,
         "homeLastFive": {
-          "record": "3-2-0",
+          "record": "4-1-0",
           "results": [
             "W",
+            "W",
+            "W",
             "D",
-            "W",
-            "W",
-            "D"
+            "W"
           ],
           "games": [
             {
               "result": "W",
-              "score": "5-2",
-              "opponent": "United States"
-            },
-            {
-              "result": "D",
-              "score": "1-1",
-              "opponent": "Mexico"
-            },
-            {
-              "result": "W",
-              "score": "2-0",
+              "score": "3-1",
               "opponent": "Croatia"
             },
             {
               "result": "W",
-              "score": "5-0",
-              "opponent": "Tunisia"
+              "score": "6-2",
+              "opponent": "Panama"
+            },
+            {
+              "result": "W",
+              "score": "2-1",
+              "opponent": "Egypt"
             },
             {
               "result": "D",
               "score": "1-1",
-              "opponent": "Egypt"
+              "opponent": "Morocco"
+            },
+            {
+              "result": "W",
+              "score": "3-0",
+              "opponent": "Haiti"
             }
           ]
         },
         "awayLastFive": {
-          "record": "3-1-1",
+          "record": "1-1-3",
           "results": [
+            "D",
+            "W",
             "L",
-            "W",
-            "W",
-            "W",
-            "D"
+            "L",
+            "L"
           ],
           "games": [
             {
+              "result": "D",
+              "score": "1-1",
+              "opponent": "Iceland"
+            },
+            {
+              "result": "W",
+              "score": "4-0",
+              "opponent": "New Zealand"
+            },
+            {
               "result": "L",
               "score": "2-1",
-              "opponent": "Nigeria"
+              "opponent": "Peru"
             },
             {
-              "result": "W",
-              "score": "5-0",
-              "opponent": "Costa Rica"
+              "result": "L",
+              "score": "1-0",
+              "opponent": "Scotland"
             },
             {
-              "result": "W",
-              "score": "0-0",
-              "opponent": "Gambia"
-            },
-            {
-              "result": "W",
-              "score": "2-0",
-              "opponent": "Mali"
-            },
-            {
-              "result": "D",
-              "score": "2-2",
-              "opponent": "New Zealand"
+              "result": "L",
+              "score": "3-0",
+              "opponent": "Brazil"
             }
           ]
         },
-        "seasonSeries": null,
+        "seasonSeries": {
+          "title": "Head-to-head",
+          "summary": "Brazil 2-0 in recent meetings",
+          "seriesScore": null
+        },
         "weather": null,
         "homeInjuries": [],
         "awayInjuries": [],
@@ -1511,47 +853,47 @@
           "batters": [
             {
               "order": null,
-              "name": "Thibaut Courtois",
+              "name": "Alisson Becker",
               "position": "G"
             },
             {
               "order": null,
-              "name": "Brandon Mechele",
+              "name": "Gabriel Magalh\u00e3es",
               "position": "CD-L"
             },
             {
               "order": null,
-              "name": "Nathan Ngoy",
+              "name": "Marquinhos",
               "position": "CD-R"
             },
             {
               "order": null,
-              "name": "Maxim De Cuyper",
+              "name": "Douglas Santos",
               "position": "LB"
             },
             {
               "order": null,
-              "name": "Thomas Meunier",
+              "name": "Danilo",
               "position": "RB"
             },
             {
               "order": null,
-              "name": "Kevin De Bruyne",
-              "position": "AM"
+              "name": "Casemiro",
+              "position": "CM"
             },
             {
               "order": null,
-              "name": "Youri Tielemans",
+              "name": "Lucas Paquet\u00e1",
               "position": "LM"
             },
             {
               "order": null,
-              "name": "Nicolas Raskin",
+              "name": "Bruno Guimar\u00e3es",
               "position": "RM"
             },
             {
               "order": null,
-              "name": "Romelu Lukaku",
+              "name": "Matheus Cunha",
               "position": "F"
             }
           ]
@@ -1563,47 +905,47 @@
           "batters": [
             {
               "order": null,
-              "name": "Alireza Beiranvand",
+              "name": "Johny Placide",
               "position": "G"
             },
             {
               "order": null,
-              "name": "Shoja Khalilzadeh",
+              "name": "Ricardo Ad\u00e9",
               "position": "CD"
             },
             {
               "order": null,
-              "name": "Ali Nemati",
+              "name": "Hannes Delcroix",
               "position": "CD-L"
             },
             {
               "order": null,
-              "name": "Hossein Kanani",
+              "name": "Jean-K\u00e9vin Duverne",
               "position": "CD-R"
             },
             {
               "order": null,
-              "name": "Ehsan Hajsafi",
+              "name": "Martin Exp\u00e9rience",
               "position": "LB"
             },
             {
               "order": null,
-              "name": "Saleh Hardani",
+              "name": "Carlens Arcus",
               "position": "RB"
             },
             {
               "order": null,
-              "name": "Saeid Ezatolahi",
+              "name": "Jean-Ricner Bellegarde",
               "position": "CM-L"
             },
             {
               "order": null,
-              "name": "Saman Ghoddos",
+              "name": "Danley Jean Jacques",
               "position": "CM-R"
             },
             {
               "order": null,
-              "name": "Mohammad Mohebbi",
+              "name": "Ruben Providence",
               "position": "LM"
             }
           ]
@@ -1613,30 +955,30 @@
             "sportsbook": "DraftKings",
             "viewType": "MoneyLine",
             "currentLine": {
-              "home": -230,
-              "away": 700,
-              "draw": 350
+              "home": -900,
+              "away": 1900,
+              "draw": 950
             },
             "openingLine": {
-              "home": -230,
-              "away": 650,
-              "draw": 360
+              "home": -1200,
+              "away": 3000,
+              "draw": 1000
             }
           },
           {
             "sportsbook": "DraftKings",
             "viewType": "Spread",
             "currentLine": {
-              "home": "-1.5 (+130)",
-              "away": "+1.5 (-170)"
+              "home": "-2.5 (-120)",
+              "away": "+2.5 (-105)"
             }
           },
           {
             "sportsbook": "DraftKings",
             "viewType": "Total",
             "currentLine": {
-              "over": "o2.5 (-115)",
-              "under": "u2.5 (-110)"
+              "over": "o3.5 (-105)",
+              "under": "u3.5 (-115)"
             }
           }
         ],
@@ -1644,6 +986,7 @@
           "Derived schedule metrics",
           "ESPN betting odds",
           "ESPN game summary",
+          "ESPN head-to-head",
           "ESPN injury report",
           "ESPN last-five form",
           "ESPN standings",
@@ -1655,11 +998,11 @@
             "ESPN standings",
             "ESPN team stats"
           ],
-          "wins": 0,
+          "wins": 1,
           "losses": 0,
-          "points": 2.0,
-          "goalDifference": 0.0,
-          "pointsPerGame": 0.5,
+          "points": 4.0,
+          "goalDifference": 3.0,
+          "pointsPerGame": 2.0,
           "goalsAgainstPerGame": 0.5,
           "battingAvg": null,
           "onBasePct": null,
@@ -1667,9 +1010,9 @@
           "era": null,
           "runsScored": null,
           "runsAllowed": null,
-          "powerRating": 0.38148148148148153,
+          "powerRating": 0.7092592592592593,
           "opsProxy": null,
-          "winPct": 0.0
+          "winPct": 0.5
         },
         "awayAdvanced": {
           "sources": [
@@ -1677,18 +1020,18 @@
             "ESPN team stats"
           ],
           "wins": 0,
-          "losses": 0,
-          "points": 2.0,
-          "goalDifference": 0.0,
-          "pointsPerGame": 1.0,
-          "goalsAgainstPerGame": 1.0,
+          "losses": 2,
+          "points": 0.0,
+          "goalDifference": -4.0,
+          "pointsPerGame": 0.0,
+          "goalsAgainstPerGame": 2.0,
           "battingAvg": null,
           "onBasePct": null,
           "sluggingPct": null,
           "era": null,
           "runsScored": null,
           "runsAllowed": null,
-          "powerRating": 0.39629629629629626,
+          "powerRating": 0.15,
           "opsProxy": null,
           "winPct": 0.0
         },
@@ -1700,28 +1043,28 @@
         "headToHead": {
           "homeSeriesWinPct": null,
           "awaySeriesWinPct": null,
-          "summary": null,
+          "summary": "Brazil 2-0 in recent meetings",
           "seriesScore": null
         },
         "homeScheduleFlags": {
-          "restDays": 6,
+          "restDays": 7,
           "backToBack": false,
           "threeInFour": false,
           "gamesLast4Days": 1
         },
         "awayScheduleFlags": {
-          "restDays": 5,
+          "restDays": 6,
           "backToBack": false,
           "threeInFour": false,
           "gamesLast4Days": 1
         },
         "leagueMetrics": {
           "league": "worldcup",
-          "goalDiffEdge": 0.0,
+          "goalDiffEdge": 7.0,
           "drawBaseRate": 0.22
         },
         "notes": [
-          "Rest edge: Belgium (6d) vs Iran (5d)."
+          "Rest edge: Brazil (6d) vs Haiti (5d)."
         ]
       },
       "homeLineup": {
@@ -1731,47 +1074,47 @@
         "batters": [
           {
             "order": null,
-            "name": "Thibaut Courtois",
+            "name": "Alisson Becker",
             "position": "G"
           },
           {
             "order": null,
-            "name": "Brandon Mechele",
+            "name": "Gabriel Magalh\u00e3es",
             "position": "CD-L"
           },
           {
             "order": null,
-            "name": "Nathan Ngoy",
+            "name": "Marquinhos",
             "position": "CD-R"
           },
           {
             "order": null,
-            "name": "Maxim De Cuyper",
+            "name": "Douglas Santos",
             "position": "LB"
           },
           {
             "order": null,
-            "name": "Thomas Meunier",
+            "name": "Danilo",
             "position": "RB"
           },
           {
             "order": null,
-            "name": "Kevin De Bruyne",
-            "position": "AM"
+            "name": "Casemiro",
+            "position": "CM"
           },
           {
             "order": null,
-            "name": "Youri Tielemans",
+            "name": "Lucas Paquet\u00e1",
             "position": "LM"
           },
           {
             "order": null,
-            "name": "Nicolas Raskin",
+            "name": "Bruno Guimar\u00e3es",
             "position": "RM"
           },
           {
             "order": null,
-            "name": "Romelu Lukaku",
+            "name": "Matheus Cunha",
             "position": "F"
           }
         ]
@@ -1783,47 +1126,47 @@
         "batters": [
           {
             "order": null,
-            "name": "Alireza Beiranvand",
+            "name": "Johny Placide",
             "position": "G"
           },
           {
             "order": null,
-            "name": "Shoja Khalilzadeh",
+            "name": "Ricardo Ad\u00e9",
             "position": "CD"
           },
           {
             "order": null,
-            "name": "Ali Nemati",
+            "name": "Hannes Delcroix",
             "position": "CD-L"
           },
           {
             "order": null,
-            "name": "Hossein Kanani",
+            "name": "Jean-K\u00e9vin Duverne",
             "position": "CD-R"
           },
           {
             "order": null,
-            "name": "Ehsan Hajsafi",
+            "name": "Martin Exp\u00e9rience",
             "position": "LB"
           },
           {
             "order": null,
-            "name": "Saleh Hardani",
+            "name": "Carlens Arcus",
             "position": "RB"
           },
           {
             "order": null,
-            "name": "Saeid Ezatolahi",
+            "name": "Jean-Ricner Bellegarde",
             "position": "CM-L"
           },
           {
             "order": null,
-            "name": "Saman Ghoddos",
+            "name": "Danley Jean Jacques",
             "position": "CM-R"
           },
           {
             "order": null,
-            "name": "Mohammad Mohebbi",
+            "name": "Ruben Providence",
             "position": "LM"
           }
         ]
@@ -1831,31 +1174,64 @@
       "homeMajorInjuries": [],
       "awayMajorInjuries": [],
       "prediction": {
-        "predictedWinner": "Belgium",
+        "predictedWinner": "Brazil",
         "predictedSide": "home",
-        "homeWinPct": 45.0,
-        "awayWinPct": 25.4,
-        "confidence": 45.0,
-        "confidenceLabel": "Coin flip",
-        "outcomeLabel": "Belgium to win",
-        "whyTheyWin": "Belgium are projected to win because Belgium are 3-2-0 in their last five (W-D-W-W-D) while Iran are 3-1-1.; Belgium play at SoFi Stadium, where home sides often perform better.; Belgium have 6 days rest vs 5 for Iran.",
+        "homeWinPct": 70.1,
+        "awayWinPct": 9.7,
+        "confidence": 70.1,
+        "confidenceLabel": "Strong pick",
+        "outcomeLabel": "Brazil to win",
+        "whyTheyWin": "Brazil are projected to win because Brazil (1-1-0, 75.0%) have outplayed Haiti (0-0-2, 0.0%) across the full season.; Composite rating favors Brazil: 0.709 vs 0.150 (ESPN + MLB.com + form).; Brazil are 1-1-0 at home while Haiti are 0-0-2 on the road.",
         "reasons": [
           {
+            "title": "Better season record",
+            "detail": "Brazil (1-1-0, 75.0%) have outplayed Haiti (0-0-2, 0.0%) across the full season.",
+            "impact": "high",
+            "favors": "home"
+          },
+          {
+            "title": "Power rating edge",
+            "detail": "Composite rating favors Brazil: 0.709 vs 0.150 (ESPN + MLB.com + form).",
+            "impact": "high",
+            "favors": "home",
+            "source": "Multi-source"
+          },
+          {
+            "title": "Favorable home/road split",
+            "detail": "Brazil are 1-1-0 at home while Haiti are 0-0-2 on the road.",
+            "impact": "medium",
+            "favors": "home"
+          },
+          {
             "title": "Recent form trending up",
-            "detail": "Belgium are 3-2-0 in their last five (W-D-W-W-D) while Iran are 3-1-1.",
+            "detail": "Brazil are 4-1-0 in their last five (W-W-W-D-W) while Haiti are 1-1-3.",
+            "impact": "medium",
+            "favors": "home",
+            "source": "ESPN"
+          },
+          {
+            "title": "Head-to-head history",
+            "detail": "In the regular-season series: Brazil 2-0 in recent meetings (None).",
+            "impact": "medium",
+            "favors": "home",
+            "source": "ESPN"
+          },
+          {
+            "title": "Goal difference edge",
+            "detail": "Brazil GD +3 vs Haiti -4.",
             "impact": "medium",
             "favors": "home",
             "source": "ESPN"
           },
           {
             "title": "Home-field advantage",
-            "detail": "Belgium play at SoFi Stadium, where home sides often perform better.",
+            "detail": "Brazil play at Lincoln Financial Field, where home sides often perform better.",
             "impact": "low",
             "favors": "home"
           },
           {
             "title": "Rest advantage",
-            "detail": "Belgium have 6 days rest vs 5 for Iran.",
+            "detail": "Brazil have 6 days rest vs 5 for Haiti.",
             "impact": "low",
             "favors": "home",
             "source": "Schedule"
@@ -1864,13 +1240,13 @@
         "factors": [
           {
             "label": "Season record",
-            "detail": "Belgium 0-2-0 vs Iran 0-2-0",
-            "edge": "even"
+            "detail": "Brazil 1-1-0 vs Haiti 0-0-2",
+            "edge": "home"
           },
           {
             "label": "Home/road splits",
-            "detail": "Home 0-2-0 vs away 0-2-0",
-            "edge": "even"
+            "detail": "Home 1-1-0 vs away 0-0-2",
+            "edge": "home"
           },
           {
             "label": "Home-field advantage",
@@ -1879,13 +1255,18 @@
           },
           {
             "label": "Last five games",
-            "detail": "Belgium 3-2-0 vs Iran 3-1-1",
+            "detail": "Brazil 4-1-0 vs Haiti 1-1-3",
+            "edge": "home"
+          },
+          {
+            "label": "League advanced metrics",
+            "detail": "{'league': 'worldcup', 'goalDiffEdge': 7.0, 'drawBaseRate': 0.22}",
             "edge": "home"
           },
           {
             "label": "Advanced team profile",
-            "detail": "Power 0.381 vs 0.396 (ESPN/MLB.com)",
-            "edge": "away"
+            "detail": "Power 0.709 vs 0.150 (ESPN/MLB.com)",
+            "edge": "home"
           },
           {
             "label": "Rest days",
@@ -1894,7 +1275,7 @@
           },
           {
             "label": "Model probability",
-            "detail": "Data-driven estimate 47.4% home / 23.8% away / 28.9% draw",
+            "detail": "Data-driven estimate 78.3% home / 4.1% away / 17.6% draw",
             "edge": "home"
           }
         ],
@@ -1902,6 +1283,7 @@
           "Derived schedule metrics",
           "ESPN betting odds",
           "ESPN game summary",
+          "ESPN head-to-head",
           "ESPN injury report",
           "ESPN last-five form",
           "ESPN scoreboard",
@@ -1912,25 +1294,25 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.47351004288421567,
-            "away": 0.23791705982034347,
-            "draw": 0.28857289729544083,
-            "homePct": 47.4,
-            "awayPct": 23.8,
-            "drawPct": 28.9,
+            "home": 0.7827999999999999,
+            "away": 0.0412,
+            "draw": 0.17600000000000002,
+            "homePct": 78.3,
+            "awayPct": 4.1,
+            "drawPct": 17.6,
             "components": [
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 65.0,
+                "homePct": 100.0,
                 "weightPct": 100.0
               }
             ]
           },
           "pick": {
-            "homePct": 45.0,
-            "awayPct": 25.4,
-            "drawPct": 29.6,
+            "homePct": 70.1,
+            "awayPct": 9.7,
+            "drawPct": 20.1,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
           "implied": {
@@ -1939,66 +1321,66 @@
             "books": [
               {
                 "sportsbook": "DraftKings",
-                "homePct": 66.7,
-                "awayPct": 12.0,
-                "drawPct": 21.3,
-                "vigPct": 4.42
+                "homePct": 86.1,
+                "awayPct": 4.8,
+                "drawPct": 9.1,
+                "vigPct": 4.52
               }
             ],
             "consensus": {
-              "home": 0.6674727932285369,
-              "away": 0.11970979443772674,
-              "draw": 0.2128174123337364,
-              "homePct": 66.7,
-              "awayPct": 12.0,
-              "drawPct": 21.3,
-              "rawHomePct": 69.7,
-              "rawAwayPct": 12.5,
-              "avgVigPct": 4.42
+              "home": 0.8610478359908884,
+              "away": 0.047835990888382696,
+              "draw": 0.09111617312072894,
+              "homePct": 86.1,
+              "awayPct": 4.8,
+              "drawPct": 9.1,
+              "rawHomePct": 90.0,
+              "rawAwayPct": 5.0,
+              "avgVigPct": 4.52
             }
           }
         },
         "teamProbabilities": {
           "home": {
-            "truePct": 47.4,
-            "impliedPct": 66.7,
-            "blendedPct": 45.0,
-            "edgePct": -19.3,
-            "edgeLabel": "-19.3%"
+            "truePct": 78.3,
+            "impliedPct": 86.1,
+            "blendedPct": 70.1,
+            "edgePct": -7.8,
+            "edgeLabel": "-7.8%"
           },
           "away": {
-            "truePct": 23.8,
-            "impliedPct": 12.0,
-            "blendedPct": 25.4,
-            "edgePct": 11.8,
-            "edgeLabel": "+11.8%"
+            "truePct": 4.1,
+            "impliedPct": 4.8,
+            "blendedPct": 9.7,
+            "edgePct": -0.7,
+            "edgeLabel": "-0.7%"
           },
           "draw": {
-            "truePct": 28.9,
-            "impliedPct": 21.3,
-            "blendedPct": 29.6,
-            "edgePct": 7.6,
-            "edgeLabel": "+7.6%"
+            "truePct": 17.6,
+            "impliedPct": 9.1,
+            "blendedPct": 20.1,
+            "edgePct": 8.5,
+            "edgeLabel": "+8.5%"
           }
         },
-        "drawWinPct": 29.6,
+        "drawWinPct": 20.1,
         "features": {
           "league": "worldcup",
-          "recordDiff": 0.0,
-          "splitDiff": 0.0,
-          "homePower": 0.38148148148148153,
-          "awayPower": 0.39629629629629626,
+          "recordDiff": 0.75,
+          "splitDiff": 0.75,
+          "homePower": 0.7092592592592593,
+          "awayPower": 0.15,
           "homeInjuryLoad": 0,
           "awayInjuryLoad": 0,
           "homeRest": 6,
           "awayRest": 5,
           "homeBackToBack": false,
           "awayBackToBack": false,
-          "impliedHome": 66.7,
-          "impliedAway": 12.0,
-          "trueHome": 47.4,
-          "trueAway": 23.8,
-          "confidence": 45.0,
+          "impliedHome": 86.1,
+          "impliedAway": 4.8,
+          "trueHome": 78.3,
+          "trueAway": 4.1,
+          "confidence": 70.1,
           "predictedSide": "home",
           "hasLineup": true,
           "dataCoverage": {
@@ -2015,42 +1397,42 @@
           "mlbPitching": null,
           "leagueMetrics": {
             "league": "worldcup",
-            "goalDiffEdge": 0.0,
+            "goalDiffEdge": 7.0,
             "drawBaseRate": 0.22
           }
         }
       },
-      "predictionRank": 3
+      "predictionRank": 2
     },
     {
       "league": "worldcup",
       "leagueLabel": "FIFA World Cup",
-      "eventId": "760452",
-      "startDate": "2026-06-22T01:00Z",
-      "awayTeam": "Egypt",
-      "homeTeam": "New Zealand",
-      "matchup": "Egypt @ New Zealand",
-      "gameStatusText": "Scheduled",
-      "gameStatusDetail": "Sun, June 21st at 9:00 PM EDT",
-      "statusType": "STATUS_SCHEDULED",
-      "venueName": "BC Place",
+      "eventId": "760443",
+      "startDate": "2026-06-20T03:00Z",
+      "awayTeam": "Paraguay",
+      "homeTeam": "T\u00fcrkiye",
+      "matchup": "Paraguay @ T\u00fcrkiye",
+      "gameStatusText": "Full Time",
+      "gameStatusDetail": "FT",
+      "statusType": "STATUS_FULL_TIME",
+      "venueName": "Levi's Stadium",
       "broadcast": "FS1, Tele, FOX One",
-      "awayRecord": "0-1-0",
-      "homeRecord": "0-1-0",
-      "awayRoadRecord": "0-1-0",
-      "homeHomeRecord": "0-1-0",
-      "awayScore": "0",
+      "awayRecord": "1-0-1",
+      "homeRecord": "0-0-2",
+      "awayRoadRecord": "1-0-1",
+      "homeHomeRecord": "0-0-2",
+      "awayScore": "1",
       "homeScore": "0",
       "isLive": false,
-      "isFinal": false,
-      "isScheduled": true,
+      "isFinal": true,
+      "isScheduled": false,
       "isPostponed": false,
       "isCanceled": false,
       "isSuspended": false,
       "isDelayed": false,
       "isVoided": false,
       "isWashedOut": false,
-      "attendance": 0,
+      "attendance": 68827,
       "source": "espn",
       "viewTypes": [
         "MoneyLine",
@@ -2061,82 +1443,82 @@
         "espnPredictorHome": null,
         "espnPredictorAway": null,
         "homeLastFive": {
-          "record": "1-1-3",
+          "record": "3-2",
           "results": [
-            "L",
+            "W",
+            "W",
             "W",
             "L",
-            "L",
-            "D"
+            "L"
           ],
           "games": [
             {
-              "result": "L",
-              "score": "2-0",
-              "opponent": "Finland"
+              "result": "W",
+              "score": "1-0",
+              "opponent": "Kosovo"
             },
             {
               "result": "W",
-              "score": "4-1",
-              "opponent": "Chile"
+              "score": "4-0",
+              "opponent": "North Macedonia"
+            },
+            {
+              "result": "W",
+              "score": "2-1",
+              "opponent": "Venezuela"
             },
             {
               "result": "L",
-              "score": "4-0",
-              "opponent": "Haiti"
+              "score": "2-0",
+              "opponent": "Australia"
             },
             {
               "result": "L",
               "score": "1-0",
-              "opponent": "England"
-            },
-            {
-              "result": "D",
-              "score": "2-2",
-              "opponent": "Iran"
+              "opponent": "Paraguay"
             }
           ]
         },
         "awayLastFive": {
-          "record": "2-2-1",
+          "record": "3-2",
           "results": [
             "W",
-            "D",
+            "L",
             "W",
             "L",
-            "D"
+            "W"
           ],
           "games": [
             {
               "result": "W",
-              "score": "4-0",
-              "opponent": "Saudi Arabia"
-            },
-            {
-              "result": "D",
-              "score": "0-0",
-              "opponent": "Spain"
-            },
-            {
-              "result": "W",
               "score": "1-0",
-              "opponent": "Russia"
+              "opponent": "Greece"
             },
             {
               "result": "L",
               "score": "2-1",
-              "opponent": "Brazil"
+              "opponent": "Morocco"
             },
             {
-              "result": "D",
-              "score": "1-1",
-              "opponent": "Belgium"
+              "result": "W",
+              "score": "4-0",
+              "opponent": "Nicaragua"
+            },
+            {
+              "result": "L",
+              "score": "4-1",
+              "opponent": "United States"
+            },
+            {
+              "result": "W",
+              "score": "1-0",
+              "opponent": "T\u00fcrkiye"
             }
           ]
         },
         "seasonSeries": {
           "title": "Head-to-head",
-          "summary": "New Zealand 0-1-1 in recent meetings",
+          "summary": "T\u00fcrkiye 0-1 in recent meetings",
           "seriesScore": null
         },
         "weather": null,
@@ -2153,48 +1535,48 @@
           "batters": [
             {
               "order": null,
-              "name": "Max Crocombe",
+              "name": "Ugurcan \u00c7akir",
               "position": "G"
             },
             {
               "order": null,
-              "name": "Michael Boxall",
-              "position": "D"
+              "name": "Abd\u00fclkerim Bardak\u00e7i",
+              "position": "CD-L"
             },
             {
               "order": null,
-              "name": "Finn Surman",
-              "position": "D"
+              "name": "Merih Demiral",
+              "position": "CD-R"
             },
             {
               "order": null,
-              "name": "Tim Payne",
-              "position": "D"
+              "name": "Ferdi Kadioglu",
+              "position": "LB"
             },
             {
               "order": null,
-              "name": "Liberato Cacace",
-              "position": "D"
+              "name": "Mert M\u00fcld\u00fcr",
+              "position": "RB"
             },
             {
               "order": null,
-              "name": "Marko Stamenic",
-              "position": "M"
+              "name": "Arda G\u00fcler",
+              "position": "AM"
             },
             {
               "order": null,
-              "name": "Sarpreet Singh",
-              "position": "M"
+              "name": "Ismail Y\u00fcksek",
+              "position": "LM"
             },
             {
               "order": null,
-              "name": "Joe Bell",
-              "position": "M"
+              "name": "Hakan \u00c7alhanoglu",
+              "position": "RM"
             },
             {
               "order": null,
-              "name": "Elijah Just",
-              "position": "M"
+              "name": "Kerem Akt\u00fcrkoglu",
+              "position": "F"
             }
           ]
         },
@@ -2205,48 +1587,48 @@
           "batters": [
             {
               "order": null,
-              "name": "Mostafa Shoubir",
+              "name": "Orlando Gil",
               "position": "G"
             },
             {
               "order": null,
-              "name": "Ahmed Fatouh",
-              "position": "D"
+              "name": "Omar Alderete",
+              "position": "CD-L"
             },
             {
               "order": null,
-              "name": "Mohamed Hany",
-              "position": "D"
+              "name": "Gustavo G\u00f3mez",
+              "position": "CD-R"
             },
             {
               "order": null,
-              "name": "Yasser Ibrahim",
-              "position": "D"
+              "name": "J\u00fanior Alonso",
+              "position": "LB"
             },
             {
               "order": null,
-              "name": "Hamdy Fathy",
-              "position": "D"
+              "name": "Juan Jose C\u00e1ceres",
+              "position": "RB"
             },
             {
               "order": null,
-              "name": "Mohanad Lashin",
-              "position": "M"
+              "name": "Diego G\u00f3mez",
+              "position": "CM-L"
             },
             {
               "order": null,
-              "name": "Mostafa Zico",
-              "position": "M"
+              "name": "Andr\u00e9s Cubas",
+              "position": "CM-R"
             },
             {
               "order": null,
-              "name": "Marawan Attia",
-              "position": "M"
+              "name": "Mat\u00edas Galarza",
+              "position": "LM"
             },
             {
               "order": null,
-              "name": "Mohamed Salah",
-              "position": "M"
+              "name": "Miguel Almir\u00f3n",
+              "position": "RM"
             }
           ]
         },
@@ -2255,30 +1637,30 @@
             "sportsbook": "DraftKings",
             "viewType": "MoneyLine",
             "currentLine": {
-              "home": 500,
-              "away": -180,
-              "draw": 320
+              "home": 110,
+              "away": 280,
+              "draw": 235
             },
             "openingLine": {
-              "home": 380,
-              "away": -140,
-              "draw": 290
+              "home": 125,
+              "away": 245,
+              "draw": 220
             }
           },
           {
             "sportsbook": "DraftKings",
             "viewType": "Spread",
             "currentLine": {
-              "home": "+0.5 (+145)",
-              "away": "-0.5 (-190)"
+              "home": "-0.5 (+105)",
+              "away": "+0.5 (-135)"
             }
           },
           {
             "sportsbook": "DraftKings",
             "viewType": "Total",
             "currentLine": {
-              "over": "o2.5 (-105)",
-              "under": "u2.5 (-120)"
+              "over": "o2.5 (+110)",
+              "under": "u2.5 (-135)"
             }
           }
         ],
@@ -2299,18 +1681,18 @@
             "ESPN team stats"
           ],
           "wins": 0,
-          "losses": 0,
-          "points": 1.0,
-          "goalDifference": 0.0,
-          "pointsPerGame": 2.0,
-          "goalsAgainstPerGame": 2.0,
+          "losses": 2,
+          "points": 0.0,
+          "goalDifference": -3.0,
+          "pointsPerGame": 0.0,
+          "goalsAgainstPerGame": 1.5,
           "battingAvg": null,
           "onBasePct": null,
           "sluggingPct": null,
           "era": null,
           "runsScored": null,
           "runsAllowed": null,
-          "powerRating": 0.2981481481481481,
+          "powerRating": 0.2583333333333333,
           "opsProxy": null,
           "winPct": 0.0
         },
@@ -2319,31 +1701,31 @@
             "ESPN standings",
             "ESPN team stats"
           ],
-          "wins": 0,
-          "losses": 0,
-          "points": 1.0,
-          "goalDifference": 0.0,
+          "wins": 1,
+          "losses": 1,
+          "points": 3.0,
+          "goalDifference": -2.0,
           "pointsPerGame": 1.0,
-          "goalsAgainstPerGame": 1.0,
+          "goalsAgainstPerGame": 2.0,
           "battingAvg": null,
           "onBasePct": null,
           "sluggingPct": null,
           "era": null,
           "runsScored": null,
           "runsAllowed": null,
-          "powerRating": 0.37407407407407406,
+          "powerRating": 0.48518518518518516,
           "opsProxy": null,
-          "winPct": 0.0
+          "winPct": 0.5
         },
         "restDays": {
-          "home": 6,
-          "away": 6
+          "home": 5,
+          "away": 7
         },
         "weatherImpact": null,
         "headToHead": {
           "homeSeriesWinPct": null,
           "awaySeriesWinPct": null,
-          "summary": "New Zealand 0-1-1 in recent meetings",
+          "summary": "T\u00fcrkiye 0-1 in recent meetings",
           "seriesScore": null
         },
         "homeScheduleFlags": {
@@ -2360,9 +1742,12 @@
         },
         "leagueMetrics": {
           "league": "worldcup",
-          "goalDiffEdge": 0.0,
+          "goalDiffEdge": -1.0,
           "drawBaseRate": 0.22
-        }
+        },
+        "notes": [
+          "Rest edge: T\u00fcrkiye (5d) vs Paraguay (7d)."
+        ]
       },
       "homeLineup": {
         "status": "confirmed",
@@ -2371,48 +1756,48 @@
         "batters": [
           {
             "order": null,
-            "name": "Max Crocombe",
+            "name": "Ugurcan \u00c7akir",
             "position": "G"
           },
           {
             "order": null,
-            "name": "Michael Boxall",
-            "position": "D"
+            "name": "Abd\u00fclkerim Bardak\u00e7i",
+            "position": "CD-L"
           },
           {
             "order": null,
-            "name": "Finn Surman",
-            "position": "D"
+            "name": "Merih Demiral",
+            "position": "CD-R"
           },
           {
             "order": null,
-            "name": "Tim Payne",
-            "position": "D"
+            "name": "Ferdi Kadioglu",
+            "position": "LB"
           },
           {
             "order": null,
-            "name": "Liberato Cacace",
-            "position": "D"
+            "name": "Mert M\u00fcld\u00fcr",
+            "position": "RB"
           },
           {
             "order": null,
-            "name": "Marko Stamenic",
-            "position": "M"
+            "name": "Arda G\u00fcler",
+            "position": "AM"
           },
           {
             "order": null,
-            "name": "Sarpreet Singh",
-            "position": "M"
+            "name": "Ismail Y\u00fcksek",
+            "position": "LM"
           },
           {
             "order": null,
-            "name": "Joe Bell",
-            "position": "M"
+            "name": "Hakan \u00c7alhanoglu",
+            "position": "RM"
           },
           {
             "order": null,
-            "name": "Elijah Just",
-            "position": "M"
+            "name": "Kerem Akt\u00fcrkoglu",
+            "position": "F"
           }
         ]
       },
@@ -2423,88 +1808,107 @@
         "batters": [
           {
             "order": null,
-            "name": "Mostafa Shoubir",
+            "name": "Orlando Gil",
             "position": "G"
           },
           {
             "order": null,
-            "name": "Ahmed Fatouh",
-            "position": "D"
+            "name": "Omar Alderete",
+            "position": "CD-L"
           },
           {
             "order": null,
-            "name": "Mohamed Hany",
-            "position": "D"
+            "name": "Gustavo G\u00f3mez",
+            "position": "CD-R"
           },
           {
             "order": null,
-            "name": "Yasser Ibrahim",
-            "position": "D"
+            "name": "J\u00fanior Alonso",
+            "position": "LB"
           },
           {
             "order": null,
-            "name": "Hamdy Fathy",
-            "position": "D"
+            "name": "Juan Jose C\u00e1ceres",
+            "position": "RB"
           },
           {
             "order": null,
-            "name": "Mohanad Lashin",
-            "position": "M"
+            "name": "Diego G\u00f3mez",
+            "position": "CM-L"
           },
           {
             "order": null,
-            "name": "Mostafa Zico",
-            "position": "M"
+            "name": "Andr\u00e9s Cubas",
+            "position": "CM-R"
           },
           {
             "order": null,
-            "name": "Marawan Attia",
-            "position": "M"
+            "name": "Mat\u00edas Galarza",
+            "position": "LM"
           },
           {
             "order": null,
-            "name": "Mohamed Salah",
-            "position": "M"
+            "name": "Miguel Almir\u00f3n",
+            "position": "RM"
           }
         ]
       },
       "homeMajorInjuries": [],
       "awayMajorInjuries": [],
       "prediction": {
-        "predictedWinner": "Egypt",
+        "predictedWinner": "Paraguay",
         "predictedSide": "away",
-        "homeWinPct": 28.6,
-        "awayWinPct": 40.7,
-        "confidence": 40.7,
-        "confidenceLabel": "Coin flip",
-        "outcomeLabel": "Egypt to win",
-        "whyTheyWin": "Egypt are projected to win because Composite rating favors Egypt: 0.298 vs 0.374 (ESPN + MLB.com + form).; Egypt are 2-2-1 in their last five (W-D-W-L-D) while New Zealand are 1-1-3.",
+        "homeWinPct": 10.5,
+        "awayWinPct": 64.6,
+        "confidence": 64.6,
+        "confidenceLabel": "Lean",
+        "outcomeLabel": "Paraguay to win",
+        "whyTheyWin": "Paraguay are projected to win because T\u00fcrkiye (0-0-2, 0.0%) have outplayed Paraguay (1-0-1, 50.0%) across the full season.; Composite rating favors Paraguay: 0.258 vs 0.485 (ESPN + MLB.com + form).; T\u00fcrkiye are 0-0-2 at home while Paraguay are 1-0-1 on the road.",
         "reasons": [
           {
+            "title": "Better season record",
+            "detail": "T\u00fcrkiye (0-0-2, 0.0%) have outplayed Paraguay (1-0-1, 50.0%) across the full season.",
+            "impact": "high",
+            "favors": "away"
+          },
+          {
             "title": "Power rating edge",
-            "detail": "Composite rating favors Egypt: 0.298 vs 0.374 (ESPN + MLB.com + form).",
+            "detail": "Composite rating favors Paraguay: 0.258 vs 0.485 (ESPN + MLB.com + form).",
             "impact": "high",
             "favors": "away",
             "source": "Multi-source"
           },
           {
-            "title": "Recent form trending up",
-            "detail": "Egypt are 2-2-1 in their last five (W-D-W-L-D) while New Zealand are 1-1-3.",
+            "title": "Favorable home/road split",
+            "detail": "T\u00fcrkiye are 0-0-2 at home while Paraguay are 1-0-1 on the road.",
+            "impact": "medium",
+            "favors": "away"
+          },
+          {
+            "title": "Goal difference edge",
+            "detail": "T\u00fcrkiye GD -3 vs Paraguay -2.",
             "impact": "medium",
             "favors": "away",
             "source": "ESPN"
+          },
+          {
+            "title": "Rest advantage",
+            "detail": "Paraguay have 7 days rest vs 5 for T\u00fcrkiye.",
+            "impact": "low",
+            "favors": "away",
+            "source": "Schedule"
           }
         ],
         "factors": [
           {
             "label": "Season record",
-            "detail": "New Zealand 0-1-0 vs Egypt 0-1-0",
-            "edge": "even"
+            "detail": "T\u00fcrkiye 0-0-2 vs Paraguay 1-0-1",
+            "edge": "away"
           },
           {
             "label": "Home/road splits",
-            "detail": "Home 0-1-0 vs away 0-1-0",
-            "edge": "even"
+            "detail": "Home 0-0-2 vs away 1-0-1",
+            "edge": "away"
           },
           {
             "label": "Home-field advantage",
@@ -2513,17 +1917,27 @@
           },
           {
             "label": "Last five games",
-            "detail": "New Zealand 1-1-3 vs Egypt 2-2-1",
+            "detail": "T\u00fcrkiye 3-2 vs Paraguay 3-2",
+            "edge": "even"
+          },
+          {
+            "label": "League advanced metrics",
+            "detail": "{'league': 'worldcup', 'goalDiffEdge': -1.0, 'drawBaseRate': 0.22}",
             "edge": "away"
           },
           {
             "label": "Advanced team profile",
-            "detail": "Power 0.298 vs 0.374 (ESPN/MLB.com)",
+            "detail": "Power 0.258 vs 0.485 (ESPN/MLB.com)",
+            "edge": "away"
+          },
+          {
+            "label": "Rest days",
+            "detail": "Home 5 vs away 7 days rest",
             "edge": "away"
           },
           {
             "label": "Model probability",
-            "detail": "Data-driven estimate 27.6% home / 42.2% away / 30.2% draw",
+            "detail": "Data-driven estimate 5.9% home / 70.9% away / 23.2% draw",
             "edge": "away"
           }
         ],
@@ -2542,25 +1956,25 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.2759969200155289,
-            "away": 0.4220140087523038,
-            "draw": 0.3019890712321674,
-            "homePct": 27.6,
-            "awayPct": 42.2,
-            "drawPct": 30.2,
+            "home": 0.058748590895638025,
+            "away": 0.7094262152904565,
+            "draw": 0.23182519381390554,
+            "homePct": 5.9,
+            "awayPct": 70.9,
+            "drawPct": 23.2,
             "components": [
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 41.2,
+                "homePct": 3.2,
                 "weightPct": 100.0
               }
             ]
           },
           "pick": {
-            "homePct": 28.6,
-            "awayPct": 40.7,
-            "drawPct": 30.7,
+            "homePct": 10.5,
+            "awayPct": 64.6,
+            "drawPct": 24.9,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
           "implied": {
@@ -2569,66 +1983,66 @@
             "books": [
               {
                 "sportsbook": "DraftKings",
-                "homePct": 15.9,
-                "awayPct": 61.4,
-                "drawPct": 22.7,
-                "vigPct": 4.76
+                "homePct": 45.9,
+                "awayPct": 25.4,
+                "drawPct": 28.8,
+                "vigPct": 3.79
               }
             ],
             "consensus": {
-              "home": 0.15909090909090906,
-              "away": 0.6136363636363636,
-              "draw": 0.22727272727272724,
-              "homePct": 15.9,
-              "awayPct": 61.4,
-              "drawPct": 22.7,
-              "rawHomePct": 16.7,
-              "rawAwayPct": 64.3,
-              "avgVigPct": 4.76
+              "home": 0.45882140926293025,
+              "away": 0.25355919985582986,
+              "draw": 0.28761939088123983,
+              "homePct": 45.9,
+              "awayPct": 25.4,
+              "drawPct": 28.8,
+              "rawHomePct": 47.6,
+              "rawAwayPct": 26.3,
+              "avgVigPct": 3.79
             }
           }
         },
         "teamProbabilities": {
           "home": {
-            "truePct": 27.6,
-            "impliedPct": 15.9,
-            "blendedPct": 28.6,
-            "edgePct": 11.7,
-            "edgeLabel": "+11.7%"
+            "truePct": 5.9,
+            "impliedPct": 45.9,
+            "blendedPct": 10.5,
+            "edgePct": -40.0,
+            "edgeLabel": "-40.0%"
           },
           "away": {
-            "truePct": 42.2,
-            "impliedPct": 61.4,
-            "blendedPct": 40.7,
-            "edgePct": -19.2,
-            "edgeLabel": "-19.2%"
+            "truePct": 70.9,
+            "impliedPct": 25.4,
+            "blendedPct": 64.6,
+            "edgePct": 45.5,
+            "edgeLabel": "+45.5%"
           },
           "draw": {
-            "truePct": 30.2,
-            "impliedPct": 22.7,
-            "blendedPct": 30.7,
-            "edgePct": 7.5,
-            "edgeLabel": "+7.5%"
+            "truePct": 23.2,
+            "impliedPct": 28.8,
+            "blendedPct": 24.9,
+            "edgePct": -5.6,
+            "edgeLabel": "-5.6%"
           }
         },
-        "drawWinPct": 30.7,
+        "drawWinPct": 24.9,
         "features": {
           "league": "worldcup",
-          "recordDiff": 0.0,
-          "splitDiff": 0.0,
-          "homePower": 0.2981481481481481,
-          "awayPower": 0.37407407407407406,
+          "recordDiff": -0.5,
+          "splitDiff": -0.5,
+          "homePower": 0.2583333333333333,
+          "awayPower": 0.48518518518518516,
           "homeInjuryLoad": 0,
           "awayInjuryLoad": 0,
-          "homeRest": 6,
-          "awayRest": 6,
+          "homeRest": 5,
+          "awayRest": 7,
           "homeBackToBack": false,
           "awayBackToBack": false,
-          "impliedHome": 15.9,
-          "impliedAway": 61.4,
-          "trueHome": 27.6,
-          "trueAway": 42.2,
-          "confidence": 40.7,
+          "impliedHome": 45.9,
+          "impliedAway": 25.4,
+          "trueHome": 5.9,
+          "trueAway": 70.9,
+          "confidence": 64.6,
           "predictedSide": "away",
           "hasLineup": true,
           "dataCoverage": {
@@ -2645,32 +2059,32 @@
           "mlbPitching": null,
           "leagueMetrics": {
             "league": "worldcup",
-            "goalDiffEdge": 0.0,
+            "goalDiffEdge": -1.0,
             "drawBaseRate": 0.22
           }
         }
       },
-      "predictionRank": 4
+      "predictionRank": 3
     },
     {
       "league": "worldcup",
       "leagueLabel": "FIFA World Cup",
-      "eventId": "760450",
-      "startDate": "2026-06-21T22:00Z",
-      "awayTeam": "Cape Verde",
-      "homeTeam": "Uruguay",
-      "matchup": "Cape Verde @ Uruguay",
+      "eventId": "760445",
+      "startDate": "2026-06-19T22:00Z",
+      "awayTeam": "Morocco",
+      "homeTeam": "Scotland",
+      "matchup": "Morocco @ Scotland",
       "gameStatusText": "Full Time",
       "gameStatusDetail": "FT",
       "statusType": "STATUS_FULL_TIME",
-      "venueName": "Hard Rock Stadium",
-      "broadcast": "FS1, Tele, FOX One",
-      "awayRecord": "0-2-0",
-      "homeRecord": "0-2-0",
-      "awayRoadRecord": "0-2-0",
-      "homeHomeRecord": "0-2-0",
-      "awayScore": "2",
-      "homeScore": "2",
+      "venueName": "Gillette Stadium",
+      "broadcast": "FOX, Tele, FOX One",
+      "awayRecord": "1-1-0",
+      "homeRecord": "1-0-1",
+      "awayRoadRecord": "1-1-0",
+      "homeHomeRecord": "1-0-1",
+      "awayScore": "1",
+      "homeScore": "0",
       "isLive": false,
       "isFinal": true,
       "isScheduled": false,
@@ -2680,7 +2094,7 @@
       "isDelayed": false,
       "isVoided": false,
       "isWashedOut": false,
-      "attendance": 0,
+      "attendance": 64146,
       "source": "espn",
       "viewTypes": [
         "MoneyLine",
@@ -2691,80 +2105,84 @@
         "espnPredictorHome": null,
         "espnPredictorAway": null,
         "homeLastFive": {
-          "record": "0-4-1",
+          "record": "3-2",
           "results": [
-            "D",
             "L",
-            "D",
-            "D",
-            "D"
+            "L",
+            "W",
+            "W",
+            "W"
           ],
           "games": [
             {
-              "result": "D",
-              "score": "0-0",
-              "opponent": "Mexico"
+              "result": "L",
+              "score": "1-0",
+              "opponent": "Japan"
             },
             {
               "result": "L",
-              "score": "5-1",
-              "opponent": "United States"
+              "score": "1-0",
+              "opponent": "Ivory Coast"
             },
             {
-              "result": "D",
-              "score": "1-1",
-              "opponent": "England"
+              "result": "W",
+              "score": "4-1",
+              "opponent": "Cura\u00e7ao"
             },
             {
-              "result": "D",
-              "score": "0-0",
-              "opponent": "Algeria"
+              "result": "W",
+              "score": "4-0",
+              "opponent": "Bolivia"
             },
             {
-              "result": "D",
-              "score": "1-1",
-              "opponent": "Saudi Arabia"
+              "result": "W",
+              "score": "1-0",
+              "opponent": "Haiti"
             }
           ]
         },
         "awayLastFive": {
-          "record": "2-1-2",
+          "record": "3-2-0",
           "results": [
-            "L",
-            "L",
             "W",
             "W",
+            "W",
+            "D",
             "D"
           ],
           "games": [
             {
-              "result": "L",
-              "score": "1-1",
-              "opponent": "Egypt"
-            },
-            {
-              "result": "L",
-              "score": "4-2",
-              "opponent": "Chile"
+              "result": "W",
+              "score": "2-1",
+              "opponent": "Paraguay"
             },
             {
               "result": "W",
-              "score": "1-1",
-              "opponent": "Finland"
+              "score": "5-0",
+              "opponent": "Burundi"
             },
             {
               "result": "W",
-              "score": "3-0",
-              "opponent": "Serbia"
+              "score": "4-0",
+              "opponent": "Madagascar"
             },
             {
               "result": "D",
-              "score": "0-0",
-              "opponent": "Spain"
+              "score": "1-1",
+              "opponent": "Norway"
+            },
+            {
+              "result": "D",
+              "score": "1-1",
+              "opponent": "Brazil"
             }
           ]
         },
-        "seasonSeries": null,
+        "seasonSeries": {
+          "title": "Head-to-head",
+          "summary": "Scotland 0-1 in recent meetings",
+          "seriesScore": null
+        },
         "weather": null,
         "homeInjuries": [],
         "awayInjuries": [],
@@ -2779,48 +2197,48 @@
           "batters": [
             {
               "order": null,
-              "name": "Fernando Muslera",
+              "name": "Angus Gunn",
               "position": "G"
             },
             {
               "order": null,
-              "name": "Math\u00edas Olivera",
+              "name": "Jack Hendry",
               "position": "CD-L"
             },
             {
               "order": null,
-              "name": "Sebasti\u00e1n C\u00e1ceres",
+              "name": "Grant Hanley",
               "position": "CD-R"
             },
             {
               "order": null,
-              "name": "Manuel Ugarte",
-              "position": "DM"
-            },
-            {
-              "order": null,
-              "name": "Juan Manuel Sanabria",
+              "name": "Andy Robertson",
               "position": "LB"
             },
             {
               "order": null,
-              "name": "Guillermo Varela",
+              "name": "Nathan Patterson",
               "position": "RB"
             },
             {
               "order": null,
-              "name": "Federico Valverde",
+              "name": "Lewis Ferguson",
               "position": "CM-L"
             },
             {
               "order": null,
-              "name": "Rodrigo Bentancur",
+              "name": "Ryan Christie",
               "position": "CM-R"
             },
             {
               "order": null,
-              "name": "Maxi Ara\u00fajo",
+              "name": "Kieran Tierney",
               "position": "LM"
+            },
+            {
+              "order": null,
+              "name": "John McGinn",
+              "position": "RM"
             }
           ]
         },
@@ -2831,48 +2249,48 @@
           "batters": [
             {
               "order": null,
-              "name": "Vozinha",
+              "name": "Yassine Bounou",
               "position": "G"
             },
             {
               "order": null,
-              "name": "Diney Borges",
+              "name": "Chadi Riad",
               "position": "CD-L"
             },
             {
               "order": null,
-              "name": "Pico Lopes",
+              "name": "Issa Diop",
               "position": "CD-R"
             },
             {
               "order": null,
-              "name": "Kevin Pina",
-              "position": "DM"
-            },
-            {
-              "order": null,
-              "name": "Sidny Lopes Cabral",
+              "name": "Noussair Mazraoui",
               "position": "LB"
             },
             {
               "order": null,
-              "name": "Steven Moreira",
+              "name": "Achraf Hakimi",
               "position": "RB"
             },
             {
               "order": null,
-              "name": "Jamiro Monteiro",
-              "position": "CM-L"
+              "name": "Azzedine Ounahi",
+              "position": "AM"
             },
             {
               "order": null,
-              "name": "Telmo Arcanjo",
-              "position": "CM-R"
-            },
-            {
-              "order": null,
-              "name": "Garry Rodrigues",
+              "name": "Neil El Aynaoui",
               "position": "LM"
+            },
+            {
+              "order": null,
+              "name": "Ayyoub Bouaddi",
+              "position": "RM"
+            },
+            {
+              "order": null,
+              "name": "Ismael Saibari",
+              "position": "F"
             }
           ]
         },
@@ -2881,22 +2299,22 @@
             "sportsbook": "DraftKings",
             "viewType": "MoneyLine",
             "currentLine": {
-              "home": -250,
-              "away": 800,
-              "draw": 360
+              "home": 425,
+              "away": -140,
+              "draw": 270
             },
             "openingLine": {
-              "home": -225,
-              "away": 650,
-              "draw": 360
+              "home": 265,
+              "away": 110,
+              "draw": 230
             }
           },
           {
             "sportsbook": "DraftKings",
             "viewType": "Spread",
             "currentLine": {
-              "home": "-1.5 (+120)",
-              "away": "+1.5 (-150)"
+              "home": "+0.5 (+125)",
+              "away": "-0.5 (-155)"
             }
           },
           {
@@ -2904,7 +2322,7 @@
             "viewType": "Total",
             "currentLine": {
               "over": "o2.5 (+105)",
-              "under": "u2.5 (-130)"
+              "under": "u2.5 (-135)"
             }
           }
         ],
@@ -2912,6 +2330,7 @@
           "Derived schedule metrics",
           "ESPN betting odds",
           "ESPN game summary",
+          "ESPN head-to-head",
           "ESPN injury report",
           "ESPN last-five form",
           "ESPN standings",
@@ -2923,56 +2342,56 @@
             "ESPN standings",
             "ESPN team stats"
           ],
-          "wins": 0,
-          "losses": 0,
-          "points": 2.0,
+          "wins": 1,
+          "losses": 1,
+          "points": 3.0,
           "goalDifference": 0.0,
-          "pointsPerGame": 1.5,
-          "goalsAgainstPerGame": 1.5,
+          "pointsPerGame": 0.5,
+          "goalsAgainstPerGame": 0.5,
           "battingAvg": null,
           "onBasePct": null,
           "sluggingPct": null,
           "era": null,
           "runsScored": null,
           "runsAllowed": null,
-          "powerRating": 0.32499999999999996,
+          "powerRating": 0.5314814814814814,
           "opsProxy": null,
-          "winPct": 0.0
+          "winPct": 0.5
         },
         "awayAdvanced": {
           "sources": [
             "ESPN standings",
             "ESPN team stats"
           ],
-          "wins": 0,
+          "wins": 1,
           "losses": 0,
-          "points": 2.0,
-          "goalDifference": 0.0,
+          "points": 4.0,
+          "goalDifference": 1.0,
           "pointsPerGame": 1.0,
-          "goalsAgainstPerGame": 1.0,
+          "goalsAgainstPerGame": 0.5,
           "battingAvg": null,
           "onBasePct": null,
           "sluggingPct": null,
           "era": null,
           "runsScored": null,
           "runsAllowed": null,
-          "powerRating": 0.3518518518518518,
+          "powerRating": 0.6129629629629629,
           "opsProxy": null,
-          "winPct": 0.0
+          "winPct": 0.5
         },
         "restDays": {
-          "home": 6,
+          "home": 5,
           "away": 6
         },
         "weatherImpact": null,
         "headToHead": {
           "homeSeriesWinPct": null,
           "awaySeriesWinPct": null,
-          "summary": null,
+          "summary": "Scotland 0-1 in recent meetings",
           "seriesScore": null
         },
         "homeScheduleFlags": {
-          "restDays": 6,
+          "restDays": 5,
           "backToBack": false,
           "threeInFour": false,
           "gamesLast4Days": 1
@@ -2985,9 +2404,12 @@
         },
         "leagueMetrics": {
           "league": "worldcup",
-          "goalDiffEdge": 0.0,
+          "goalDiffEdge": -1.0,
           "drawBaseRate": 0.22
-        }
+        },
+        "notes": [
+          "Rest edge: Scotland (5d) vs Morocco (6d)."
+        ]
       },
       "homeLineup": {
         "status": "confirmed",
@@ -2996,48 +2418,48 @@
         "batters": [
           {
             "order": null,
-            "name": "Fernando Muslera",
+            "name": "Angus Gunn",
             "position": "G"
           },
           {
             "order": null,
-            "name": "Math\u00edas Olivera",
+            "name": "Jack Hendry",
             "position": "CD-L"
           },
           {
             "order": null,
-            "name": "Sebasti\u00e1n C\u00e1ceres",
+            "name": "Grant Hanley",
             "position": "CD-R"
           },
           {
             "order": null,
-            "name": "Manuel Ugarte",
-            "position": "DM"
-          },
-          {
-            "order": null,
-            "name": "Juan Manuel Sanabria",
+            "name": "Andy Robertson",
             "position": "LB"
           },
           {
             "order": null,
-            "name": "Guillermo Varela",
+            "name": "Nathan Patterson",
             "position": "RB"
           },
           {
             "order": null,
-            "name": "Federico Valverde",
+            "name": "Lewis Ferguson",
             "position": "CM-L"
           },
           {
             "order": null,
-            "name": "Rodrigo Bentancur",
+            "name": "Ryan Christie",
             "position": "CM-R"
           },
           {
             "order": null,
-            "name": "Maxi Ara\u00fajo",
+            "name": "Kieran Tierney",
             "position": "LM"
+          },
+          {
+            "order": null,
+            "name": "John McGinn",
+            "position": "RM"
           }
         ]
       },
@@ -3048,80 +2470,114 @@
         "batters": [
           {
             "order": null,
-            "name": "Vozinha",
+            "name": "Yassine Bounou",
             "position": "G"
           },
           {
             "order": null,
-            "name": "Diney Borges",
+            "name": "Chadi Riad",
             "position": "CD-L"
           },
           {
             "order": null,
-            "name": "Pico Lopes",
+            "name": "Issa Diop",
             "position": "CD-R"
           },
           {
             "order": null,
-            "name": "Kevin Pina",
-            "position": "DM"
-          },
-          {
-            "order": null,
-            "name": "Sidny Lopes Cabral",
+            "name": "Noussair Mazraoui",
             "position": "LB"
           },
           {
             "order": null,
-            "name": "Steven Moreira",
+            "name": "Achraf Hakimi",
             "position": "RB"
           },
           {
             "order": null,
-            "name": "Jamiro Monteiro",
-            "position": "CM-L"
+            "name": "Azzedine Ounahi",
+            "position": "AM"
           },
           {
             "order": null,
-            "name": "Telmo Arcanjo",
-            "position": "CM-R"
-          },
-          {
-            "order": null,
-            "name": "Garry Rodrigues",
+            "name": "Neil El Aynaoui",
             "position": "LM"
+          },
+          {
+            "order": null,
+            "name": "Ayyoub Bouaddi",
+            "position": "RM"
+          },
+          {
+            "order": null,
+            "name": "Ismael Saibari",
+            "position": "F"
           }
         ]
       },
       "homeMajorInjuries": [],
       "awayMajorInjuries": [],
       "prediction": {
-        "predictedWinner": "Uruguay",
-        "predictedSide": "home",
-        "homeWinPct": 37.3,
-        "awayWinPct": 31.0,
-        "confidence": 37.3,
-        "confidenceLabel": "Coin flip",
-        "outcomeLabel": "Uruguay to win",
-        "whyTheyWin": "Uruguay are projected to win because Uruguay play at Hard Rock Stadium, where home sides often perform better.",
+        "predictedWinner": "Morocco",
+        "predictedSide": "away",
+        "homeWinPct": 14.1,
+        "awayWinPct": 59.9,
+        "confidence": 59.9,
+        "confidenceLabel": "Lean",
+        "outcomeLabel": "Morocco to win",
+        "whyTheyWin": "Morocco are projected to win because Scotland (1-0-1, 50.0%) have outplayed Morocco (1-1-0, 75.0%) across the full season.; Composite rating favors Morocco: 0.531 vs 0.613 (ESPN + MLB.com + form).; Scotland are 1-0-1 at home while Morocco are 1-1-0 on the road.",
         "reasons": [
           {
-            "title": "Home-field advantage",
-            "detail": "Uruguay play at Hard Rock Stadium, where home sides often perform better.",
+            "title": "Better season record",
+            "detail": "Scotland (1-0-1, 50.0%) have outplayed Morocco (1-1-0, 75.0%) across the full season.",
+            "impact": "high",
+            "favors": "away"
+          },
+          {
+            "title": "Power rating edge",
+            "detail": "Composite rating favors Morocco: 0.531 vs 0.613 (ESPN + MLB.com + form).",
+            "impact": "high",
+            "favors": "away",
+            "source": "Multi-source"
+          },
+          {
+            "title": "Favorable home/road split",
+            "detail": "Scotland are 1-0-1 at home while Morocco are 1-1-0 on the road.",
+            "impact": "medium",
+            "favors": "away"
+          },
+          {
+            "title": "Recent form trending up",
+            "detail": "Morocco are 3-2-0 in their last five (W-W-W-D-D) while Scotland are 3-2.",
+            "impact": "medium",
+            "favors": "away",
+            "source": "ESPN"
+          },
+          {
+            "title": "Goal difference edge",
+            "detail": "Scotland GD +0 vs Morocco +1.",
+            "impact": "medium",
+            "favors": "away",
+            "source": "ESPN"
+          },
+          {
+            "title": "Rest advantage",
+            "detail": "Morocco have 6 days rest vs 5 for Scotland.",
             "impact": "low",
-            "favors": "home"
+            "favors": "away",
+            "source": "Schedule"
           }
         ],
         "factors": [
           {
             "label": "Season record",
-            "detail": "Uruguay 0-2-0 vs Cape Verde 0-2-0",
-            "edge": "even"
+            "detail": "Scotland 1-0-1 vs Morocco 1-1-0",
+            "edge": "away"
           },
           {
             "label": "Home/road splits",
-            "detail": "Home 0-2-0 vs away 0-2-0",
-            "edge": "even"
+            "detail": "Home 1-0-1 vs away 1-1-0",
+            "edge": "away"
           },
           {
             "label": "Home-field advantage",
@@ -3130,24 +2586,35 @@
           },
           {
             "label": "Last five games",
-            "detail": "Uruguay 0-4-1 vs Cape Verde 2-1-2",
+            "detail": "Scotland 3-2 vs Morocco 3-2-0",
+            "edge": "away"
+          },
+          {
+            "label": "League advanced metrics",
+            "detail": "{'league': 'worldcup', 'goalDiffEdge': -1.0, 'drawBaseRate': 0.22}",
             "edge": "away"
           },
           {
             "label": "Advanced team profile",
-            "detail": "Power 0.325 vs 0.352 (ESPN/MLB.com)",
+            "detail": "Power 0.531 vs 0.613 (ESPN/MLB.com)",
+            "edge": "away"
+          },
+          {
+            "label": "Rest days",
+            "detail": "Home 5 vs away 6 days rest",
             "edge": "away"
           },
           {
             "label": "Model probability",
-            "detail": "Data-driven estimate 38.1% home / 30.6% away / 31.3% draw",
-            "edge": "home"
+            "detail": "Data-driven estimate 10.2% home / 65.4% away / 24.5% draw",
+            "edge": "away"
           }
         ],
         "dataSources": [
           "Derived schedule metrics",
           "ESPN betting odds",
           "ESPN game summary",
+          "ESPN head-to-head",
           "ESPN injury report",
           "ESPN last-five form",
           "ESPN scoreboard",
@@ -3158,25 +2625,25 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.3813410031926747,
-            "away": 0.30575913361203333,
-            "draw": 0.312899863195292,
-            "homePct": 38.1,
-            "awayPct": 30.6,
-            "drawPct": 31.3,
+            "home": 0.10151898558511462,
+            "away": 0.6539163711538987,
+            "draw": 0.24456464326098676,
+            "homePct": 10.2,
+            "awayPct": 65.4,
+            "drawPct": 24.5,
             "components": [
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 52.8,
+                "homePct": 12.5,
                 "weightPct": 100.0
               }
             ]
           },
           "pick": {
-            "homePct": 37.3,
-            "awayPct": 31.0,
-            "drawPct": 31.6,
+            "homePct": 14.1,
+            "awayPct": 59.9,
+            "drawPct": 26.0,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
           "implied": {
@@ -3185,67 +2652,67 @@
             "books": [
               {
                 "sportsbook": "DraftKings",
-                "homePct": 68.5,
-                "awayPct": 10.7,
-                "drawPct": 20.8,
-                "vigPct": 4.28
+                "homePct": 18.2,
+                "awayPct": 55.9,
+                "drawPct": 25.9,
+                "vigPct": 4.41
               }
             ],
             "consensus": {
-              "home": 0.684976836532098,
-              "away": 0.10655195234943744,
-              "draw": 0.2084712111184646,
-              "homePct": 68.5,
-              "awayPct": 10.7,
-              "drawPct": 20.8,
-              "rawHomePct": 71.4,
-              "rawAwayPct": 11.1,
-              "avgVigPct": 4.28
+              "home": 0.18243451463790447,
+              "away": 0.5587057010785825,
+              "draw": 0.25885978428351314,
+              "homePct": 18.2,
+              "awayPct": 55.9,
+              "drawPct": 25.9,
+              "rawHomePct": 19.1,
+              "rawAwayPct": 58.3,
+              "avgVigPct": 4.41
             }
           }
         },
         "teamProbabilities": {
           "home": {
-            "truePct": 38.1,
-            "impliedPct": 68.5,
-            "blendedPct": 37.3,
-            "edgePct": -30.4,
-            "edgeLabel": "-30.4%"
+            "truePct": 10.2,
+            "impliedPct": 18.2,
+            "blendedPct": 14.1,
+            "edgePct": -8.0,
+            "edgeLabel": "-8.0%"
           },
           "away": {
-            "truePct": 30.6,
-            "impliedPct": 10.7,
-            "blendedPct": 31.0,
-            "edgePct": 19.9,
-            "edgeLabel": "+19.9%"
+            "truePct": 65.4,
+            "impliedPct": 55.9,
+            "blendedPct": 59.9,
+            "edgePct": 9.5,
+            "edgeLabel": "+9.5%"
           },
           "draw": {
-            "truePct": 31.3,
-            "impliedPct": 20.8,
-            "blendedPct": 31.6,
-            "edgePct": 10.5,
-            "edgeLabel": "+10.5%"
+            "truePct": 24.5,
+            "impliedPct": 25.9,
+            "blendedPct": 26.0,
+            "edgePct": -1.4,
+            "edgeLabel": "-1.4%"
           }
         },
-        "drawWinPct": 31.6,
+        "drawWinPct": 26.0,
         "features": {
           "league": "worldcup",
-          "recordDiff": 0.0,
-          "splitDiff": 0.0,
-          "homePower": 0.32499999999999996,
-          "awayPower": 0.3518518518518518,
+          "recordDiff": -0.25,
+          "splitDiff": -0.25,
+          "homePower": 0.5314814814814814,
+          "awayPower": 0.6129629629629629,
           "homeInjuryLoad": 0,
           "awayInjuryLoad": 0,
-          "homeRest": 6,
+          "homeRest": 5,
           "awayRest": 6,
           "homeBackToBack": false,
           "awayBackToBack": false,
-          "impliedHome": 68.5,
-          "impliedAway": 10.7,
-          "trueHome": 38.1,
-          "trueAway": 30.6,
-          "confidence": 37.3,
-          "predictedSide": "home",
+          "impliedHome": 18.2,
+          "impliedAway": 55.9,
+          "trueHome": 10.2,
+          "trueAway": 65.4,
+          "confidence": 59.9,
+          "predictedSide": "away",
           "hasLineup": true,
           "dataCoverage": {
             "lineup": true,
@@ -3261,15 +2728,15 @@
           "mlbPitching": null,
           "leagueMetrics": {
             "league": "worldcup",
-            "goalDiffEdge": 0.0,
+            "goalDiffEdge": -1.0,
             "drawBaseRate": 0.22
           }
         }
       },
-      "predictionRank": 5
+      "predictionRank": 4
     }
   ],
-  "fetchedAt": "2026-06-22T00:09:40.282622+00:00",
+  "fetchedAt": "2026-06-22T00:09:26.989727+00:00",
   "scheduleTimezone": "America/New_York",
   "defaultScheduleDate": "2026-06-21"
 }

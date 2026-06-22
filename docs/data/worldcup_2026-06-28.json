@@ -1,0 +1,321 @@
+{
+  "url": "espn://soccer/fifa.world/scoreboard?dates=20260628",
+  "source": "espn",
+  "league": "worldcup",
+  "leagueLabel": "FIFA World Cup",
+  "leagues": [
+    {
+      "id": "mlb",
+      "label": "MLB Baseball",
+      "shortLabel": "MLB"
+    },
+    {
+      "id": "nfl",
+      "label": "NFL Football",
+      "shortLabel": "NFL"
+    },
+    {
+      "id": "nba",
+      "label": "NBA Basketball",
+      "shortLabel": "NBA"
+    },
+    {
+      "id": "wnba",
+      "label": "WNBA Basketball",
+      "shortLabel": "WNBA"
+    },
+    {
+      "id": "worldcup",
+      "label": "FIFA World Cup",
+      "shortLabel": "World Cup"
+    },
+    {
+      "id": "epl",
+      "label": "English Premier League",
+      "shortLabel": "EPL"
+    },
+    {
+      "id": "afl",
+      "label": "AFL",
+      "shortLabel": "AFL"
+    }
+  ],
+  "scheduleDate": "2026-06-28",
+  "gameCount": 1,
+  "statusCounts": {
+    "Scheduled": 1
+  },
+  "topPick": "Group A 2nd Place to win",
+  "games": [
+    {
+      "league": "worldcup",
+      "leagueLabel": "FIFA World Cup",
+      "eventId": "760486",
+      "startDate": "2026-06-28T19:00Z",
+      "awayTeam": "Group B 2nd Place",
+      "homeTeam": "Group A 2nd Place",
+      "matchup": "Group B 2nd Place @ Group A 2nd Place",
+      "gameStatusText": "Scheduled",
+      "gameStatusDetail": "Sun, June 28th at 3:00 PM EDT",
+      "statusType": "STATUS_SCHEDULED",
+      "venueName": "SoFi Stadium",
+      "broadcast": "FOX, Tele, FOX One",
+      "awayRecord": null,
+      "homeRecord": null,
+      "awayRoadRecord": null,
+      "homeHomeRecord": null,
+      "awayScore": "0",
+      "homeScore": "0",
+      "isLive": false,
+      "isFinal": false,
+      "isScheduled": true,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 0,
+      "source": "espn",
+      "viewTypes": [],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": "0-0",
+          "results": [],
+          "games": []
+        },
+        "awayLastFive": {
+          "record": "0-0",
+          "results": [],
+          "games": []
+        },
+        "seasonSeries": null,
+        "weather": null,
+        "homeInjuries": [],
+        "awayInjuries": [],
+        "homeMajorInjuries": [],
+        "awayMajorInjuries": [],
+        "homeKeyInjuries": [],
+        "awayKeyInjuries": [],
+        "homeLineup": {
+          "status": "unavailable",
+          "source": null,
+          "note": "Key players not available yet.",
+          "batters": []
+        },
+        "awayLineup": {
+          "status": "unavailable",
+          "source": null,
+          "note": "Key players not available yet.",
+          "batters": []
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [],
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [],
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": null,
+          "away": null
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": null,
+          "seriesScore": null
+        },
+        "homeScheduleFlags": {
+          "restDays": null,
+          "backToBack": false,
+          "threeInFour": false
+        },
+        "awayScheduleFlags": {
+          "restDays": null,
+          "backToBack": false,
+          "threeInFour": false
+        },
+        "leagueMetrics": {
+          "league": "worldcup",
+          "drawBaseRate": 0.22
+        }
+      },
+      "homeLineup": {
+        "status": "unavailable",
+        "source": null,
+        "note": "Key players not available yet.",
+        "batters": []
+      },
+      "awayLineup": {
+        "status": "unavailable",
+        "source": null,
+        "note": "Key players not available yet.",
+        "batters": []
+      },
+      "homeMajorInjuries": [],
+      "awayMajorInjuries": [],
+      "prediction": {
+        "predictedWinner": "Group A 2nd Place",
+        "predictedSide": "home",
+        "homeWinPct": 41.9,
+        "awayWinPct": 31.2,
+        "confidence": 41.9,
+        "confidenceLabel": "Coin flip",
+        "outcomeLabel": "Group A 2nd Place to win",
+        "whyTheyWin": "Group A 2nd Place are projected to win because Group A 2nd Place play at SoFi Stadium, where home sides often perform better.",
+        "reasons": [
+          {
+            "title": "Home-field advantage",
+            "detail": "Group A 2nd Place play at SoFi Stadium, where home sides often perform better.",
+            "impact": "low",
+            "favors": "home"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "Group A 2nd Place ? vs Group B 2nd Place ?",
+            "edge": "even"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home ? vs away ?",
+            "edge": "even"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Last five games",
+            "detail": "Group A 2nd Place 0-0 vs Group B 2nd Place 0-0",
+            "edge": "even"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 43.6% home / 30.8% away / 25.6% draw",
+            "edge": "home"
+          }
+        ],
+        "dataSources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "Key players",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.43647625149102065,
+            "away": 0.30757961587079197,
+            "draw": 0.2559441326381874,
+            "homePct": 43.6,
+            "awayPct": 30.8,
+            "drawPct": 25.6,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 58.7,
+                "weightPct": 100.0
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 41.9,
+            "awayPct": 31.2,
+            "drawPct": 26.9,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": false
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 43.6,
+            "impliedPct": null,
+            "blendedPct": 41.9,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "away": {
+            "truePct": 30.8,
+            "impliedPct": null,
+            "blendedPct": 31.2,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "draw": {
+            "truePct": 25.6,
+            "impliedPct": null,
+            "blendedPct": 26.9,
+            "edgePct": null,
+            "edgeLabel": null
+          }
+        },
+        "drawWinPct": 26.9,
+        "features": {
+          "league": "worldcup",
+          "recordDiff": 0.0,
+          "splitDiff": 0.0,
+          "homePower": null,
+          "awayPower": null,
+          "homeInjuryLoad": 0,
+          "awayInjuryLoad": 0,
+          "homeRest": null,
+          "awayRest": null,
+          "homeBackToBack": false,
+          "awayBackToBack": false,
+          "impliedHome": null,
+          "impliedAway": null,
+          "trueHome": 43.6,
+          "trueAway": 30.8,
+          "confidence": 41.9,
+          "predictedSide": "home",
+          "hasLineup": false,
+          "dataCoverage": {
+            "lineup": false,
+            "injuries": false,
+            "espnPredictor": false,
+            "advancedStats": false,
+            "restData": false,
+            "scheduleFlags": true,
+            "mlbPitching": false,
+            "leagueMetrics": true,
+            "impliedOdds": false
+          },
+          "mlbPitching": null,
+          "leagueMetrics": {
+            "league": "worldcup",
+            "drawBaseRate": 0.22
+          }
+        }
+      },
+      "predictionRank": 1
+    }
+  ],
+  "fetchedAt": "2026-06-22T00:10:22.260444+00:00",
+  "scheduleTimezone": "America/New_York",
+  "defaultScheduleDate": "2026-06-21"
+}

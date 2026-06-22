@@ -1,0 +1,1838 @@
+{
+  "url": "espn://basketball/wnba/scoreboard?dates=20260620",
+  "source": "espn",
+  "league": "wnba",
+  "leagueLabel": "WNBA Basketball",
+  "leagues": [
+    {
+      "id": "mlb",
+      "label": "MLB Baseball",
+      "shortLabel": "MLB"
+    },
+    {
+      "id": "nfl",
+      "label": "NFL Football",
+      "shortLabel": "NFL"
+    },
+    {
+      "id": "nba",
+      "label": "NBA Basketball",
+      "shortLabel": "NBA"
+    },
+    {
+      "id": "wnba",
+      "label": "WNBA Basketball",
+      "shortLabel": "WNBA"
+    },
+    {
+      "id": "worldcup",
+      "label": "FIFA World Cup",
+      "shortLabel": "World Cup"
+    },
+    {
+      "id": "epl",
+      "label": "English Premier League",
+      "shortLabel": "EPL"
+    },
+    {
+      "id": "afl",
+      "label": "AFL",
+      "shortLabel": "AFL"
+    }
+  ],
+  "scheduleDate": "2026-06-20",
+  "gameCount": 3,
+  "statusCounts": {
+    "Final": 3
+  },
+  "topPick": "Dallas Wings to win",
+  "games": [
+    {
+      "league": "wnba",
+      "leagueLabel": "WNBA Basketball",
+      "eventId": "401857008",
+      "startDate": "2026-06-21T00:00Z",
+      "awayTeam": "Chicago Sky",
+      "homeTeam": "Dallas Wings",
+      "matchup": "Chicago Sky @ Dallas Wings",
+      "gameStatusText": "Final",
+      "gameStatusDetail": "Final",
+      "statusType": "STATUS_FINAL",
+      "venueName": "College Park Center",
+      "broadcast": "CBS, Paramount+",
+      "awayRecord": "4-11",
+      "homeRecord": "10-6",
+      "awayRoadRecord": "3-5",
+      "homeHomeRecord": "6-2",
+      "awayScore": "92",
+      "homeScore": "93",
+      "isLive": false,
+      "isFinal": true,
+      "isScheduled": false,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 6251,
+      "source": "espn",
+      "viewTypes": [
+        "PointspreadDataOpeningAndLatestOddsDataView"
+      ],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": null,
+          "results": [],
+          "games": []
+        },
+        "awayLastFive": {
+          "record": null,
+          "results": [],
+          "games": []
+        },
+        "seasonSeries": {
+          "title": "Regular Season Series",
+          "summary": "DAL leads series 2-0",
+          "seriesScore": "2-0"
+        },
+        "weather": null,
+        "homeInjuries": [
+          {
+            "player": "Odyssey Sims",
+            "status": "Out",
+            "detail": "Ankle (Left)",
+            "returnDate": "2026-07-02"
+          },
+          {
+            "player": "Alanna Smith",
+            "status": "Out",
+            "detail": "Face",
+            "returnDate": "2026-06-25"
+          },
+          {
+            "player": "Alysha Clark",
+            "status": "Day-To-Day",
+            "detail": "Leg (Left)",
+            "returnDate": "2026-06-22"
+          }
+        ],
+        "awayInjuries": [
+          {
+            "player": "Courtney Vandersloot",
+            "status": "Out",
+            "detail": "Surgery (Right)",
+            "returnDate": "2026-06-28"
+          },
+          {
+            "player": "DiJonai Carrington",
+            "status": "Out",
+            "detail": "Surgery (Left)",
+            "returnDate": "2026-06-28"
+          },
+          {
+            "player": "Rickea Jackson",
+            "status": "Out",
+            "detail": "Surgery (Left)",
+            "returnDate": "2027-05-01"
+          }
+        ],
+        "homeMajorInjuries": [
+          {
+            "player": "Odyssey Sims",
+            "status": "Out",
+            "detail": "Ankle (Left)",
+            "returnDate": "2026-07-02"
+          },
+          {
+            "player": "Alanna Smith",
+            "status": "Out",
+            "detail": "Face",
+            "returnDate": "2026-06-25"
+          }
+        ],
+        "awayMajorInjuries": [
+          {
+            "player": "Courtney Vandersloot",
+            "status": "Out",
+            "detail": "Surgery (Right)",
+            "returnDate": "2026-06-28"
+          },
+          {
+            "player": "DiJonai Carrington",
+            "status": "Out",
+            "detail": "Surgery (Left)",
+            "returnDate": "2026-06-28"
+          },
+          {
+            "player": "Rickea Jackson",
+            "status": "Out",
+            "detail": "Surgery (Left)",
+            "returnDate": "2027-05-01"
+          }
+        ],
+        "homeKeyInjuries": [
+          "Odyssey Sims (Out)",
+          "Alanna Smith (Out)",
+          "Alysha Clark (Day-To-Day)"
+        ],
+        "awayKeyInjuries": [
+          "Courtney Vandersloot (Out)",
+          "DiJonai Carrington (Out)",
+          "Rickea Jackson (Out)"
+        ],
+        "homeLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Jessica Shepard",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Awak Kuier",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Arike Ogunbowale",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Paige Bueckers",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Azzi Fudd",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Alanna Smith",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Maddy Siegrist",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Li Yueru",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Sug Sutton",
+              "position": "G"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Azura Stevens",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Kamilla Cardoso",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Skylar Diggins",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Sydney Taylor",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Gabriela Jaquez",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Maddy Westbeld",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Elizabeth Williams",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Natasha Cloud",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Jacy Sheldon",
+              "position": "G"
+            }
+          ]
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 10,
+          "losses": 6,
+          "points": 2.0,
+          "goalDifference": 74.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 4,
+          "losses": 11,
+          "points": -3.5,
+          "goalDifference": -75.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": 2,
+          "away": 3
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": "DAL leads series 2-0",
+          "seriesScore": "2-0"
+        },
+        "homeScheduleFlags": {
+          "restDays": 3,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 2
+        },
+        "awayScheduleFlags": {
+          "restDays": 3,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 2
+        },
+        "leagueMetrics": {
+          "league": "wnba"
+        },
+        "notes": [
+          "Rest edge: Dallas Wings (2d) vs Chicago Sky (3d)."
+        ]
+      },
+      "homeLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Jessica Shepard",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Awak Kuier",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Arike Ogunbowale",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Paige Bueckers",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Azzi Fudd",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Alanna Smith",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Maddy Siegrist",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Li Yueru",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Sug Sutton",
+            "position": "G"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Azura Stevens",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Kamilla Cardoso",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Skylar Diggins",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Sydney Taylor",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Gabriela Jaquez",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Maddy Westbeld",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Elizabeth Williams",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Natasha Cloud",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Jacy Sheldon",
+            "position": "G"
+          }
+        ]
+      },
+      "homeMajorInjuries": [
+        {
+          "player": "Odyssey Sims",
+          "status": "Out",
+          "detail": "Ankle (Left)",
+          "returnDate": "2026-07-02"
+        },
+        {
+          "player": "Alanna Smith",
+          "status": "Out",
+          "detail": "Face",
+          "returnDate": "2026-06-25"
+        }
+      ],
+      "awayMajorInjuries": [
+        {
+          "player": "Courtney Vandersloot",
+          "status": "Out",
+          "detail": "Surgery (Right)",
+          "returnDate": "2026-06-28"
+        },
+        {
+          "player": "DiJonai Carrington",
+          "status": "Out",
+          "detail": "Surgery (Left)",
+          "returnDate": "2026-06-28"
+        },
+        {
+          "player": "Rickea Jackson",
+          "status": "Out",
+          "detail": "Surgery (Left)",
+          "returnDate": "2027-05-01"
+        }
+      ],
+      "prediction": {
+        "predictedWinner": "Dallas Wings",
+        "predictedSide": "home",
+        "homeWinPct": 87.1,
+        "awayWinPct": 12.9,
+        "confidence": 87.1,
+        "confidenceLabel": "Strong pick",
+        "outcomeLabel": "Dallas Wings to win",
+        "whyTheyWin": "Dallas Wings are projected to win because Dallas Wings (10-6, 62.5%) have outplayed Chicago Sky (4-11, 26.7%) across the full season.; Dallas Wings are 6-2 at home while Chicago Sky are 3-5 on the road.; Chicago Sky missing or limited players: Courtney Vandersloot (Out), DiJonai Carrington (Out), Rickea Jackson (Out).",
+        "reasons": [
+          {
+            "title": "Better season record",
+            "detail": "Dallas Wings (10-6, 62.5%) have outplayed Chicago Sky (4-11, 26.7%) across the full season.",
+            "impact": "high",
+            "favors": "home"
+          },
+          {
+            "title": "Favorable home/road split",
+            "detail": "Dallas Wings are 6-2 at home while Chicago Sky are 3-5 on the road.",
+            "impact": "medium",
+            "favors": "home"
+          },
+          {
+            "title": "Opponent injury issues",
+            "detail": "Chicago Sky missing or limited players: Courtney Vandersloot (Out), DiJonai Carrington (Out), Rickea Jackson (Out).",
+            "impact": "medium",
+            "favors": "home",
+            "source": "ESPN"
+          },
+          {
+            "title": "Home-field advantage",
+            "detail": "Dallas Wings have home-court advantage at College Park Center.",
+            "impact": "low",
+            "favors": "home"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "Dallas Wings 10-6 vs Chicago Sky 4-11",
+            "edge": "home"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home 6-2 vs away 3-5",
+            "edge": "home"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Injury impact",
+            "detail": "Weighted injury load: home 3.2 vs away 4.8",
+            "edge": "home"
+          },
+          {
+            "label": "Rest days",
+            "detail": "Home 2 vs away 3 days rest",
+            "edge": "away"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 92.1% home / 7.9% away",
+            "edge": "home"
+          }
+        ],
+        "dataSources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.9210330613933017,
+            "away": 0.07896693860669834,
+            "draw": null,
+            "homePct": 92.1,
+            "awayPct": 7.9,
+            "drawPct": null,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 92.1,
+                "weightPct": 100.0
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 87.1,
+            "awayPct": 12.9,
+            "drawPct": null,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": false
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 92.1,
+            "impliedPct": null,
+            "blendedPct": 87.1,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "away": {
+            "truePct": 7.9,
+            "impliedPct": null,
+            "blendedPct": 12.9,
+            "edgePct": null,
+            "edgeLabel": null
+          }
+        },
+        "features": {
+          "league": "wnba",
+          "recordDiff": 0.3583,
+          "splitDiff": 0.375,
+          "homePower": null,
+          "awayPower": null,
+          "homeInjuryLoad": 3.22,
+          "awayInjuryLoad": 4.83,
+          "homeRest": 2,
+          "awayRest": 3,
+          "homeBackToBack": false,
+          "awayBackToBack": false,
+          "impliedHome": null,
+          "impliedAway": null,
+          "trueHome": 92.1,
+          "trueAway": 7.9,
+          "confidence": 87.1,
+          "predictedSide": "home",
+          "hasLineup": true,
+          "dataCoverage": {
+            "lineup": true,
+            "injuries": true,
+            "espnPredictor": false,
+            "advancedStats": false,
+            "restData": true,
+            "scheduleFlags": true,
+            "mlbPitching": false,
+            "leagueMetrics": false,
+            "impliedOdds": false
+          },
+          "mlbPitching": null,
+          "leagueMetrics": {
+            "league": "wnba"
+          }
+        }
+      },
+      "predictionRank": 1
+    },
+    {
+      "league": "wnba",
+      "leagueLabel": "WNBA Basketball",
+      "eventId": "401857006",
+      "startDate": "2026-06-20T17:00Z",
+      "awayTeam": "Indiana Fever",
+      "homeTeam": "Atlanta Dream",
+      "matchup": "Indiana Fever @ Atlanta Dream",
+      "gameStatusText": "Final",
+      "gameStatusDetail": "Final",
+      "statusType": "STATUS_FINAL",
+      "venueName": "State Farm Arena",
+      "broadcast": "ABC",
+      "awayRecord": "9-7",
+      "homeRecord": "11-4",
+      "awayRoadRecord": "3-4",
+      "homeHomeRecord": "5-2",
+      "awayScore": "96",
+      "homeScore": "113",
+      "isLive": false,
+      "isFinal": true,
+      "isScheduled": false,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 17044,
+      "source": "espn",
+      "viewTypes": [
+        "PointspreadDataOpeningAndLatestOddsDataView"
+      ],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": null,
+          "results": [],
+          "games": []
+        },
+        "awayLastFive": {
+          "record": null,
+          "results": [],
+          "games": []
+        },
+        "seasonSeries": {
+          "title": "Regular Season Series",
+          "summary": "ATL leads series 2-1",
+          "seriesScore": "2-1"
+        },
+        "weather": null,
+        "homeInjuries": [
+          {
+            "player": "Aaliyah Nye",
+            "status": "Out",
+            "detail": "Knee (Left)",
+            "returnDate": "2026-06-24"
+          },
+          {
+            "player": "Brionna Jones",
+            "status": "Out",
+            "detail": "Surgery (Right)",
+            "returnDate": "2026-07-04"
+          }
+        ],
+        "awayInjuries": [
+          {
+            "player": "Caitlin Clark",
+            "status": "Day-To-Day",
+            "detail": "Back",
+            "returnDate": "2026-06-22"
+          }
+        ],
+        "homeMajorInjuries": [
+          {
+            "player": "Aaliyah Nye",
+            "status": "Out",
+            "detail": "Knee (Left)",
+            "returnDate": "2026-06-24"
+          },
+          {
+            "player": "Brionna Jones",
+            "status": "Out",
+            "detail": "Surgery (Right)",
+            "returnDate": "2026-07-04"
+          }
+        ],
+        "awayMajorInjuries": [],
+        "homeKeyInjuries": [
+          "Aaliyah Nye (Out)",
+          "Brionna Jones (Out)"
+        ],
+        "awayKeyInjuries": [
+          "Caitlin Clark (Day-To-Day)"
+        ],
+        "homeLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Naz Hillmon",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Angel Reese",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Allisha Gray",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Jordin Canada",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Rhyne Howard",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Sika Kone",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Madina Okot",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Te-Hina Paopao",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Indya Nivar",
+              "position": "G"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Monique Billings",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Aliyah Boston",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Kelsey Mitchell",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Lexie Hull",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Caitlin Clark",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Myisha Hines-Allen",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Makayla Timpson",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Damiris Dantas",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Sophie Cunningham",
+              "position": "G"
+            }
+          ]
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 11,
+          "losses": 4,
+          "points": 3.5,
+          "goalDifference": 107.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 9,
+          "losses": 7,
+          "points": 1.0,
+          "goalDifference": 44.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": 1,
+          "away": 1
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": "ATL leads series 2-1",
+          "seriesScore": "2-1"
+        },
+        "homeScheduleFlags": {
+          "restDays": 2,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 2
+        },
+        "awayScheduleFlags": {
+          "restDays": 2,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 2
+        },
+        "leagueMetrics": {
+          "league": "wnba"
+        }
+      },
+      "homeLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Naz Hillmon",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Angel Reese",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Allisha Gray",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Jordin Canada",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Rhyne Howard",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Sika Kone",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Madina Okot",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Te-Hina Paopao",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Indya Nivar",
+            "position": "G"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Monique Billings",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Aliyah Boston",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Kelsey Mitchell",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Lexie Hull",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Caitlin Clark",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Myisha Hines-Allen",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Makayla Timpson",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Damiris Dantas",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Sophie Cunningham",
+            "position": "G"
+          }
+        ]
+      },
+      "homeMajorInjuries": [
+        {
+          "player": "Aaliyah Nye",
+          "status": "Out",
+          "detail": "Knee (Left)",
+          "returnDate": "2026-06-24"
+        },
+        {
+          "player": "Brionna Jones",
+          "status": "Out",
+          "detail": "Surgery (Right)",
+          "returnDate": "2026-07-04"
+        }
+      ],
+      "awayMajorInjuries": [],
+      "prediction": {
+        "predictedWinner": "Atlanta Dream",
+        "predictedSide": "home",
+        "homeWinPct": 68.4,
+        "awayWinPct": 31.6,
+        "confidence": 68.4,
+        "confidenceLabel": "Strong pick",
+        "outcomeLabel": "Atlanta Dream to win",
+        "whyTheyWin": "Atlanta Dream are projected to win because Atlanta Dream (11-4, 73.3%) have outplayed Indiana Fever (9-7, 56.2%) across the full season.; Atlanta Dream are 5-2 at home while Indiana Fever are 3-4 on the road.; Atlanta Dream have home-court advantage at State Farm Arena.",
+        "reasons": [
+          {
+            "title": "Better season record",
+            "detail": "Atlanta Dream (11-4, 73.3%) have outplayed Indiana Fever (9-7, 56.2%) across the full season.",
+            "impact": "high",
+            "favors": "home"
+          },
+          {
+            "title": "Favorable home/road split",
+            "detail": "Atlanta Dream are 5-2 at home while Indiana Fever are 3-4 on the road.",
+            "impact": "medium",
+            "favors": "home"
+          },
+          {
+            "title": "Home-field advantage",
+            "detail": "Atlanta Dream have home-court advantage at State Farm Arena.",
+            "impact": "low",
+            "favors": "home"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "Atlanta Dream 11-4 vs Indiana Fever 9-7",
+            "edge": "home"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home 5-2 vs away 3-4",
+            "edge": "home"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Injury impact",
+            "detail": "Weighted injury load: home 3.2 vs away 0.0",
+            "edge": "away"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 70.9% home / 29.1% away",
+            "edge": "home"
+          }
+        ],
+        "dataSources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.7094637299575095,
+            "away": 0.2905362700424905,
+            "draw": null,
+            "homePct": 70.9,
+            "awayPct": 29.1,
+            "drawPct": null,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 70.9,
+                "weightPct": 100.0
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 68.4,
+            "awayPct": 31.6,
+            "drawPct": null,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": false
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 70.9,
+            "impliedPct": null,
+            "blendedPct": 68.4,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "away": {
+            "truePct": 29.1,
+            "impliedPct": null,
+            "blendedPct": 31.6,
+            "edgePct": null,
+            "edgeLabel": null
+          }
+        },
+        "features": {
+          "league": "wnba",
+          "recordDiff": 0.1708,
+          "splitDiff": 0.2857,
+          "homePower": null,
+          "awayPower": null,
+          "homeInjuryLoad": 3.22,
+          "awayInjuryLoad": 0,
+          "homeRest": 1,
+          "awayRest": 1,
+          "homeBackToBack": false,
+          "awayBackToBack": false,
+          "impliedHome": null,
+          "impliedAway": null,
+          "trueHome": 70.9,
+          "trueAway": 29.1,
+          "confidence": 68.4,
+          "predictedSide": "home",
+          "hasLineup": true,
+          "dataCoverage": {
+            "lineup": true,
+            "injuries": true,
+            "espnPredictor": false,
+            "advancedStats": false,
+            "restData": true,
+            "scheduleFlags": true,
+            "mlbPitching": false,
+            "leagueMetrics": false,
+            "impliedOdds": false
+          },
+          "mlbPitching": null,
+          "leagueMetrics": {
+            "league": "wnba"
+          }
+        }
+      },
+      "predictionRank": 2
+    },
+    {
+      "league": "wnba",
+      "leagueLabel": "WNBA Basketball",
+      "eventId": "401857007",
+      "startDate": "2026-06-20T19:07Z",
+      "awayTeam": "Seattle Storm",
+      "homeTeam": "Phoenix Mercury",
+      "matchup": "Seattle Storm @ Phoenix Mercury",
+      "gameStatusText": "Final",
+      "gameStatusDetail": "Final",
+      "statusType": "STATUS_FINAL",
+      "venueName": "Mortgage Matchup Center",
+      "broadcast": "ABC",
+      "awayRecord": "3-14",
+      "homeRecord": "5-12",
+      "awayRoadRecord": "1-8",
+      "homeHomeRecord": "2-6",
+      "awayScore": "73",
+      "homeScore": "93",
+      "isLive": false,
+      "isFinal": true,
+      "isScheduled": false,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 9662,
+      "source": "espn",
+      "viewTypes": [
+        "PointspreadDataOpeningAndLatestOddsDataView"
+      ],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": null,
+          "results": [],
+          "games": []
+        },
+        "awayLastFive": {
+          "record": null,
+          "results": [],
+          "games": []
+        },
+        "seasonSeries": {
+          "title": "Regular Season Series",
+          "summary": "PHX leads series 2-0",
+          "seriesScore": "2-0"
+        },
+        "weather": null,
+        "homeInjuries": [
+          {
+            "player": "Monique Akoa Makani",
+            "status": "Out",
+            "detail": "Hamstring (Left)",
+            "returnDate": "2026-06-24"
+          },
+          {
+            "player": "Jovana Nogic",
+            "status": "Out",
+            "detail": "Not Injury Related",
+            "returnDate": "2026-06-27"
+          },
+          {
+            "player": "Sami Whitcomb",
+            "status": "Out",
+            "detail": "Surgery (Left)",
+            "returnDate": "2026-07-02"
+          }
+        ],
+        "awayInjuries": [
+          {
+            "player": "Jordan Horston",
+            "status": "Day-To-Day",
+            "detail": "Foot (Right)",
+            "returnDate": "2026-06-22"
+          },
+          {
+            "player": "Jade Melbourne",
+            "status": "Day-To-Day",
+            "detail": "Foot (Right)",
+            "returnDate": "2026-06-22"
+          },
+          {
+            "player": "Taina Mair",
+            "status": "Out",
+            "detail": "Coach's Decision",
+            "returnDate": "2026-06-22"
+          },
+          {
+            "player": "Ezi Magbegor",
+            "status": "Out",
+            "detail": "Not Specified (Right)",
+            "returnDate": "2026-07-02"
+          }
+        ],
+        "homeMajorInjuries": [
+          {
+            "player": "Monique Akoa Makani",
+            "status": "Out",
+            "detail": "Hamstring (Left)",
+            "returnDate": "2026-06-24"
+          },
+          {
+            "player": "Jovana Nogic",
+            "status": "Out",
+            "detail": "Not Injury Related",
+            "returnDate": "2026-06-27"
+          },
+          {
+            "player": "Sami Whitcomb",
+            "status": "Out",
+            "detail": "Surgery (Left)",
+            "returnDate": "2026-07-02"
+          }
+        ],
+        "awayMajorInjuries": [
+          {
+            "player": "Taina Mair",
+            "status": "Out",
+            "detail": "Coach's Decision",
+            "returnDate": "2026-06-22"
+          },
+          {
+            "player": "Ezi Magbegor",
+            "status": "Out",
+            "detail": "Not Specified (Right)",
+            "returnDate": "2026-07-02"
+          }
+        ],
+        "homeKeyInjuries": [
+          "Monique Akoa Makani (Out)",
+          "Jovana Nogic (Out)",
+          "Sami Whitcomb (Out)"
+        ],
+        "awayKeyInjuries": [
+          "Jordan Horston (Day-To-Day)",
+          "Jade Melbourne (Day-To-Day)",
+          "Taina Mair (Out)",
+          "Ezi Magbegor (Out)"
+        ],
+        "homeLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Alyssa Thomas",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Natasha Mack",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Noemie Brochant",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Kahleah Copper",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Lexi Held",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "DeWanna Bonner",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Valeriane Ayayi",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Kyara Linskens",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Quionche Carter",
+              "position": "G"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Dominique Malonga",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Awa Fam",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Natisha Hiedeman",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Flau'jae Johnson",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Jade Melbourne",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Katie Lou Samuelson",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Mackenzie Holmes",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Taylor Thierry",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Stefanie Dolson",
+              "position": "C"
+            }
+          ]
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 5,
+          "losses": 12,
+          "points": -3.5,
+          "goalDifference": -59.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 3,
+          "losses": 14,
+          "points": -5.5,
+          "goalDifference": -126.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": 2,
+          "away": 2
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": "PHX leads series 2-0",
+          "seriesScore": "2-0"
+        },
+        "homeScheduleFlags": {
+          "restDays": 2,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 2
+        },
+        "awayScheduleFlags": {
+          "restDays": 2,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 2
+        },
+        "leagueMetrics": {
+          "league": "wnba"
+        }
+      },
+      "homeLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Alyssa Thomas",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Natasha Mack",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Noemie Brochant",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Kahleah Copper",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Lexi Held",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "DeWanna Bonner",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Valeriane Ayayi",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Kyara Linskens",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Quionche Carter",
+            "position": "G"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Dominique Malonga",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Awa Fam",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Natisha Hiedeman",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Flau'jae Johnson",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Jade Melbourne",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Katie Lou Samuelson",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Mackenzie Holmes",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Taylor Thierry",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Stefanie Dolson",
+            "position": "C"
+          }
+        ]
+      },
+      "homeMajorInjuries": [
+        {
+          "player": "Monique Akoa Makani",
+          "status": "Out",
+          "detail": "Hamstring (Left)",
+          "returnDate": "2026-06-24"
+        },
+        {
+          "player": "Jovana Nogic",
+          "status": "Out",
+          "detail": "Not Injury Related",
+          "returnDate": "2026-06-27"
+        },
+        {
+          "player": "Sami Whitcomb",
+          "status": "Out",
+          "detail": "Surgery (Left)",
+          "returnDate": "2026-07-02"
+        }
+      ],
+      "awayMajorInjuries": [
+        {
+          "player": "Taina Mair",
+          "status": "Out",
+          "detail": "Coach's Decision",
+          "returnDate": "2026-06-22"
+        },
+        {
+          "player": "Ezi Magbegor",
+          "status": "Out",
+          "detail": "Not Specified (Right)",
+          "returnDate": "2026-07-02"
+        }
+      ],
+      "prediction": {
+        "predictedWinner": "Phoenix Mercury",
+        "predictedSide": "home",
+        "homeWinPct": 64.0,
+        "awayWinPct": 36.0,
+        "confidence": 64.0,
+        "confidenceLabel": "Lean",
+        "outcomeLabel": "Phoenix Mercury to win",
+        "whyTheyWin": "Phoenix Mercury are projected to win because Phoenix Mercury (5-12, 29.4%) have outplayed Seattle Storm (3-14, 17.6%) across the full season.; Phoenix Mercury are 2-6 at home while Seattle Storm are 1-8 on the road.; Phoenix Mercury have home-court advantage at Mortgage Matchup Center.",
+        "reasons": [
+          {
+            "title": "Better season record",
+            "detail": "Phoenix Mercury (5-12, 29.4%) have outplayed Seattle Storm (3-14, 17.6%) across the full season.",
+            "impact": "high",
+            "favors": "home"
+          },
+          {
+            "title": "Favorable home/road split",
+            "detail": "Phoenix Mercury are 2-6 at home while Seattle Storm are 1-8 on the road.",
+            "impact": "medium",
+            "favors": "home"
+          },
+          {
+            "title": "Home-field advantage",
+            "detail": "Phoenix Mercury have home-court advantage at Mortgage Matchup Center.",
+            "impact": "low",
+            "favors": "home"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "Phoenix Mercury 5-12 vs Seattle Storm 3-14",
+            "edge": "home"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home 2-6 vs away 1-8",
+            "edge": "home"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Injury impact",
+            "detail": "Weighted injury load: home 4.8 vs away 3.2",
+            "edge": "away"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 65.9% home / 34.1% away",
+            "edge": "home"
+          }
+        ],
+        "dataSources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.6592612693768299,
+            "away": 0.34073873062317006,
+            "draw": null,
+            "homePct": 65.9,
+            "awayPct": 34.1,
+            "drawPct": null,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 65.9,
+                "weightPct": 100.0
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 64.0,
+            "awayPct": 36.0,
+            "drawPct": null,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": false
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 65.9,
+            "impliedPct": null,
+            "blendedPct": 64.0,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "away": {
+            "truePct": 34.1,
+            "impliedPct": null,
+            "blendedPct": 36.0,
+            "edgePct": null,
+            "edgeLabel": null
+          }
+        },
+        "features": {
+          "league": "wnba",
+          "recordDiff": 0.1176,
+          "splitDiff": 0.1389,
+          "homePower": null,
+          "awayPower": null,
+          "homeInjuryLoad": 4.83,
+          "awayInjuryLoad": 3.22,
+          "homeRest": 2,
+          "awayRest": 2,
+          "homeBackToBack": false,
+          "awayBackToBack": false,
+          "impliedHome": null,
+          "impliedAway": null,
+          "trueHome": 65.9,
+          "trueAway": 34.1,
+          "confidence": 64.0,
+          "predictedSide": "home",
+          "hasLineup": true,
+          "dataCoverage": {
+            "lineup": true,
+            "injuries": true,
+            "espnPredictor": false,
+            "advancedStats": false,
+            "restData": true,
+            "scheduleFlags": true,
+            "mlbPitching": false,
+            "leagueMetrics": false,
+            "impliedOdds": false
+          },
+          "mlbPitching": null,
+          "leagueMetrics": {
+            "league": "wnba"
+          }
+        }
+      },
+      "predictionRank": 3
+    }
+  ],
+  "fetchedAt": "2026-06-22T00:08:26.731314+00:00",
+  "scheduleTimezone": "America/New_York",
+  "defaultScheduleDate": "2026-06-21"
+}

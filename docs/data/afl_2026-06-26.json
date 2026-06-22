@@ -1,0 +1,467 @@
+{
+  "url": "espn://australian-football/afl/scoreboard?dates=20260626",
+  "source": "espn",
+  "league": "afl",
+  "leagueLabel": "AFL",
+  "leagues": [
+    {
+      "id": "mlb",
+      "label": "MLB Baseball",
+      "shortLabel": "MLB"
+    },
+    {
+      "id": "nfl",
+      "label": "NFL Football",
+      "shortLabel": "NFL"
+    },
+    {
+      "id": "nba",
+      "label": "NBA Basketball",
+      "shortLabel": "NBA"
+    },
+    {
+      "id": "wnba",
+      "label": "WNBA Basketball",
+      "shortLabel": "WNBA"
+    },
+    {
+      "id": "worldcup",
+      "label": "FIFA World Cup",
+      "shortLabel": "World Cup"
+    },
+    {
+      "id": "epl",
+      "label": "English Premier League",
+      "shortLabel": "EPL"
+    },
+    {
+      "id": "afl",
+      "label": "AFL",
+      "shortLabel": "AFL"
+    }
+  ],
+  "scheduleDate": "2026-06-26",
+  "gameCount": 1,
+  "statusCounts": {
+    "Scheduled": 1
+  },
+  "topPick": "Hawthorn to win",
+  "games": [
+    {
+      "league": "afl",
+      "leagueLabel": "AFL",
+      "eventId": "1133614",
+      "startDate": "2026-06-26T09:40Z",
+      "awayTeam": "GWS GIANTS",
+      "homeTeam": "Hawthorn",
+      "matchup": "GWS GIANTS @ Hawthorn",
+      "gameStatusText": "Scheduled",
+      "gameStatusDetail": "Fri, June 25th at 2:40 AM EDT",
+      "statusType": "STATUS_SCHEDULED",
+      "venueName": "MCG",
+      "broadcast": null,
+      "awayRecord": "6-8",
+      "homeRecord": "9-1-4",
+      "awayRoadRecord": "6-8",
+      "homeHomeRecord": "9-1-4",
+      "awayScore": "0",
+      "homeScore": "0",
+      "isLive": false,
+      "isFinal": false,
+      "isScheduled": true,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 0,
+      "source": "espn",
+      "viewTypes": [],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": "3-2",
+          "results": [
+            "L",
+            "W",
+            "W",
+            "L",
+            "W"
+          ],
+          "games": [
+            {
+              "result": "L",
+              "score": "120-81",
+              "opponent": "Melbourne"
+            },
+            {
+              "result": "W",
+              "score": "75-66",
+              "opponent": "Adelaide Crows"
+            },
+            {
+              "result": "W",
+              "score": "119-67",
+              "opponent": "St Kilda"
+            },
+            {
+              "result": "L",
+              "score": "77-71",
+              "opponent": "Western Bulldogs"
+            },
+            {
+              "result": "W",
+              "score": "113-97",
+              "opponent": "Gold Coast SUNS"
+            }
+          ]
+        },
+        "awayLastFive": {
+          "record": "2-3",
+          "results": [
+            "L",
+            "W",
+            "W",
+            "L",
+            "L"
+          ],
+          "games": [
+            {
+              "result": "L",
+              "score": "88-71",
+              "opponent": "West Coast Eagles"
+            },
+            {
+              "result": "W",
+              "score": "166-88",
+              "opponent": "Brisbane Lions"
+            },
+            {
+              "result": "W",
+              "score": "119-70",
+              "opponent": "Melbourne"
+            },
+            {
+              "result": "L",
+              "score": "96-88",
+              "opponent": "St Kilda"
+            },
+            {
+              "result": "L",
+              "score": "88-65",
+              "opponent": "Carlton"
+            }
+          ]
+        },
+        "seasonSeries": null,
+        "weather": null,
+        "homeInjuries": [],
+        "awayInjuries": [],
+        "homeMajorInjuries": [],
+        "awayMajorInjuries": [],
+        "homeKeyInjuries": [],
+        "awayKeyInjuries": [],
+        "homeLineup": {
+          "status": "projected",
+          "source": "espn_leaders",
+          "note": "Key players not posted yet. Key players to watch:",
+          "batters": [
+            {
+              "name": "Nick Watson",
+              "position": "Goals",
+              "statLine": "36"
+            },
+            {
+              "name": "Jai Newcombe",
+              "position": "Disposals",
+              "statLine": "372"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "projected",
+          "source": "espn_leaders",
+          "note": "Key players not posted yet. Key players to watch:",
+          "batters": [
+            {
+              "name": "Jake Stringer",
+              "position": "Goals",
+              "statLine": "27"
+            },
+            {
+              "name": "Clayton Oliver",
+              "position": "Disposals",
+              "statLine": "441"
+            }
+          ]
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [],
+          "powerRating": 0.6,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [],
+          "powerRating": 0.4000000000000001,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": 7,
+          "away": 6
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": null,
+          "seriesScore": null
+        },
+        "homeScheduleFlags": {
+          "restDays": 7,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 1
+        },
+        "awayScheduleFlags": {
+          "restDays": 6,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 1
+        },
+        "leagueMetrics": {
+          "league": "afl"
+        },
+        "notes": [
+          "Rest edge: Hawthorn (7d) vs GWS GIANTS (6d)."
+        ]
+      },
+      "homeLineup": {
+        "status": "projected",
+        "source": "espn_leaders",
+        "note": "Key players not posted yet. Key players to watch:",
+        "batters": [
+          {
+            "name": "Nick Watson",
+            "position": "Goals",
+            "statLine": "36"
+          },
+          {
+            "name": "Jai Newcombe",
+            "position": "Disposals",
+            "statLine": "372"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "projected",
+        "source": "espn_leaders",
+        "note": "Key players not posted yet. Key players to watch:",
+        "batters": [
+          {
+            "name": "Jake Stringer",
+            "position": "Goals",
+            "statLine": "27"
+          },
+          {
+            "name": "Clayton Oliver",
+            "position": "Disposals",
+            "statLine": "441"
+          }
+        ]
+      },
+      "homeMajorInjuries": [],
+      "awayMajorInjuries": [],
+      "prediction": {
+        "predictedWinner": "Hawthorn",
+        "predictedSide": "home",
+        "homeWinPct": 87.6,
+        "awayWinPct": 12.4,
+        "confidence": 87.6,
+        "confidenceLabel": "Strong pick",
+        "outcomeLabel": "Hawthorn to win",
+        "whyTheyWin": "Hawthorn are projected to win because Hawthorn (9-1-4, 67.9%) have outplayed GWS GIANTS (6-8, 42.9%) across the full season.; Composite rating favors Hawthorn: 0.600 vs 0.400 (ESPN + MLB.com + form).; Hawthorn are 9-1-4 at home while GWS GIANTS are 6-8 on the road.",
+        "reasons": [
+          {
+            "title": "Better season record",
+            "detail": "Hawthorn (9-1-4, 67.9%) have outplayed GWS GIANTS (6-8, 42.9%) across the full season.",
+            "impact": "high",
+            "favors": "home"
+          },
+          {
+            "title": "Power rating edge",
+            "detail": "Composite rating favors Hawthorn: 0.600 vs 0.400 (ESPN + MLB.com + form).",
+            "impact": "high",
+            "favors": "home",
+            "source": "Multi-source"
+          },
+          {
+            "title": "Favorable home/road split",
+            "detail": "Hawthorn are 9-1-4 at home while GWS GIANTS are 6-8 on the road.",
+            "impact": "medium",
+            "favors": "home"
+          },
+          {
+            "title": "Recent form trending up",
+            "detail": "Hawthorn are 3-2 in their last five (L-W-W-L-W) while GWS GIANTS are 2-3.",
+            "impact": "medium",
+            "favors": "home",
+            "source": "ESPN"
+          },
+          {
+            "title": "Home-field advantage",
+            "detail": "Hawthorn have home-ground advantage at MCG.",
+            "impact": "low",
+            "favors": "home"
+          },
+          {
+            "title": "Rest advantage",
+            "detail": "Hawthorn have 7 days rest vs 6 for GWS GIANTS.",
+            "impact": "low",
+            "favors": "home",
+            "source": "Schedule"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "Hawthorn 9-1-4 vs GWS GIANTS 6-8",
+            "edge": "home"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home 9-1-4 vs away 6-8",
+            "edge": "home"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Last five games",
+            "detail": "Hawthorn 3-2 vs GWS GIANTS 2-3",
+            "edge": "home"
+          },
+          {
+            "label": "Advanced team profile",
+            "detail": "Power 0.600 vs 0.400 (ESPN/MLB.com)",
+            "edge": "home"
+          },
+          {
+            "label": "Rest days",
+            "detail": "Home 7 vs away 6 days rest",
+            "edge": "home"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 92.7% home / 7.3% away",
+            "edge": "home"
+          }
+        ],
+        "dataSources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "Key players",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.9268988265776218,
+            "away": 0.07310117342237821,
+            "draw": null,
+            "homePct": 92.7,
+            "awayPct": 7.3,
+            "drawPct": null,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 92.7,
+                "weightPct": 100.0
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 87.6,
+            "awayPct": 12.4,
+            "drawPct": null,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": false
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 92.7,
+            "impliedPct": null,
+            "blendedPct": 87.6,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "away": {
+            "truePct": 7.3,
+            "impliedPct": null,
+            "blendedPct": 12.4,
+            "edgePct": null,
+            "edgeLabel": null
+          }
+        },
+        "features": {
+          "league": "afl",
+          "recordDiff": 0.25,
+          "splitDiff": 0.25,
+          "homePower": 0.6,
+          "awayPower": 0.4000000000000001,
+          "homeInjuryLoad": 0,
+          "awayInjuryLoad": 0,
+          "homeRest": 7,
+          "awayRest": 6,
+          "homeBackToBack": false,
+          "awayBackToBack": false,
+          "impliedHome": null,
+          "impliedAway": null,
+          "trueHome": 92.7,
+          "trueAway": 7.3,
+          "confidence": 87.6,
+          "predictedSide": "home",
+          "hasLineup": true,
+          "dataCoverage": {
+            "lineup": true,
+            "injuries": false,
+            "espnPredictor": false,
+            "advancedStats": true,
+            "restData": true,
+            "scheduleFlags": true,
+            "mlbPitching": false,
+            "leagueMetrics": false,
+            "impliedOdds": false
+          },
+          "mlbPitching": null,
+          "leagueMetrics": {
+            "league": "afl"
+          }
+        }
+      },
+      "predictionRank": 1
+    }
+  ],
+  "fetchedAt": "2026-06-22T00:11:38.885719+00:00",
+  "scheduleTimezone": "Australia/Melbourne",
+  "defaultScheduleDate": "2026-06-22"
+}

@@ -1,0 +1,454 @@
+{
+  "url": "espn://australian-football/afl/scoreboard?dates=20260625",
+  "source": "espn",
+  "league": "afl",
+  "leagueLabel": "AFL",
+  "leagues": [
+    {
+      "id": "mlb",
+      "label": "MLB Baseball",
+      "shortLabel": "MLB"
+    },
+    {
+      "id": "nfl",
+      "label": "NFL Football",
+      "shortLabel": "NFL"
+    },
+    {
+      "id": "nba",
+      "label": "NBA Basketball",
+      "shortLabel": "NBA"
+    },
+    {
+      "id": "wnba",
+      "label": "WNBA Basketball",
+      "shortLabel": "WNBA"
+    },
+    {
+      "id": "worldcup",
+      "label": "FIFA World Cup",
+      "shortLabel": "World Cup"
+    },
+    {
+      "id": "epl",
+      "label": "English Premier League",
+      "shortLabel": "EPL"
+    },
+    {
+      "id": "afl",
+      "label": "AFL",
+      "shortLabel": "AFL"
+    }
+  ],
+  "scheduleDate": "2026-06-25",
+  "gameCount": 1,
+  "statusCounts": {
+    "Scheduled": 1
+  },
+  "topPick": "Sydney Swans to win",
+  "games": [
+    {
+      "league": "afl",
+      "leagueLabel": "AFL",
+      "eventId": "1133611",
+      "startDate": "2026-06-25T09:30Z",
+      "awayTeam": "Sydney Swans",
+      "homeTeam": "Brisbane Lions",
+      "matchup": "Sydney Swans @ Brisbane Lions",
+      "gameStatusText": "Scheduled",
+      "gameStatusDetail": "Thu, June 24th at 2:30 AM EDT",
+      "statusType": "STATUS_SCHEDULED",
+      "venueName": "Gabba",
+      "broadcast": null,
+      "awayRecord": "12-2",
+      "homeRecord": "8-6",
+      "awayRoadRecord": "12-2",
+      "homeHomeRecord": "8-6",
+      "awayScore": "0",
+      "homeScore": "0",
+      "isLive": false,
+      "isFinal": false,
+      "isScheduled": true,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 0,
+      "source": "espn",
+      "viewTypes": [],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": "2-3",
+          "results": [
+            "L",
+            "L",
+            "L",
+            "W",
+            "W"
+          ],
+          "games": [
+            {
+              "result": "L",
+              "score": "117-76",
+              "opponent": "Geelong Cats"
+            },
+            {
+              "result": "L",
+              "score": "166-88",
+              "opponent": "GWS GIANTS"
+            },
+            {
+              "result": "L",
+              "score": "103-78",
+              "opponent": "Fremantle"
+            },
+            {
+              "result": "W",
+              "score": "106-75",
+              "opponent": "Gold Coast SUNS"
+            },
+            {
+              "result": "W",
+              "score": "115-80",
+              "opponent": "Richmond"
+            }
+          ]
+        },
+        "awayLastFive": {
+          "record": "4-1",
+          "results": [
+            "W",
+            "L",
+            "W",
+            "W",
+            "W"
+          ],
+          "games": [
+            {
+              "result": "W",
+              "score": "81-75",
+              "opponent": "Collingwood"
+            },
+            {
+              "result": "L",
+              "score": "107-80",
+              "opponent": "Geelong Cats"
+            },
+            {
+              "result": "W",
+              "score": "170-56",
+              "opponent": "Richmond"
+            },
+            {
+              "result": "W",
+              "score": "104-102",
+              "opponent": "St Kilda"
+            },
+            {
+              "result": "W",
+              "score": "93-90",
+              "opponent": "Port Adelaide"
+            }
+          ]
+        },
+        "seasonSeries": null,
+        "weather": null,
+        "homeInjuries": [],
+        "awayInjuries": [],
+        "homeMajorInjuries": [],
+        "awayMajorInjuries": [],
+        "homeKeyInjuries": [],
+        "awayKeyInjuries": [],
+        "homeLineup": {
+          "status": "projected",
+          "source": "espn_leaders",
+          "note": "Key players not posted yet. Key players to watch:",
+          "batters": [
+            {
+              "name": "Logan Morris",
+              "position": "Goals",
+              "statLine": "35"
+            },
+            {
+              "name": "Lachie Neale",
+              "position": "Disposals",
+              "statLine": "426"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "projected",
+          "source": "espn_leaders",
+          "note": "Key players not posted yet. Key players to watch:",
+          "batters": [
+            {
+              "name": "Charlie Curnow",
+              "position": "Goals",
+              "statLine": "36"
+            },
+            {
+              "name": "Nick Blakey",
+              "position": "Disposals",
+              "statLine": "364"
+            },
+            {
+              "name": "Brodie Grundy",
+              "position": "Contested Possessions",
+              "statLine": "183"
+            }
+          ]
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [],
+          "powerRating": 0.4000000000000001,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [],
+          "powerRating": 0.8000000000000002,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": null,
+          "away": null
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": null,
+          "seriesScore": null
+        },
+        "homeScheduleFlags": {
+          "restDays": null,
+          "backToBack": false,
+          "threeInFour": false
+        },
+        "awayScheduleFlags": {
+          "restDays": null,
+          "backToBack": false,
+          "threeInFour": false
+        },
+        "leagueMetrics": {
+          "league": "afl"
+        }
+      },
+      "homeLineup": {
+        "status": "projected",
+        "source": "espn_leaders",
+        "note": "Key players not posted yet. Key players to watch:",
+        "batters": [
+          {
+            "name": "Logan Morris",
+            "position": "Goals",
+            "statLine": "35"
+          },
+          {
+            "name": "Lachie Neale",
+            "position": "Disposals",
+            "statLine": "426"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "projected",
+        "source": "espn_leaders",
+        "note": "Key players not posted yet. Key players to watch:",
+        "batters": [
+          {
+            "name": "Charlie Curnow",
+            "position": "Goals",
+            "statLine": "36"
+          },
+          {
+            "name": "Nick Blakey",
+            "position": "Disposals",
+            "statLine": "364"
+          },
+          {
+            "name": "Brodie Grundy",
+            "position": "Contested Possessions",
+            "statLine": "183"
+          }
+        ]
+      },
+      "homeMajorInjuries": [],
+      "awayMajorInjuries": [],
+      "prediction": {
+        "predictedWinner": "Sydney Swans",
+        "predictedSide": "away",
+        "homeWinPct": 10.4,
+        "awayWinPct": 89.6,
+        "confidence": 89.6,
+        "confidenceLabel": "Strong pick",
+        "outcomeLabel": "Sydney Swans to win",
+        "whyTheyWin": "Sydney Swans are projected to win because Brisbane Lions (8-6, 57.1%) have outplayed Sydney Swans (12-2, 85.7%) across the full season.; Composite rating favors Sydney Swans: 0.400 vs 0.800 (ESPN + MLB.com + form).; Brisbane Lions are 8-6 at home while Sydney Swans are 12-2 on the road.",
+        "reasons": [
+          {
+            "title": "Better season record",
+            "detail": "Brisbane Lions (8-6, 57.1%) have outplayed Sydney Swans (12-2, 85.7%) across the full season.",
+            "impact": "high",
+            "favors": "away"
+          },
+          {
+            "title": "Power rating edge",
+            "detail": "Composite rating favors Sydney Swans: 0.400 vs 0.800 (ESPN + MLB.com + form).",
+            "impact": "high",
+            "favors": "away",
+            "source": "Multi-source"
+          },
+          {
+            "title": "Favorable home/road split",
+            "detail": "Brisbane Lions are 8-6 at home while Sydney Swans are 12-2 on the road.",
+            "impact": "medium",
+            "favors": "away"
+          },
+          {
+            "title": "Recent form trending up",
+            "detail": "Sydney Swans are 4-1 in their last five (W-L-W-W-W) while Brisbane Lions are 2-3.",
+            "impact": "medium",
+            "favors": "away",
+            "source": "ESPN"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "Brisbane Lions 8-6 vs Sydney Swans 12-2",
+            "edge": "away"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home 8-6 vs away 12-2",
+            "edge": "away"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Last five games",
+            "detail": "Brisbane Lions 2-3 vs Sydney Swans 4-1",
+            "edge": "away"
+          },
+          {
+            "label": "Advanced team profile",
+            "detail": "Power 0.400 vs 0.800 (ESPN/MLB.com)",
+            "edge": "away"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 5.0% home / 95.0% away",
+            "edge": "away"
+          }
+        ],
+        "dataSources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "Key players",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.05,
+            "away": 0.95,
+            "draw": null,
+            "homePct": 5.0,
+            "awayPct": 95.0,
+            "drawPct": null,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 4.8,
+                "weightPct": 100.0
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 10.4,
+            "awayPct": 89.6,
+            "drawPct": null,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": false
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 5.0,
+            "impliedPct": null,
+            "blendedPct": 10.4,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "away": {
+            "truePct": 95.0,
+            "impliedPct": null,
+            "blendedPct": 89.6,
+            "edgePct": null,
+            "edgeLabel": null
+          }
+        },
+        "features": {
+          "league": "afl",
+          "recordDiff": -0.2857,
+          "splitDiff": -0.2857,
+          "homePower": 0.4000000000000001,
+          "awayPower": 0.8000000000000002,
+          "homeInjuryLoad": 0,
+          "awayInjuryLoad": 0,
+          "homeRest": null,
+          "awayRest": null,
+          "homeBackToBack": false,
+          "awayBackToBack": false,
+          "impliedHome": null,
+          "impliedAway": null,
+          "trueHome": 5.0,
+          "trueAway": 95.0,
+          "confidence": 89.6,
+          "predictedSide": "away",
+          "hasLineup": true,
+          "dataCoverage": {
+            "lineup": true,
+            "injuries": false,
+            "espnPredictor": false,
+            "advancedStats": true,
+            "restData": false,
+            "scheduleFlags": true,
+            "mlbPitching": false,
+            "leagueMetrics": false,
+            "impliedOdds": false
+          },
+          "mlbPitching": null,
+          "leagueMetrics": {
+            "league": "afl"
+          }
+        }
+      },
+      "predictionRank": 1
+    }
+  ],
+  "fetchedAt": "2026-06-22T00:11:34.357088+00:00",
+  "scheduleTimezone": "Australia/Melbourne",
+  "defaultScheduleDate": "2026-06-22"
+}

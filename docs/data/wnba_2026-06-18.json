@@ -1,0 +1,605 @@
+{
+  "url": "espn://basketball/wnba/scoreboard?dates=20260618",
+  "source": "espn",
+  "league": "wnba",
+  "leagueLabel": "WNBA Basketball",
+  "leagues": [
+    {
+      "id": "mlb",
+      "label": "MLB Baseball",
+      "shortLabel": "MLB"
+    },
+    {
+      "id": "nfl",
+      "label": "NFL Football",
+      "shortLabel": "NFL"
+    },
+    {
+      "id": "nba",
+      "label": "NBA Basketball",
+      "shortLabel": "NBA"
+    },
+    {
+      "id": "wnba",
+      "label": "WNBA Basketball",
+      "shortLabel": "WNBA"
+    },
+    {
+      "id": "worldcup",
+      "label": "FIFA World Cup",
+      "shortLabel": "World Cup"
+    },
+    {
+      "id": "epl",
+      "label": "English Premier League",
+      "shortLabel": "EPL"
+    },
+    {
+      "id": "afl",
+      "label": "AFL",
+      "shortLabel": "AFL"
+    }
+  ],
+  "scheduleDate": "2026-06-18",
+  "gameCount": 1,
+  "statusCounts": {
+    "Final": 1
+  },
+  "topPick": "Indiana Fever to win",
+  "games": [
+    {
+      "league": "wnba",
+      "leagueLabel": "WNBA Basketball",
+      "eventId": "401857002",
+      "startDate": "2026-06-18T23:30Z",
+      "awayTeam": "Atlanta Dream",
+      "homeTeam": "Indiana Fever",
+      "matchup": "Atlanta Dream @ Indiana Fever",
+      "gameStatusText": "Final",
+      "gameStatusDetail": "Final",
+      "statusType": "STATUS_FINAL",
+      "venueName": "Gainbridge Fieldhouse",
+      "broadcast": "Prime Video, Atlanta News First, Victory+ ATL, WTHR Channel 13",
+      "awayRecord": "10-4",
+      "homeRecord": "9-6",
+      "awayRoadRecord": "6-2",
+      "homeHomeRecord": "6-3",
+      "awayScore": "108",
+      "homeScore": "101",
+      "isLive": false,
+      "isFinal": true,
+      "isScheduled": false,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 17274,
+      "source": "espn",
+      "viewTypes": [
+        "PointspreadDataOpeningAndLatestOddsDataView"
+      ],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": null,
+          "results": [],
+          "games": []
+        },
+        "awayLastFive": {
+          "record": null,
+          "results": [],
+          "games": []
+        },
+        "seasonSeries": {
+          "title": "Regular Season Series",
+          "summary": "ATL leads series 2-1",
+          "seriesScore": "2-1"
+        },
+        "weather": null,
+        "homeInjuries": [
+          {
+            "player": "Caitlin Clark",
+            "status": "Day-To-Day",
+            "detail": "Back",
+            "returnDate": "2026-06-22"
+          }
+        ],
+        "awayInjuries": [
+          {
+            "player": "Aaliyah Nye",
+            "status": "Out",
+            "detail": "Knee (Left)",
+            "returnDate": "2026-06-24"
+          },
+          {
+            "player": "Brionna Jones",
+            "status": "Out",
+            "detail": "Surgery (Right)",
+            "returnDate": "2026-07-04"
+          }
+        ],
+        "homeMajorInjuries": [],
+        "awayMajorInjuries": [
+          {
+            "player": "Aaliyah Nye",
+            "status": "Out",
+            "detail": "Knee (Left)",
+            "returnDate": "2026-06-24"
+          },
+          {
+            "player": "Brionna Jones",
+            "status": "Out",
+            "detail": "Surgery (Right)",
+            "returnDate": "2026-07-04"
+          }
+        ],
+        "homeKeyInjuries": [
+          "Caitlin Clark (Day-To-Day)"
+        ],
+        "awayKeyInjuries": [
+          "Aaliyah Nye (Out)",
+          "Brionna Jones (Out)"
+        ],
+        "homeLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Monique Billings",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Aliyah Boston",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Kelsey Mitchell",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Lexie Hull",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Caitlin Clark",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Myisha Hines-Allen",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Makayla Timpson",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Sophie Cunningham",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Tyasha Harris",
+              "position": "G"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Naz Hillmon",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Angel Reese",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Allisha Gray",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Jordin Canada",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Rhyne Howard",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Sika Kone",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Madina Okot",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Te-Hina Paopao",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Isobel Borlase",
+              "position": "G"
+            }
+          ]
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 9,
+          "losses": 7,
+          "points": 1.0,
+          "goalDifference": 44.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 11,
+          "losses": 4,
+          "points": 3.5,
+          "goalDifference": 107.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": 2,
+          "away": 4
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": "ATL leads series 2-1",
+          "seriesScore": "2-1"
+        },
+        "homeScheduleFlags": {
+          "restDays": 2,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 2
+        },
+        "awayScheduleFlags": {
+          "restDays": 4,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 1
+        },
+        "leagueMetrics": {
+          "league": "wnba"
+        },
+        "notes": [
+          "Rest edge: Indiana Fever (2d) vs Atlanta Dream (4d)."
+        ]
+      },
+      "homeLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Monique Billings",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Aliyah Boston",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Kelsey Mitchell",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Lexie Hull",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Caitlin Clark",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Myisha Hines-Allen",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Makayla Timpson",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Sophie Cunningham",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Tyasha Harris",
+            "position": "G"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Naz Hillmon",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Angel Reese",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Allisha Gray",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Jordin Canada",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Rhyne Howard",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Sika Kone",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Madina Okot",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Te-Hina Paopao",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Isobel Borlase",
+            "position": "G"
+          }
+        ]
+      },
+      "homeMajorInjuries": [],
+      "awayMajorInjuries": [
+        {
+          "player": "Aaliyah Nye",
+          "status": "Out",
+          "detail": "Knee (Left)",
+          "returnDate": "2026-06-24"
+        },
+        {
+          "player": "Brionna Jones",
+          "status": "Out",
+          "detail": "Surgery (Right)",
+          "returnDate": "2026-07-04"
+        }
+      ],
+      "prediction": {
+        "predictedWinner": "Indiana Fever",
+        "predictedSide": "home",
+        "homeWinPct": 50.3,
+        "awayWinPct": 49.7,
+        "confidence": 50.3,
+        "confidenceLabel": "Coin flip",
+        "outcomeLabel": "Indiana Fever to win",
+        "whyTheyWin": "Indiana Fever are projected to win because Atlanta Dream missing or limited players: Aaliyah Nye (Out), Brionna Jones (Out).; Indiana Fever have home-court advantage at Gainbridge Fieldhouse.",
+        "reasons": [
+          {
+            "title": "Opponent injury issues",
+            "detail": "Atlanta Dream missing or limited players: Aaliyah Nye (Out), Brionna Jones (Out).",
+            "impact": "medium",
+            "favors": "home",
+            "source": "ESPN"
+          },
+          {
+            "title": "Home-field advantage",
+            "detail": "Indiana Fever have home-court advantage at Gainbridge Fieldhouse.",
+            "impact": "low",
+            "favors": "home"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "Indiana Fever 9-6 vs Atlanta Dream 10-4",
+            "edge": "away"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home 6-3 vs away 6-2",
+            "edge": "away"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Injury impact",
+            "detail": "Weighted injury load: home 0.0 vs away 3.2",
+            "edge": "home"
+          },
+          {
+            "label": "Rest days",
+            "detail": "Home 2 vs away 4 days rest",
+            "edge": "away"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 50.3% home / 49.7% away",
+            "edge": "even"
+          }
+        ],
+        "dataSources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.5034713727944398,
+            "away": 0.49652862720556024,
+            "draw": null,
+            "homePct": 50.3,
+            "awayPct": 49.7,
+            "drawPct": null,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 50.3,
+                "weightPct": 100.0
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 50.3,
+            "awayPct": 49.7,
+            "drawPct": null,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": false
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 50.3,
+            "impliedPct": null,
+            "blendedPct": 50.3,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "away": {
+            "truePct": 49.7,
+            "impliedPct": null,
+            "blendedPct": 49.7,
+            "edgePct": null,
+            "edgeLabel": null
+          }
+        },
+        "features": {
+          "league": "wnba",
+          "recordDiff": -0.1143,
+          "splitDiff": -0.0833,
+          "homePower": null,
+          "awayPower": null,
+          "homeInjuryLoad": 0,
+          "awayInjuryLoad": 3.22,
+          "homeRest": 2,
+          "awayRest": 4,
+          "homeBackToBack": false,
+          "awayBackToBack": false,
+          "impliedHome": null,
+          "impliedAway": null,
+          "trueHome": 50.3,
+          "trueAway": 49.7,
+          "confidence": 50.3,
+          "predictedSide": "home",
+          "hasLineup": true,
+          "dataCoverage": {
+            "lineup": true,
+            "injuries": true,
+            "espnPredictor": false,
+            "advancedStats": false,
+            "restData": true,
+            "scheduleFlags": true,
+            "mlbPitching": false,
+            "leagueMetrics": false,
+            "impliedOdds": false
+          },
+          "mlbPitching": null,
+          "leagueMetrics": {
+            "league": "wnba"
+          }
+        }
+      },
+      "predictionRank": 1
+    }
+  ],
+  "fetchedAt": "2026-06-22T00:08:08.518907+00:00",
+  "scheduleTimezone": "America/New_York",
+  "defaultScheduleDate": "2026-06-21"
+}

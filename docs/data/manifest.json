@@ -1,146 +1,317 @@
 {
-  "builtAt": "2026-06-15T23:16:51.465761+00:00",
+  "builtAt": "2026-06-22T00:13:13.741601+00:00",
   "leagues": [
     {
       "id": "mlb",
       "label": "MLB Baseball",
       "espnPath": "baseball/mlb",
       "scheduleTimezone": "America/New_York",
-      "scheduleDate": "2026-06-15",
-      "defaultDate": "2026-06-15",
+      "scheduleDate": "2026-06-21",
+      "defaultDate": "2026-06-21",
       "availableDates": [
-        "2026-06-13",
-        "2026-06-14",
-        "2026-06-15",
-        "2026-06-16"
+        "2026-06-18",
+        "2026-06-19",
+        "2026-06-20",
+        "2026-06-21",
+        "2026-06-22",
+        "2026-06-23",
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-06-27",
+        "2026-06-28"
       ],
       "dateFiles": {
-        "2026-06-13": "data/mlb_2026-06-13.json",
-        "2026-06-14": "data/mlb_2026-06-14.json",
-        "2026-06-15": "data/mlb_2026-06-15.json",
-        "2026-06-16": "data/mlb_2026-06-16.json"
+        "2026-06-18": "data/mlb_2026-06-18.json",
+        "2026-06-19": "data/mlb_2026-06-19.json",
+        "2026-06-20": "data/mlb_2026-06-20.json",
+        "2026-06-21": "data/mlb_2026-06-21.json",
+        "2026-06-22": "data/mlb_2026-06-22.json",
+        "2026-06-23": "data/mlb_2026-06-23.json",
+        "2026-06-24": "data/mlb_2026-06-24.json",
+        "2026-06-25": "data/mlb_2026-06-25.json",
+        "2026-06-26": "data/mlb_2026-06-26.json",
+        "2026-06-27": "data/mlb_2026-06-27.json",
+        "2026-06-28": "data/mlb_2026-06-28.json"
       },
-      "gameCount": 0,
+      "gameCount": 15,
       "file": "data/mlb.json",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1081)"
+      "error": null
     },
     {
       "id": "nfl",
       "label": "NFL Football",
       "espnPath": "football/nfl",
       "scheduleTimezone": "America/New_York",
-      "scheduleDate": "2026-06-15",
-      "defaultDate": "2026-06-15",
+      "scheduleDate": "2026-06-21",
+      "defaultDate": "2026-06-21",
       "availableDates": [
-        "2026-06-13",
-        "2026-06-14",
-        "2026-06-15",
-        "2026-06-16"
+        "2026-06-18",
+        "2026-06-19",
+        "2026-06-20",
+        "2026-06-21",
+        "2026-06-22",
+        "2026-06-23",
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-06-27",
+        "2026-06-28"
       ],
       "dateFiles": {
-        "2026-06-13": "data/nfl_2026-06-13.json",
-        "2026-06-14": "data/nfl_2026-06-14.json",
-        "2026-06-15": "data/nfl_2026-06-15.json",
-        "2026-06-16": "data/nfl_2026-06-16.json"
+        "2026-06-18": "data/nfl_2026-06-18.json",
+        "2026-06-19": "data/nfl_2026-06-19.json",
+        "2026-06-20": "data/nfl_2026-06-20.json",
+        "2026-06-21": "data/nfl_2026-06-21.json",
+        "2026-06-22": "data/nfl_2026-06-22.json",
+        "2026-06-23": "data/nfl_2026-06-23.json",
+        "2026-06-24": "data/nfl_2026-06-24.json",
+        "2026-06-25": "data/nfl_2026-06-25.json",
+        "2026-06-26": "data/nfl_2026-06-26.json",
+        "2026-06-27": "data/nfl_2026-06-27.json",
+        "2026-06-28": "data/nfl_2026-06-28.json"
       },
       "gameCount": 0,
       "file": "data/nfl.json",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1081)"
+      "error": null
     },
     {
       "id": "nba",
       "label": "NBA Basketball",
       "espnPath": "basketball/nba",
       "scheduleTimezone": "America/New_York",
-      "scheduleDate": "2026-06-15",
-      "defaultDate": "2026-06-15",
+      "scheduleDate": "2026-06-21",
+      "defaultDate": "2026-06-21",
       "availableDates": [
-        "2026-06-13",
-        "2026-06-14",
-        "2026-06-15",
-        "2026-06-16"
+        "2026-06-18",
+        "2026-06-19",
+        "2026-06-20",
+        "2026-06-21",
+        "2026-06-22",
+        "2026-06-23",
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-06-27",
+        "2026-06-28"
       ],
       "dateFiles": {
-        "2026-06-13": "data/nba_2026-06-13.json",
-        "2026-06-14": "data/nba_2026-06-14.json",
-        "2026-06-15": "data/nba_2026-06-15.json",
-        "2026-06-16": "data/nba_2026-06-16.json"
+        "2026-06-18": "data/nba_2026-06-18.json",
+        "2026-06-19": "data/nba_2026-06-19.json",
+        "2026-06-20": "data/nba_2026-06-20.json",
+        "2026-06-21": "data/nba_2026-06-21.json",
+        "2026-06-22": "data/nba_2026-06-22.json",
+        "2026-06-23": "data/nba_2026-06-23.json",
+        "2026-06-24": "data/nba_2026-06-24.json",
+        "2026-06-25": "data/nba_2026-06-25.json",
+        "2026-06-26": "data/nba_2026-06-26.json",
+        "2026-06-27": "data/nba_2026-06-27.json",
+        "2026-06-28": "data/nba_2026-06-28.json"
       },
       "gameCount": 0,
       "file": "data/nba.json",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1081)"
+      "error": "oddsTables missing or empty in pageProps"
+    },
+    {
+      "id": "wnba",
+      "label": "WNBA Basketball",
+      "espnPath": "basketball/wnba",
+      "scheduleTimezone": "America/New_York",
+      "scheduleDate": "2026-06-21",
+      "defaultDate": "2026-06-21",
+      "availableDates": [
+        "2026-06-18",
+        "2026-06-19",
+        "2026-06-20",
+        "2026-06-21",
+        "2026-06-22",
+        "2026-06-23",
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-06-27",
+        "2026-06-28"
+      ],
+      "dateFiles": {
+        "2026-06-18": "data/wnba_2026-06-18.json",
+        "2026-06-19": "data/wnba_2026-06-19.json",
+        "2026-06-20": "data/wnba_2026-06-20.json",
+        "2026-06-21": "data/wnba_2026-06-21.json",
+        "2026-06-22": "data/wnba_2026-06-22.json",
+        "2026-06-23": "data/wnba_2026-06-23.json",
+        "2026-06-24": "data/wnba_2026-06-24.json",
+        "2026-06-25": "data/wnba_2026-06-25.json",
+        "2026-06-26": "data/wnba_2026-06-26.json",
+        "2026-06-27": "data/wnba_2026-06-27.json",
+        "2026-06-28": "data/wnba_2026-06-28.json"
+      },
+      "gameCount": 3,
+      "file": "data/wnba.json",
+      "error": null
     },
     {
       "id": "worldcup",
       "label": "FIFA World Cup",
       "espnPath": "soccer/fifa.world",
       "scheduleTimezone": "America/New_York",
-      "scheduleDate": "2026-06-15",
-      "defaultDate": "2026-06-15",
+      "scheduleDate": "2026-06-21",
+      "defaultDate": "2026-06-21",
       "availableDates": [
-        "2026-06-14",
-        "2026-06-15",
-        "2026-06-16"
+        "2026-06-19",
+        "2026-06-20",
+        "2026-06-21",
+        "2026-06-22",
+        "2026-06-23",
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-06-27",
+        "2026-06-28"
       ],
       "dateFiles": {
-        "2026-06-14": "data/worldcup_2026-06-14.json",
-        "2026-06-15": "data/worldcup_2026-06-15.json",
-        "2026-06-16": "data/worldcup_2026-06-16.json"
+        "2026-06-19": "data/worldcup_2026-06-19.json",
+        "2026-06-20": "data/worldcup_2026-06-20.json",
+        "2026-06-21": "data/worldcup_2026-06-21.json",
+        "2026-06-22": "data/worldcup_2026-06-22.json",
+        "2026-06-23": "data/worldcup_2026-06-23.json",
+        "2026-06-24": "data/worldcup_2026-06-24.json",
+        "2026-06-25": "data/worldcup_2026-06-25.json",
+        "2026-06-26": "data/worldcup_2026-06-26.json",
+        "2026-06-27": "data/worldcup_2026-06-27.json",
+        "2026-06-28": "data/worldcup_2026-06-28.json"
       },
-      "gameCount": 0,
+      "gameCount": 5,
       "file": "data/worldcup.json",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1081)"
+      "error": null
     },
     {
       "id": "epl",
       "label": "English Premier League",
       "espnPath": "soccer/eng.1",
       "scheduleTimezone": "Europe/London",
-      "scheduleDate": "2026-06-16",
-      "defaultDate": "2026-06-16",
+      "scheduleDate": "2026-06-22",
+      "defaultDate": "2026-06-22",
       "availableDates": [
-        "2026-06-15",
-        "2026-06-16",
-        "2026-06-17"
+        "2026-06-20",
+        "2026-06-21",
+        "2026-06-22",
+        "2026-06-23",
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-06-27",
+        "2026-06-28",
+        "2026-06-29"
       ],
       "dateFiles": {
-        "2026-06-15": "data/epl_2026-06-15.json",
-        "2026-06-16": "data/epl_2026-06-16.json",
-        "2026-06-17": "data/epl_2026-06-17.json"
+        "2026-06-20": "data/epl_2026-06-20.json",
+        "2026-06-21": "data/epl_2026-06-21.json",
+        "2026-06-22": "data/epl_2026-06-22.json",
+        "2026-06-23": "data/epl_2026-06-23.json",
+        "2026-06-24": "data/epl_2026-06-24.json",
+        "2026-06-25": "data/epl_2026-06-25.json",
+        "2026-06-26": "data/epl_2026-06-26.json",
+        "2026-06-27": "data/epl_2026-06-27.json",
+        "2026-06-28": "data/epl_2026-06-28.json",
+        "2026-06-29": "data/epl_2026-06-29.json"
       },
       "gameCount": 0,
       "file": "data/epl.json",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260616: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1081)"
+      "error": "oddsTables missing or empty in pageProps"
     },
     {
       "id": "afl",
       "label": "AFL",
       "espnPath": "australian-football/afl",
       "scheduleTimezone": "Australia/Melbourne",
-      "scheduleDate": "2026-06-16",
-      "defaultDate": "2026-06-16",
+      "scheduleDate": "2026-06-22",
+      "defaultDate": "2026-06-22",
       "availableDates": [
-        "2026-06-15",
-        "2026-06-16",
-        "2026-06-17"
+        "2026-06-20",
+        "2026-06-21",
+        "2026-06-22",
+        "2026-06-23",
+        "2026-06-24",
+        "2026-06-25",
+        "2026-06-26",
+        "2026-06-27",
+        "2026-06-28",
+        "2026-06-29"
       ],
       "dateFiles": {
-        "2026-06-15": "data/afl_2026-06-15.json",
-        "2026-06-16": "data/afl_2026-06-16.json",
-        "2026-06-17": "data/afl_2026-06-17.json"
+        "2026-06-20": "data/afl_2026-06-20.json",
+        "2026-06-21": "data/afl_2026-06-21.json",
+        "2026-06-22": "data/afl_2026-06-22.json",
+        "2026-06-23": "data/afl_2026-06-23.json",
+        "2026-06-24": "data/afl_2026-06-24.json",
+        "2026-06-25": "data/afl_2026-06-25.json",
+        "2026-06-26": "data/afl_2026-06-26.json",
+        "2026-06-27": "data/afl_2026-06-27.json",
+        "2026-06-28": "data/afl_2026-06-28.json",
+        "2026-06-29": "data/afl_2026-06-29.json"
       },
       "gameCount": 0,
       "file": "data/afl.json",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260616: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Basic Constraints of CA cert not marked critical (_ssl.c:1081)"
+      "error": null
     }
   ],
   "accuracy": {
     "last7Days": {
-      "correct": 0,
-      "total": 0,
-      "pct": null
+      "correct": 55,
+      "total": 89,
+      "pct": 61.8,
+      "units": 11.731,
+      "roiPct": 13.2,
+      "pending": 50
     },
-    "byLeague": {}
+    "allTime": {
+      "correct": 65,
+      "total": 105,
+      "pct": 61.9,
+      "units": 14.723,
+      "roiPct": 14.0,
+      "pending": 236
+    },
+    "byLeague": {
+      "mlb": {
+        "correct": 34,
+        "total": 59,
+        "pct": 57.6,
+        "units": 2.32,
+        "roiPct": 3.9,
+        "pending": 0
+      },
+      "worldcup": {
+        "correct": 11,
+        "total": 19,
+        "pct": 57.9,
+        "units": 0.411,
+        "roiPct": 2.2,
+        "pending": 0
+      },
+      "afl": {
+        "correct": 1,
+        "total": 1,
+        "pct": 100.0,
+        "units": 1.0,
+        "roiPct": 100.0,
+        "pending": 0
+      },
+      "wnba": {
+        "correct": 9,
+        "total": 10,
+        "pct": 90.0,
+        "units": 8.0,
+        "roiPct": 80.0,
+        "pending": 0
+      }
+    },
+    "streak": {
+      "current": 1,
+      "type": "loss",
+      "bestWin": 9,
+      "bestLoss": 3
+    }
   },
   "liveScoreRefreshSeconds": 90,
   "snapshotNote": "Predictions refresh every 30 minutes on GitHub Actions. Live scores auto-refresh every 90s in your browser."

@@ -1,0 +1,566 @@
+{
+  "url": "espn://basketball/wnba/scoreboard?dates=20260623",
+  "source": "espn",
+  "league": "wnba",
+  "leagueLabel": "WNBA Basketball",
+  "leagues": [
+    {
+      "id": "mlb",
+      "label": "MLB Baseball",
+      "shortLabel": "MLB"
+    },
+    {
+      "id": "nfl",
+      "label": "NFL Football",
+      "shortLabel": "NFL"
+    },
+    {
+      "id": "nba",
+      "label": "NBA Basketball",
+      "shortLabel": "NBA"
+    },
+    {
+      "id": "wnba",
+      "label": "WNBA Basketball",
+      "shortLabel": "WNBA"
+    },
+    {
+      "id": "worldcup",
+      "label": "FIFA World Cup",
+      "shortLabel": "World Cup"
+    },
+    {
+      "id": "epl",
+      "label": "English Premier League",
+      "shortLabel": "EPL"
+    },
+    {
+      "id": "afl",
+      "label": "AFL",
+      "shortLabel": "AFL"
+    }
+  ],
+  "scheduleDate": "2026-06-23",
+  "gameCount": 1,
+  "statusCounts": {
+    "Scheduled": 1
+  },
+  "topPick": "New York Liberty to win",
+  "games": [
+    {
+      "league": "wnba",
+      "leagueLabel": "WNBA Basketball",
+      "eventId": "401857016",
+      "startDate": "2026-06-24T02:00Z",
+      "awayTeam": "New York Liberty",
+      "homeTeam": "Las Vegas Aces",
+      "matchup": "New York Liberty @ Las Vegas Aces",
+      "gameStatusText": "Scheduled",
+      "gameStatusDetail": "Tue, June 23rd at 10:00 PM EDT",
+      "statusType": "STATUS_SCHEDULED",
+      "venueName": "Michelob ULTRA Arena",
+      "broadcast": "USA Net, WWOR-TV, Liberty Live, Vegas 34",
+      "awayRecord": "11-5",
+      "homeRecord": "12-4",
+      "awayRoadRecord": "5-1",
+      "homeHomeRecord": "4-2",
+      "awayScore": "0",
+      "homeScore": "0",
+      "isLive": false,
+      "isFinal": false,
+      "isScheduled": true,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 0,
+      "source": "espn",
+      "viewTypes": [
+        "PointspreadDataOpeningAndLatestOddsDataView"
+      ],
+      "enrichment": {
+        "espnPredictorHome": 56.9,
+        "espnPredictorAway": 43.1,
+        "homeLastFive": {
+          "record": "4-1",
+          "results": [
+            "W",
+            "W",
+            "L",
+            "W",
+            "W"
+          ],
+          "games": [
+            {
+              "result": "W",
+              "score": "105-89",
+              "opponent": "Portland Fire"
+            },
+            {
+              "result": "W",
+              "score": "100-97",
+              "opponent": "Minnesota Lynx"
+            },
+            {
+              "result": "L",
+              "score": "96-66",
+              "opponent": "Dallas Wings"
+            },
+            {
+              "result": "W",
+              "score": "86-76",
+              "opponent": "Phoenix Mercury"
+            },
+            {
+              "result": "W",
+              "score": "92-73",
+              "opponent": "Golden State Valkyries"
+            }
+          ]
+        },
+        "awayLastFive": {
+          "record": "4-1",
+          "results": [
+            "W",
+            "W",
+            "W",
+            "W",
+            "L"
+          ],
+          "games": [
+            {
+              "result": "W",
+              "score": "89-80",
+              "opponent": "Connecticut Sun"
+            },
+            {
+              "result": "W",
+              "score": "104-90",
+              "opponent": "Atlanta Dream"
+            },
+            {
+              "result": "W",
+              "score": "86-64",
+              "opponent": "Washington Mystics"
+            },
+            {
+              "result": "W",
+              "score": "96-95",
+              "opponent": "Chicago Sky"
+            },
+            {
+              "result": "L",
+              "score": "86-83",
+              "opponent": "Washington Mystics"
+            }
+          ]
+        },
+        "seasonSeries": {
+          "title": "Regular Season Series",
+          "summary": "Series starts 6/23",
+          "seriesScore": "0-0"
+        },
+        "weather": null,
+        "homeInjuries": [
+          {
+            "player": "Chennedy Carter",
+            "status": "Out",
+            "detail": "Illness",
+            "returnDate": "2026-06-23"
+          },
+          {
+            "player": "Janiah Barker",
+            "status": "Out",
+            "detail": "Leg",
+            "returnDate": "2026-06-23"
+          },
+          {
+            "player": "Dana Evans",
+            "status": "Out",
+            "detail": "Leg (Left)",
+            "returnDate": "2026-06-30"
+          }
+        ],
+        "awayInjuries": [],
+        "homeMajorInjuries": [
+          {
+            "player": "Chennedy Carter",
+            "status": "Out",
+            "detail": "Illness",
+            "returnDate": "2026-06-23"
+          },
+          {
+            "player": "Janiah Barker",
+            "status": "Out",
+            "detail": "Leg",
+            "returnDate": "2026-06-23"
+          },
+          {
+            "player": "Dana Evans",
+            "status": "Out",
+            "detail": "Leg (Left)",
+            "returnDate": "2026-06-30"
+          }
+        ],
+        "awayMajorInjuries": [],
+        "homeKeyInjuries": [
+          "Chennedy Carter (Out)",
+          "Janiah Barker (Out)",
+          "Dana Evans (Out)"
+        ],
+        "awayKeyInjuries": [],
+        "homeLineup": {
+          "status": "projected",
+          "source": "espn_leaders",
+          "note": "Key players not posted yet. Key players to watch:",
+          "batters": [
+            {
+              "name": "A'ja Wilson",
+              "position": "Points",
+              "statLine": "26.1"
+            },
+            {
+              "name": "Chelsea Gray",
+              "position": "Assists",
+              "statLine": "7.1"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "projected",
+          "source": "espn_leaders",
+          "note": "Key players not posted yet. Key players to watch:",
+          "batters": [
+            {
+              "name": "Breanna Stewart",
+              "position": "Points",
+              "statLine": "19.5"
+            },
+            {
+              "name": "Pauline Astier",
+              "position": "Assists",
+              "statLine": "3.8"
+            },
+            {
+              "name": "Jonquel Jones",
+              "position": "Rebounds",
+              "statLine": "9.1"
+            }
+          ]
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN Matchup Predictor",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 12,
+          "losses": 4,
+          "points": 4.0,
+          "goalDifference": 70.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": 0.8000000000000002,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 11,
+          "losses": 5,
+          "points": 3.0,
+          "goalDifference": 96.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": 0.8000000000000002,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": 2,
+          "away": 2
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": "Series starts 6/23",
+          "seriesScore": "0-0"
+        },
+        "homeScheduleFlags": {
+          "restDays": 3,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 2
+        },
+        "awayScheduleFlags": {
+          "restDays": 2,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 2
+        },
+        "leagueMetrics": {
+          "league": "wnba"
+        }
+      },
+      "homeLineup": {
+        "status": "projected",
+        "source": "espn_leaders",
+        "note": "Key players not posted yet. Key players to watch:",
+        "batters": [
+          {
+            "name": "A'ja Wilson",
+            "position": "Points",
+            "statLine": "26.1"
+          },
+          {
+            "name": "Chelsea Gray",
+            "position": "Assists",
+            "statLine": "7.1"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "projected",
+        "source": "espn_leaders",
+        "note": "Key players not posted yet. Key players to watch:",
+        "batters": [
+          {
+            "name": "Breanna Stewart",
+            "position": "Points",
+            "statLine": "19.5"
+          },
+          {
+            "name": "Pauline Astier",
+            "position": "Assists",
+            "statLine": "3.8"
+          },
+          {
+            "name": "Jonquel Jones",
+            "position": "Rebounds",
+            "statLine": "9.1"
+          }
+        ]
+      },
+      "homeMajorInjuries": [
+        {
+          "player": "Chennedy Carter",
+          "status": "Out",
+          "detail": "Illness",
+          "returnDate": "2026-06-23"
+        },
+        {
+          "player": "Janiah Barker",
+          "status": "Out",
+          "detail": "Leg",
+          "returnDate": "2026-06-23"
+        },
+        {
+          "player": "Dana Evans",
+          "status": "Out",
+          "detail": "Leg (Left)",
+          "returnDate": "2026-06-30"
+        }
+      ],
+      "awayMajorInjuries": [],
+      "prediction": {
+        "predictedWinner": "New York Liberty",
+        "predictedSide": "away",
+        "homeWinPct": 38.8,
+        "awayWinPct": 61.2,
+        "confidence": 61.2,
+        "confidenceLabel": "Lean",
+        "outcomeLabel": "New York Liberty to win",
+        "whyTheyWin": "New York Liberty are projected to win because Las Vegas Aces are 4-2 at home while New York Liberty are 5-1 on the road.; Las Vegas Aces missing or limited players: Chennedy Carter (Out), Janiah Barker (Out), Dana Evans (Out).; Las Vegas Aces have more notable injuries (Chennedy Carter (Out), Janiah Barker (Out), Dana Evans (Out)) than New York Liberty (none listed).",
+        "reasons": [
+          {
+            "title": "Favorable home/road split",
+            "detail": "Las Vegas Aces are 4-2 at home while New York Liberty are 5-1 on the road.",
+            "impact": "medium",
+            "favors": "away"
+          },
+          {
+            "title": "Opponent injury issues",
+            "detail": "Las Vegas Aces missing or limited players: Chennedy Carter (Out), Janiah Barker (Out), Dana Evans (Out).",
+            "impact": "medium",
+            "favors": "away",
+            "source": "ESPN"
+          },
+          {
+            "title": "Injury advantage",
+            "detail": "Las Vegas Aces have more notable injuries (Chennedy Carter (Out), Janiah Barker (Out), Dana Evans (Out)) than New York Liberty (none listed).",
+            "impact": "medium",
+            "favors": "away",
+            "source": "ESPN"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "Las Vegas Aces 12-4 vs New York Liberty 11-5",
+            "edge": "home"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home 4-2 vs away 5-1",
+            "edge": "away"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Last five games",
+            "detail": "Las Vegas Aces 4-1 vs New York Liberty 4-1",
+            "edge": "even"
+          },
+          {
+            "label": "Injury impact",
+            "detail": "Weighted injury load: home 4.8 vs away 0.0",
+            "edge": "away"
+          },
+          {
+            "label": "ESPN predictor",
+            "detail": "56.9% home / 43.1% away",
+            "edge": "home"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 37.3% home / 62.7% away",
+            "edge": "away"
+          }
+        ],
+        "dataSources": [
+          "Derived schedule metrics",
+          "ESPN Matchup Predictor",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.37253477923377676,
+            "away": 0.6274652207662232,
+            "draw": null,
+            "homePct": 37.3,
+            "awayPct": 62.7,
+            "drawPct": null,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 30.4,
+                "weightPct": 74.1
+              },
+              {
+                "source": "ESPN Matchup Predictor",
+                "detail": "56.9% / 43.1%",
+                "homePct": 56.9,
+                "weightPct": 25.9
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 38.8,
+            "awayPct": 61.2,
+            "drawPct": null,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": false
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 37.3,
+            "impliedPct": null,
+            "blendedPct": 38.8,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "away": {
+            "truePct": 62.7,
+            "impliedPct": null,
+            "blendedPct": 61.2,
+            "edgePct": null,
+            "edgeLabel": null
+          }
+        },
+        "features": {
+          "league": "wnba",
+          "recordDiff": 0.0625,
+          "splitDiff": -0.1667,
+          "homePower": 0.8000000000000002,
+          "awayPower": 0.8000000000000002,
+          "homeInjuryLoad": 4.83,
+          "awayInjuryLoad": 0,
+          "homeRest": 2,
+          "awayRest": 2,
+          "homeBackToBack": false,
+          "awayBackToBack": false,
+          "impliedHome": null,
+          "impliedAway": null,
+          "trueHome": 37.3,
+          "trueAway": 62.7,
+          "confidence": 61.2,
+          "predictedSide": "away",
+          "hasLineup": true,
+          "dataCoverage": {
+            "lineup": true,
+            "injuries": true,
+            "espnPredictor": true,
+            "advancedStats": true,
+            "restData": true,
+            "scheduleFlags": true,
+            "mlbPitching": false,
+            "leagueMetrics": false,
+            "impliedOdds": false
+          },
+          "mlbPitching": null,
+          "leagueMetrics": {
+            "league": "wnba"
+          }
+        }
+      },
+      "predictionRank": 1
+    }
+  ],
+  "fetchedAt": "2026-06-22T00:08:46.353811+00:00",
+  "scheduleTimezone": "America/New_York",
+  "defaultScheduleDate": "2026-06-21"
+}

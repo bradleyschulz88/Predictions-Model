@@ -291,6 +291,7 @@ let accuracyData = null;
 let calibrationData = null;
 let manifestData = null;
 let overviewData = null;
+let predictionsLogData = null;
 let lastLiveScoreAt = null;
 let activeScheduleDate = null;
 let datePickerGameCount = null;
@@ -3324,11 +3325,82 @@ function gameDisplayRank(game) {
   return game?.displayRank ?? game?.predictionRank ?? "?";
 }
 
+function confidenceLabelFromConfidence(confidence) {
+  const value = Number(confidence);
+  if (Number.isNaN(value)) return "";
+  if (value >= 68) return "Strong pick";
+  if (value >= 57) return "Lean";
+  return "Coin flip";
+}
+
+function recordToPrediction(record) {
+  if (!record) return null;
+  const predictedWinner = record.predictedWinner || record.predicted;
+  const outcomeLabel = record.outcomeLabel || (predictedWinner ? `${predictedWinner} to win` : null);
+  if (!outcomeLabel && !predictedWinner) return null;
+  const confidence = record.confidence != null ? Number(record.confidence) : null;
+  return {
+    predictedWinner,
+    predictedSide: record.predictedSide,
+    outcomeLabel,
+    confidence,
+    confidenceLabel: confidenceLabelFromConfidence(confidence),
+    features: record.features,
+  };
+}
+
+function hydrateGamePredictions(games, { league, scheduleDate } = {}) {
+  const records = new Map();
+  for (const [eventId, pick] of Object.entries(accuracyData?.picksByEventId || {})) {
+    records.set(String(eventId), pick);
+  }
+  for (const [eventId, pick] of Object.entries(predictionsLogData?.predictions || {})) {
+    if (!records.has(String(eventId))) records.set(String(eventId), pick);
+  }
+
+  return (games || []).map((game) => {
+    if (game?.prediction?.outcomeLabel || game?.prediction?.predictedWinner) return game;
+    const record = records.get(String(game.eventId));
+    if (!record) return game;
+    if (league && record.league && record.league !== league) return game;
+    if (scheduleDate && record.scheduleDate && record.scheduleDate !== scheduleDate) return game;
+    const prediction = recordToPrediction(record);
+    if (!prediction) return game;
+    return { ...game, prediction };
+  });
+}
+
+function countGamesWithPredictions(games) {
+  return (games || []).filter((game) => game.prediction?.outcomeLabel || game.prediction?.predictedWinner).length;
+}
+
+function enrichPayloadWithPredictions(payload, league, scheduleDate) {
+  if (!payload?.games?.length) return payload;
+  const hydratedGames = hydrateGamePredictions(payload.games, {
+    league,
+    scheduleDate: scheduleDate || payload.scheduleDate || payload._requestedDate,
+  });
+  const pickCount = countGamesWithPredictions(hydratedGames);
+  return {
+    ...payload,
+    games: hydratedGames,
+    gameCount: hydratedGames.length,
+    topPick: hydratedGames.find((game) => game.prediction?.outcomeLabel)?.prediction?.outcomeLabel || payload.topPick,
+    liveScheduleOnly: pickCount > 0 ? false : payload.liveScheduleOnly,
+    _liveFallback: pickCount > 0 ? false : payload._liveFallback,
+  };
+}
+
+function gameHasPrediction(game) {
+  return Boolean(game?.prediction?.outcomeLabel || game?.prediction?.predictedWinner);
+}
+
 function prepareGamesForDisplay(games) {
   const refreshed = (games || []).map(refreshGameStatusFlags);
   const filtered = filterGames(refreshed);
   const playable = filtered.filter((game) => !isUnplayableGame(game));
-  return [...playable]
+  const withPicks = playable.filter((game) => gameHasPrediction(game));
+  return [...withPicks]
     .sort((left, right) => (right.prediction?.confidence ?? 0) - (left.prediction?.confidence ?? 0))
     .map((game, index) => ({ ...game, displayRank: index + 1 }));
 }
@@ -3681,10 +3753,15 @@ function renderGames(games) {
     const displayDate = getSelectedDate();
     const tz = lastPayload?.scheduleTimezone || leagueMeta(sport)?.scheduleTimezone;
     const sourceHint = describeScheduleSource(lastPayload);
+    const scheduleCount = refreshedGames.filter((game) => !isUnplayableGame(refreshGameStatusFlags(game))).length;
     const removedNote = removedCount
       ? ` ${removedCount} game${removedCount === 1 ? " was" : "s were"} washed out or postponed and removed from picks.`
       : "";
-    gamesEl.innerHTML = `<div class="empty-state">No ${leagueLabel} picks available for ${displayDate}${tz ? ` (${tz})` : ""}.${removedNote} Source: ${sourceHint}.${buildError ? ` Build error: ${buildError}` : ""}${scheduleOnly ? " Live ESPN schedule loaded — predictions appear once GitHub Actions builds that date." : ""}</div>`;
+    const scheduleNote =
+      scheduleCount > 0
+        ? ` ${scheduleCount} game${scheduleCount === 1 ? "" : "s"} on the schedule, but no model picks are loaded yet.`
+        : "";
+    gamesEl.innerHTML = `<div class="empty-state">No ${leagueLabel} picks available for ${displayDate}${tz ? ` (${tz})` : ""}.${removedNote}${scheduleNote} Source: ${sourceHint}.${buildError ? ` Build error: ${buildError}` : ""}${scheduleOnly ? " Predictions refresh every 30 minutes on GitHub Actions — try Refresh or check the Actions workflow." : ""}</div>`;
     renderTopPicks([]);
     renderStats(lastPayload || {}, [], { gameCount: refreshedGames.length });
     renderModelDayResult(refreshedGames);
@@ -3953,7 +4030,11 @@ async function fetchStaticPayloadForDate(league, dateValue, { force = false } = 
     const gameCount = payload.gameCount ?? payload.games?.length ?? 0;
     const matchesDate = (payload.scheduleDate || dateValue) === dateValue;
     if (matchesDate && gameCount > 0) {
-      return payload;
+      if (countGamesWithPredictions(payload.games) > 0) {
+        return payload;
+      }
+      if (!emptyDatePayload) emptyDatePayload = payload;
+      continue;
     }
     if (matchesDate && !emptyDatePayload) {
       emptyDatePayload = payload;
@@ -4143,20 +4224,22 @@ async function refreshLiveScores() {
     if (!mergedGames.length) return;
 
     lastLiveScoreAt = Date.now();
-    lastPayload = { ...lastPayload, games: mergedGames, gameCount: mergedGames.length };
+    const enrichedGames = hydrateGamePredictions(mergedGames, { league, scheduleDate: dateValue });
+    lastPayload = enrichPayloadWithPredictions({ ...lastPayload, games: enrichedGames }, league, dateValue);
+    const finalGames = lastPayload.games || enrichedGames;
     saveMyBets(autoSettleMyBets(loadMyBets()));
     saveModelTracker(autoSettleModelBets(loadModelTracker()));
     if (activeView === "predictions") {
       const needsFullRender =
-        scheduleListChanged(gamesBefore, mergedGames) ||
-        pickVisibilityChanged(gamesBefore, mergedGames) ||
-        hasMaterialStatusChange(gamesBefore, mergedGames);
+        scheduleListChanged(gamesBefore, finalGames) ||
+        pickVisibilityChanged(gamesBefore, finalGames) ||
+        hasMaterialStatusChange(gamesBefore, finalGames);
       if (needsFullRender) {
-        renderGames(mergedGames);
+        renderGames(finalGames);
       } else {
-        const patched = patchLiveScoreDom(mergedGames);
-        if (!patched) renderGames(mergedGames);
-        else renderStats(lastPayload, prepareGamesForDisplay(mergedGames));
+        const patched = patchLiveScoreDom(finalGames);
+        if (!patched) renderGames(finalGames);
+        else renderStats(lastPayload, prepareGamesForDisplay(finalGames));
       }
     } else if (activeView === "my-bets") {
       renderMyBetsView();
@@ -4188,6 +4271,16 @@ async function fetchAccuracy({ force = false } = {}) {
   }
 }
 
+async function fetchPredictionsLog({ force = false } = {}) {
+  try {
+    const response = await fetch(staticDataUrl("data/predictions_log.json", force));
+    if (!response.ok) return null;
+    return response.json();
+  } catch {
+    return null;
+  }
+}
+
 async function fetchCalibration({ force = false } = {}) {
   try {
     const response = await fetch(staticDataUrl("data/calibration.json", force));
@@ -4202,11 +4295,12 @@ async function fetchDashboardPayload(params, { force = false } = {}) {
   const league = params.get("league") || sportSelect.value;
 
   if (IS_STATIC_HOST) {
-    manifestData = manifestData || (await fetchManifest({ force }));
+    manifestData = await fetchManifest({ force: force || !manifestData });
     if (manifestData?.leagues?.length) {
       syncDatePicker(league, activeScheduleDate || getSelectedDate());
     }
-    accuracyData = await fetchAccuracy({ force });
+    accuracyData = (await fetchAccuracy({ force: force || !accuracyData })) ?? accuracyData;
+    predictionsLogData = (await fetchPredictionsLog({ force: force || !predictionsLogData })) ?? predictionsLogData;
     calibrationData = (await fetchCalibration({ force })) ?? calibrationData;
 
     if (league === "overview") {
@@ -4215,13 +4309,14 @@ async function fetchDashboardPayload(params, { force = false } = {}) {
     }
 
     const dateValue = params.get("date") || getSelectedDate();
-    const payload = await fetchStaticPayload(league, { force, dateValue });
+    let payload = await fetchStaticPayload(league, { force, dateValue });
 
     if (payload.scheduleDate && payload.scheduleDate !== dateValue && !payload._liveFallback) {
       payload._requestedDate = dateValue;
       payload._dateFallback = true;
     }
 
+    payload = enrichPayloadWithPredictions(payload, league, dateValue);
     return payload;
   }
 
@@ -4380,7 +4475,9 @@ async function loadDashboard(force = false) {
 function resetAutoRefresh() {
   if (refreshTimer) clearInterval(refreshTimer);
   refreshTimer = null;
-  if (autoRefresh.checked) refreshTimer = setInterval(() => loadDashboard(false), 120000);
+  if (autoRefresh.checked) {
+    refreshTimer = setInterval(() => loadDashboard(IS_STATIC_HOST), 120000);
+  }
 }
 
 function onSportChange() {
@@ -4417,7 +4514,8 @@ async function initDashboard() {
   });
 
   if (IS_STATIC_HOST) {
-    manifestData = await fetchManifest({ force: false });
+    manifestData = await fetchManifest({ force: true });
+    predictionsLogData = await fetchPredictionsLog({ force: true });
   }
 
   sportSelect.addEventListener("change", onSportChange);
