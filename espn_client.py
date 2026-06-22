@@ -92,8 +92,10 @@ def _parse_probable(competitor: dict[str, Any]) -> dict[str, Any] | None:
                     era = float(stat.get("displayValue"))
                 except (TypeError, ValueError):
                     era = None
+        player_id = item.get("playerId") or athlete.get("id")
         return {
             "name": athlete.get("displayName"),
+            "playerId": int(player_id) if player_id is not None else None,
             "era": era,
             "record": item.get("record"),
         }

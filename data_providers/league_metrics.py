@@ -87,12 +87,6 @@ def league_metrics_logit_adjustment(enrichment: dict[str, Any], league: str) -> 
         run_edge = metrics.get("runDiffEdge")
         if run_edge is not None:
             adjustment += max(-0.35, min(0.35, run_edge * 0.002))
-        ops_edge = metrics.get("opsEdge")
-        if ops_edge is not None:
-            adjustment += max(-0.25, min(0.25, ops_edge * 0.8))
-        era_edge = metrics.get("eraEdge")
-        if era_edge is not None:
-            adjustment += max(-0.25, min(0.25, era_edge * 0.08))
 
     return max(-0.45, min(0.45, adjustment))
 

@@ -38,16 +38,22 @@ class PredictionModelTests(unittest.TestCase):
             games = parse_scoreboard(json.load(handle), league="mlb")
 
         ranked = apply_predictions(games)
-        confidences = [game["prediction"]["confidence"] for game in ranked]
+        publishable = sorted(
+            (game for game in ranked if game.get("prediction")),
+            key=lambda game: game["predictionRank"],
+        )
+        confidences = [game["prediction"]["confidence"] for game in publishable]
         self.assertEqual(confidences, sorted(confidences, reverse=True))
-        self.assertEqual(ranked[0]["predictionRank"], 1)
-        self.assertEqual(ranked[-1]["predictionRank"], len(ranked))
+        if publishable:
+            self.assertEqual(publishable[0]["predictionRank"], 1)
+            self.assertEqual(publishable[-1]["predictionRank"], len(publishable))
 
     def test_dashboard_payload_includes_predictions(self) -> None:
         payload = fetch_dashboard_data(fixture=ESPN_FIXTURE, include_odds=False, league="mlb")
         self.assertTrue(payload["topPick"])
-        self.assertIn("prediction", payload["games"][0])
-        self.assertEqual(payload["games"][0]["predictionRank"], 1)
+        top_game = next(game for game in payload["games"] if game.get("predictionRank") == 1)
+        self.assertIn("prediction", top_game)
+        self.assertEqual(top_game["predictionRank"], 1)
 
     def test_weighted_injury_adjustment_prefers_qb_injury(self) -> None:
         enrichment = {
@@ -66,7 +72,11 @@ class PredictionModelTests(unittest.TestCase):
             "homeLineup": {"batters": [{"order": 1}, {"order": 2}, {"order": 3}]},
             "awayLineup": {"batters": [{"order": 1}]},
         }
-        self.assertGreater(_lineup_logit_adjustment(game, "mlb"), 0)
+        enrichment = {
+            "homeAdvanced": {"opsProxy": 0.75},
+            "awayAdvanced": {"opsProxy": 0.70},
+        }
+        self.assertGreater(_lineup_logit_adjustment(game, "mlb", enrichment), 0)
 
     def test_prediction_includes_feature_vector(self) -> None:
         game = {

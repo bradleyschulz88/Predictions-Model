@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from accuracy_tracker import ACCURACY_FILE, LOG_FILE  # noqa: E402
+from calibration_params import compute_calibration_params  # noqa: E402
+from mlb_predictions import apply_predictions  # noqa: E402
 
 CALIBRATION_FILE = "calibration.json"
 STRONG_THRESHOLD = 68
@@ -70,6 +72,14 @@ def _calibration_buckets(graded: list[dict[str, Any]]) -> list[dict[str, Any]]:
             }
         )
     return rows
+
+
+def _calibration_by_league(graded: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for item in graded:
+        league = item.get("league") or "unknown"
+        grouped[league].append(item)
+    return {league: _calibration_buckets(items) for league, items in grouped.items()}
 
 
 def _coverage_breakdown(graded: list[dict[str, Any]]) -> dict[str, Any]:
@@ -149,6 +159,7 @@ def summarize_predictions(data_dir: Path) -> dict[str, Any]:
     }
 
     calibration = _calibration_buckets(graded)
+    calibration_by_league = _calibration_by_league(graded)
     avg_overconfidence = None
     if calibration:
         avg_overconfidence = round(
@@ -156,7 +167,7 @@ def summarize_predictions(data_dir: Path) -> dict[str, Any]:
             1,
         )
 
-    return {
+    report = {
         "builtAt": datetime.now(timezone.utc).isoformat(),
         "thresholds": {"strong": STRONG_THRESHOLD, "lean": LEAN_THRESHOLD},
         "summary": {
@@ -172,8 +183,11 @@ def summarize_predictions(data_dir: Path) -> dict[str, Any]:
         "byLeague": dict(by_league),
         "byConfidence": dict(by_confidence),
         "calibration": calibration,
+        "calibrationByLeague": calibration_by_league,
         "coverageBreakdown": _coverage_breakdown(graded),
     }
+    report["calibrationParams"] = compute_calibration_params(report)
+    return report
 
 
 def write_calibration_report(data_dir: Path) -> dict[str, Any]:
@@ -181,6 +195,74 @@ def write_calibration_report(data_dir: Path) -> dict[str, Any]:
     output_path = data_dir / CALIBRATION_FILE
     output_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     return report
+
+
+def _actual_winner_from_snapshot_game(game: dict[str, Any]) -> str | None:
+    if not game.get("isFinal"):
+        return None
+    home_score = game.get("homeScore")
+    away_score = game.get("awayScore")
+    if home_score is None or away_score is None:
+        return None
+    try:
+        home = int(home_score)
+        away = int(away_score)
+    except (TypeError, ValueError):
+        return None
+    if home == away:
+        return "Draw"
+    return game.get("homeTeam") if home > away else game.get("awayTeam")
+
+
+def replay_snapshot(
+    data_dir: Path,
+    *,
+    league: str,
+    schedule_date: str,
+) -> dict[str, Any]:
+    """Replay a dated snapshot through predict_game and compare to known finals."""
+    snapshot_path = data_dir / f"{league}_{schedule_date}.json"
+    payload = _load_json(snapshot_path, {})
+    games = payload.get("games") or []
+    replayed = apply_predictions([dict(game) for game in games])
+
+    results: list[dict[str, Any]] = []
+    for game in replayed:
+        prediction = game.get("prediction") or {}
+        actual = _actual_winner_from_snapshot_game(game)
+        if not prediction.get("predictedWinner") or actual is None:
+            continue
+        predicted = prediction.get("predictedWinner")
+        correct = predicted == actual or (
+            predicted != "Draw"
+            and actual != "Draw"
+            and predicted in (game.get("homeTeam"), game.get("awayTeam"))
+            and actual in (game.get("homeTeam"), game.get("awayTeam"))
+            and predicted == actual
+        )
+        results.append(
+            {
+                "eventId": game.get("eventId"),
+                "matchup": game.get("matchup"),
+                "predicted": predicted,
+                "actual": actual,
+                "correct": correct,
+                "confidence": prediction.get("confidence"),
+            }
+        )
+
+    correct = sum(1 for item in results if item.get("correct"))
+    total = len(results)
+    return {
+        "league": league,
+        "scheduleDate": schedule_date,
+        "snapshotPath": str(snapshot_path),
+        "gamesReplayed": len(replayed),
+        "finalsCompared": total,
+        "correct": correct,
+        "winPct": round(correct / total * 100, 1) if total else None,
+        "results": results,
+    }
 
 
 def main() -> int:
@@ -193,7 +275,18 @@ def main() -> int:
     )
     parser.add_argument("--json", action="store_true", help="Print full JSON report")
     parser.add_argument("--write", action="store_true", help=f"Write {CALIBRATION_FILE} to data dir")
+    parser.add_argument("--replay", action="store_true", help="Replay a dated snapshot JSON through the model")
+    parser.add_argument("--league", default="mlb", help="League id for snapshot replay")
+    parser.add_argument("--date", dest="schedule_date", help="Schedule date (YYYY-MM-DD) for snapshot replay")
     args = parser.parse_args()
+
+    if args.replay:
+        if not args.schedule_date:
+            print("Snapshot replay requires --date YYYY-MM-DD", file=sys.stderr)
+            return 2
+        report = replay_snapshot(args.data_dir, league=args.league, schedule_date=args.schedule_date)
+        print(json.dumps(report, indent=2))
+        return 0
 
     report = write_calibration_report(args.data_dir) if args.write else summarize_predictions(args.data_dir)
     if args.json or args.write:
@@ -228,6 +321,13 @@ def main() -> int:
                 f"  {row['confidenceRange']}%: predicted {row['avgPredictedPct']}%"
                 f" · actual {row['actualWinPct']}% · n={row['picks']}"
             )
+
+    params = report.get("calibrationParams") or {}
+    buckets = params.get("buckets") or {}
+    if buckets:
+        print("\nCalibration shrink multipliers")
+        for league, values in sorted(buckets.items()):
+            print(f"  {league}: {values}")
 
     return 0
 

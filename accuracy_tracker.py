@@ -15,7 +15,7 @@ from sports_config import list_league_ids
 
 ACCURACY_FILE = "accuracy.json"
 LOG_FILE = "predictions_log.json"
-LOOKBACK_DAYS = 7
+LOOKBACK_DAYS = 30
 DEFAULT_STAKE_UNITS = 1.0
 
 
@@ -242,25 +242,29 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
         if record.get("status") == "graded"
     }
     picks_by_event: dict[str, dict[str, Any]] = dict(accuracy.get("picksByEventId") or {})
+    skipped_dates: list[dict[str, str]] = []
 
+    predictions = log.get("predictions") or {}
     dates_to_check: set[tuple[str, str]] = set()
-    for league in list_league_ids():
-        for day_offset in range(0, LOOKBACK_DAYS + 1):
-            dates_to_check.add((league, league_schedule_date(league, -day_offset)))
+    if predictions:
+        for league in list_league_ids():
+            for day_offset in range(0, LOOKBACK_DAYS + 1):
+                dates_to_check.add((league, league_schedule_date(league, -day_offset)))
 
-    for event_id, pending in (log.get("predictions") or {}).items():
-        if event_id in graded_ids:
-            continue
-        league = pending.get("league")
-        schedule_date = pending.get("scheduleDate")
-        if league and schedule_date:
-            dates_to_check.add((league, schedule_date))
+        for event_id, pending in predictions.items():
+            if event_id in graded_ids:
+                continue
+            league = pending.get("league")
+            schedule_date = pending.get("scheduleDate")
+            if league and schedule_date:
+                dates_to_check.add((league, schedule_date))
 
     for league, check_date in sorted(dates_to_check):
         try:
             scoreboard = fetch_scoreboard(league, check_date, retries=2, retry_delay=0.5, verify_ssl=verify_ssl)
             games = parse_scoreboard(scoreboard, league=league)
-        except Exception:
+        except Exception as exc:
+            skipped_dates.append({"league": league, "date": check_date, "error": str(exc)})
             continue
 
         for game in games:
@@ -287,7 +291,7 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
             picks_by_event[event_id] = record
             graded_ids.add(event_id)
 
-    for event_id, pending in (log.get("predictions") or {}).items():
+    for event_id, pending in predictions.items():
         if event_id in picks_by_event:
             continue
         picks_by_event[event_id] = _build_pick_record(pending=pending, status="pending")
@@ -347,6 +351,7 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
         "recentResults": recent_results,
         "pendingPicks": pending_picks,
         "picksByEventId": picks_by_event,
+        "skippedDates": skipped_dates,
     }
     _save_json(accuracy_path, accuracy)
     return accuracy

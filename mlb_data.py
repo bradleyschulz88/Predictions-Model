@@ -255,7 +255,8 @@ def finalize_dashboard_payload(
             if book:
                 sportsbooks.add(book)
 
-    top_pick = games[0]["prediction"]["outcomeLabel"] if games else None
+    top_game = next((game for game in games if game.get("prediction")), None)
+    top_pick = top_game["prediction"]["outcomeLabel"] if top_game else None
 
     return {
         "url": url,

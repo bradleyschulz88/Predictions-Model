@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from accuracy_tracker import grade_predictions, record_predictions  # noqa: E402
+from data_coverage import coverage_warnings, emit_ci_warnings, summarize_coverage  # noqa: E402
 from mlb_data import fetch_dashboard_data, strip_betting_lines_for_display  # noqa: E402
 from scripts.backtest_model import write_calibration_report  # noqa: E402
 from schedule_dates import default_game_date, get_schedule_timezone, schedule_dates_for_league  # noqa: E402
@@ -127,6 +128,7 @@ def main() -> int:
     manifest: dict = {"builtAt": None, "leagues": []}
     primary_payloads: dict[str, dict] = {}
     payloads_for_accuracy: list[dict] = []
+    coverage_reports: dict[str, dict] = {}
 
     for league in list_league_ids():
         league_config = get_league(league)
@@ -165,6 +167,7 @@ def main() -> int:
             print(f"Wrote {dated_path} ({payload.get('gameCount', 0)} games)", flush=True)
             if payload.get("gameCount", 0) > 0:
                 payloads_for_accuracy.append(payload)
+                coverage_reports[f"{league}:{date_value}"] = summarize_coverage(payload.get("games") or [])
 
             if date_value == default_date:
                 primary_payload = display_payload
@@ -195,6 +198,7 @@ def main() -> int:
                 "availableDates": available_dates,
                 "dateFiles": date_files,
                 "gameCount": primary_payload.get("gameCount", 0),
+                "dataCoverage": summarize_coverage(primary_payload.get("games") or []),
                 "file": f"data/{league}.json",
                 "error": primary_payload.get("error"),
             }
@@ -204,6 +208,16 @@ def main() -> int:
     accuracy = grade_predictions(OUTPUT_DIR)
     write_calibration_report(OUTPUT_DIR)
     overview = build_overview(primary_payloads)
+
+    default_coverage = {
+        league: summarize_coverage(primary_payloads[league].get("games") or [])
+        for league in primary_payloads
+    }
+    manifest["dataCoverage"] = default_coverage
+    manifest["dataCoverageByDate"] = coverage_reports
+    for warning in coverage_warnings(default_coverage):
+        print(f"Warning: {warning}", flush=True)
+    emit_ci_warnings(coverage_warnings(default_coverage))
 
     manifest["accuracy"] = accuracy.get("summary")
     manifest["builtAt"] = datetime.now(timezone.utc).isoformat()

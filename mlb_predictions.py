@@ -8,6 +8,13 @@ from typing import Any
 
 from sports_config import get_league
 
+from calibration_params import (
+    MIN_PICK_CONFIDENCE,
+    calibrate_probability as _calibrate_probability,
+    is_publishable_pick,
+    load_calibration_params,
+)
+
 from data_providers.league_metrics import (
     league_metrics_logit_adjustment,
     soccer_draw_probability,
@@ -26,6 +33,19 @@ HOME_FIELD_LOGIT = {
 }
 
 DEFAULT_DRAW_PROB = 0.26
+
+MARKET_BLEND_WEIGHT = {
+    "mlb": 0.10,
+    "nfl": 0.15,
+    "nba": 0.15,
+    "wnba": 0.12,
+    "epl": 0.12,
+    "worldcup": 0.10,
+    "afl": 0.06,
+}
+DEFAULT_MARKET_BLEND_WEIGHT = 0.10
+
+_CALIBRATION_PARAMS: dict[str, Any] | None = None
 
 
 def parse_record(summary: str | None) -> tuple[int, ...] | None:
@@ -230,7 +250,7 @@ def compute_true_probabilities(
     if implied.get("available"):
         market_home = implied["consensus"]["home"]
         market_away = implied["consensus"]["away"]
-        market_weight = 0.10
+        market_weight = MARKET_BLEND_WEIGHT.get(league, DEFAULT_MARKET_BLEND_WEIGHT)
         home_true = home_true * (1.0 - market_weight) + market_home * market_weight
         away_true = away_true * (1.0 - market_weight) + market_away * market_weight
         total = home_true + away_true
@@ -432,9 +452,26 @@ def extract_total_line(lines: list[dict[str, Any]]) -> float | None:
     return None
 
 
-def calibrate_probability(prob: float) -> float:
-    """Pull extreme probabilities toward 50% to reduce overconfidence."""
-    return clamp(0.5 + (prob - 0.5) * 0.88)
+def _get_calibration_params() -> dict[str, Any]:
+    global _CALIBRATION_PARAMS
+    if _CALIBRATION_PARAMS is None:
+        _CALIBRATION_PARAMS = load_calibration_params()
+    return _CALIBRATION_PARAMS
+
+
+def calibrate_probability(
+    prob: float,
+    *,
+    league: str = "mlb",
+    confidence_pct: float | None = None,
+) -> float:
+    """Pull extreme probabilities toward 50% using graded calibration buckets."""
+    return _calibrate_probability(
+        prob,
+        league=league,
+        confidence_pct=confidence_pct,
+        params=_get_calibration_params(),
+    )
 
 
 def confidence_label(confidence_pct: float) -> str:
@@ -485,17 +522,69 @@ def _streak_logit_adjustment(enrichment: dict[str, Any]) -> float:
     return max(-0.25, min(0.25, home - away))
 
 
-def _lineup_logit_adjustment(game: dict[str, Any], league: str) -> float:
-    home_batters = (game.get("homeLineup") or {}).get("batters") or []
-    away_batters = (game.get("awayLineup") or {}).get("batters") or []
-    if not home_batters and not away_batters:
+def _parse_batting_avg(stat_line: str | None) -> float | None:
+    if not stat_line:
+        return None
+    match = re.search(r"(\.\d{3})", stat_line)
+    if not match:
+        return None
+    try:
+        return float(match.group(1))
+    except ValueError:
+        return None
+
+
+def _lineup_quality_score(
+    game: dict[str, Any],
+    side: str,
+    league: str,
+    enrichment: dict[str, Any],
+) -> float | None:
+    lineup = game.get(f"{side}Lineup") or {}
+    batters = lineup.get("batters") or []
+    if not batters:
+        return None
+
+    confirmed = [batter for batter in batters if batter.get("order")] or batters
+    averages: list[float] = []
+    for batter in confirmed:
+        avg = batter.get("avg")
+        if avg is None and batter.get("statLine"):
+            avg = _parse_batting_avg(batter.get("statLine"))
+        if avg is not None:
+            try:
+                averages.append(float(avg))
+            except (TypeError, ValueError):
+                continue
+
+    if averages and league == "mlb":
+        avg_value = sum(averages) / len(averages)
+        return avg_value * 1.45
+
+    advanced = enrichment.get("homeAdvanced" if side == "home" else "awayAdvanced") or {}
+    if league == "mlb":
+        ops = advanced.get("opsProxy")
+        if ops is not None:
+            confirm_ratio = len(confirmed) / max(1, len(batters))
+            return float(ops) * (0.75 + 0.25 * confirm_ratio)
+
+    if league in {"nba", "wnba", "nfl", "afl"}:
+        scoring = advanced.get("pointsPerGame")
+        if scoring is not None:
+            return float(scoring) / 100.0
+
+    return len(confirmed) / 9.0
+
+
+def _lineup_logit_adjustment(game: dict[str, Any], league: str, enrichment: dict[str, Any]) -> float:
+    home_score = _lineup_quality_score(game, "home", league, enrichment)
+    away_score = _lineup_quality_score(game, "away", league, enrichment)
+    if home_score is None and away_score is None:
         return 0.0
-    home_confirmed = sum(1 for batter in home_batters if batter.get("order"))
-    away_confirmed = sum(1 for batter in away_batters if batter.get("order"))
-    if home_confirmed == 0 and away_confirmed == 0:
-        return 0.0
-    multiplier = 0.035 if league == "mlb" else 0.02
-    return max(-0.25, min(0.25, (home_confirmed - away_confirmed) * multiplier))
+    home_value = home_score if home_score is not None else 0.5
+    away_value = away_score if away_score is not None else 0.5
+    multiplier = 2.5 if league == "mlb" else 1.5
+    return max(-0.35, min(0.35, (home_value - away_value) * multiplier))
 
 
 def _weather_win_logit_adjustment(game: dict[str, Any], enrichment: dict[str, Any], league: str) -> float:
@@ -564,7 +653,7 @@ def extract_prediction_features(game: dict[str, Any], prediction: dict[str, Any]
     }
 
 
-def _advanced_logit_adjustment(enrichment: dict[str, Any]) -> float:
+def _advanced_logit_adjustment(enrichment: dict[str, Any], league: str = "mlb") -> float:
     home = enrichment.get("homeAdvanced") or {}
     away = enrichment.get("awayAdvanced") or {}
     adjustment = 0.0
@@ -590,15 +679,16 @@ def _advanced_logit_adjustment(enrichment: dict[str, Any]) -> float:
     if home_gf is not None and away_gf is not None and home_ga is not None and away_ga is not None:
         adjustment += ((home_gf - away_gf) + (away_ga - home_ga)) * 0.45
 
-    home_ops = home.get("opsProxy")
-    away_ops = away.get("opsProxy")
-    if home_ops is not None and away_ops is not None:
-        adjustment += (home_ops - away_ops) * 1.8
+    if league != "mlb":
+        home_ops = home.get("opsProxy")
+        away_ops = away.get("opsProxy")
+        if home_ops is not None and away_ops is not None:
+            adjustment += (home_ops - away_ops) * 1.8
 
-    home_era = home.get("era")
-    away_era = away.get("era")
-    if home_era is not None and away_era is not None:
-        adjustment += (away_era - home_era) * 0.22
+        home_era = home.get("era")
+        away_era = away.get("era")
+        if home_era is not None and away_era is not None:
+            adjustment += (away_era - home_era) * 0.22
 
     return adjustment
 
@@ -1176,13 +1266,13 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
             }
         )
 
-    lineup_adj = _lineup_logit_adjustment(game, league_config.id)
+    lineup_adj = _lineup_logit_adjustment(game, league_config.id, enrichment)
     if lineup_adj:
         logit += lineup_adj
         factors.append(
             {
-                "label": "Lineup confirmation",
-                "detail": "Confirmed starters in posted lineup",
+                "label": "Lineup quality",
+                "detail": "Confirmed lineup strength vs opponent",
                 "edge": "home" if lineup_adj > 0 else "away" if lineup_adj < 0 else "even",
             }
         )
@@ -1237,7 +1327,7 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
                 }
             )
 
-    advanced_adj = _advanced_logit_adjustment(enrichment)
+    advanced_adj = _advanced_logit_adjustment(enrichment, league_config.id)
     if advanced_adj:
         logit += advanced_adj
         home_adv = enrichment.get("homeAdvanced") or {}
@@ -1311,10 +1401,29 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         }
     )
 
-    home_prob = calibrate_probability(clamp(true_probs["home"]))
-    away_prob = calibrate_probability(clamp(true_probs["away"]))
+    raw_best = max(
+        true_probs["home"],
+        true_probs["away"],
+        true_probs.get("draw") or 0.0 if league_config.supports_draw else 0.0,
+    )
+    calibration_confidence = raw_best * 100.0
+
+    home_prob = calibrate_probability(
+        clamp(true_probs["home"]),
+        league=league_config.id,
+        confidence_pct=calibration_confidence,
+    )
+    away_prob = calibrate_probability(
+        clamp(true_probs["away"]),
+        league=league_config.id,
+        confidence_pct=calibration_confidence,
+    )
     draw_prob = (
-        calibrate_probability(clamp(true_probs.get("draw") or 0.0))
+        calibrate_probability(
+            clamp(true_probs.get("draw") or 0.0),
+            league=league_config.id,
+            confidence_pct=calibration_confidence,
+        )
         if league_config.supports_draw
         else 0.0
     )
@@ -1408,7 +1517,15 @@ def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for game in games:
         game["prediction"] = predict_game(game)
 
-    games.sort(key=lambda game: game.get("prediction", {}).get("confidence", 0), reverse=True)
-    for index, game in enumerate(games, start=1):
+    publishable = [game for game in games if is_publishable_pick(game.get("prediction"))]
+    publishable.sort(key=lambda game: game.get("prediction", {}).get("confidence", 0), reverse=True)
+    for index, game in enumerate(publishable, start=1):
         game["predictionRank"] = index
+
+    for game in games:
+        if game not in publishable:
+            game.pop("predictionRank", None)
+            if not is_publishable_pick(game.get("prediction")):
+                game["prediction"] = None
+
     return games

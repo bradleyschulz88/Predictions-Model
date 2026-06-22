@@ -362,6 +362,55 @@ def _head_to_head_series(head_to_head: list[dict[str, Any]] | None) -> dict[str,
     }
 
 
+def _predictor_from_team_block(block: dict[str, Any] | None) -> float | None:
+    if not block:
+        return None
+    for key in ("gameProjection", "teamChanceWin", "winPercentage", "chance"):
+        value = _to_float(block.get(key))
+        if value is not None:
+            if value <= 1.0:
+                return value * 100.0
+            return value
+    return None
+
+
+def _parse_espn_predictor(summary: dict[str, Any]) -> tuple[float | None, float | None]:
+    """Extract ESPN Matchup Predictor percentages from summary JSON."""
+    predictor = summary.get("predictor") or {}
+    home_pct = _predictor_from_team_block(predictor.get("homeTeam"))
+    away_pct = _predictor_from_team_block(predictor.get("awayTeam"))
+    if home_pct is not None and away_pct is not None:
+        return home_pct, away_pct
+
+    for item in summary.get("pickcenter") or []:
+        if not isinstance(item, dict):
+            continue
+        details = item.get("details") or item.get("pick") or item
+        if not isinstance(details, dict):
+            continue
+        home_pct = _predictor_from_team_block(details.get("homeTeam"))
+        away_pct = _predictor_from_team_block(details.get("awayTeam"))
+        if home_pct is not None and away_pct is not None:
+            return home_pct, away_pct
+        home_pct = _to_float(details.get("homeTeamOdds") or details.get("homeWinPercentage"))
+        away_pct = _to_float(details.get("awayTeamOdds") or details.get("awayWinPercentage"))
+        if home_pct is not None and away_pct is not None:
+            if home_pct <= 1.0:
+                home_pct *= 100.0
+            if away_pct <= 1.0:
+                away_pct *= 100.0
+            return home_pct, away_pct
+
+    game_info = summary.get("gameInfo") or {}
+    nested = game_info.get("predictor") or {}
+    home_pct = _predictor_from_team_block(nested.get("homeTeam"))
+    away_pct = _predictor_from_team_block(nested.get("awayTeam"))
+    if home_pct is not None and away_pct is not None:
+        return home_pct, away_pct
+
+    return None, None
+
+
 def _parse_weather(game_info: dict[str, Any] | None) -> str | None:
     weather = (game_info or {}).get("weather")
     if not isinstance(weather, dict):
@@ -383,9 +432,8 @@ def parse_event_enrichment(
     league: LeagueConfig | str = "mlb",
 ) -> dict[str, Any]:
     league_config = get_league(league) if isinstance(league, str) else league
+    espn_predictor_home, espn_predictor_away = _parse_espn_predictor(summary)
     predictor = summary.get("predictor") or {}
-    home_predictor = predictor.get("homeTeam") or {}
-    away_predictor = predictor.get("awayTeam") or {}
 
     home_last_five = _last_five_for_team(summary.get("lastFiveGames"), home_team)
     away_last_five = _last_five_for_team(summary.get("lastFiveGames"), away_team)
@@ -404,7 +452,7 @@ def parse_event_enrichment(
         "ESPN injury report",
         league_config.lineup_label,
     ]
-    if predictor:
+    if espn_predictor_home is not None and espn_predictor_away is not None:
         sources.append("ESPN Matchup Predictor")
     if series:
         sources.append("ESPN head-to-head")
@@ -412,8 +460,8 @@ def parse_event_enrichment(
         sources.append("ESPN betting odds")
 
     return {
-        "espnPredictorHome": _to_float(home_predictor.get("gameProjection")),
-        "espnPredictorAway": _to_float(away_predictor.get("gameProjection")),
+        "espnPredictorHome": espn_predictor_home,
+        "espnPredictorAway": espn_predictor_away,
         "homeLastFive": home_last_five,
         "awayLastFive": away_last_five,
         "seasonSeries": series,

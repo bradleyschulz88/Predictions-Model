@@ -16,19 +16,84 @@ def _fetch_api(path: str, params: dict[str, str] | None = None, *, cache_key: st
     return fetch_json(f"https://statsapi.mlb.com{path}{query}", cache_key=cache_key, verify_ssl=verify_ssl)
 
 
-def _search_player_id(name: str | None, *, verify_ssl: bool = True) -> int | None:
+def _search_player_id(
+    name: str | None,
+    *,
+    team_name: str | None = None,
+    verify_ssl: bool = True,
+) -> int | None:
     if not name:
         return None
     payload = _fetch_api(
         "/api/v1/people/search",
         {"names": name},
-        cache_key=f"mlb:playersearch:{name.lower()}",
+        cache_key=f"mlb:playersearch:{name.lower()}:{team_name or ''}",
         verify_ssl=verify_ssl,
     )
-    for person in payload.get("people") or []:
+    people = payload.get("people") or []
+    if not people:
+        return None
+
+    if team_name:
+        for person in people:
+            current_team = (person.get("currentTeam") or {}).get("name") or ""
+            if current_team and (current_team in team_name or team_name in current_team):
+                return int(person["id"])
+
+    for person in people:
         if person.get("fullName"):
             return int(person["id"])
     return None
+
+
+def _resolve_pitcher_id(pitcher: dict[str, Any], team_name: str | None, *, verify_ssl: bool = True) -> int | None:
+    stored = pitcher.get("mlbId")
+    if stored is not None:
+        try:
+            return int(stored)
+        except (TypeError, ValueError):
+            pass
+    return _search_player_id(pitcher.get("name"), team_name=team_name, verify_ssl=verify_ssl)
+
+
+def _team_reliever_era(team_id: int, *, verify_ssl: bool = True) -> float | None:
+    """IP-weighted reliever ERA from MLB Stats API."""
+    payload = _fetch_api(
+        "/api/v1/stats",
+        {
+            "stats": "season",
+            "group": "pitching",
+            "playerPool": "all",
+            "teamId": str(team_id),
+            "position": "R",
+        },
+        cache_key=f"mlb:bullpen:relievers:{team_id}",
+        verify_ssl=verify_ssl,
+    )
+    total_ip = 0.0
+    total_er = 0.0
+    for group in payload.get("stats") or []:
+        for split in group.get("splits") or []:
+            stat = split.get("stat") or {}
+            ip = to_float(stat.get("inningsPitched"))
+            er = to_float(stat.get("earnedRuns"))
+            if ip is None or er is None or ip <= 0:
+                continue
+            total_ip += ip
+            total_er += er
+    if total_ip <= 0:
+        return None
+    return round(total_er / total_ip * 9.0, 2)
+
+
+def _team_bullpen_era(team_name: str | None, *, verify_ssl: bool = True) -> float | None:
+    team_id = _resolve_team_id(team_name, verify_ssl=verify_ssl)
+    if not team_id:
+        return None
+    bullpen_era = _team_reliever_era(team_id, verify_ssl=verify_ssl)
+    if bullpen_era is not None:
+        return bullpen_era
+    return _team_pitching_era(team_name, verify_ssl=verify_ssl)
 
 
 def _pitcher_season_stats(player_id: int, *, verify_ssl: bool = True) -> dict[str, float | None]:
@@ -124,8 +189,13 @@ def enrich_mlb_pitching_context(game: dict[str, Any], *, verify_ssl: bool = True
     for side in ("home", "away"):
         pitcher = game.get(f"{side}Pitcher") or {}
         name = pitcher.get("name")
-        player_id = _search_player_id(name, verify_ssl=verify_ssl)
+        team = game.get(f"{side}Team")
+        player_id = _resolve_pitcher_id(pitcher, team, verify_ssl=verify_ssl)
         if player_id:
+            if pitcher.get("playerId") is not None:
+                pitcher["espnPlayerId"] = pitcher.get("playerId")
+            pitcher["mlbId"] = player_id
+            game[f"{side}Pitcher"] = pitcher
             season = _pitcher_season_stats(player_id, verify_ssl=verify_ssl)
             api_era = season.get("era")
             api_fip = season.get("fip")
@@ -146,11 +216,15 @@ def enrich_mlb_pitching_context(game: dict[str, Any], *, verify_ssl: bool = True
 
         team = game.get(f"{side}Team")
         team_era = _team_pitching_era(team, verify_ssl=verify_ssl)
+        bullpen_era = _team_bullpen_era(team, verify_ssl=verify_ssl)
         if team_era is not None:
             context[f"{side}TeamPitchingEra"] = team_era
-            context[f"{side}BullpenEra"] = team_era
             if "MLB Stats API team pitching" not in context["sources"]:
                 context["sources"].append("MLB Stats API team pitching")
+        if bullpen_era is not None:
+            context[f"{side}BullpenEra"] = bullpen_era
+            if "MLB Stats API bullpen" not in context["sources"]:
+                context["sources"].append("MLB Stats API bullpen")
 
     if context["sources"]:
         context["sources"] = sorted(set(context["sources"]))
@@ -158,28 +232,11 @@ def enrich_mlb_pitching_context(game: dict[str, Any], *, verify_ssl: bool = True
 
 
 def mlb_pitching_logit_adjustment(game: dict[str, Any], enrichment: dict[str, Any]) -> float:
+    """Bullpen-only adjustment; starting pitching handled separately in predict_game."""
     pitching = enrichment.get("mlbPitching") or {}
-    adjustment = 0.0
-
-    for side, other in (("home", "away"), ("away", "home")):
-        team_pitching = pitching.get(f"{side}TeamPitchingEra") or pitching.get(f"{side}BullpenEra")
-        other_pitching = pitching.get(f"{other}TeamPitchingEra") or pitching.get(f"{other}BullpenEra")
-        if team_pitching is not None and other_pitching is not None:
-            adjustment += (other_pitching - team_pitching) * 0.04
-
-        api_era = pitching.get(f"{side}PitcherApiEra")
-        other_api = pitching.get(f"{other}PitcherApiEra")
-        if api_era is not None and other_api is not None:
-            adjustment += (other_api - api_era) * 0.15
-
-        api_fip = pitching.get(f"{side}PitcherFip")
-        other_fip = pitching.get(f"{other}PitcherFip")
-        if api_fip is not None and other_fip is not None:
-            adjustment += (other_fip - api_fip) * 0.10
-
-        recent = pitching.get(f"{side}PitcherRecentEra")
-        other_recent = pitching.get(f"{other}PitcherRecentEra")
-        if recent is not None and other_recent is not None:
-            adjustment += (other_recent - recent) * 0.12
-
-    return max(-0.5, min(0.5, adjustment))
+    home_bp = pitching.get("homeBullpenEra")
+    away_bp = pitching.get("awayBullpenEra")
+    if home_bp is None or away_bp is None:
+        return 0.0
+    adjustment = (away_bp - home_bp) * 0.06
+    return max(-0.35, min(0.35, adjustment))

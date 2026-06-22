@@ -47,6 +47,7 @@ class AccuracyTrackerTests(unittest.TestCase):
             record_predictions(data_dir, {"mlb": {"scheduleDate": "2026-06-16", "fetchedAt": "now", "games": []}})
             accuracy = grade_predictions(data_dir)
             self.assertIn("summary", accuracy)
+            self.assertEqual(accuracy.get("skippedDates"), [])
             self.assertTrue((data_dir / "predictions_log.json").is_file())
 
     def test_record_predictions_stores_features(self) -> None:
