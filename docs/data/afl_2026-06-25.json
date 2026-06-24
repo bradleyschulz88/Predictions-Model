@@ -291,9 +291,9 @@
       "prediction": {
         "predictedWinner": "Sydney Swans",
         "predictedSide": "away",
-        "homeWinPct": 10.4,
-        "awayWinPct": 89.6,
-        "confidence": 89.6,
+        "homeWinPct": 17.6,
+        "awayWinPct": 82.4,
+        "confidence": 82.4,
         "confidenceLabel": "Strong pick",
         "outcomeLabel": "Sydney Swans to win",
         "whyTheyWin": "Sydney Swans are projected to win because Brisbane Lions (8-6, 57.1%) have outplayed Sydney Swans (12-2, 85.7%) across the full season.; Composite rating favors Sydney Swans: 0.400 vs 0.800 (ESPN + MLB.com + form).; Brisbane Lions are 8-6 at home while Sydney Swans are 12-2 on the road.",
@@ -347,6 +347,11 @@
             "edge": "away"
           },
           {
+            "label": "Lineup quality",
+            "detail": "Confirmed lineup strength vs opponent",
+            "edge": "away"
+          },
+          {
             "label": "Advanced team profile",
             "detail": "Power 0.400 vs 0.800 (ESPN/MLB.com)",
             "edge": "away"
@@ -378,14 +383,14 @@
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 4.8,
+                "homePct": 4.1,
                 "weightPct": 100.0
               }
             ]
           },
           "pick": {
-            "homePct": 10.4,
-            "awayPct": 89.6,
+            "homePct": 17.6,
+            "awayPct": 82.4,
             "drawPct": null,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
@@ -397,14 +402,14 @@
           "home": {
             "truePct": 5.0,
             "impliedPct": null,
-            "blendedPct": 10.4,
+            "blendedPct": 17.6,
             "edgePct": null,
             "edgeLabel": null
           },
           "away": {
             "truePct": 95.0,
             "impliedPct": null,
-            "blendedPct": 89.6,
+            "blendedPct": 82.4,
             "edgePct": null,
             "edgeLabel": null
           }
@@ -425,7 +430,7 @@
           "impliedAway": null,
           "trueHome": 5.0,
           "trueAway": 95.0,
-          "confidence": 89.6,
+          "confidence": 82.4,
           "predictedSide": "away",
           "hasLineup": true,
           "dataCoverage": {
@@ -448,7 +453,7 @@
       "predictionRank": 1
     }
   ],
-  "fetchedAt": "2026-06-22T00:11:34.357088+00:00",
+  "fetchedAt": "2026-06-24T00:07:06.658752+00:00",
   "scheduleTimezone": "Australia/Melbourne",
-  "defaultScheduleDate": "2026-06-22"
+  "defaultScheduleDate": "2026-06-24"
 }

@@ -82,20 +82,15 @@
         "espnPredictorHome": null,
         "espnPredictorAway": null,
         "homeLastFive": {
-          "record": "2-3",
+          "record": "3-2",
           "results": [
-            "L",
             "L",
             "W",
             "L",
+            "W",
             "W"
           ],
           "games": [
-            {
-              "result": "L",
-              "score": "105-97",
-              "opponent": "Sydney Swans"
-            },
             {
               "result": "L",
               "score": "133-65",
@@ -115,6 +110,11 @@
               "result": "W",
               "score": "74-73",
               "opponent": "West Coast Eagles"
+            },
+            {
+              "result": "W",
+              "score": "73-48",
+              "opponent": "Richmond"
             }
           ]
         },
@@ -217,7 +217,7 @@
         ],
         "homeAdvanced": {
           "sources": [],
-          "powerRating": 0.4000000000000001,
+          "powerRating": 0.6,
           "opsProxy": null,
           "winPct": null
         },
@@ -302,12 +302,12 @@
       "prediction": {
         "predictedWinner": "North Melbourne",
         "predictedSide": "home",
-        "homeWinPct": 89.6,
-        "awayWinPct": 10.4,
-        "confidence": 89.6,
+        "homeWinPct": 82.4,
+        "awayWinPct": 17.6,
+        "confidence": 82.4,
         "confidenceLabel": "Strong pick",
         "outcomeLabel": "North Melbourne to win",
-        "whyTheyWin": "North Melbourne are projected to win because North Melbourne (7-7, 50.0%) have outplayed Essendon (1-13, 7.1%) across the full season.; Composite rating favors North Melbourne: 0.400 vs 0.000 (ESPN + MLB.com + form).; North Melbourne are 7-7 at home while Essendon are 1-13 on the road.",
+        "whyTheyWin": "North Melbourne are projected to win because North Melbourne (7-7, 50.0%) have outplayed Essendon (1-13, 7.1%) across the full season.; Composite rating favors North Melbourne: 0.600 vs 0.000 (ESPN + MLB.com + form).; North Melbourne are 7-7 at home while Essendon are 1-13 on the road.",
         "reasons": [
           {
             "title": "Better season record",
@@ -317,7 +317,7 @@
           },
           {
             "title": "Power rating edge",
-            "detail": "Composite rating favors North Melbourne: 0.400 vs 0.000 (ESPN + MLB.com + form).",
+            "detail": "Composite rating favors North Melbourne: 0.600 vs 0.000 (ESPN + MLB.com + form).",
             "impact": "high",
             "favors": "home",
             "source": "Multi-source"
@@ -330,7 +330,7 @@
           },
           {
             "title": "Recent form trending up",
-            "detail": "North Melbourne are 2-3 in their last five (L-L-W-L-W) while Essendon are 0-5.",
+            "detail": "North Melbourne are 3-2 in their last five (L-W-L-W-W) while Essendon are 0-5.",
             "impact": "medium",
             "favors": "home",
             "source": "ESPN"
@@ -360,12 +360,12 @@
           },
           {
             "label": "Last five games",
-            "detail": "North Melbourne 2-3 vs Essendon 0-5",
+            "detail": "North Melbourne 3-2 vs Essendon 0-5",
             "edge": "home"
           },
           {
             "label": "Advanced team profile",
-            "detail": "Power 0.400 vs 0.000 (ESPN/MLB.com)",
+            "detail": "Power 0.600 vs 0.000 (ESPN/MLB.com)",
             "edge": "home"
           },
           {
@@ -395,14 +395,14 @@
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 98.6,
+                "homePct": 99.3,
                 "weightPct": 100.0
               }
             ]
           },
           "pick": {
-            "homePct": 89.6,
-            "awayPct": 10.4,
+            "homePct": 82.4,
+            "awayPct": 17.6,
             "drawPct": null,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
@@ -414,14 +414,14 @@
           "home": {
             "truePct": 95.0,
             "impliedPct": null,
-            "blendedPct": 89.6,
+            "blendedPct": 82.4,
             "edgePct": null,
             "edgeLabel": null
           },
           "away": {
             "truePct": 5.0,
             "impliedPct": null,
-            "blendedPct": 10.4,
+            "blendedPct": 17.6,
             "edgePct": null,
             "edgeLabel": null
           }
@@ -430,7 +430,7 @@
           "league": "afl",
           "recordDiff": 0.4286,
           "splitDiff": 0.4286,
-          "homePower": 0.4000000000000001,
+          "homePower": 0.6,
           "awayPower": 0.0,
           "homeInjuryLoad": 0,
           "awayInjuryLoad": 0,
@@ -442,7 +442,7 @@
           "impliedAway": null,
           "trueHome": 95.0,
           "trueAway": 5.0,
-          "confidence": 89.6,
+          "confidence": 82.4,
           "predictedSide": "home",
           "hasLineup": true,
           "dataCoverage": {
@@ -718,9 +718,9 @@
       "prediction": {
         "predictedWinner": "Fremantle",
         "predictedSide": "home",
-        "homeWinPct": 89.6,
-        "awayWinPct": 10.4,
-        "confidence": 89.6,
+        "homeWinPct": 82.4,
+        "awayWinPct": 17.6,
+        "confidence": 82.4,
         "confidenceLabel": "Strong pick",
         "outcomeLabel": "Fremantle to win",
         "whyTheyWin": "Fremantle are projected to win because Fremantle (13-1, 92.9%) have outplayed Gold Coast SUNS (7-7, 50.0%) across the full season.; Composite rating favors Fremantle: 1.000 vs 0.200 (ESPN + MLB.com + form).; Fremantle are 13-1 at home while Gold Coast SUNS are 7-7 on the road.",
@@ -817,8 +817,8 @@
             ]
           },
           "pick": {
-            "homePct": 89.6,
-            "awayPct": 10.4,
+            "homePct": 82.4,
+            "awayPct": 17.6,
             "drawPct": null,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
@@ -830,14 +830,14 @@
           "home": {
             "truePct": 95.0,
             "impliedPct": null,
-            "blendedPct": 89.6,
+            "blendedPct": 82.4,
             "edgePct": null,
             "edgeLabel": null
           },
           "away": {
             "truePct": 5.0,
             "impliedPct": null,
-            "blendedPct": 10.4,
+            "blendedPct": 17.6,
             "edgePct": null,
             "edgeLabel": null
           }
@@ -858,7 +858,7 @@
           "impliedAway": null,
           "trueHome": 95.0,
           "trueAway": 5.0,
-          "confidence": 89.6,
+          "confidence": 82.4,
           "predictedSide": "home",
           "hasLineup": true,
           "dataCoverage": {
@@ -881,7 +881,7 @@
       "predictionRank": 2
     }
   ],
-  "fetchedAt": "2026-06-22T00:11:59.581731+00:00",
+  "fetchedAt": "2026-06-24T00:07:31.202969+00:00",
   "scheduleTimezone": "Australia/Melbourne",
-  "defaultScheduleDate": "2026-06-22"
+  "defaultScheduleDate": "2026-06-24"
 }
