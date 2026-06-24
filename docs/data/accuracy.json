@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-06-24T21:26:39.780153+00:00",
+  "updatedAt": "2026-06-24T22:54:33.451199+00:00",
   "summary": {
     "last7Days": {
       "correct": 73,
-      "total": 121,
-      "pct": 60.3,
-      "units": 9.422,
-      "roiPct": 7.8,
+      "total": 122,
+      "pct": 59.8,
+      "units": 8.422,
+      "roiPct": 6.9,
       "pending": 50
     },
     "allTime": {
       "correct": 73,
-      "total": 121,
-      "pct": 60.3,
-      "units": 9.422,
-      "roiPct": 7.8,
-      "pending": 163
+      "total": 122,
+      "pct": 59.8,
+      "units": 8.422,
+      "roiPct": 6.9,
+      "pending": 162
     },
     "byLeague": {
+      "mlb": {
+        "correct": 39,
+        "total": 80,
+        "pct": 48.8,
+        "units": -10.738,
+        "roiPct": -13.4,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 18,
         "total": 22,
         "pct": 81.8,
         "units": 8.16,
         "roiPct": 37.1,
-        "pending": 0
-      },
-      "mlb": {
-        "correct": 39,
-        "total": 79,
-        "pct": 49.4,
-        "units": -9.738,
-        "roiPct": -12.3,
         "pending": 0
       },
       "wnba": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 3,
+      "current": 2,
       "type": "loss",
       "bestWin": 7,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401815893",
+      "league": "mlb",
+      "scheduleDate": "2026-06-24",
+      "matchup": "Boston Red Sox @ Colorado Rockies",
+      "predicted": "Boston Red Sox",
+      "predictedSide": "away",
+      "outcomeLabel": "Boston Red Sox to win",
+      "confidence": 68.3,
+      "pickOdds": -165,
+      "status": "graded",
+      "actual": "Colorado Rockies",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "8",
+      "awayScore": "6",
+      "gradedAt": "2026-06-24T22:54:10.190681+00:00",
+      "date": "2026-06-24"
+    },
     {
       "eventId": "760463",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "4",
       "awayScore": "3",
       "gradedAt": "2026-06-22T00:19:14.434977+00:00",
-      "date": "2026-06-19"
-    },
-    {
-      "eventId": "401815819",
-      "league": "mlb",
-      "scheduleDate": "2026-06-19",
-      "matchup": "St. Louis Cardinals @ Kansas City Royals",
-      "predicted": "St. Louis Cardinals",
-      "predictedSide": "away",
-      "outcomeLabel": "St. Louis Cardinals to win",
-      "confidence": 69.7,
-      "pickOdds": -120,
-      "status": "graded",
-      "actual": "Kansas City Royals",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "6",
-      "awayScore": "5",
-      "gradedAt": "2026-06-22T00:19:14.434967+00:00",
       "date": "2026-06-19"
     }
   ],
@@ -4992,15 +4992,15 @@
       "predicted": "Boston Red Sox",
       "predictedSide": "away",
       "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 76.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 68.3,
+      "pickOdds": -165,
+      "status": "graded",
+      "actual": "Colorado Rockies",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "8",
+      "awayScore": "6",
+      "gradedAt": "2026-06-24T22:54:10.190681+00:00",
       "date": "2026-06-24"
     },
     "401815894": {
