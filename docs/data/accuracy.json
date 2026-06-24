@@ -1,45 +1,45 @@
 {
-  "updatedAt": "2026-06-24T00:11:27.769095+00:00",
+  "updatedAt": "2026-06-24T00:16:37.348713+00:00",
   "summary": {
     "last7Days": {
-      "correct": 47,
-      "total": 83,
-      "pct": 56.6,
-      "units": 1.573,
-      "roiPct": 1.9,
+      "correct": 59,
+      "total": 100,
+      "pct": 59.0,
+      "units": 5.996,
+      "roiPct": 6.0,
       "pending": 50
     },
     "allTime": {
-      "correct": 47,
-      "total": 83,
-      "pct": 56.6,
-      "units": 1.573,
-      "roiPct": 1.9,
-      "pending": 184
+      "correct": 59,
+      "total": 100,
+      "pct": 59.0,
+      "units": 5.996,
+      "roiPct": 6.0,
+      "pending": 167
     },
     "byLeague": {
       "worldcup": {
-        "correct": 11,
-        "total": 14,
-        "pct": 78.6,
-        "units": 4.067,
-        "roiPct": 29.1,
+        "correct": 14,
+        "total": 18,
+        "pct": 77.8,
+        "units": 5.136,
+        "roiPct": 28.5,
         "pending": 0
       },
       "wnba": {
-        "correct": 7,
-        "total": 11,
-        "pct": 63.6,
-        "units": 3.0,
-        "roiPct": 27.3,
+        "correct": 10,
+        "total": 14,
+        "pct": 71.4,
+        "units": 6.0,
+        "roiPct": 42.9,
         "pending": 0
       },
       "mlb": {
-        "correct": 24,
-        "total": 53,
-        "pct": 45.3,
-        "units": -10.494,
-        "roiPct": -19.8,
+        "correct": 30,
+        "total": 63,
+        "pct": 47.6,
+        "units": -10.14,
+        "roiPct": -16.1,
         "pending": 0
       },
       "afl": {
@@ -54,11 +54,334 @@
     "streak": {
       "current": 6,
       "type": "win",
-      "bestWin": 6,
+      "bestWin": 7,
       "bestLoss": 7
     }
   },
   "recentResults": [
+    {
+      "eventId": "760458",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-23",
+      "matchup": "Ghana @ England",
+      "predicted": "England",
+      "predictedSide": "home",
+      "outcomeLabel": "England to win",
+      "confidence": 58.7,
+      "pickOdds": -550,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "0",
+      "awayScore": "0",
+      "gradedAt": "2026-06-24T00:16:36.667075+00:00",
+      "date": "2026-06-23"
+    },
+    {
+      "eventId": "760461",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-23",
+      "matchup": "Uzbekistan @ Portugal",
+      "predicted": "Portugal",
+      "predictedSide": "home",
+      "outcomeLabel": "Portugal to win",
+      "confidence": 76.3,
+      "pickOdds": -700,
+      "status": "graded",
+      "actual": "Portugal",
+      "correct": true,
+      "units": 0.143,
+      "homeScore": "5",
+      "awayScore": "0",
+      "gradedAt": "2026-06-24T00:16:36.667050+00:00",
+      "date": "2026-06-23"
+    },
+    {
+      "eventId": "760455",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Algeria @ Jordan",
+      "predicted": "Algeria",
+      "predictedSide": "away",
+      "outcomeLabel": "Algeria to win",
+      "confidence": 71.6,
+      "pickOdds": -210,
+      "status": "graded",
+      "actual": "Algeria",
+      "correct": true,
+      "units": 0.476,
+      "homeScore": "1",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:36.597446+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "760454",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Senegal @ Norway",
+      "predicted": "Norway",
+      "predictedSide": "home",
+      "outcomeLabel": "Norway to win",
+      "confidence": 76.3,
+      "pickOdds": 145,
+      "status": "graded",
+      "actual": "Norway",
+      "correct": true,
+      "units": 1.45,
+      "homeScore": "3",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:36.597432+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "401857015",
+      "league": "wnba",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Dallas Wings @ Seattle Storm",
+      "predicted": "Dallas Wings",
+      "predictedSide": "away",
+      "outcomeLabel": "Dallas Wings to win",
+      "confidence": 70.8,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Dallas Wings",
+      "correct": true,
+      "units": 1.0,
+      "homeScore": "110",
+      "awayScore": "112",
+      "gradedAt": "2026-06-24T00:16:33.214821+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "401857014",
+      "league": "wnba",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Phoenix Mercury @ Indiana Fever",
+      "predicted": "Indiana Fever",
+      "predictedSide": "home",
+      "outcomeLabel": "Indiana Fever to win",
+      "confidence": 72.5,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Indiana Fever",
+      "correct": true,
+      "units": 1.0,
+      "homeScore": "86",
+      "awayScore": "77",
+      "gradedAt": "2026-06-24T00:16:33.214814+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "401857013",
+      "league": "wnba",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Toronto Tempo @ Atlanta Dream",
+      "predicted": "Atlanta Dream",
+      "predictedSide": "home",
+      "outcomeLabel": "Atlanta Dream to win",
+      "confidence": 68.2,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Atlanta Dream",
+      "correct": true,
+      "units": 1.0,
+      "homeScore": "94",
+      "awayScore": "87",
+      "gradedAt": "2026-06-24T00:16:33.214799+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "401815868",
+      "league": "mlb",
+      "scheduleDate": "2026-06-23",
+      "matchup": "Houston Astros @ Toronto Blue Jays",
+      "predicted": "Houston Astros",
+      "predictedSide": "away",
+      "outcomeLabel": "Houston Astros to win",
+      "confidence": 74.9,
+      "pickOdds": 105,
+      "status": "graded",
+      "actual": "Houston Astros",
+      "correct": true,
+      "units": 1.05,
+      "homeScore": "7",
+      "awayScore": "9",
+      "gradedAt": "2026-06-24T00:16:24.846264+00:00",
+      "date": "2026-06-23"
+    },
+    {
+      "eventId": "401815865",
+      "league": "mlb",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Atlanta Braves @ San Diego Padres",
+      "predicted": "Atlanta Braves",
+      "predictedSide": "away",
+      "outcomeLabel": "Atlanta Braves to win",
+      "confidence": 71.1,
+      "pickOdds": -105,
+      "status": "graded",
+      "actual": "San Diego Padres",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "0",
+      "gradedAt": "2026-06-24T00:16:24.747401+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "401815866",
+      "league": "mlb",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Baltimore Orioles @ Los Angeles Angels",
+      "predicted": "Baltimore Orioles",
+      "predictedSide": "away",
+      "outcomeLabel": "Baltimore Orioles to win",
+      "confidence": 57.0,
+      "pickOdds": -165,
+      "status": "graded",
+      "actual": "Baltimore Orioles",
+      "correct": true,
+      "units": 0.606,
+      "homeScore": "1",
+      "awayScore": "6",
+      "gradedAt": "2026-06-24T00:16:24.747389+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "401815864",
+      "league": "mlb",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Boston Red Sox @ Colorado Rockies",
+      "predicted": "Boston Red Sox",
+      "predictedSide": "away",
+      "outcomeLabel": "Boston Red Sox to win",
+      "confidence": 68.4,
+      "pickOdds": -145,
+      "status": "graded",
+      "actual": "Colorado Rockies",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "3",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:24.747383+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "401815861",
+      "league": "mlb",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Arizona Diamondbacks @ St. Louis Cardinals",
+      "predicted": "St. Louis Cardinals",
+      "predictedSide": "home",
+      "outcomeLabel": "St. Louis Cardinals to win",
+      "confidence": 75.1,
+      "pickOdds": -150,
+      "status": "graded",
+      "actual": "St. Louis Cardinals",
+      "correct": true,
+      "units": 0.667,
+      "homeScore": "3",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:24.747370+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "401815863",
+      "league": "mlb",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Los Angeles Dodgers @ Minnesota Twins",
+      "predicted": "Los Angeles Dodgers",
+      "predictedSide": "away",
+      "outcomeLabel": "Los Angeles Dodgers to win",
+      "confidence": 66.5,
+      "pickOdds": -155,
+      "status": "graded",
+      "actual": "Los Angeles Dodgers",
+      "correct": true,
+      "units": 0.645,
+      "homeScore": "1",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:24.747364+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "401815862",
+      "league": "mlb",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Cleveland Guardians @ Chicago White Sox",
+      "predicted": "Cleveland Guardians",
+      "predictedSide": "away",
+      "outcomeLabel": "Cleveland Guardians to win",
+      "confidence": 58.9,
+      "pickOdds": -115,
+      "status": "graded",
+      "actual": "Chicago White Sox",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "6",
+      "awayScore": "5",
+      "gradedAt": "2026-06-24T00:16:24.747357+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "401815857",
+      "league": "mlb",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Milwaukee Brewers @ Cincinnati Reds",
+      "predicted": "Milwaukee Brewers",
+      "predictedSide": "away",
+      "outcomeLabel": "Milwaukee Brewers to win",
+      "confidence": 76.4,
+      "pickOdds": -155,
+      "status": "graded",
+      "actual": "Milwaukee Brewers",
+      "correct": true,
+      "units": 0.645,
+      "homeScore": "1",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:24.747341+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "401815855",
+      "league": "mlb",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Houston Astros @ Toronto Blue Jays",
+      "predicted": "Toronto Blue Jays",
+      "predictedSide": "home",
+      "outcomeLabel": "Toronto Blue Jays to win",
+      "confidence": 61.9,
+      "pickOdds": -135,
+      "status": "graded",
+      "actual": "Toronto Blue Jays",
+      "correct": true,
+      "units": 0.741,
+      "homeScore": "4",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:24.747330+00:00",
+      "date": "2026-06-22"
+    },
+    {
+      "eventId": "401815859",
+      "league": "mlb",
+      "scheduleDate": "2026-06-22",
+      "matchup": "Philadelphia Phillies @ Washington Nationals",
+      "predicted": "Philadelphia Phillies",
+      "predictedSide": "away",
+      "outcomeLabel": "Philadelphia Phillies to win",
+      "confidence": 63.2,
+      "pickOdds": 105,
+      "status": "graded",
+      "actual": "Washington Nationals",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "4",
+      "awayScore": "1",
+      "gradedAt": "2026-06-24T00:16:24.747306+00:00",
+      "date": "2026-06-22"
+    },
     {
       "eventId": "760457",
       "league": "worldcup",
@@ -4061,15 +4384,15 @@
       "predicted": "Milwaukee Brewers",
       "predictedSide": "away",
       "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 82.4,
-      "pickOdds": -170,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 76.4,
+      "pickOdds": -155,
+      "status": "graded",
+      "actual": "Milwaukee Brewers",
+      "correct": true,
+      "units": 0.645,
+      "homeScore": "1",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:24.747341+00:00",
       "date": "2026-06-22"
     },
     "401815860": {
@@ -4118,15 +4441,15 @@
       "predicted": "St. Louis Cardinals",
       "predictedSide": "home",
       "outcomeLabel": "St. Louis Cardinals to win",
-      "confidence": 78.8,
-      "pickOdds": -145,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 75.1,
+      "pickOdds": -150,
+      "status": "graded",
+      "actual": "St. Louis Cardinals",
+      "correct": true,
+      "units": 0.667,
+      "homeScore": "3",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:24.747370+00:00",
       "date": "2026-06-22"
     },
     "401815854": {
@@ -4175,15 +4498,15 @@
       "predicted": "Atlanta Braves",
       "predictedSide": "away",
       "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 75.8,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 71.1,
+      "pickOdds": -105,
+      "status": "graded",
+      "actual": "San Diego Padres",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "0",
+      "gradedAt": "2026-06-24T00:16:24.747401+00:00",
       "date": "2026-06-22"
     },
     "401815864": {
@@ -4194,15 +4517,15 @@
       "predicted": "Boston Red Sox",
       "predictedSide": "away",
       "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 67.0,
-      "pickOdds": -130,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 68.4,
+      "pickOdds": -145,
+      "status": "graded",
+      "actual": "Colorado Rockies",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "3",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:24.747383+00:00",
       "date": "2026-06-22"
     },
     "401815862": {
@@ -4213,15 +4536,15 @@
       "predicted": "Cleveland Guardians",
       "predictedSide": "away",
       "outcomeLabel": "Cleveland Guardians to win",
-      "confidence": 66.1,
+      "confidence": 58.9,
       "pickOdds": -115,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "status": "graded",
+      "actual": "Chicago White Sox",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "6",
+      "awayScore": "5",
+      "gradedAt": "2026-06-24T00:16:24.747357+00:00",
       "date": "2026-06-22"
     },
     "401815855": {
@@ -4234,13 +4557,13 @@
       "outcomeLabel": "Toronto Blue Jays to win",
       "confidence": 61.9,
       "pickOdds": -135,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "status": "graded",
+      "actual": "Toronto Blue Jays",
+      "correct": true,
+      "units": 0.741,
+      "homeScore": "4",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:24.747330+00:00",
       "date": "2026-06-22"
     },
     "401815863": {
@@ -4251,15 +4574,15 @@
       "predicted": "Los Angeles Dodgers",
       "predictedSide": "away",
       "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 59.0,
+      "confidence": 66.5,
       "pickOdds": -155,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "status": "graded",
+      "actual": "Los Angeles Dodgers",
+      "correct": true,
+      "units": 0.645,
+      "homeScore": "1",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:24.747364+00:00",
       "date": "2026-06-22"
     },
     "401815866": {
@@ -4270,15 +4593,15 @@
       "predicted": "Baltimore Orioles",
       "predictedSide": "away",
       "outcomeLabel": "Baltimore Orioles to win",
-      "confidence": 58.1,
-      "pickOdds": -160,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 57.0,
+      "pickOdds": -165,
+      "status": "graded",
+      "actual": "Baltimore Orioles",
+      "correct": true,
+      "units": 0.606,
+      "homeScore": "1",
+      "awayScore": "6",
+      "gradedAt": "2026-06-24T00:16:24.747389+00:00",
       "date": "2026-06-22"
     },
     "401815859": {
@@ -4289,15 +4612,15 @@
       "predicted": "Philadelphia Phillies",
       "predictedSide": "away",
       "outcomeLabel": "Philadelphia Phillies to win",
-      "confidence": 57.8,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 63.2,
+      "pickOdds": 105,
+      "status": "graded",
+      "actual": "Washington Nationals",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "4",
+      "awayScore": "1",
+      "gradedAt": "2026-06-24T00:16:24.747306+00:00",
       "date": "2026-06-22"
     },
     "401815878": {
@@ -4457,18 +4780,18 @@
       "league": "mlb",
       "scheduleDate": "2026-06-23",
       "matchup": "Houston Astros @ Toronto Blue Jays",
-      "predicted": "Toronto Blue Jays",
-      "predictedSide": "home",
-      "outcomeLabel": "Toronto Blue Jays to win",
-      "confidence": 71.8,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "predicted": "Houston Astros",
+      "predictedSide": "away",
+      "outcomeLabel": "Houston Astros to win",
+      "confidence": 74.9,
+      "pickOdds": 105,
+      "status": "graded",
+      "actual": "Houston Astros",
+      "correct": true,
+      "units": 1.05,
+      "homeScore": "7",
+      "awayScore": "9",
+      "gradedAt": "2026-06-24T00:16:24.846264+00:00",
       "date": "2026-06-23"
     },
     "401815875": {
@@ -5923,15 +6246,15 @@
       "predicted": "Atlanta Dream",
       "predictedSide": "home",
       "outcomeLabel": "Atlanta Dream to win",
-      "confidence": 87.4,
+      "confidence": 68.2,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "status": "graded",
+      "actual": "Atlanta Dream",
+      "correct": true,
+      "units": 1.0,
+      "homeScore": "94",
+      "awayScore": "87",
+      "gradedAt": "2026-06-24T00:16:33.214799+00:00",
       "date": "2026-06-22"
     },
     "401857014": {
@@ -5942,15 +6265,15 @@
       "predicted": "Indiana Fever",
       "predictedSide": "home",
       "outcomeLabel": "Indiana Fever to win",
-      "confidence": 86.2,
+      "confidence": 72.5,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "status": "graded",
+      "actual": "Indiana Fever",
+      "correct": true,
+      "units": 1.0,
+      "homeScore": "86",
+      "awayScore": "77",
+      "gradedAt": "2026-06-24T00:16:33.214814+00:00",
       "date": "2026-06-22"
     },
     "401857015": {
@@ -5961,15 +6284,15 @@
       "predicted": "Dallas Wings",
       "predictedSide": "away",
       "outcomeLabel": "Dallas Wings to win",
-      "confidence": 85.2,
+      "confidence": 70.8,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "status": "graded",
+      "actual": "Dallas Wings",
+      "correct": true,
+      "units": 1.0,
+      "homeScore": "110",
+      "awayScore": "112",
+      "gradedAt": "2026-06-24T00:16:33.214821+00:00",
       "date": "2026-06-22"
     },
     "401857012": {
@@ -6379,15 +6702,15 @@
       "predicted": "Norway",
       "predictedSide": "home",
       "outcomeLabel": "Norway to win",
-      "confidence": 70.1,
-      "pickOdds": 130,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 76.3,
+      "pickOdds": 145,
+      "status": "graded",
+      "actual": "Norway",
+      "correct": true,
+      "units": 1.45,
+      "homeScore": "3",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:36.597432+00:00",
       "date": "2026-06-22"
     },
     "760456": {
@@ -6417,15 +6740,15 @@
       "predicted": "Algeria",
       "predictedSide": "away",
       "outcomeLabel": "Algeria to win",
-      "confidence": 39.7,
-      "pickOdds": -180,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 71.6,
+      "pickOdds": -210,
+      "status": "graded",
+      "actual": "Algeria",
+      "correct": true,
+      "units": 0.476,
+      "homeScore": "1",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T00:16:36.597446+00:00",
       "date": "2026-06-22"
     },
     "760461": {
@@ -6436,15 +6759,15 @@
       "predicted": "Portugal",
       "predictedSide": "home",
       "outcomeLabel": "Portugal to win",
-      "confidence": 66.1,
-      "pickOdds": -500,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 76.3,
+      "pickOdds": -700,
+      "status": "graded",
+      "actual": "Portugal",
+      "correct": true,
+      "units": 0.143,
+      "homeScore": "5",
+      "awayScore": "0",
+      "gradedAt": "2026-06-24T00:16:36.667050+00:00",
       "date": "2026-06-23"
     },
     "760459": {
@@ -6474,15 +6797,15 @@
       "predicted": "England",
       "predictedSide": "home",
       "outcomeLabel": "England to win",
-      "confidence": 61.3,
-      "pickOdds": -450,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 58.7,
+      "pickOdds": -550,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "0",
+      "awayScore": "0",
+      "gradedAt": "2026-06-24T00:16:36.667075+00:00",
       "date": "2026-06-23"
     },
     "760460": {
@@ -7664,1211 +7987,5 @@
       "date": "2026-06-30"
     }
   },
-  "skippedDates": [
-    {
-      "league": "afl",
-      "date": "2026-05-25",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260525: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-05-26",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260526: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-05-27",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260527: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-05-28",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260528: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-05-29",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260529: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-05-30",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260530: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-05-31",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260531: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-01",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260601: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-02",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260602: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-03",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260603: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-04",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260604: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-05",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260605: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-06",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260606: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-07",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260607: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-08",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260608: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-09",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260609: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-10",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260610: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-11",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260611: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-12",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260612: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-13",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260613: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-14",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260614: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-15",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-16",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260616: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-17",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260617: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-18",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260618: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-19",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260619: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-20",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260620: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-21",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260621: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-22",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260622: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-23",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260623: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-24",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260624: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-25",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260625: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-26",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260626: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-27",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260627: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "afl",
-      "date": "2026-06-28",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260628: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-05-25",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260525: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-05-26",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260526: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-05-27",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260527: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-05-28",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260528: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-05-29",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260529: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-05-30",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260530: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-05-31",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260531: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-01",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260601: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-02",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260602: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-03",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260603: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-04",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260604: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-05",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260605: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-06",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260606: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-07",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260607: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-08",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260608: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-09",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260609: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-10",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260610: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-11",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260611: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-12",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260612: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-13",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260613: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-14",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260614: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-15",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-16",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260616: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-17",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260617: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-18",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260618: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-19",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260619: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-20",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260620: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-21",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260621: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-22",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260622: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-23",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260623: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "epl",
-      "date": "2026-06-24",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260624: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-05-24",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260524: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-05-25",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260525: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-05-26",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260526: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-05-27",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260527: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-05-28",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260528: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-05-29",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260529: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-05-30",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260530: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-05-31",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260531: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-01",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260601: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-02",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260602: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-03",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260603: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-04",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260604: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-05",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260605: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-06",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260606: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-07",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260607: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-08",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260608: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-09",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260609: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-10",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260610: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-11",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260611: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-12",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260612: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-13",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260613: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-14",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260614: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-15",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-16",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260616: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-17",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260617: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-18",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260618: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-19",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260619: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-20",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260620: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-21",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260621: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-22",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260622: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-23",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260623: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-24",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260624: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-25",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260625: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-26",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260626: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-27",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260627: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-28",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260628: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-29",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260629: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-30",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260630: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-05-24",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260524: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-05-25",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260525: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-05-26",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260526: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-05-27",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260527: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-05-28",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260528: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-05-29",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260529: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-05-30",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260530: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-05-31",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260531: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-01",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260601: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-02",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260602: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-03",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260603: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-04",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260604: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-05",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260605: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-06",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260606: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-07",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260607: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-08",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260608: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-09",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260609: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-10",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260610: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-11",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260611: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-12",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260612: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-13",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260613: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-14",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260614: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-15",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-16",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260616: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-17",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260617: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-18",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260618: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-19",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260619: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-20",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260620: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-21",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260621: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-22",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260622: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nba",
-      "date": "2026-06-23",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260623: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-05-24",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260524: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-05-25",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260525: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-05-26",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260526: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-05-27",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260527: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-05-28",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260528: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-05-29",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260529: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-05-30",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260530: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-05-31",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260531: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-01",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260601: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-02",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260602: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-03",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260603: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-04",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260604: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-05",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260605: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-06",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260606: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-07",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260607: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-08",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260608: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-09",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260609: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-10",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260610: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-11",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260611: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-12",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260612: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-13",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260613: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-14",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260614: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-15",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-16",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260616: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-17",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260617: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-18",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260618: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-19",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260619: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-20",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260620: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-21",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260621: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-22",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260622: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-06-23",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260623: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-05-24",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260524: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-05-25",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260525: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-05-26",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260526: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-05-27",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260527: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-05-28",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260528: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-05-29",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260529: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-05-30",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260530: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-05-31",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260531: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-01",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260601: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-02",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260602: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-03",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260603: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-04",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260604: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-05",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260605: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-06",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260606: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-07",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260607: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-08",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260608: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-09",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260609: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-10",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260610: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-11",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260611: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-12",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260612: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-13",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260613: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-14",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260614: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-15",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-16",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260616: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-17",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260617: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-18",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260618: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-19",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260619: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-20",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260620: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-21",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260621: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-22",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260622: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-23",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260623: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-24",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260624: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-25",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260625: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-26",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260626: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-27",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260627: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-28",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260628: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-06-30",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260630: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-05-24",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260524: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-05-25",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260525: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-05-26",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260526: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-05-27",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260527: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-05-28",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260528: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-05-29",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260529: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-05-30",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260530: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-05-31",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260531: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-01",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260601: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-02",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260602: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-03",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260603: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-04",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260604: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-05",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260605: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-06",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260606: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-07",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260607: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-08",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260608: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-09",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260609: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-10",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260610: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-11",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260611: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-12",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260612: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-13",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260613: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-14",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260614: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-15",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260615: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-16",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260616: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-17",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260617: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-18",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260618: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-19",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260619: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-20",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260620: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-21",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260621: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-22",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260622: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-23",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260623: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-24",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260624: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-25",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260625: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-26",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260626: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-27",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260627: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-28",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260628: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-29",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260629: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    },
-    {
-      "league": "worldcup",
-      "date": "2026-06-30",
-      "error": "Network error for https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260630: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)"
-    }
-  ]
+  "skippedDates": []
 }
