@@ -1,0 +1,699 @@
+{
+  "url": "espn://soccer/fifa.world/scoreboard?dates=20260629",
+  "source": "espn",
+  "league": "worldcup",
+  "leagueLabel": "FIFA World Cup",
+  "leagues": [
+    {
+      "id": "mlb",
+      "label": "MLB Baseball",
+      "shortLabel": "MLB"
+    },
+    {
+      "id": "nfl",
+      "label": "NFL Football",
+      "shortLabel": "NFL"
+    },
+    {
+      "id": "nba",
+      "label": "NBA Basketball",
+      "shortLabel": "NBA"
+    },
+    {
+      "id": "wnba",
+      "label": "WNBA Basketball",
+      "shortLabel": "WNBA"
+    },
+    {
+      "id": "worldcup",
+      "label": "FIFA World Cup",
+      "shortLabel": "World Cup"
+    },
+    {
+      "id": "epl",
+      "label": "English Premier League",
+      "shortLabel": "EPL"
+    },
+    {
+      "id": "afl",
+      "label": "AFL",
+      "shortLabel": "AFL"
+    }
+  ],
+  "scheduleDate": "2026-06-29",
+  "gameCount": 3,
+  "statusCounts": {
+    "Scheduled": 3
+  },
+  "topPick": "Germany to win",
+  "games": [
+    {
+      "league": "worldcup",
+      "leagueLabel": "FIFA World Cup",
+      "eventId": "760487",
+      "startDate": "2026-06-29T17:00Z",
+      "awayTeam": "Group F 2nd Place",
+      "homeTeam": "Group C Winner",
+      "matchup": "Group F 2nd Place @ Group C Winner",
+      "gameStatusText": "Scheduled",
+      "gameStatusDetail": "Mon, June 29th at 1:00 PM EDT",
+      "statusType": "STATUS_SCHEDULED",
+      "venueName": "NRG Stadium",
+      "broadcast": "FOX, Tele, FOX One",
+      "awayRecord": null,
+      "homeRecord": null,
+      "awayRoadRecord": null,
+      "homeHomeRecord": null,
+      "awayScore": "0",
+      "homeScore": "0",
+      "isLive": false,
+      "isFinal": false,
+      "isScheduled": true,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 0,
+      "source": "espn",
+      "viewTypes": [],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": "0-0",
+          "results": [],
+          "games": []
+        },
+        "awayLastFive": {
+          "record": "0-0",
+          "results": [],
+          "games": []
+        },
+        "seasonSeries": null,
+        "weather": null,
+        "homeInjuries": [],
+        "awayInjuries": [],
+        "homeMajorInjuries": [],
+        "awayMajorInjuries": [],
+        "homeKeyInjuries": [],
+        "awayKeyInjuries": [],
+        "homeLineup": {
+          "status": "unavailable",
+          "source": null,
+          "note": "Key players not available yet.",
+          "batters": []
+        },
+        "awayLineup": {
+          "status": "unavailable",
+          "source": null,
+          "note": "Key players not available yet.",
+          "batters": []
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [],
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [],
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": null,
+          "away": null
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": null,
+          "seriesScore": null
+        },
+        "homeScheduleFlags": {
+          "restDays": null,
+          "backToBack": false,
+          "threeInFour": false
+        },
+        "awayScheduleFlags": {
+          "restDays": null,
+          "backToBack": false,
+          "threeInFour": false
+        },
+        "leagueMetrics": {
+          "league": "worldcup",
+          "drawBaseRate": 0.22
+        }
+      },
+      "homeLineup": {
+        "status": "unavailable",
+        "source": null,
+        "note": "Key players not available yet.",
+        "batters": []
+      },
+      "awayLineup": {
+        "status": "unavailable",
+        "source": null,
+        "note": "Key players not available yet.",
+        "batters": []
+      },
+      "homeMajorInjuries": [],
+      "awayMajorInjuries": [],
+      "prediction": null
+    },
+    {
+      "league": "worldcup",
+      "leagueLabel": "FIFA World Cup",
+      "eventId": "760489",
+      "startDate": "2026-06-29T20:30Z",
+      "awayTeam": "Third Place Group A/B/C/D/F",
+      "homeTeam": "Germany",
+      "matchup": "Third Place Group A/B/C/D/F @ Germany",
+      "gameStatusText": "Scheduled",
+      "gameStatusDetail": "Mon, June 29th at 4:30 PM EDT",
+      "statusType": "STATUS_SCHEDULED",
+      "venueName": "Gillette Stadium",
+      "broadcast": "FOX, Tele, FOX One",
+      "awayRecord": null,
+      "homeRecord": null,
+      "awayRoadRecord": null,
+      "homeHomeRecord": null,
+      "awayScore": "0",
+      "homeScore": "0",
+      "isLive": false,
+      "isFinal": false,
+      "isScheduled": true,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 0,
+      "source": "espn",
+      "viewTypes": [],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": "5-0",
+          "results": [
+            "W",
+            "W",
+            "W",
+            "W",
+            "W"
+          ],
+          "games": [
+            {
+              "result": "W",
+              "score": "2-1",
+              "opponent": "Ghana"
+            },
+            {
+              "result": "W",
+              "score": "4-0",
+              "opponent": "Finland"
+            },
+            {
+              "result": "W",
+              "score": "2-1",
+              "opponent": "United States"
+            },
+            {
+              "result": "W",
+              "score": "7-1",
+              "opponent": "Cura\u00e7ao"
+            },
+            {
+              "result": "W",
+              "score": "2-1",
+              "opponent": "Ivory Coast"
+            }
+          ]
+        },
+        "awayLastFive": {
+          "record": "0-0",
+          "results": [],
+          "games": []
+        },
+        "seasonSeries": null,
+        "weather": null,
+        "homeInjuries": [],
+        "awayInjuries": [],
+        "homeMajorInjuries": [],
+        "awayMajorInjuries": [],
+        "homeKeyInjuries": [],
+        "awayKeyInjuries": [],
+        "homeLineup": {
+          "status": "projected",
+          "source": "espn_leaders",
+          "note": "Key players not posted yet. Key players to watch:",
+          "batters": [
+            {
+              "name": "Deniz Undav",
+              "position": "Goals",
+              "statLine": "Matches: 2, Goals: 3"
+            },
+            {
+              "name": "Kai Havertz",
+              "position": "Goals",
+              "statLine": "Matches: 2, Goals: 2"
+            },
+            {
+              "name": "Felix Nmecha",
+              "position": "Goals",
+              "statLine": "Matches: 2, Goals: 1"
+            },
+            {
+              "name": "Joshua Kimmich",
+              "position": "Assists",
+              "statLine": "Matches: 2, Assists: 2"
+            },
+            {
+              "name": "Florian Wirtz",
+              "position": "Assists",
+              "statLine": "Matches: 2, Assists: 1"
+            },
+            {
+              "name": "Jonathan Tah",
+              "position": "Accurate Passes",
+              "statLine": "158"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "unavailable",
+          "source": null,
+          "note": "Key players not available yet.",
+          "batters": []
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 2,
+          "losses": 0,
+          "points": 6.0,
+          "goalDifference": 7.0,
+          "pointsPerGame": 4.5,
+          "goalsAgainstPerGame": 1.0,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": 1.0,
+          "opsProxy": null,
+          "winPct": 1.0
+        },
+        "awayAdvanced": {
+          "sources": [],
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": 4,
+          "away": null
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": null,
+          "seriesScore": null
+        },
+        "homeScheduleFlags": {
+          "restDays": 4,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 1
+        },
+        "awayScheduleFlags": {
+          "restDays": null,
+          "backToBack": false,
+          "threeInFour": false
+        },
+        "leagueMetrics": {
+          "league": "worldcup",
+          "drawBaseRate": 0.22
+        }
+      },
+      "homeLineup": {
+        "status": "projected",
+        "source": "espn_leaders",
+        "note": "Key players not posted yet. Key players to watch:",
+        "batters": [
+          {
+            "name": "Deniz Undav",
+            "position": "Goals",
+            "statLine": "Matches: 2, Goals: 3"
+          },
+          {
+            "name": "Kai Havertz",
+            "position": "Goals",
+            "statLine": "Matches: 2, Goals: 2"
+          },
+          {
+            "name": "Felix Nmecha",
+            "position": "Goals",
+            "statLine": "Matches: 2, Goals: 1"
+          },
+          {
+            "name": "Joshua Kimmich",
+            "position": "Assists",
+            "statLine": "Matches: 2, Assists: 2"
+          },
+          {
+            "name": "Florian Wirtz",
+            "position": "Assists",
+            "statLine": "Matches: 2, Assists: 1"
+          },
+          {
+            "name": "Jonathan Tah",
+            "position": "Accurate Passes",
+            "statLine": "158"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "unavailable",
+        "source": null,
+        "note": "Key players not available yet.",
+        "batters": []
+      },
+      "homeMajorInjuries": [],
+      "awayMajorInjuries": [],
+      "prediction": {
+        "predictedWinner": "Germany",
+        "predictedSide": "home",
+        "homeWinPct": 76.3,
+        "awayWinPct": 5.8,
+        "confidence": 76.3,
+        "confidenceLabel": "Strong pick",
+        "outcomeLabel": "Germany to win",
+        "whyTheyWin": "Germany are projected to win because Germany are 5-0 in their last five (W-W-W-W-W) while Third Place Group A/B/C/D/F are 0-0.; Germany play at Gillette Stadium, where home sides often perform better.",
+        "reasons": [
+          {
+            "title": "Recent form trending up",
+            "detail": "Germany are 5-0 in their last five (W-W-W-W-W) while Third Place Group A/B/C/D/F are 0-0.",
+            "impact": "medium",
+            "favors": "home",
+            "source": "ESPN"
+          },
+          {
+            "title": "Home-field advantage",
+            "detail": "Germany play at Gillette Stadium, where home sides often perform better.",
+            "impact": "low",
+            "favors": "home"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "Germany ? vs Third Place Group A/B/C/D/F ?",
+            "edge": "even"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home ? vs away ?",
+            "edge": "even"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Last five games",
+            "detail": "Germany 5-0 vs Third Place Group A/B/C/D/F 0-0",
+            "edge": "home"
+          },
+          {
+            "label": "Lineup quality",
+            "detail": "Confirmed lineup strength vs opponent",
+            "edge": "home"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 78.3% home / 4.1% away / 17.6% draw",
+            "edge": "home"
+          }
+        ],
+        "dataSources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.7827999999999999,
+            "away": 0.0412,
+            "draw": 0.17600000000000002,
+            "homePct": 78.3,
+            "awayPct": 4.1,
+            "drawPct": 17.6,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 98.5,
+                "weightPct": 100.0
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 76.3,
+            "awayPct": 5.8,
+            "drawPct": 17.9,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": false
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 78.3,
+            "impliedPct": null,
+            "blendedPct": 76.3,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "away": {
+            "truePct": 4.1,
+            "impliedPct": null,
+            "blendedPct": 5.8,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "draw": {
+            "truePct": 17.6,
+            "impliedPct": null,
+            "blendedPct": 17.9,
+            "edgePct": null,
+            "edgeLabel": null
+          }
+        },
+        "drawWinPct": 17.9,
+        "features": {
+          "league": "worldcup",
+          "recordDiff": 0.0,
+          "splitDiff": 0.0,
+          "homePower": 1.0,
+          "awayPower": null,
+          "homeInjuryLoad": 0,
+          "awayInjuryLoad": 0,
+          "homeRest": 4,
+          "awayRest": null,
+          "homeBackToBack": false,
+          "awayBackToBack": false,
+          "impliedHome": null,
+          "impliedAway": null,
+          "trueHome": 78.3,
+          "trueAway": 4.1,
+          "confidence": 76.3,
+          "predictedSide": "home",
+          "hasLineup": true,
+          "dataCoverage": {
+            "lineup": true,
+            "injuries": false,
+            "espnPredictor": false,
+            "advancedStats": true,
+            "restData": false,
+            "scheduleFlags": true,
+            "mlbPitching": false,
+            "leagueMetrics": true,
+            "impliedOdds": false
+          },
+          "mlbPitching": null,
+          "leagueMetrics": {
+            "league": "worldcup",
+            "drawBaseRate": 0.22
+          }
+        }
+      },
+      "predictionRank": 1
+    },
+    {
+      "league": "worldcup",
+      "leagueLabel": "FIFA World Cup",
+      "eventId": "760488",
+      "startDate": "2026-06-30T01:00Z",
+      "awayTeam": "Group C 2nd Place",
+      "homeTeam": "Group F Winner",
+      "matchup": "Group C 2nd Place @ Group F Winner",
+      "gameStatusText": "Scheduled",
+      "gameStatusDetail": "Mon, June 29th at 9:00 PM EDT",
+      "statusType": "STATUS_SCHEDULED",
+      "venueName": "Estadio BBVA",
+      "broadcast": "FOX, Tele, FOX One",
+      "awayRecord": null,
+      "homeRecord": null,
+      "awayRoadRecord": null,
+      "homeHomeRecord": null,
+      "awayScore": "0",
+      "homeScore": "0",
+      "isLive": false,
+      "isFinal": false,
+      "isScheduled": true,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 0,
+      "source": "espn",
+      "viewTypes": [],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": "0-0",
+          "results": [],
+          "games": []
+        },
+        "awayLastFive": {
+          "record": "0-0",
+          "results": [],
+          "games": []
+        },
+        "seasonSeries": null,
+        "weather": null,
+        "homeInjuries": [],
+        "awayInjuries": [],
+        "homeMajorInjuries": [],
+        "awayMajorInjuries": [],
+        "homeKeyInjuries": [],
+        "awayKeyInjuries": [],
+        "homeLineup": {
+          "status": "unavailable",
+          "source": null,
+          "note": "Key players not available yet.",
+          "batters": []
+        },
+        "awayLineup": {
+          "status": "unavailable",
+          "source": null,
+          "note": "Key players not available yet.",
+          "batters": []
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [],
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [],
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": null,
+          "away": null
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": null,
+          "seriesScore": null
+        },
+        "homeScheduleFlags": {
+          "restDays": null,
+          "backToBack": false,
+          "threeInFour": false
+        },
+        "awayScheduleFlags": {
+          "restDays": null,
+          "backToBack": false,
+          "threeInFour": false
+        },
+        "leagueMetrics": {
+          "league": "worldcup",
+          "drawBaseRate": 0.22
+        }
+      },
+      "homeLineup": {
+        "status": "unavailable",
+        "source": null,
+        "note": "Key players not available yet.",
+        "batters": []
+      },
+      "awayLineup": {
+        "status": "unavailable",
+        "source": null,
+        "note": "Key players not available yet.",
+        "batters": []
+      },
+      "homeMajorInjuries": [],
+      "awayMajorInjuries": [],
+      "prediction": null
+    }
+  ],
+  "fetchedAt": "2026-06-24T00:06:11.624518+00:00",
+  "scheduleTimezone": "America/New_York",
+  "defaultScheduleDate": "2026-06-23"
+}
