@@ -54,6 +54,7 @@ class PredictionModelTests(unittest.TestCase):
         top_game = next(game for game in payload["games"] if game.get("predictionRank") == 1)
         self.assertIn("prediction", top_game)
         self.assertEqual(top_game["predictionRank"], 1)
+        self.assertEqual(payload["topPick"], top_game["prediction"]["outcomeLabel"])
 
     def test_weighted_injury_adjustment_prefers_qb_injury(self) -> None:
         enrichment = {

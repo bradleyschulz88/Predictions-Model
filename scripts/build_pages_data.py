@@ -90,7 +90,11 @@ def build_overview(payloads: dict[str, dict]) -> dict:
 
     for league_id, payload in payloads.items():
         games = payload.get("games") or []
-        publishable = [game for game in games if (game.get("prediction") or {}).get("predictedWinner")]
+        publishable = sorted(
+            [game for game in games if (game.get("prediction") or {}).get("predictedWinner")],
+            key=lambda game: (game.get("prediction") or {}).get("confidence") or 0,
+            reverse=True,
+        )
         top_game = publishable[0] if publishable else None
         top_prediction = (top_game or {}).get("prediction") or {}
         league_summaries.append(

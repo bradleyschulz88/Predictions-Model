@@ -12,7 +12,7 @@ from data_providers.utils import team_match_score
 from espn_client import ESPNClientError, fetch_scoreboard, parse_scoreboard
 from espn_enrichment import enrich_game, enrich_games, ensure_espn_odds_on_games
 from data_providers import enrich_games_with_providers
-from mlb_predictions import apply_predictions
+from mlb_predictions import apply_predictions, is_publishable_pick
 from data_providers.schedule_advanced import clear_rolling_schedule_cache, fetch_rolling_schedule_games
 from schedule_dates import default_game_date, get_schedule_timezone
 from sbr_client import SBRClientError, build_odds_url, get_game_rows, get_page_props
@@ -255,8 +255,15 @@ def finalize_dashboard_payload(
             if book:
                 sportsbooks.add(book)
 
-    top_game = next((game for game in games if game.get("prediction")), None)
-    top_pick = top_game["prediction"]["outcomeLabel"] if top_game else None
+    top_game = next((game for game in games if game.get("predictionRank") == 1), None)
+    if top_game is None:
+        publishable = [game for game in games if is_publishable_pick(game.get("prediction"))]
+        if publishable:
+            top_game = max(
+                publishable,
+                key=lambda item: (item.get("prediction") or {}).get("confidence") or 0,
+            )
+    top_pick = (top_game.get("prediction") or {}).get("outcomeLabel") if top_game else None
 
     return {
         "url": url,

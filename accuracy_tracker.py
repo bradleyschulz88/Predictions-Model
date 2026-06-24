@@ -134,7 +134,9 @@ def _build_pick_record(
         record["correct"] = correct
         record["homeScore"] = game.get("homeScore")
         record["awayScore"] = game.get("awayScore")
-        record["units"] = american_odds_profit(pending.get("pickOdds") or 100, correct)
+        odds = pending.get("pickOdds")
+        if odds is not None:
+            record["units"] = american_odds_profit(odds, correct)
         record["gradedAt"] = datetime.now(timezone.utc).isoformat()
     return record
 

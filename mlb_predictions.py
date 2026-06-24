@@ -612,7 +612,8 @@ def extract_prediction_features(game: dict[str, Any], prediction: dict[str, Any]
     data_coverage = {
         "lineup": bool((game.get("homeLineup") or {}).get("batters") or (game.get("awayLineup") or {}).get("batters")),
         "injuries": bool(enrichment.get("homeMajorInjuries") or enrichment.get("awayMajorInjuries")),
-        "espnPredictor": enrichment.get("espnPredictorHome") is not None,
+        "espnPredictor": enrichment.get("espnPredictorHome") is not None
+        and enrichment.get("espnPredictorAway") is not None,
         "advancedStats": home_adv.get("powerRating") is not None or away_adv.get("powerRating") is not None,
         "restData": rest_days.get("home") is not None and rest_days.get("away") is not None,
         "scheduleFlags": bool(home_flags or away_flags),
