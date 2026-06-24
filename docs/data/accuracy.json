@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-24T12:35:24.913701+00:00",
+  "updatedAt": "2026-06-24T15:35:23.750238+00:00",
   "summary": {
     "last7Days": {
       "correct": 70,
@@ -15,7 +15,7 @@
       "pct": 59.8,
       "units": 7.296,
       "roiPct": 6.2,
-      "pending": 164
+      "pending": 165
     },
     "byLeague": {
       "worldcup": {
@@ -1962,6 +1962,25 @@
   ],
   "pendingPicks": [
     {
+      "eventId": "1133619",
+      "league": "afl",
+      "scheduleDate": "2026-07-02",
+      "matchup": "Brisbane Lions @ Geelong Cats",
+      "predicted": "Geelong Cats",
+      "predictedSide": "home",
+      "outcomeLabel": "Geelong Cats to win",
+      "confidence": 57.9,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-02"
+    },
+    {
       "eventId": "760494",
       "league": "worldcup",
       "scheduleDate": "2026-07-01",
@@ -2882,25 +2901,6 @@
       "predictedSide": "away",
       "outcomeLabel": "Los Angeles Dodgers to win",
       "confidence": 73.6,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-06-28"
-    },
-    {
-      "eventId": "401815949",
-      "league": "mlb",
-      "scheduleDate": "2026-06-28",
-      "matchup": "Atlanta Braves @ San Francisco Giants",
-      "predicted": "Atlanta Braves",
-      "predictedSide": "away",
-      "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 80.5,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -8251,6 +8251,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-01"
+    },
+    "1133619": {
+      "eventId": "1133619",
+      "league": "afl",
+      "scheduleDate": "2026-07-02",
+      "matchup": "Brisbane Lions @ Geelong Cats",
+      "predicted": "Geelong Cats",
+      "predictedSide": "home",
+      "outcomeLabel": "Geelong Cats to win",
+      "confidence": 57.9,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-02"
     }
   },
   "skippedDates": []
