@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-06-24T17:54:21.105659+00:00",
+  "updatedAt": "2026-06-24T19:43:42.586623+00:00",
   "summary": {
     "last7Days": {
-      "correct": 70,
-      "total": 117,
-      "pct": 59.8,
-      "units": 7.296,
-      "roiPct": 6.2,
+      "correct": 71,
+      "total": 118,
+      "pct": 60.2,
+      "units": 8.346,
+      "roiPct": 7.1,
       "pending": 50
     },
     "allTime": {
-      "correct": 70,
-      "total": 117,
-      "pct": 59.8,
-      "units": 7.296,
-      "roiPct": 6.2,
-      "pending": 166
+      "correct": 71,
+      "total": 118,
+      "pct": 60.2,
+      "units": 8.346,
+      "roiPct": 7.1,
+      "pending": 165
     },
     "byLeague": {
+      "mlb": {
+        "correct": 39,
+        "total": 78,
+        "pct": 50.0,
+        "units": -8.738,
+        "roiPct": -11.2,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 16,
         "total": 20,
@@ -34,14 +42,6 @@
         "roiPct": 40.0,
         "pending": 0
       },
-      "mlb": {
-        "correct": 38,
-        "total": 77,
-        "pct": 49.4,
-        "units": -9.788,
-        "roiPct": -12.7,
-        "pending": 0
-      },
       "afl": {
         "correct": 5,
         "total": 5,
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 7,
+      "current": 6,
       "type": "loss",
       "bestWin": 7,
-      "bestLoss": 7
+      "bestLoss": 6
     }
   },
   "recentResults": [
+    {
+      "eventId": "401815889",
+      "league": "mlb",
+      "scheduleDate": "2026-06-24",
+      "matchup": "Texas Rangers @ Miami Marlins",
+      "predicted": "Miami Marlins",
+      "predictedSide": "home",
+      "outcomeLabel": "Miami Marlins to win",
+      "confidence": 57.2,
+      "pickOdds": 105,
+      "status": "graded",
+      "actual": "Miami Marlins",
+      "correct": true,
+      "units": 1.05,
+      "homeScore": "4",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T19:43:28.397154+00:00",
+      "date": "2026-06-24"
+    },
     {
       "eventId": "760459",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "3",
       "awayScore": "2",
       "gradedAt": "2026-06-22T00:19:14.434931+00:00",
-      "date": "2026-06-19"
-    },
-    {
-      "eventId": "401815816",
-      "league": "mlb",
-      "scheduleDate": "2026-06-19",
-      "matchup": "Washington Nationals @ Tampa Bay Rays",
-      "predicted": "Washington Nationals",
-      "predictedSide": "away",
-      "outcomeLabel": "Washington Nationals to win",
-      "confidence": 83.7,
-      "pickOdds": 135,
-      "status": "graded",
-      "actual": "Tampa Bay Rays",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "5",
-      "awayScore": "2",
-      "gradedAt": "2026-06-22T00:19:14.434917+00:00",
       "date": "2026-06-19"
     }
   ],
@@ -5030,15 +5030,15 @@
       "predicted": "Miami Marlins",
       "predictedSide": "home",
       "outcomeLabel": "Miami Marlins to win",
-      "confidence": 73.1,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 57.2,
+      "pickOdds": 105,
+      "status": "graded",
+      "actual": "Miami Marlins",
+      "correct": true,
+      "units": 1.05,
+      "homeScore": "4",
+      "awayScore": "2",
+      "gradedAt": "2026-06-24T19:43:28.397154+00:00",
       "date": "2026-06-24"
     },
     "401815886": {
