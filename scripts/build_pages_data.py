@@ -90,7 +90,9 @@ def build_overview(payloads: dict[str, dict]) -> dict:
 
     for league_id, payload in payloads.items():
         games = payload.get("games") or []
-        top_game = games[0] if games else None
+        publishable = [game for game in games if (game.get("prediction") or {}).get("predictedWinner")]
+        top_game = publishable[0] if publishable else None
+        top_prediction = (top_game or {}).get("prediction") or {}
         league_summaries.append(
             {
                 "id": league_id,
@@ -98,10 +100,10 @@ def build_overview(payloads: dict[str, dict]) -> dict:
                 "scheduleDate": payload.get("scheduleDate"),
                 "gameCount": payload.get("gameCount", 0),
                 "topPick": payload.get("topPick"),
-                "topConfidence": (top_game or {}).get("prediction", {}).get("confidence"),
+                "topConfidence": top_prediction.get("confidence"),
             }
         )
-        for game in games[:3]:
+        for game in publishable[:3]:
             prediction = game.get("prediction") or {}
             top_picks.append(
                 {

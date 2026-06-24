@@ -93,8 +93,8 @@ class BuildPagesTests(unittest.TestCase):
                 "gameCount": 2,
                 "topPick": "Yankees ML",
                 "games": [
-                    {"matchup": "A @ B", "eventId": "1", "prediction": {"outcomeLabel": "B ML", "confidence": 62, "confidenceLabel": "Lean"}},
-                    {"matchup": "C @ D", "eventId": "2", "prediction": {"outcomeLabel": "C ML", "confidence": 71, "confidenceLabel": "Strong pick"}},
+                    {"matchup": "A @ B", "eventId": "1", "prediction": None},
+                    {"matchup": "C @ D", "eventId": "2", "prediction": {"outcomeLabel": "C ML", "confidence": 71, "confidenceLabel": "Strong pick", "predictedWinner": "C"}},
                 ],
             },
             "nba": {
@@ -103,7 +103,7 @@ class BuildPagesTests(unittest.TestCase):
                 "gameCount": 1,
                 "topPick": "Lakers ML",
                 "games": [
-                    {"matchup": "E @ F", "eventId": "3", "prediction": {"outcomeLabel": "F ML", "confidence": 68, "confidenceLabel": "Lean"}},
+                    {"matchup": "E @ F", "eventId": "3", "prediction": {"outcomeLabel": "F ML", "confidence": 68, "confidenceLabel": "Lean", "predictedWinner": "F"}},
                 ],
             },
         }
