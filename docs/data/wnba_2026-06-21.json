@@ -43,566 +43,10 @@
   "scheduleDate": "2026-06-21",
   "gameCount": 3,
   "statusCounts": {
-    "In Progress": 2,
-    "Final": 1
+    "Final": 3
   },
-  "topPick": "New York Liberty to win",
+  "topPick": "Las Vegas Aces to win",
   "games": [
-    {
-      "league": "wnba",
-      "leagueLabel": "WNBA Basketball",
-      "eventId": "401857011",
-      "startDate": "2026-06-22T00:00Z",
-      "awayTeam": "New York Liberty",
-      "homeTeam": "Los Angeles Sparks",
-      "matchup": "New York Liberty @ Los Angeles Sparks",
-      "gameStatusText": "In Progress",
-      "gameStatusDetail": "9:48 - 1st Quarter",
-      "statusType": "STATUS_IN_PROGRESS",
-      "venueName": "crypto.com Arena",
-      "broadcast": "ESPN, Disney+",
-      "awayRecord": "11-5",
-      "homeRecord": "7-8",
-      "awayRoadRecord": "5-1",
-      "homeHomeRecord": "2-6",
-      "awayScore": "0",
-      "homeScore": "0",
-      "isLive": true,
-      "isFinal": false,
-      "isScheduled": false,
-      "isPostponed": false,
-      "isCanceled": false,
-      "isSuspended": false,
-      "isDelayed": false,
-      "isVoided": false,
-      "isWashedOut": false,
-      "attendance": 0,
-      "source": "espn",
-      "viewTypes": [
-        "PointspreadDataOpeningAndLatestOddsDataView"
-      ],
-      "enrichment": {
-        "espnPredictorHome": null,
-        "espnPredictorAway": null,
-        "homeLastFive": {
-          "record": null,
-          "results": [],
-          "games": []
-        },
-        "awayLastFive": {
-          "record": null,
-          "results": [],
-          "games": []
-        },
-        "seasonSeries": {
-          "title": "Regular Season Series",
-          "summary": "",
-          "seriesScore": "0-0"
-        },
-        "weather": null,
-        "homeInjuries": [
-          {
-            "player": "Kate Martin",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-25"
-          },
-          {
-            "player": "Cameron Brink",
-            "status": "Out",
-            "detail": "Not Specified (Left)",
-            "returnDate": "2026-06-25"
-          }
-        ],
-        "awayInjuries": [],
-        "homeMajorInjuries": [
-          {
-            "player": "Kate Martin",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-25"
-          },
-          {
-            "player": "Cameron Brink",
-            "status": "Out",
-            "detail": "Not Specified (Left)",
-            "returnDate": "2026-06-25"
-          }
-        ],
-        "awayMajorInjuries": [],
-        "homeKeyInjuries": [
-          "Kate Martin (Out)",
-          "Cameron Brink (Out)"
-        ],
-        "awayKeyInjuries": [],
-        "homeLineup": {
-          "status": "confirmed",
-          "source": "espn_boxscore",
-          "note": "Starting lineup from ESPN.",
-          "batters": [
-            {
-              "order": null,
-              "name": "Nneka Ogwumike",
-              "position": "F"
-            },
-            {
-              "order": null,
-              "name": "Dearica Hamby",
-              "position": "F"
-            },
-            {
-              "order": null,
-              "name": "Erica Wheeler",
-              "position": "G"
-            },
-            {
-              "order": null,
-              "name": "Kelsey Plum",
-              "position": "G"
-            },
-            {
-              "order": null,
-              "name": "Ariel Atkins",
-              "position": "G"
-            },
-            {
-              "order": null,
-              "name": "Emma Cannon",
-              "position": "F"
-            },
-            {
-              "order": null,
-              "name": "Jihyun Park",
-              "position": "F"
-            },
-            {
-              "order": null,
-              "name": "Laura Ziegler",
-              "position": "F"
-            },
-            {
-              "order": null,
-              "name": "Kiana Williams",
-              "position": "G"
-            }
-          ]
-        },
-        "awayLineup": {
-          "status": "confirmed",
-          "source": "espn_boxscore",
-          "note": "Starting lineup from ESPN.",
-          "batters": [
-            {
-              "order": null,
-              "name": "Breanna Stewart",
-              "position": "F"
-            },
-            {
-              "order": null,
-              "name": "Satou Sabally",
-              "position": "F"
-            },
-            {
-              "order": null,
-              "name": "Leonie Fiebich",
-              "position": "F"
-            },
-            {
-              "order": null,
-              "name": "Jonquel Jones",
-              "position": "C"
-            },
-            {
-              "order": null,
-              "name": "Sabrina Ionescu",
-              "position": "G"
-            },
-            {
-              "order": null,
-              "name": "Raquel Carrera",
-              "position": "F"
-            },
-            {
-              "order": null,
-              "name": "Han Xu",
-              "position": "C"
-            },
-            {
-              "order": null,
-              "name": "Rebekah Gardner",
-              "position": "G"
-            },
-            {
-              "order": null,
-              "name": "Betnijah Laney-Hamilton",
-              "position": "G"
-            }
-          ]
-        },
-        "espnOdds": [],
-        "sources": [
-          "Derived schedule metrics",
-          "ESPN game summary",
-          "ESPN head-to-head",
-          "ESPN injury report",
-          "ESPN last-five form",
-          "ESPN standings",
-          "ESPN team stats",
-          "Key players"
-        ],
-        "homeAdvanced": {
-          "sources": [
-            "ESPN standings",
-            "ESPN team stats"
-          ],
-          "wins": 7,
-          "losses": 8,
-          "points": -0.5,
-          "goalDifference": -48.0,
-          "pointsPerGame": null,
-          "goalsAgainstPerGame": null,
-          "battingAvg": null,
-          "onBasePct": null,
-          "sluggingPct": null,
-          "era": null,
-          "runsScored": null,
-          "runsAllowed": null,
-          "powerRating": null,
-          "opsProxy": null,
-          "winPct": null
-        },
-        "awayAdvanced": {
-          "sources": [
-            "ESPN standings",
-            "ESPN team stats"
-          ],
-          "wins": 11,
-          "losses": 5,
-          "points": 3.0,
-          "goalDifference": 96.0,
-          "pointsPerGame": null,
-          "goalsAgainstPerGame": null,
-          "battingAvg": null,
-          "onBasePct": null,
-          "sluggingPct": null,
-          "era": null,
-          "runsScored": null,
-          "runsAllowed": null,
-          "powerRating": null,
-          "opsProxy": null,
-          "winPct": null
-        },
-        "restDays": {
-          "home": 3,
-          "away": 2
-        },
-        "weatherImpact": null,
-        "headToHead": {
-          "homeSeriesWinPct": null,
-          "awaySeriesWinPct": null,
-          "summary": "",
-          "seriesScore": "0-0"
-        },
-        "homeScheduleFlags": {
-          "restDays": 4,
-          "backToBack": false,
-          "threeInFour": false,
-          "gamesLast4Days": 1
-        },
-        "awayScheduleFlags": {
-          "restDays": 3,
-          "backToBack": false,
-          "threeInFour": false,
-          "gamesLast4Days": 2
-        },
-        "leagueMetrics": {
-          "league": "wnba"
-        },
-        "notes": [
-          "Rest edge: Los Angeles Sparks (3d) vs New York Liberty (2d)."
-        ]
-      },
-      "homeLineup": {
-        "status": "confirmed",
-        "source": "espn_boxscore",
-        "note": "Starting lineup from ESPN.",
-        "batters": [
-          {
-            "order": null,
-            "name": "Nneka Ogwumike",
-            "position": "F"
-          },
-          {
-            "order": null,
-            "name": "Dearica Hamby",
-            "position": "F"
-          },
-          {
-            "order": null,
-            "name": "Erica Wheeler",
-            "position": "G"
-          },
-          {
-            "order": null,
-            "name": "Kelsey Plum",
-            "position": "G"
-          },
-          {
-            "order": null,
-            "name": "Ariel Atkins",
-            "position": "G"
-          },
-          {
-            "order": null,
-            "name": "Emma Cannon",
-            "position": "F"
-          },
-          {
-            "order": null,
-            "name": "Jihyun Park",
-            "position": "F"
-          },
-          {
-            "order": null,
-            "name": "Laura Ziegler",
-            "position": "F"
-          },
-          {
-            "order": null,
-            "name": "Kiana Williams",
-            "position": "G"
-          }
-        ]
-      },
-      "awayLineup": {
-        "status": "confirmed",
-        "source": "espn_boxscore",
-        "note": "Starting lineup from ESPN.",
-        "batters": [
-          {
-            "order": null,
-            "name": "Breanna Stewart",
-            "position": "F"
-          },
-          {
-            "order": null,
-            "name": "Satou Sabally",
-            "position": "F"
-          },
-          {
-            "order": null,
-            "name": "Leonie Fiebich",
-            "position": "F"
-          },
-          {
-            "order": null,
-            "name": "Jonquel Jones",
-            "position": "C"
-          },
-          {
-            "order": null,
-            "name": "Sabrina Ionescu",
-            "position": "G"
-          },
-          {
-            "order": null,
-            "name": "Raquel Carrera",
-            "position": "F"
-          },
-          {
-            "order": null,
-            "name": "Han Xu",
-            "position": "C"
-          },
-          {
-            "order": null,
-            "name": "Rebekah Gardner",
-            "position": "G"
-          },
-          {
-            "order": null,
-            "name": "Betnijah Laney-Hamilton",
-            "position": "G"
-          }
-        ]
-      },
-      "homeMajorInjuries": [
-        {
-          "player": "Kate Martin",
-          "status": "Out",
-          "detail": "Coach's Decision",
-          "returnDate": "2026-06-25"
-        },
-        {
-          "player": "Cameron Brink",
-          "status": "Out",
-          "detail": "Not Specified (Left)",
-          "returnDate": "2026-06-25"
-        }
-      ],
-      "awayMajorInjuries": [],
-      "prediction": {
-        "predictedWinner": "New York Liberty",
-        "predictedSide": "away",
-        "homeWinPct": 13.8,
-        "awayWinPct": 86.2,
-        "confidence": 86.2,
-        "confidenceLabel": "Strong pick",
-        "outcomeLabel": "New York Liberty to win",
-        "whyTheyWin": "New York Liberty are projected to win because Los Angeles Sparks (7-8, 46.7%) have outplayed New York Liberty (11-5, 68.8%) across the full season.; Los Angeles Sparks are 2-6 at home while New York Liberty are 5-1 on the road.; Los Angeles Sparks missing or limited players: Kate Martin (Out), Cameron Brink (Out).",
-        "reasons": [
-          {
-            "title": "Better season record",
-            "detail": "Los Angeles Sparks (7-8, 46.7%) have outplayed New York Liberty (11-5, 68.8%) across the full season.",
-            "impact": "high",
-            "favors": "away"
-          },
-          {
-            "title": "Favorable home/road split",
-            "detail": "Los Angeles Sparks are 2-6 at home while New York Liberty are 5-1 on the road.",
-            "impact": "medium",
-            "favors": "away"
-          },
-          {
-            "title": "Opponent injury issues",
-            "detail": "Los Angeles Sparks missing or limited players: Kate Martin (Out), Cameron Brink (Out).",
-            "impact": "medium",
-            "favors": "away",
-            "source": "ESPN"
-          },
-          {
-            "title": "Injury advantage",
-            "detail": "Los Angeles Sparks have more notable injuries (Kate Martin (Out), Cameron Brink (Out)) than New York Liberty (none listed).",
-            "impact": "medium",
-            "favors": "away",
-            "source": "ESPN"
-          }
-        ],
-        "factors": [
-          {
-            "label": "Season record",
-            "detail": "Los Angeles Sparks 7-8 vs New York Liberty 11-5",
-            "edge": "away"
-          },
-          {
-            "label": "Home/road splits",
-            "detail": "Home 2-6 vs away 5-1",
-            "edge": "away"
-          },
-          {
-            "label": "Home-field advantage",
-            "detail": "Historical home edge applied",
-            "edge": "home"
-          },
-          {
-            "label": "Injury impact",
-            "detail": "Weighted injury load: home 3.2 vs away 0.0",
-            "edge": "away"
-          },
-          {
-            "label": "Rest days",
-            "detail": "Home 3 vs away 2 days rest",
-            "edge": "home"
-          },
-          {
-            "label": "Model probability",
-            "detail": "Data-driven estimate 8.9% home / 91.1% away",
-            "edge": "away"
-          }
-        ],
-        "dataSources": [
-          "Derived schedule metrics",
-          "ESPN game summary",
-          "ESPN head-to-head",
-          "ESPN injury report",
-          "ESPN last-five form",
-          "ESPN scoreboard",
-          "ESPN standings",
-          "ESPN team stats",
-          "Key players",
-          "Probability model"
-        ],
-        "probabilities": {
-          "true": {
-            "home": 0.08897080460049776,
-            "away": 0.9110291953995022,
-            "draw": null,
-            "homePct": 8.9,
-            "awayPct": 91.1,
-            "drawPct": null,
-            "components": [
-              {
-                "source": "Analytics model",
-                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 8.9,
-                "weightPct": 100.0
-              }
-            ]
-          },
-          "pick": {
-            "homePct": 13.8,
-            "awayPct": 86.2,
-            "drawPct": null,
-            "method": "Model data only (records, form, injuries, advanced stats)"
-          },
-          "implied": {
-            "available": false
-          }
-        },
-        "teamProbabilities": {
-          "home": {
-            "truePct": 8.9,
-            "impliedPct": null,
-            "blendedPct": 13.8,
-            "edgePct": null,
-            "edgeLabel": null
-          },
-          "away": {
-            "truePct": 91.1,
-            "impliedPct": null,
-            "blendedPct": 86.2,
-            "edgePct": null,
-            "edgeLabel": null
-          }
-        },
-        "features": {
-          "league": "wnba",
-          "recordDiff": -0.2208,
-          "splitDiff": -0.5833,
-          "homePower": null,
-          "awayPower": null,
-          "homeInjuryLoad": 3.22,
-          "awayInjuryLoad": 0,
-          "homeRest": 3,
-          "awayRest": 2,
-          "homeBackToBack": false,
-          "awayBackToBack": false,
-          "impliedHome": null,
-          "impliedAway": null,
-          "trueHome": 8.9,
-          "trueAway": 91.1,
-          "confidence": 86.2,
-          "predictedSide": "away",
-          "hasLineup": true,
-          "dataCoverage": {
-            "lineup": true,
-            "injuries": true,
-            "espnPredictor": false,
-            "advancedStats": false,
-            "restData": true,
-            "scheduleFlags": true,
-            "mlbPitching": false,
-            "leagueMetrics": false,
-            "impliedOdds": false
-          },
-          "mlbPitching": null,
-          "leagueMetrics": {
-            "league": "wnba"
-          }
-        }
-      },
-      "predictionRank": 1
-    },
     {
       "league": "wnba",
       "leagueLabel": "WNBA Basketball",
@@ -657,16 +101,16 @@
         "weather": null,
         "homeInjuries": [
           {
-            "player": "Chennedy Carter",
-            "status": "Out",
-            "detail": "Illness",
-            "returnDate": "2026-06-23"
-          },
-          {
             "player": "Janiah Barker",
             "status": "Out",
             "detail": "Leg",
-            "returnDate": "2026-06-23"
+            "returnDate": "2026-06-25"
+          },
+          {
+            "player": "Chennedy Carter",
+            "status": "Out",
+            "detail": "Illness",
+            "returnDate": "2026-06-25"
           },
           {
             "player": "Dana Evans",
@@ -679,8 +123,8 @@
           {
             "player": "Tiffany Hayes",
             "status": "Day-To-Day",
-            "detail": "Head",
-            "returnDate": "2026-06-21"
+            "detail": "Undisclosed",
+            "returnDate": "2026-06-24"
           },
           {
             "player": "Miela Sowah",
@@ -703,16 +147,16 @@
         ],
         "homeMajorInjuries": [
           {
-            "player": "Chennedy Carter",
-            "status": "Out",
-            "detail": "Illness",
-            "returnDate": "2026-06-23"
-          },
-          {
             "player": "Janiah Barker",
             "status": "Out",
             "detail": "Leg",
-            "returnDate": "2026-06-23"
+            "returnDate": "2026-06-25"
+          },
+          {
+            "player": "Chennedy Carter",
+            "status": "Out",
+            "detail": "Illness",
+            "returnDate": "2026-06-25"
           },
           {
             "player": "Dana Evans",
@@ -742,8 +186,8 @@
           }
         ],
         "homeKeyInjuries": [
-          "Chennedy Carter (Out)",
           "Janiah Barker (Out)",
+          "Chennedy Carter (Out)",
           "Dana Evans (Out)"
         ],
         "awayKeyInjuries": [
@@ -1045,16 +489,16 @@
       },
       "homeMajorInjuries": [
         {
-          "player": "Chennedy Carter",
-          "status": "Out",
-          "detail": "Illness",
-          "returnDate": "2026-06-23"
-        },
-        {
           "player": "Janiah Barker",
           "status": "Out",
           "detail": "Leg",
-          "returnDate": "2026-06-23"
+          "returnDate": "2026-06-25"
+        },
+        {
+          "player": "Chennedy Carter",
+          "status": "Out",
+          "detail": "Illness",
+          "returnDate": "2026-06-25"
         },
         {
           "player": "Dana Evans",
@@ -1086,9 +530,9 @@
       "prediction": {
         "predictedWinner": "Las Vegas Aces",
         "predictedSide": "home",
-        "homeWinPct": 81.2,
-        "awayWinPct": 18.8,
-        "confidence": 81.2,
+        "homeWinPct": 75.5,
+        "awayWinPct": 24.5,
+        "confidence": 75.5,
         "confidenceLabel": "Strong pick",
         "outcomeLabel": "Las Vegas Aces to win",
         "whyTheyWin": "Las Vegas Aces are projected to win because Las Vegas Aces (12-4, 75.0%) have outplayed Golden State Valkyries (10-7, 58.8%) across the full season.; Las Vegas Aces are 4-2 at home while Golden State Valkyries are 3-4 on the road.; Las Vegas Aces have home-court advantage at Michelob ULTRA Arena.",
@@ -1181,8 +625,8 @@
             ]
           },
           "pick": {
-            "homePct": 81.2,
-            "awayPct": 18.8,
+            "homePct": 75.5,
+            "awayPct": 24.5,
             "drawPct": null,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
@@ -1194,14 +638,14 @@
           "home": {
             "truePct": 85.4,
             "impliedPct": null,
-            "blendedPct": 81.2,
+            "blendedPct": 75.5,
             "edgePct": null,
             "edgeLabel": null
           },
           "away": {
             "truePct": 14.6,
             "impliedPct": null,
-            "blendedPct": 18.8,
+            "blendedPct": 24.5,
             "edgePct": null,
             "edgeLabel": null
           }
@@ -1222,7 +666,7 @@
           "impliedAway": null,
           "trueHome": 85.4,
           "trueAway": 14.6,
-          "confidence": 81.2,
+          "confidence": 75.5,
           "predictedSide": "home",
           "hasLineup": true,
           "dataCoverage": {
@@ -1242,7 +686,7 @@
           }
         }
       },
-      "predictionRank": 2
+      "predictionRank": 1
     },
     {
       "league": "wnba",
@@ -1252,19 +696,19 @@
       "awayTeam": "Washington Mystics",
       "homeTeam": "Minnesota Lynx",
       "matchup": "Washington Mystics @ Minnesota Lynx",
-      "gameStatusText": "In Progress",
-      "gameStatusDetail": "19.3 - 4th Quarter",
-      "statusType": "STATUS_IN_PROGRESS",
+      "gameStatusText": "Final",
+      "gameStatusDetail": "Final",
+      "statusType": "STATUS_FINAL",
       "venueName": "Target Center",
       "broadcast": "NBA TV, MNMT, Victory+ MIN",
-      "awayRecord": "7-7",
-      "homeRecord": "13-3",
-      "awayRoadRecord": "5-4",
-      "homeHomeRecord": "6-2",
-      "awayScore": "77",
-      "homeScore": "76",
-      "isLive": true,
-      "isFinal": false,
+      "awayRecord": "8-7",
+      "homeRecord": "13-4",
+      "awayRoadRecord": "6-4",
+      "homeHomeRecord": "6-3",
+      "awayScore": "84",
+      "homeScore": "79",
+      "isLive": false,
+      "isFinal": true,
       "isScheduled": false,
       "isPostponed": false,
       "isCanceled": false,
@@ -1292,24 +736,12 @@
         },
         "seasonSeries": {
           "title": "Regular Season Series",
-          "summary": "",
-          "seriesScore": "0-0"
+          "summary": "WSH leads series 1-0",
+          "seriesScore": "1-0"
         },
         "weather": null,
         "homeInjuries": [
           {
-            "player": "Eliska Hamzova",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          },
-          {
-            "player": "Liatu King",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          },
-          {
             "player": "Napheesa Collier",
             "status": "Out",
             "detail": "Sprain (Left)",
@@ -1328,28 +760,9 @@
             "returnDate": "2027-05-01"
           }
         ],
-        "awayInjuries": [
-          {
-            "player": "Darianna Littlepage-Buggs",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          }
-        ],
+        "awayInjuries": [],
         "homeMajorInjuries": [
           {
-            "player": "Eliska Hamzova",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          },
-          {
-            "player": "Liatu King",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          },
-          {
             "player": "Napheesa Collier",
             "status": "Out",
             "detail": "Sprain (Left)",
@@ -1368,24 +781,13 @@
             "returnDate": "2027-05-01"
           }
         ],
-        "awayMajorInjuries": [
-          {
-            "player": "Darianna Littlepage-Buggs",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          }
-        ],
+        "awayMajorInjuries": [],
         "homeKeyInjuries": [
-          "Eliska Hamzova (Out)",
-          "Liatu King (Out)",
           "Napheesa Collier (Out)",
           "Dorka Juhasz (Out)",
           "Emma Cechova (Out)"
         ],
-        "awayKeyInjuries": [
-          "Darianna Littlepage-Buggs (Out)"
-        ],
+        "awayKeyInjuries": [],
         "homeLineup": {
           "status": "confirmed",
           "source": "espn_boxscore",
@@ -1507,9 +909,9 @@
             "ESPN team stats"
           ],
           "wins": 13,
-          "losses": 3,
-          "points": 5.0,
-          "goalDifference": 207.0,
+          "losses": 4,
+          "points": 4.5,
+          "goalDifference": 202.0,
           "pointsPerGame": null,
           "goalsAgainstPerGame": null,
           "battingAvg": null,
@@ -1527,10 +929,10 @@
             "ESPN standings",
             "ESPN team stats"
           ],
-          "wins": 7,
+          "wins": 8,
           "losses": 7,
-          "points": 0.0,
-          "goalDifference": -53.0,
+          "points": 0.5,
+          "goalDifference": -48.0,
           "pointsPerGame": null,
           "goalsAgainstPerGame": null,
           "battingAvg": null,
@@ -1551,8 +953,8 @@
         "headToHead": {
           "homeSeriesWinPct": null,
           "awaySeriesWinPct": null,
-          "summary": "",
-          "seriesScore": "0-0"
+          "summary": "WSH leads series 1-0",
+          "seriesScore": "1-0"
         },
         "homeScheduleFlags": {
           "restDays": 1,
@@ -1676,18 +1078,6 @@
       },
       "homeMajorInjuries": [
         {
-          "player": "Eliska Hamzova",
-          "status": "Out",
-          "detail": "Coach's Decision",
-          "returnDate": "2026-06-24"
-        },
-        {
-          "player": "Liatu King",
-          "status": "Out",
-          "detail": "Coach's Decision",
-          "returnDate": "2026-06-24"
-        },
-        {
           "player": "Napheesa Collier",
           "status": "Out",
           "detail": "Sprain (Left)",
@@ -1706,53 +1096,437 @@
           "returnDate": "2027-05-01"
         }
       ],
-      "awayMajorInjuries": [
+      "awayMajorInjuries": [],
+      "prediction": null
+    },
+    {
+      "league": "wnba",
+      "leagueLabel": "WNBA Basketball",
+      "eventId": "401857011",
+      "startDate": "2026-06-22T00:00Z",
+      "awayTeam": "New York Liberty",
+      "homeTeam": "Los Angeles Sparks",
+      "matchup": "New York Liberty @ Los Angeles Sparks",
+      "gameStatusText": "Final",
+      "gameStatusDetail": "Final",
+      "statusType": "STATUS_FINAL",
+      "venueName": "crypto.com Arena",
+      "broadcast": "ESPN, Disney+",
+      "awayRecord": "11-6",
+      "homeRecord": "8-8",
+      "awayRoadRecord": "5-2",
+      "homeHomeRecord": "3-6",
+      "awayScore": "97",
+      "homeScore": "98",
+      "isLive": false,
+      "isFinal": true,
+      "isScheduled": false,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 18043,
+      "source": "espn",
+      "viewTypes": [
+        "PointspreadDataOpeningAndLatestOddsDataView"
+      ],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": null,
+          "results": [],
+          "games": []
+        },
+        "awayLastFive": {
+          "record": null,
+          "results": [],
+          "games": []
+        },
+        "seasonSeries": {
+          "title": "Regular Season Series",
+          "summary": "LA leads series 1-0",
+          "seriesScore": "1-0"
+        },
+        "weather": null,
+        "homeInjuries": [
+          {
+            "player": "Kate Martin",
+            "status": "Day-To-Day",
+            "detail": "Coach's Decision",
+            "returnDate": "2026-06-25"
+          },
+          {
+            "player": "Cameron Brink",
+            "status": "Out",
+            "detail": "Not Specified (Left)",
+            "returnDate": "2026-06-25"
+          }
+        ],
+        "awayInjuries": [],
+        "homeMajorInjuries": [
+          {
+            "player": "Cameron Brink",
+            "status": "Out",
+            "detail": "Not Specified (Left)",
+            "returnDate": "2026-06-25"
+          }
+        ],
+        "awayMajorInjuries": [],
+        "homeKeyInjuries": [
+          "Kate Martin (Day-To-Day)",
+          "Cameron Brink (Out)"
+        ],
+        "awayKeyInjuries": [],
+        "homeLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Nneka Ogwumike",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Dearica Hamby",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Erica Wheeler",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Kelsey Plum",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Ariel Atkins",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Jihyun Park",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Laura Ziegler",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Kiana Williams",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Rae Burrell",
+              "position": "G"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "confirmed",
+          "source": "espn_boxscore",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Breanna Stewart",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Satou Sabally",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Leonie Fiebich",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Jonquel Jones",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Sabrina Ionescu",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Raquel Carrera",
+              "position": "F"
+            },
+            {
+              "order": null,
+              "name": "Han Xu",
+              "position": "C"
+            },
+            {
+              "order": null,
+              "name": "Rebekah Gardner",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Rebecca Allen",
+              "position": "G"
+            }
+          ]
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 8,
+          "losses": 8,
+          "points": 0.0,
+          "goalDifference": -47.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 11,
+          "losses": 6,
+          "points": 2.5,
+          "goalDifference": 95.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": null,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": 3,
+          "away": 2
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": "LA leads series 1-0",
+          "seriesScore": "1-0"
+        },
+        "homeScheduleFlags": {
+          "restDays": 4,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 1
+        },
+        "awayScheduleFlags": {
+          "restDays": 3,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 2
+        },
+        "leagueMetrics": {
+          "league": "wnba"
+        },
+        "notes": [
+          "Rest edge: Los Angeles Sparks (3d) vs New York Liberty (2d)."
+        ]
+      },
+      "homeLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Nneka Ogwumike",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Dearica Hamby",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Erica Wheeler",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Kelsey Plum",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Ariel Atkins",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Jihyun Park",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Laura Ziegler",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Kiana Williams",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Rae Burrell",
+            "position": "G"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "confirmed",
+        "source": "espn_boxscore",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Breanna Stewart",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Satou Sabally",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Leonie Fiebich",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Jonquel Jones",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Sabrina Ionescu",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Raquel Carrera",
+            "position": "F"
+          },
+          {
+            "order": null,
+            "name": "Han Xu",
+            "position": "C"
+          },
+          {
+            "order": null,
+            "name": "Rebekah Gardner",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Rebecca Allen",
+            "position": "G"
+          }
+        ]
+      },
+      "homeMajorInjuries": [
         {
-          "player": "Darianna Littlepage-Buggs",
+          "player": "Cameron Brink",
           "status": "Out",
-          "detail": "Coach's Decision",
-          "returnDate": "2026-06-24"
+          "detail": "Not Specified (Left)",
+          "returnDate": "2026-06-25"
         }
       ],
+      "awayMajorInjuries": [],
       "prediction": {
-        "predictedWinner": "Minnesota Lynx",
-        "predictedSide": "home",
-        "homeWinPct": 57.6,
-        "awayWinPct": 42.4,
-        "confidence": 57.6,
-        "confidenceLabel": "Lean",
-        "outcomeLabel": "Minnesota Lynx to win",
-        "whyTheyWin": "Minnesota Lynx are projected to win because Minnesota Lynx (13-3, 81.2%) have outplayed Washington Mystics (7-7, 50.0%) across the full season.; Minnesota Lynx are 6-2 at home while Washington Mystics are 5-4 on the road.; Minnesota Lynx have home-court advantage at Target Center.",
+        "predictedWinner": "New York Liberty",
+        "predictedSide": "away",
+        "homeWinPct": 29.2,
+        "awayWinPct": 70.8,
+        "confidence": 70.8,
+        "confidenceLabel": "Strong pick",
+        "outcomeLabel": "New York Liberty to win",
+        "whyTheyWin": "New York Liberty are projected to win because Los Angeles Sparks (8-8, 50.0%) have outplayed New York Liberty (11-6, 64.7%) across the full season.; Los Angeles Sparks are 3-6 at home while New York Liberty are 5-2 on the road.; Los Angeles Sparks missing or limited players: Cameron Brink (Out).",
         "reasons": [
           {
             "title": "Better season record",
-            "detail": "Minnesota Lynx (13-3, 81.2%) have outplayed Washington Mystics (7-7, 50.0%) across the full season.",
+            "detail": "Los Angeles Sparks (8-8, 50.0%) have outplayed New York Liberty (11-6, 64.7%) across the full season.",
             "impact": "high",
-            "favors": "home"
+            "favors": "away"
           },
           {
             "title": "Favorable home/road split",
-            "detail": "Minnesota Lynx are 6-2 at home while Washington Mystics are 5-4 on the road.",
+            "detail": "Los Angeles Sparks are 3-6 at home while New York Liberty are 5-2 on the road.",
             "impact": "medium",
-            "favors": "home"
+            "favors": "away"
           },
           {
-            "title": "Home-field advantage",
-            "detail": "Minnesota Lynx have home-court advantage at Target Center.",
-            "impact": "low",
-            "favors": "home"
+            "title": "Opponent injury issues",
+            "detail": "Los Angeles Sparks missing or limited players: Cameron Brink (Out).",
+            "impact": "medium",
+            "favors": "away",
+            "source": "ESPN"
+          },
+          {
+            "title": "Injury advantage",
+            "detail": "Los Angeles Sparks have more notable injuries (Kate Martin (Day-To-Day), Cameron Brink (Out)) than New York Liberty (none listed).",
+            "impact": "medium",
+            "favors": "away",
+            "source": "ESPN"
           }
         ],
         "factors": [
           {
             "label": "Season record",
-            "detail": "Minnesota Lynx 13-3 vs Washington Mystics 7-7",
-            "edge": "home"
+            "detail": "Los Angeles Sparks 8-8 vs New York Liberty 11-6",
+            "edge": "away"
           },
           {
             "label": "Home/road splits",
-            "detail": "Home 6-2 vs away 5-4",
-            "edge": "home"
+            "detail": "Home 3-6 vs away 5-2",
+            "edge": "away"
           },
           {
             "label": "Home-field advantage",
@@ -1761,18 +1535,18 @@
           },
           {
             "label": "Injury impact",
-            "detail": "Weighted injury load: home 8.0 vs away 1.6",
+            "detail": "Weighted injury load: home 1.6 vs away 0.0",
             "edge": "away"
           },
           {
-            "label": "Schedule fatigue",
-            "detail": "Home B2B=True \u00b7 Away B2B=False",
-            "edge": "away"
+            "label": "Rest days",
+            "detail": "Home 3 vs away 2 days rest",
+            "edge": "home"
           },
           {
             "label": "Model probability",
-            "detail": "Data-driven estimate 58.6% home / 41.4% away",
-            "edge": "home"
+            "detail": "Data-driven estimate 21.2% home / 78.8% away",
+            "edge": "away"
           }
         ],
         "dataSources": [
@@ -1789,24 +1563,24 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.5860031176799294,
-            "away": 0.4139968823200706,
+            "home": 0.21170577427081527,
+            "away": 0.7882942257291847,
             "draw": null,
-            "homePct": 58.6,
-            "awayPct": 41.4,
+            "homePct": 21.2,
+            "awayPct": 78.8,
             "drawPct": null,
             "components": [
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 58.6,
+                "homePct": 21.2,
                 "weightPct": 100.0
               }
             ]
           },
           "pick": {
-            "homePct": 57.6,
-            "awayPct": 42.4,
+            "homePct": 29.2,
+            "awayPct": 70.8,
             "drawPct": null,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
@@ -1816,38 +1590,38 @@
         },
         "teamProbabilities": {
           "home": {
-            "truePct": 58.6,
+            "truePct": 21.2,
             "impliedPct": null,
-            "blendedPct": 57.6,
+            "blendedPct": 29.2,
             "edgePct": null,
             "edgeLabel": null
           },
           "away": {
-            "truePct": 41.4,
+            "truePct": 78.8,
             "impliedPct": null,
-            "blendedPct": 42.4,
+            "blendedPct": 70.8,
             "edgePct": null,
             "edgeLabel": null
           }
         },
         "features": {
           "league": "wnba",
-          "recordDiff": 0.3125,
-          "splitDiff": 0.1944,
+          "recordDiff": -0.1471,
+          "splitDiff": -0.381,
           "homePower": null,
           "awayPower": null,
-          "homeInjuryLoad": 8.05,
-          "awayInjuryLoad": 1.61,
-          "homeRest": 1,
-          "awayRest": 1,
-          "homeBackToBack": true,
+          "homeInjuryLoad": 1.61,
+          "awayInjuryLoad": 0,
+          "homeRest": 3,
+          "awayRest": 2,
+          "homeBackToBack": false,
           "awayBackToBack": false,
           "impliedHome": null,
           "impliedAway": null,
-          "trueHome": 58.6,
-          "trueAway": 41.4,
-          "confidence": 57.6,
-          "predictedSide": "home",
+          "trueHome": 21.2,
+          "trueAway": 78.8,
+          "confidence": 70.8,
+          "predictedSide": "away",
           "hasLineup": true,
           "dataCoverage": {
             "lineup": true,
@@ -1866,10 +1640,10 @@
           }
         }
       },
-      "predictionRank": 3
+      "predictionRank": 2
     }
   ],
-  "fetchedAt": "2026-06-22T00:08:34.143292+00:00",
+  "fetchedAt": "2026-06-24T00:04:13.198397+00:00",
   "scheduleTimezone": "America/New_York",
-  "defaultScheduleDate": "2026-06-21"
+  "defaultScheduleDate": "2026-06-23"
 }

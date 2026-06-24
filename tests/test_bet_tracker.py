@@ -5,6 +5,7 @@ from __future__ import annotations
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from accuracy_tracker import (
     american_odds_profit,
@@ -89,7 +90,9 @@ class BetTrackerTests(unittest.TestCase):
                     }
                 ],
             )
-            accuracy = grade_predictions(data_dir, verify_ssl=True)
+            with patch("accuracy_tracker.fetch_scoreboard", return_value={"events": []}):
+                with patch("accuracy_tracker.parse_scoreboard", return_value=[]):
+                    accuracy = grade_predictions(data_dir, verify_ssl=True)
             self.assertIn("picksByEventId", accuracy)
             self.assertIn("pendingPicks", accuracy)
             self.assertIn("summary", accuracy)

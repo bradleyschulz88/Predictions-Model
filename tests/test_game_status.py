@@ -2,11 +2,22 @@
 
 from __future__ import annotations
 
+import json
 import unittest
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from unittest.mock import patch
 
 from espn_client import fetch_scoreboard, parse_scoreboard
 from game_status import normalize_espn_status
+
+FIXTURES = Path(__file__).resolve().parent / "fixtures"
+STATUS_SCOREBOARD_FIXTURE = FIXTURES / "espn_scoreboard_20260618_status.json"
+
+
+def _load_status_scoreboard() -> dict:
+    with open(STATUS_SCOREBOARD_FIXTURE, encoding="utf-8") as handle:
+        return json.load(handle)
 
 
 class GameStatusTests(unittest.TestCase):
@@ -104,7 +115,8 @@ class GameStatusTests(unittest.TestCase):
         self.assertTrue(flags["isVoided"])
         self.assertEqual(flags["gameStatusText"], "Washed out")
 
-    def test_chicago_white_sox_fixture_parses_from_espn(self) -> None:
+    @patch("tests.test_game_status.fetch_scoreboard", return_value=_load_status_scoreboard())
+    def test_chicago_white_sox_fixture_parses_from_espn(self, _mock_fetch) -> None:
         scoreboard = fetch_scoreboard("mlb", "2026-06-18", verify_ssl=False)
         games = parse_scoreboard(scoreboard, league="mlb")
         game = next(g for g in games if g["eventId"] == "401815803")
@@ -129,7 +141,8 @@ class GameStatusTests(unittest.TestCase):
         )
         self.assertTrue(flags["isLive"])
 
-    def test_live_mlb_fixtures_from_espn(self) -> None:
+    @patch("tests.test_game_status.fetch_scoreboard", return_value=_load_status_scoreboard())
+    def test_live_mlb_fixtures_from_espn(self, _mock_fetch) -> None:
         scoreboard = fetch_scoreboard("mlb", "2026-06-18", verify_ssl=False)
         games = parse_scoreboard(scoreboard, league="mlb")
         by_matchup = {game["matchup"]: game for game in games}

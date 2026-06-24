@@ -60,10 +60,10 @@
       "statusType": "STATUS_SCHEDULED",
       "venueName": "Gainbridge Fieldhouse",
       "broadcast": "USA Net, WTHR Channel 13, Arizona's Family 3TV, Merc+",
-      "awayRecord": "5-12",
-      "homeRecord": "9-7",
-      "awayRoadRecord": "3-6",
-      "homeHomeRecord": "6-3",
+      "awayRecord": "5-13",
+      "homeRecord": "10-7",
+      "awayRoadRecord": "3-7",
+      "homeHomeRecord": "7-3",
       "awayScore": "0",
       "homeScore": "0",
       "isLive": false,
@@ -81,23 +81,18 @@
         "PointspreadDataOpeningAndLatestOddsDataView"
       ],
       "enrichment": {
-        "espnPredictorHome": 69.4,
-        "espnPredictorAway": 30.6,
+        "espnPredictorHome": 69.7,
+        "espnPredictorAway": 30.3,
         "homeLastFive": {
           "record": "3-2",
           "results": [
             "W",
             "W",
-            "W",
             "L",
-            "L"
+            "L",
+            "W"
           ],
           "games": [
-            {
-              "result": "W",
-              "score": "114-106 OT",
-              "opponent": "Chicago Sky"
-            },
             {
               "result": "W",
               "score": "85-75",
@@ -117,6 +112,11 @@
               "result": "L",
               "score": "113-96",
               "opponent": "Atlanta Dream"
+            },
+            {
+              "result": "W",
+              "score": "86-77",
+              "opponent": "Phoenix Mercury"
             }
           ]
         },
@@ -126,15 +126,10 @@
             "L",
             "L",
             "L",
-            "L",
-            "W"
+            "W",
+            "L"
           ],
           "games": [
-            {
-              "result": "L",
-              "score": "87-81",
-              "opponent": "Golden State Valkyries"
-            },
             {
               "result": "L",
               "score": "85-70",
@@ -154,13 +149,18 @@
               "result": "W",
               "score": "93-73",
               "opponent": "Seattle Storm"
+            },
+            {
+              "result": "L",
+              "score": "86-77",
+              "opponent": "Indiana Fever"
             }
           ]
         },
         "seasonSeries": {
           "title": "Regular Season Series",
-          "summary": "Series starts 6/22",
-          "seriesScore": "0-0"
+          "summary": "IND leads series 1-0",
+          "seriesScore": "1-0"
         },
         "weather": null,
         "homeInjuries": [
@@ -168,15 +168,21 @@
             "player": "Caitlin Clark",
             "status": "Day-To-Day",
             "detail": "Back",
-            "returnDate": "2026-06-22"
+            "returnDate": "2026-06-24"
           }
         ],
         "awayInjuries": [
           {
+            "player": "Natasha Mack",
+            "status": "Day-To-Day",
+            "detail": "Foot",
+            "returnDate": "2026-06-24"
+          },
+          {
             "player": "Monique Akoa Makani",
             "status": "Out",
             "detail": "Hamstring (Left)",
-            "returnDate": "2026-06-24"
+            "returnDate": "2026-06-27"
           },
           {
             "player": "Jovana Nogic",
@@ -197,7 +203,7 @@
             "player": "Monique Akoa Makani",
             "status": "Out",
             "detail": "Hamstring (Left)",
-            "returnDate": "2026-06-24"
+            "returnDate": "2026-06-27"
           },
           {
             "player": "Jovana Nogic",
@@ -216,6 +222,7 @@
           "Caitlin Clark (Day-To-Day)"
         ],
         "awayKeyInjuries": [
+          "Natasha Mack (Day-To-Day)",
           "Monique Akoa Makani (Out)",
           "Jovana Nogic (Out)",
           "Sami Whitcomb (Out)"
@@ -228,7 +235,7 @@
             {
               "name": "Caitlin Clark",
               "position": "Points",
-              "statLine": "21.1"
+              "statLine": "21.3"
             },
             {
               "name": "Aliyah Boston",
@@ -245,7 +252,7 @@
             {
               "name": "Kahleah Copper",
               "position": "Points",
-              "statLine": "19.1"
+              "statLine": "19.2"
             },
             {
               "name": "Alyssa Thomas",
@@ -255,7 +262,7 @@
             {
               "name": "Natasha Mack",
               "position": "Rebounds",
-              "statLine": "8.4"
+              "statLine": "8.3"
             }
           ]
         },
@@ -276,10 +283,10 @@
             "ESPN standings",
             "ESPN team stats"
           ],
-          "wins": 9,
+          "wins": 10,
           "losses": 7,
-          "points": 1.0,
-          "goalDifference": 44.0,
+          "points": 1.5,
+          "goalDifference": 53.0,
           "pointsPerGame": null,
           "goalsAgainstPerGame": null,
           "battingAvg": null,
@@ -298,9 +305,9 @@
             "ESPN team stats"
           ],
           "wins": 5,
-          "losses": 12,
-          "points": -3.5,
-          "goalDifference": -59.0,
+          "losses": 13,
+          "points": -4.0,
+          "goalDifference": -68.0,
           "pointsPerGame": null,
           "goalsAgainstPerGame": null,
           "battingAvg": null,
@@ -321,8 +328,8 @@
         "headToHead": {
           "homeSeriesWinPct": null,
           "awaySeriesWinPct": null,
-          "summary": "Series starts 6/22",
-          "seriesScore": "0-0"
+          "summary": "IND leads series 1-0",
+          "seriesScore": "1-0"
         },
         "homeScheduleFlags": {
           "restDays": 1,
@@ -348,7 +355,7 @@
           {
             "name": "Caitlin Clark",
             "position": "Points",
-            "statLine": "21.1"
+            "statLine": "21.3"
           },
           {
             "name": "Aliyah Boston",
@@ -365,7 +372,7 @@
           {
             "name": "Kahleah Copper",
             "position": "Points",
-            "statLine": "19.1"
+            "statLine": "19.2"
           },
           {
             "name": "Alyssa Thomas",
@@ -375,7 +382,7 @@
           {
             "name": "Natasha Mack",
             "position": "Rebounds",
-            "statLine": "8.4"
+            "statLine": "8.3"
           }
         ]
       },
@@ -385,7 +392,7 @@
           "player": "Monique Akoa Makani",
           "status": "Out",
           "detail": "Hamstring (Left)",
-          "returnDate": "2026-06-24"
+          "returnDate": "2026-06-27"
         },
         {
           "player": "Jovana Nogic",
@@ -403,22 +410,22 @@
       "prediction": {
         "predictedWinner": "Indiana Fever",
         "predictedSide": "home",
-        "homeWinPct": 86.2,
-        "awayWinPct": 13.8,
-        "confidence": 86.2,
+        "homeWinPct": 79.8,
+        "awayWinPct": 20.2,
+        "confidence": 79.8,
         "confidenceLabel": "Strong pick",
         "outcomeLabel": "Indiana Fever to win",
-        "whyTheyWin": "Indiana Fever are projected to win because Indiana Fever (9-7, 56.2%) have outplayed Phoenix Mercury (5-12, 29.4%) across the full season.; ESPN's model gives Indiana Fever a 69.4% chance and Phoenix Mercury a 30.6% chance.; Composite rating favors Indiana Fever: 0.600 vs 0.200 (ESPN + MLB.com + form).",
+        "whyTheyWin": "Indiana Fever are projected to win because Indiana Fever (10-7, 58.8%) have outplayed Phoenix Mercury (5-13, 27.8%) across the full season.; ESPN's model gives Indiana Fever a 69.7% chance and Phoenix Mercury a 30.3% chance.; Composite rating favors Indiana Fever: 0.600 vs 0.200 (ESPN + MLB.com + form).",
         "reasons": [
           {
             "title": "Better season record",
-            "detail": "Indiana Fever (9-7, 56.2%) have outplayed Phoenix Mercury (5-12, 29.4%) across the full season.",
+            "detail": "Indiana Fever (10-7, 58.8%) have outplayed Phoenix Mercury (5-13, 27.8%) across the full season.",
             "impact": "high",
             "favors": "home"
           },
           {
             "title": "ESPN Matchup Predictor agrees",
-            "detail": "ESPN's model gives Indiana Fever a 69.4% chance and Phoenix Mercury a 30.6% chance.",
+            "detail": "ESPN's model gives Indiana Fever a 69.7% chance and Phoenix Mercury a 30.3% chance.",
             "impact": "high",
             "favors": "home",
             "source": "ESPN"
@@ -432,13 +439,13 @@
           },
           {
             "title": "Favorable home/road split",
-            "detail": "Indiana Fever are 6-3 at home while Phoenix Mercury are 3-6 on the road.",
+            "detail": "Indiana Fever are 7-3 at home while Phoenix Mercury are 3-7 on the road.",
             "impact": "medium",
             "favors": "home"
           },
           {
             "title": "Recent form trending up",
-            "detail": "Indiana Fever are 3-2 in their last five (W-W-W-L-L) while Phoenix Mercury are 1-4.",
+            "detail": "Indiana Fever are 3-2 in their last five (W-W-L-L-W) while Phoenix Mercury are 1-4.",
             "impact": "medium",
             "favors": "home",
             "source": "ESPN"
@@ -452,7 +459,7 @@
           },
           {
             "title": "Injury advantage",
-            "detail": "Phoenix Mercury have more notable injuries (Monique Akoa Makani (Out), Jovana Nogic (Out), Sami Whitcomb (Out)) than Indiana Fever (Caitlin Clark (Day-To-Day)).",
+            "detail": "Phoenix Mercury have more notable injuries (Natasha Mack (Day-To-Day), Monique Akoa Makani (Out), Jovana Nogic (Out)) than Indiana Fever (Caitlin Clark (Day-To-Day)).",
             "impact": "medium",
             "favors": "home",
             "source": "ESPN"
@@ -467,12 +474,12 @@
         "factors": [
           {
             "label": "Season record",
-            "detail": "Indiana Fever 9-7 vs Phoenix Mercury 5-12",
+            "detail": "Indiana Fever 10-7 vs Phoenix Mercury 5-13",
             "edge": "home"
           },
           {
             "label": "Home/road splits",
-            "detail": "Home 6-3 vs away 3-6",
+            "detail": "Home 7-3 vs away 3-7",
             "edge": "home"
           },
           {
@@ -491,18 +498,23 @@
             "edge": "home"
           },
           {
+            "label": "Lineup quality",
+            "detail": "Confirmed lineup strength vs opponent",
+            "edge": "away"
+          },
+          {
             "label": "Advanced team profile",
             "detail": "Power 0.600 vs 0.200 (ESPN/MLB.com)",
             "edge": "home"
           },
           {
             "label": "ESPN predictor",
-            "detail": "69.4% home / 30.6% away",
+            "detail": "69.7% home / 30.3% away",
             "edge": "home"
           },
           {
             "label": "Model probability",
-            "detail": "Data-driven estimate 91.1% home / 8.9% away",
+            "detail": "Data-driven estimate 91.3% home / 8.7% away",
             "edge": "home"
           }
         ],
@@ -521,30 +533,30 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.9113962061026956,
-            "away": 0.08860379389730444,
+            "home": 0.9132753039696283,
+            "away": 0.0867246960303717,
             "draw": null,
-            "homePct": 91.1,
-            "awayPct": 8.9,
+            "homePct": 91.3,
+            "awayPct": 8.7,
             "drawPct": null,
             "components": [
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 98.7,
+                "homePct": 98.9,
                 "weightPct": 74.1
               },
               {
                 "source": "ESPN Matchup Predictor",
-                "detail": "69.4% / 30.6%",
-                "homePct": 69.4,
+                "detail": "69.7% / 30.3%",
+                "homePct": 69.7,
                 "weightPct": 25.9
               }
             ]
           },
           "pick": {
-            "homePct": 86.2,
-            "awayPct": 13.8,
+            "homePct": 79.8,
+            "awayPct": 20.2,
             "drawPct": null,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
@@ -554,24 +566,24 @@
         },
         "teamProbabilities": {
           "home": {
-            "truePct": 91.1,
+            "truePct": 91.3,
             "impliedPct": null,
-            "blendedPct": 86.2,
+            "blendedPct": 79.8,
             "edgePct": null,
             "edgeLabel": null
           },
           "away": {
-            "truePct": 8.9,
+            "truePct": 8.7,
             "impliedPct": null,
-            "blendedPct": 13.8,
+            "blendedPct": 20.2,
             "edgePct": null,
             "edgeLabel": null
           }
         },
         "features": {
           "league": "wnba",
-          "recordDiff": 0.2684,
-          "splitDiff": 0.3333,
+          "recordDiff": 0.3105,
+          "splitDiff": 0.4,
           "homePower": 0.6,
           "awayPower": 0.20000000000000004,
           "homeInjuryLoad": 0,
@@ -582,9 +594,9 @@
           "awayBackToBack": true,
           "impliedHome": null,
           "impliedAway": null,
-          "trueHome": 91.1,
-          "trueAway": 8.9,
-          "confidence": 86.2,
+          "trueHome": 91.3,
+          "trueAway": 8.7,
+          "confidence": 79.8,
           "predictedSide": "home",
           "hasLineup": true,
           "dataCoverage": {
@@ -609,6 +621,352 @@
     {
       "league": "wnba",
       "leagueLabel": "WNBA Basketball",
+      "eventId": "401857018",
+      "startDate": "2026-06-24T23:30Z",
+      "awayTeam": "Minnesota Lynx",
+      "homeTeam": "Washington Mystics",
+      "matchup": "Minnesota Lynx @ Washington Mystics",
+      "gameStatusText": "Scheduled",
+      "gameStatusDetail": "Wed, June 24th at 7:30 PM EDT",
+      "statusType": "STATUS_SCHEDULED",
+      "venueName": "CareFirst Arena",
+      "broadcast": "WNBA League Pass, Victory+ MIN, MNMT",
+      "awayRecord": "13-4",
+      "homeRecord": "8-7",
+      "awayRoadRecord": "7-1",
+      "homeHomeRecord": "2-3",
+      "awayScore": "0",
+      "homeScore": "0",
+      "isLive": false,
+      "isFinal": false,
+      "isScheduled": true,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 0,
+      "source": "espn",
+      "viewTypes": [
+        "PointspreadDataOpeningAndLatestOddsDataView"
+      ],
+      "enrichment": {
+        "espnPredictorHome": 36.9,
+        "espnPredictorAway": 63.1,
+        "homeLastFive": {
+          "record": "4-1",
+          "results": [
+            "W",
+            "L",
+            "W",
+            "W",
+            "W"
+          ],
+          "games": [
+            {
+              "result": "W",
+              "score": "86-85",
+              "opponent": "Toronto Tempo"
+            },
+            {
+              "result": "L",
+              "score": "86-64",
+              "opponent": "New York Liberty"
+            },
+            {
+              "result": "W",
+              "score": "88-81",
+              "opponent": "Connecticut Sun"
+            },
+            {
+              "result": "W",
+              "score": "86-83",
+              "opponent": "New York Liberty"
+            },
+            {
+              "result": "W",
+              "score": "84-79",
+              "opponent": "Minnesota Lynx"
+            }
+          ]
+        },
+        "awayLastFive": {
+          "record": "3-2",
+          "results": [
+            "L",
+            "W",
+            "W",
+            "W",
+            "L"
+          ],
+          "games": [
+            {
+              "result": "L",
+              "score": "100-97",
+              "opponent": "Las Vegas Aces"
+            },
+            {
+              "result": "W",
+              "score": "107-74",
+              "opponent": "Portland Fire"
+            },
+            {
+              "result": "W",
+              "score": "99-83",
+              "opponent": "Los Angeles Sparks"
+            },
+            {
+              "result": "W",
+              "score": "81-75",
+              "opponent": "Golden State Valkyries"
+            },
+            {
+              "result": "L",
+              "score": "84-79",
+              "opponent": "Washington Mystics"
+            }
+          ]
+        },
+        "seasonSeries": {
+          "title": "Regular Season Series",
+          "summary": "WSH leads series 1-0",
+          "seriesScore": "1-0"
+        },
+        "weather": null,
+        "homeInjuries": [],
+        "awayInjuries": [
+          {
+            "player": "Napheesa Collier",
+            "status": "Out",
+            "detail": "Sprain (Left)",
+            "returnDate": "2026-07-03"
+          },
+          {
+            "player": "Dorka Juhasz",
+            "status": "Out",
+            "detail": "Sprain (Right)",
+            "returnDate": "2026-07-03"
+          },
+          {
+            "player": "Emma Cechova",
+            "status": "Out",
+            "detail": "Surgery (Right)",
+            "returnDate": "2027-05-01"
+          }
+        ],
+        "homeMajorInjuries": [],
+        "awayMajorInjuries": [
+          {
+            "player": "Napheesa Collier",
+            "status": "Out",
+            "detail": "Sprain (Left)",
+            "returnDate": "2026-07-03"
+          },
+          {
+            "player": "Dorka Juhasz",
+            "status": "Out",
+            "detail": "Sprain (Right)",
+            "returnDate": "2026-07-03"
+          },
+          {
+            "player": "Emma Cechova",
+            "status": "Out",
+            "detail": "Surgery (Right)",
+            "returnDate": "2027-05-01"
+          }
+        ],
+        "homeKeyInjuries": [],
+        "awayKeyInjuries": [
+          "Napheesa Collier (Out)",
+          "Dorka Juhasz (Out)",
+          "Emma Cechova (Out)"
+        ],
+        "homeLineup": {
+          "status": "projected",
+          "source": "espn_leaders",
+          "note": "Key players not posted yet. Key players to watch:",
+          "batters": [
+            {
+              "name": "Sonia Citron",
+              "position": "Points",
+              "statLine": "17.6"
+            },
+            {
+              "name": "Georgia Amoore",
+              "position": "Assists",
+              "statLine": "4.1"
+            },
+            {
+              "name": "Kiki Iriafen",
+              "position": "Rebounds",
+              "statLine": "8.5"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "projected",
+          "source": "espn_leaders",
+          "note": "Key players not posted yet. Key players to watch:",
+          "batters": [
+            {
+              "name": "Olivia Miles",
+              "position": "Points",
+              "statLine": "18.5"
+            },
+            {
+              "name": "Natasha Howard",
+              "position": "Rebounds",
+              "statLine": "7.4"
+            }
+          ]
+        },
+        "espnOdds": [],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN Matchup Predictor",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 8,
+          "losses": 7,
+          "points": 0.5,
+          "goalDifference": -48.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": 0.8000000000000002,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "awayAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 13,
+          "losses": 4,
+          "points": 4.5,
+          "goalDifference": 202.0,
+          "pointsPerGame": null,
+          "goalsAgainstPerGame": null,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": 0.6,
+          "opsProxy": null,
+          "winPct": null
+        },
+        "restDays": {
+          "home": 3,
+          "away": 3
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": "WSH leads series 1-0",
+          "seriesScore": "1-0"
+        },
+        "homeScheduleFlags": {
+          "restDays": 3,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 2
+        },
+        "awayScheduleFlags": {
+          "restDays": 3,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 2
+        },
+        "leagueMetrics": {
+          "league": "wnba"
+        }
+      },
+      "homeLineup": {
+        "status": "projected",
+        "source": "espn_leaders",
+        "note": "Key players not posted yet. Key players to watch:",
+        "batters": [
+          {
+            "name": "Sonia Citron",
+            "position": "Points",
+            "statLine": "17.6"
+          },
+          {
+            "name": "Georgia Amoore",
+            "position": "Assists",
+            "statLine": "4.1"
+          },
+          {
+            "name": "Kiki Iriafen",
+            "position": "Rebounds",
+            "statLine": "8.5"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "projected",
+        "source": "espn_leaders",
+        "note": "Key players not posted yet. Key players to watch:",
+        "batters": [
+          {
+            "name": "Olivia Miles",
+            "position": "Points",
+            "statLine": "18.5"
+          },
+          {
+            "name": "Natasha Howard",
+            "position": "Rebounds",
+            "statLine": "7.4"
+          }
+        ]
+      },
+      "homeMajorInjuries": [],
+      "awayMajorInjuries": [
+        {
+          "player": "Napheesa Collier",
+          "status": "Out",
+          "detail": "Sprain (Left)",
+          "returnDate": "2026-07-03"
+        },
+        {
+          "player": "Dorka Juhasz",
+          "status": "Out",
+          "detail": "Sprain (Right)",
+          "returnDate": "2026-07-03"
+        },
+        {
+          "player": "Emma Cechova",
+          "status": "Out",
+          "detail": "Surgery (Right)",
+          "returnDate": "2027-05-01"
+        }
+      ],
+      "prediction": null
+    },
+    {
+      "league": "wnba",
+      "leagueLabel": "WNBA Basketball",
       "eventId": "401857019",
       "startDate": "2026-06-25T00:00Z",
       "awayTeam": "Portland Fire",
@@ -620,7 +978,7 @@
       "venueName": "Wintrust Arena",
       "broadcast": "WNBA League Pass, Fox 12 Plus, CW26",
       "awayRecord": "8-9",
-      "homeRecord": "4-11",
+      "homeRecord": "4-12",
       "awayRoadRecord": "2-4",
       "homeHomeRecord": "1-6",
       "awayScore": "0",
@@ -636,10 +994,12 @@
       "isWashedOut": false,
       "attendance": 0,
       "source": "espn",
-      "viewTypes": [],
+      "viewTypes": [
+        "PointspreadDataOpeningAndLatestOddsDataView"
+      ],
       "enrichment": {
-        "espnPredictorHome": 70.5,
-        "espnPredictorAway": 29.5,
+        "espnPredictorHome": 69.0,
+        "espnPredictorAway": 30.9,
         "homeLastFive": {
           "record": "0-5",
           "results": [
@@ -650,11 +1010,6 @@
             "L"
           ],
           "games": [
-            {
-              "result": "L",
-              "score": "85-68",
-              "opponent": "Toronto Tempo"
-            },
             {
               "result": "L",
               "score": "82-75",
@@ -674,6 +1029,11 @@
               "result": "L",
               "score": "93-92",
               "opponent": "Dallas Wings"
+            },
+            {
+              "result": "L",
+              "score": "92-63",
+              "opponent": "Connecticut Sun"
             }
           ]
         },
@@ -742,9 +1102,15 @@
         ],
         "awayInjuries": [
           {
-            "player": "Jordan Harrison",
-            "status": "Out",
-            "detail": "Coach's Decision",
+            "player": "Karlie Samuelson",
+            "status": "Day-To-Day",
+            "detail": "Foot",
+            "returnDate": "2026-06-24"
+          },
+          {
+            "player": "Carla Leite",
+            "status": "Day-To-Day",
+            "detail": "Sprain (Right)",
             "returnDate": "2026-06-24"
           }
         ],
@@ -768,21 +1134,15 @@
             "returnDate": "2027-05-01"
           }
         ],
-        "awayMajorInjuries": [
-          {
-            "player": "Jordan Harrison",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          }
-        ],
+        "awayMajorInjuries": [],
         "homeKeyInjuries": [
           "Courtney Vandersloot (Out)",
           "DiJonai Carrington (Out)",
           "Rickea Jackson (Out)"
         ],
         "awayKeyInjuries": [
-          "Jordan Harrison (Out)"
+          "Karlie Samuelson (Day-To-Day)",
+          "Carla Leite (Day-To-Day)"
         ],
         "homeLineup": {
           "status": "projected",
@@ -792,12 +1152,12 @@
             {
               "name": "Skylar Diggins",
               "position": "Points",
-              "statLine": "15.4"
+              "statLine": "14.5"
             },
             {
               "name": "Kamilla Cardoso",
               "position": "Rebounds",
-              "statLine": "8.3"
+              "statLine": "8.7"
             }
           ]
         },
@@ -836,9 +1196,9 @@
             "ESPN team stats"
           ],
           "wins": 4,
-          "losses": 11,
-          "points": -3.5,
-          "goalDifference": -75.0,
+          "losses": 12,
+          "points": -4.0,
+          "goalDifference": -104.0,
           "pointsPerGame": null,
           "goalsAgainstPerGame": null,
           "battingAvg": null,
@@ -910,12 +1270,12 @@
           {
             "name": "Skylar Diggins",
             "position": "Points",
-            "statLine": "15.4"
+            "statLine": "14.5"
           },
           {
             "name": "Kamilla Cardoso",
             "position": "Rebounds",
-            "statLine": "8.3"
+            "statLine": "8.7"
           }
         ]
       },
@@ -956,27 +1316,20 @@
           "returnDate": "2027-05-01"
         }
       ],
-      "awayMajorInjuries": [
-        {
-          "player": "Jordan Harrison",
-          "status": "Out",
-          "detail": "Coach's Decision",
-          "returnDate": "2026-06-24"
-        }
-      ],
+      "awayMajorInjuries": [],
       "prediction": {
         "predictedWinner": "Portland Fire",
         "predictedSide": "away",
-        "homeWinPct": 24.2,
-        "awayWinPct": 75.8,
-        "confidence": 75.8,
+        "homeWinPct": 28.1,
+        "awayWinPct": 71.9,
+        "confidence": 71.9,
         "confidenceLabel": "Strong pick",
         "outcomeLabel": "Portland Fire to win",
-        "whyTheyWin": "Portland Fire are projected to win because Chicago Sky (4-11, 26.7%) have outplayed Portland Fire (8-9, 47.1%) across the full season.; Composite rating favors Portland Fire: 0.000 vs 0.400 (ESPN + MLB.com + form).; Chicago Sky are 1-6 at home while Portland Fire are 2-4 on the road.",
+        "whyTheyWin": "Portland Fire are projected to win because Chicago Sky (4-12, 25.0%) have outplayed Portland Fire (8-9, 47.1%) across the full season.; Composite rating favors Portland Fire: 0.000 vs 0.400 (ESPN + MLB.com + form).; Chicago Sky are 1-6 at home while Portland Fire are 2-4 on the road.",
         "reasons": [
           {
             "title": "Better season record",
-            "detail": "Chicago Sky (4-11, 26.7%) have outplayed Portland Fire (8-9, 47.1%) across the full season.",
+            "detail": "Chicago Sky (4-12, 25.0%) have outplayed Portland Fire (8-9, 47.1%) across the full season.",
             "impact": "high",
             "favors": "away"
           },
@@ -1008,13 +1361,6 @@
             "source": "ESPN"
           },
           {
-            "title": "Injury advantage",
-            "detail": "Chicago Sky have more notable injuries (Courtney Vandersloot (Out), DiJonai Carrington (Out), Rickea Jackson (Out)) than Portland Fire (Jordan Harrison (Out)).",
-            "impact": "medium",
-            "favors": "away",
-            "source": "ESPN"
-          },
-          {
             "title": "Rest advantage",
             "detail": "Portland Fire have 6 days rest vs 2 for Chicago Sky.",
             "impact": "low",
@@ -1025,7 +1371,7 @@
         "factors": [
           {
             "label": "Season record",
-            "detail": "Chicago Sky 4-11 vs Portland Fire 8-9",
+            "detail": "Chicago Sky 4-12 vs Portland Fire 8-9",
             "edge": "away"
           },
           {
@@ -1045,7 +1391,7 @@
           },
           {
             "label": "Injury impact",
-            "detail": "Weighted injury load: home 4.8 vs away 1.6",
+            "detail": "Weighted injury load: home 4.8 vs away 0.0",
             "edge": "away"
           },
           {
@@ -1060,12 +1406,12 @@
           },
           {
             "label": "ESPN predictor",
-            "detail": "70.5% home / 29.5% away",
+            "detail": "69.0% home / 30.9% away",
             "edge": "home"
           },
           {
             "label": "Model probability",
-            "detail": "Data-driven estimate 20.7% home / 79.3% away",
+            "detail": "Data-driven estimate 19.6% home / 80.4% away",
             "edge": "away"
           }
         ],
@@ -1084,30 +1430,30 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.20671674268769455,
-            "away": 0.7932832573123054,
+            "home": 0.19621464968621147,
+            "away": 0.8037853503137885,
             "draw": null,
-            "homePct": 20.7,
-            "awayPct": 79.3,
+            "homePct": 19.6,
+            "awayPct": 80.4,
             "drawPct": null,
             "components": [
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 3.2,
+                "homePct": 2.3,
                 "weightPct": 74.1
               },
               {
                 "source": "ESPN Matchup Predictor",
-                "detail": "70.5% / 29.5%",
-                "homePct": 70.5,
+                "detail": "69.0% / 30.9%",
+                "homePct": 69.1,
                 "weightPct": 25.9
               }
             ]
           },
           "pick": {
-            "homePct": 24.2,
-            "awayPct": 75.8,
+            "homePct": 28.1,
+            "awayPct": 71.9,
             "drawPct": null,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
@@ -1117,37 +1463,37 @@
         },
         "teamProbabilities": {
           "home": {
-            "truePct": 20.7,
+            "truePct": 19.6,
             "impliedPct": null,
-            "blendedPct": 24.2,
+            "blendedPct": 28.1,
             "edgePct": null,
             "edgeLabel": null
           },
           "away": {
-            "truePct": 79.3,
+            "truePct": 80.4,
             "impliedPct": null,
-            "blendedPct": 75.8,
+            "blendedPct": 71.9,
             "edgePct": null,
             "edgeLabel": null
           }
         },
         "features": {
           "league": "wnba",
-          "recordDiff": -0.2039,
+          "recordDiff": -0.2206,
           "splitDiff": -0.1905,
           "homePower": 0.0,
           "awayPower": 0.4000000000000001,
           "homeInjuryLoad": 4.83,
-          "awayInjuryLoad": 1.61,
+          "awayInjuryLoad": 0,
           "homeRest": 2,
           "awayRest": 6,
           "homeBackToBack": false,
           "awayBackToBack": false,
           "impliedHome": null,
           "impliedAway": null,
-          "trueHome": 20.7,
-          "trueAway": 79.3,
-          "confidence": 75.8,
+          "trueHome": 19.6,
+          "trueAway": 80.4,
+          "confidence": 71.9,
           "predictedSide": "away",
           "hasLineup": true,
           "dataCoverage": {
@@ -1172,595 +1518,6 @@
     {
       "league": "wnba",
       "leagueLabel": "WNBA Basketball",
-      "eventId": "401857018",
-      "startDate": "2026-06-24T23:30Z",
-      "awayTeam": "Minnesota Lynx",
-      "homeTeam": "Washington Mystics",
-      "matchup": "Minnesota Lynx @ Washington Mystics",
-      "gameStatusText": "Scheduled",
-      "gameStatusDetail": "Wed, June 24th at 7:30 PM EDT",
-      "statusType": "STATUS_SCHEDULED",
-      "venueName": "CareFirst Arena",
-      "broadcast": "WNBA League Pass, Victory+ MIN, MNMT",
-      "awayRecord": "13-3",
-      "homeRecord": "7-7",
-      "awayRoadRecord": "7-1",
-      "homeHomeRecord": "2-3",
-      "awayScore": "0",
-      "homeScore": "0",
-      "isLive": false,
-      "isFinal": false,
-      "isScheduled": true,
-      "isPostponed": false,
-      "isCanceled": false,
-      "isSuspended": false,
-      "isDelayed": false,
-      "isVoided": false,
-      "isWashedOut": false,
-      "attendance": 0,
-      "source": "espn",
-      "viewTypes": [],
-      "enrichment": {
-        "espnPredictorHome": 35.8,
-        "espnPredictorAway": 64.2,
-        "homeLastFive": {
-          "record": "3-2",
-          "results": [
-            "L",
-            "W",
-            "L",
-            "W",
-            "W"
-          ],
-          "games": [
-            {
-              "result": "L",
-              "score": "78-76",
-              "opponent": "Indiana Fever"
-            },
-            {
-              "result": "W",
-              "score": "86-85",
-              "opponent": "Toronto Tempo"
-            },
-            {
-              "result": "L",
-              "score": "86-64",
-              "opponent": "New York Liberty"
-            },
-            {
-              "result": "W",
-              "score": "88-81",
-              "opponent": "Connecticut Sun"
-            },
-            {
-              "result": "W",
-              "score": "86-83",
-              "opponent": "New York Liberty"
-            }
-          ]
-        },
-        "awayLastFive": {
-          "record": "4-1",
-          "results": [
-            "W",
-            "L",
-            "W",
-            "W",
-            "W"
-          ],
-          "games": [
-            {
-              "result": "W",
-              "score": "100-76",
-              "opponent": "Dallas Wings"
-            },
-            {
-              "result": "L",
-              "score": "100-97",
-              "opponent": "Las Vegas Aces"
-            },
-            {
-              "result": "W",
-              "score": "107-74",
-              "opponent": "Portland Fire"
-            },
-            {
-              "result": "W",
-              "score": "99-83",
-              "opponent": "Los Angeles Sparks"
-            },
-            {
-              "result": "W",
-              "score": "81-75",
-              "opponent": "Golden State Valkyries"
-            }
-          ]
-        },
-        "seasonSeries": {
-          "title": "Regular Season Series",
-          "summary": "",
-          "seriesScore": "0-0"
-        },
-        "weather": null,
-        "homeInjuries": [
-          {
-            "player": "Darianna Littlepage-Buggs",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          }
-        ],
-        "awayInjuries": [
-          {
-            "player": "Eliska Hamzova",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          },
-          {
-            "player": "Liatu King",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          },
-          {
-            "player": "Napheesa Collier",
-            "status": "Out",
-            "detail": "Sprain (Left)",
-            "returnDate": "2026-07-03"
-          },
-          {
-            "player": "Dorka Juhasz",
-            "status": "Out",
-            "detail": "Sprain (Right)",
-            "returnDate": "2026-07-03"
-          },
-          {
-            "player": "Emma Cechova",
-            "status": "Out",
-            "detail": "Surgery (Right)",
-            "returnDate": "2027-05-01"
-          }
-        ],
-        "homeMajorInjuries": [
-          {
-            "player": "Darianna Littlepage-Buggs",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          }
-        ],
-        "awayMajorInjuries": [
-          {
-            "player": "Eliska Hamzova",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          },
-          {
-            "player": "Liatu King",
-            "status": "Out",
-            "detail": "Coach's Decision",
-            "returnDate": "2026-06-24"
-          },
-          {
-            "player": "Napheesa Collier",
-            "status": "Out",
-            "detail": "Sprain (Left)",
-            "returnDate": "2026-07-03"
-          },
-          {
-            "player": "Dorka Juhasz",
-            "status": "Out",
-            "detail": "Sprain (Right)",
-            "returnDate": "2026-07-03"
-          },
-          {
-            "player": "Emma Cechova",
-            "status": "Out",
-            "detail": "Surgery (Right)",
-            "returnDate": "2027-05-01"
-          }
-        ],
-        "homeKeyInjuries": [
-          "Darianna Littlepage-Buggs (Out)"
-        ],
-        "awayKeyInjuries": [
-          "Eliska Hamzova (Out)",
-          "Liatu King (Out)",
-          "Napheesa Collier (Out)",
-          "Dorka Juhasz (Out)",
-          "Emma Cechova (Out)"
-        ],
-        "homeLineup": {
-          "status": "projected",
-          "source": "espn_leaders",
-          "note": "Key players not posted yet. Key players to watch:",
-          "batters": [
-            {
-              "name": "Sonia Citron",
-              "position": "Points",
-              "statLine": "17.3"
-            },
-            {
-              "name": "Georgia Amoore",
-              "position": "Assists",
-              "statLine": "3.9"
-            },
-            {
-              "name": "Kiki Iriafen",
-              "position": "Rebounds",
-              "statLine": "8.6"
-            }
-          ]
-        },
-        "awayLineup": {
-          "status": "projected",
-          "source": "espn_leaders",
-          "note": "Key players not posted yet. Key players to watch:",
-          "batters": [
-            {
-              "name": "Olivia Miles",
-              "position": "Points",
-              "statLine": "18.2"
-            },
-            {
-              "name": "Natasha Howard",
-              "position": "Rebounds",
-              "statLine": "7.5"
-            }
-          ]
-        },
-        "espnOdds": [],
-        "sources": [
-          "Derived schedule metrics",
-          "ESPN Matchup Predictor",
-          "ESPN game summary",
-          "ESPN head-to-head",
-          "ESPN injury report",
-          "ESPN last-five form",
-          "ESPN standings",
-          "ESPN team stats",
-          "Key players"
-        ],
-        "homeAdvanced": {
-          "sources": [
-            "ESPN standings",
-            "ESPN team stats"
-          ],
-          "wins": 7,
-          "losses": 7,
-          "points": 0.0,
-          "goalDifference": -53.0,
-          "pointsPerGame": null,
-          "goalsAgainstPerGame": null,
-          "battingAvg": null,
-          "onBasePct": null,
-          "sluggingPct": null,
-          "era": null,
-          "runsScored": null,
-          "runsAllowed": null,
-          "powerRating": 0.6,
-          "opsProxy": null,
-          "winPct": null
-        },
-        "awayAdvanced": {
-          "sources": [
-            "ESPN standings",
-            "ESPN team stats"
-          ],
-          "wins": 13,
-          "losses": 3,
-          "points": 5.0,
-          "goalDifference": 207.0,
-          "pointsPerGame": null,
-          "goalsAgainstPerGame": null,
-          "battingAvg": null,
-          "onBasePct": null,
-          "sluggingPct": null,
-          "era": null,
-          "runsScored": null,
-          "runsAllowed": null,
-          "powerRating": 0.8000000000000002,
-          "opsProxy": null,
-          "winPct": null
-        },
-        "restDays": {
-          "home": 3,
-          "away": 3
-        },
-        "weatherImpact": null,
-        "headToHead": {
-          "homeSeriesWinPct": null,
-          "awaySeriesWinPct": null,
-          "summary": "",
-          "seriesScore": "0-0"
-        },
-        "homeScheduleFlags": {
-          "restDays": 3,
-          "backToBack": false,
-          "threeInFour": false,
-          "gamesLast4Days": 2
-        },
-        "awayScheduleFlags": {
-          "restDays": 3,
-          "backToBack": false,
-          "threeInFour": false,
-          "gamesLast4Days": 2
-        },
-        "leagueMetrics": {
-          "league": "wnba"
-        }
-      },
-      "homeLineup": {
-        "status": "projected",
-        "source": "espn_leaders",
-        "note": "Key players not posted yet. Key players to watch:",
-        "batters": [
-          {
-            "name": "Sonia Citron",
-            "position": "Points",
-            "statLine": "17.3"
-          },
-          {
-            "name": "Georgia Amoore",
-            "position": "Assists",
-            "statLine": "3.9"
-          },
-          {
-            "name": "Kiki Iriafen",
-            "position": "Rebounds",
-            "statLine": "8.6"
-          }
-        ]
-      },
-      "awayLineup": {
-        "status": "projected",
-        "source": "espn_leaders",
-        "note": "Key players not posted yet. Key players to watch:",
-        "batters": [
-          {
-            "name": "Olivia Miles",
-            "position": "Points",
-            "statLine": "18.2"
-          },
-          {
-            "name": "Natasha Howard",
-            "position": "Rebounds",
-            "statLine": "7.5"
-          }
-        ]
-      },
-      "homeMajorInjuries": [
-        {
-          "player": "Darianna Littlepage-Buggs",
-          "status": "Out",
-          "detail": "Coach's Decision",
-          "returnDate": "2026-06-24"
-        }
-      ],
-      "awayMajorInjuries": [
-        {
-          "player": "Eliska Hamzova",
-          "status": "Out",
-          "detail": "Coach's Decision",
-          "returnDate": "2026-06-24"
-        },
-        {
-          "player": "Liatu King",
-          "status": "Out",
-          "detail": "Coach's Decision",
-          "returnDate": "2026-06-24"
-        },
-        {
-          "player": "Napheesa Collier",
-          "status": "Out",
-          "detail": "Sprain (Left)",
-          "returnDate": "2026-07-03"
-        },
-        {
-          "player": "Dorka Juhasz",
-          "status": "Out",
-          "detail": "Sprain (Right)",
-          "returnDate": "2026-07-03"
-        },
-        {
-          "player": "Emma Cechova",
-          "status": "Out",
-          "detail": "Surgery (Right)",
-          "returnDate": "2027-05-01"
-        }
-      ],
-      "prediction": {
-        "predictedWinner": "Minnesota Lynx",
-        "predictedSide": "away",
-        "homeWinPct": 25.7,
-        "awayWinPct": 74.3,
-        "confidence": 74.3,
-        "confidenceLabel": "Strong pick",
-        "outcomeLabel": "Minnesota Lynx to win",
-        "whyTheyWin": "Minnesota Lynx are projected to win because Washington Mystics (7-7, 50.0%) have outplayed Minnesota Lynx (13-3, 81.2%) across the full season.; ESPN's model gives Washington Mystics a 35.8% chance and Minnesota Lynx a 64.2% chance.; Composite rating favors Minnesota Lynx: 0.600 vs 0.800 (ESPN + MLB.com + form).",
-        "reasons": [
-          {
-            "title": "Better season record",
-            "detail": "Washington Mystics (7-7, 50.0%) have outplayed Minnesota Lynx (13-3, 81.2%) across the full season.",
-            "impact": "high",
-            "favors": "away"
-          },
-          {
-            "title": "ESPN Matchup Predictor agrees",
-            "detail": "ESPN's model gives Washington Mystics a 35.8% chance and Minnesota Lynx a 64.2% chance.",
-            "impact": "high",
-            "favors": "away",
-            "source": "ESPN"
-          },
-          {
-            "title": "Power rating edge",
-            "detail": "Composite rating favors Minnesota Lynx: 0.600 vs 0.800 (ESPN + MLB.com + form).",
-            "impact": "high",
-            "favors": "away",
-            "source": "Multi-source"
-          },
-          {
-            "title": "Favorable home/road split",
-            "detail": "Washington Mystics are 2-3 at home while Minnesota Lynx are 7-1 on the road.",
-            "impact": "medium",
-            "favors": "away"
-          },
-          {
-            "title": "Recent form trending up",
-            "detail": "Minnesota Lynx are 4-1 in their last five (W-L-W-W-W) while Washington Mystics are 3-2.",
-            "impact": "medium",
-            "favors": "away",
-            "source": "ESPN"
-          }
-        ],
-        "factors": [
-          {
-            "label": "Season record",
-            "detail": "Washington Mystics 7-7 vs Minnesota Lynx 13-3",
-            "edge": "away"
-          },
-          {
-            "label": "Home/road splits",
-            "detail": "Home 2-3 vs away 7-1",
-            "edge": "away"
-          },
-          {
-            "label": "Home-field advantage",
-            "detail": "Historical home edge applied",
-            "edge": "home"
-          },
-          {
-            "label": "Last five games",
-            "detail": "Washington Mystics 3-2 vs Minnesota Lynx 4-1",
-            "edge": "away"
-          },
-          {
-            "label": "Injury impact",
-            "detail": "Weighted injury load: home 1.6 vs away 8.0",
-            "edge": "home"
-          },
-          {
-            "label": "Advanced team profile",
-            "detail": "Power 0.600 vs 0.800 (ESPN/MLB.com)",
-            "edge": "away"
-          },
-          {
-            "label": "ESPN predictor",
-            "detail": "35.8% home / 64.2% away",
-            "edge": "away"
-          },
-          {
-            "label": "Model probability",
-            "detail": "Data-driven estimate 22.3% home / 77.7% away",
-            "edge": "away"
-          }
-        ],
-        "dataSources": [
-          "Derived schedule metrics",
-          "ESPN Matchup Predictor",
-          "ESPN game summary",
-          "ESPN head-to-head",
-          "ESPN injury report",
-          "ESPN last-five form",
-          "ESPN scoreboard",
-          "ESPN standings",
-          "ESPN team stats",
-          "Key players",
-          "Probability model"
-        ],
-        "probabilities": {
-          "true": {
-            "home": 0.2234955617885492,
-            "away": 0.7765044382114508,
-            "draw": null,
-            "homePct": 22.3,
-            "awayPct": 77.7,
-            "drawPct": null,
-            "components": [
-              {
-                "source": "Analytics model",
-                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 17.6,
-                "weightPct": 74.1
-              },
-              {
-                "source": "ESPN Matchup Predictor",
-                "detail": "35.8% / 64.2%",
-                "homePct": 35.8,
-                "weightPct": 25.9
-              }
-            ]
-          },
-          "pick": {
-            "homePct": 25.7,
-            "awayPct": 74.3,
-            "drawPct": null,
-            "method": "Model data only (records, form, injuries, advanced stats)"
-          },
-          "implied": {
-            "available": false
-          }
-        },
-        "teamProbabilities": {
-          "home": {
-            "truePct": 22.3,
-            "impliedPct": null,
-            "blendedPct": 25.7,
-            "edgePct": null,
-            "edgeLabel": null
-          },
-          "away": {
-            "truePct": 77.7,
-            "impliedPct": null,
-            "blendedPct": 74.3,
-            "edgePct": null,
-            "edgeLabel": null
-          }
-        },
-        "features": {
-          "league": "wnba",
-          "recordDiff": -0.3125,
-          "splitDiff": -0.475,
-          "homePower": 0.6,
-          "awayPower": 0.8000000000000002,
-          "homeInjuryLoad": 1.61,
-          "awayInjuryLoad": 8.05,
-          "homeRest": 3,
-          "awayRest": 3,
-          "homeBackToBack": false,
-          "awayBackToBack": false,
-          "impliedHome": null,
-          "impliedAway": null,
-          "trueHome": 22.3,
-          "trueAway": 77.7,
-          "confidence": 74.3,
-          "predictedSide": "away",
-          "hasLineup": true,
-          "dataCoverage": {
-            "lineup": true,
-            "injuries": true,
-            "espnPredictor": true,
-            "advancedStats": true,
-            "restData": true,
-            "scheduleFlags": true,
-            "mlbPitching": false,
-            "leagueMetrics": false,
-            "impliedOdds": false
-          },
-          "mlbPitching": null,
-          "leagueMetrics": {
-            "league": "wnba"
-          }
-        }
-      },
-      "predictionRank": 3
-    },
-    {
-      "league": "wnba",
-      "leagueLabel": "WNBA Basketball",
       "eventId": "401857020",
       "startDate": "2026-06-25T02:00Z",
       "awayTeam": "Atlanta Dream",
@@ -1771,7 +1528,7 @@
       "statusType": "STATUS_SCHEDULED",
       "venueName": "Chase Center",
       "broadcast": "USA Net, CNBC, KPIX+, Atlanta News First, Victory+ ATL",
-      "awayRecord": "11-4",
+      "awayRecord": "12-4",
       "homeRecord": "10-7",
       "awayRoadRecord": "6-2",
       "homeHomeRecord": "7-3",
@@ -1788,10 +1545,12 @@
       "isWashedOut": false,
       "attendance": 0,
       "source": "espn",
-      "viewTypes": [],
+      "viewTypes": [
+        "PointspreadDataOpeningAndLatestOddsDataView"
+      ],
       "enrichment": {
-        "espnPredictorHome": 46.6,
-        "espnPredictorAway": 53.4,
+        "espnPredictorHome": 46.1,
+        "espnPredictorAway": 53.9,
         "homeLastFive": {
           "record": "3-2",
           "results": [
@@ -1832,18 +1591,13 @@
         "awayLastFive": {
           "record": "4-1",
           "results": [
-            "W",
             "L",
+            "W",
             "W",
             "W",
             "W"
           ],
           "games": [
-            {
-              "result": "W",
-              "score": "82-75",
-              "opponent": "Chicago Sky"
-            },
             {
               "result": "L",
               "score": "104-90",
@@ -1863,6 +1617,11 @@
               "result": "W",
               "score": "113-96",
               "opponent": "Indiana Fever"
+            },
+            {
+              "result": "W",
+              "score": "94-87",
+              "opponent": "Toronto Tempo"
             }
           ]
         },
@@ -1876,8 +1635,8 @@
           {
             "player": "Tiffany Hayes",
             "status": "Day-To-Day",
-            "detail": "Head",
-            "returnDate": "2026-06-21"
+            "detail": "Undisclosed",
+            "returnDate": "2026-06-24"
           },
           {
             "player": "Miela Sowah",
@@ -1964,12 +1723,12 @@
             {
               "name": "Gabby Williams",
               "position": "Points",
-              "statLine": "16.2"
+              "statLine": "15.9"
             },
             {
               "name": "Veronica Burton",
               "position": "Assists",
-              "statLine": "5.6"
+              "statLine": "5.4"
             },
             {
               "name": "Kayla Thornton",
@@ -1986,17 +1745,17 @@
             {
               "name": "Allisha Gray",
               "position": "Points",
-              "statLine": "19.6"
+              "statLine": "19.5"
             },
             {
               "name": "Jordin Canada",
               "position": "Assists",
-              "statLine": "7.1"
+              "statLine": "7.4"
             },
             {
               "name": "Angel Reese",
               "position": "Rebounds",
-              "statLine": "11.9"
+              "statLine": "11.8"
             }
           ]
         },
@@ -2038,10 +1797,10 @@
             "ESPN standings",
             "ESPN team stats"
           ],
-          "wins": 11,
+          "wins": 12,
           "losses": 4,
-          "points": 3.5,
-          "goalDifference": 107.0,
+          "points": 4.0,
+          "goalDifference": 114.0,
           "pointsPerGame": null,
           "goalsAgainstPerGame": null,
           "battingAvg": null,
@@ -2092,12 +1851,12 @@
           {
             "name": "Gabby Williams",
             "position": "Points",
-            "statLine": "16.2"
+            "statLine": "15.9"
           },
           {
             "name": "Veronica Burton",
             "position": "Assists",
-            "statLine": "5.6"
+            "statLine": "5.4"
           },
           {
             "name": "Kayla Thornton",
@@ -2114,17 +1873,17 @@
           {
             "name": "Allisha Gray",
             "position": "Points",
-            "statLine": "19.6"
+            "statLine": "19.5"
           },
           {
             "name": "Jordin Canada",
             "position": "Assists",
-            "statLine": "7.1"
+            "statLine": "7.4"
           },
           {
             "name": "Angel Reese",
             "position": "Rebounds",
-            "statLine": "11.9"
+            "statLine": "11.8"
           }
         ]
       },
@@ -2165,22 +1924,22 @@
       "prediction": {
         "predictedWinner": "Atlanta Dream",
         "predictedSide": "away",
-        "homeWinPct": 30.4,
-        "awayWinPct": 69.6,
-        "confidence": 69.6,
-        "confidenceLabel": "Strong pick",
+        "homeWinPct": 33.4,
+        "awayWinPct": 66.6,
+        "confidence": 66.6,
+        "confidenceLabel": "Lean",
         "outcomeLabel": "Atlanta Dream to win",
-        "whyTheyWin": "Atlanta Dream are projected to win because Golden State Valkyries (10-7, 58.8%) have outplayed Atlanta Dream (11-4, 73.3%) across the full season.; ESPN's model gives Golden State Valkyries a 46.6% chance and Atlanta Dream a 53.4% chance.; Composite rating favors Atlanta Dream: 0.600 vs 0.800 (ESPN + MLB.com + form).",
+        "whyTheyWin": "Atlanta Dream are projected to win because Golden State Valkyries (10-7, 58.8%) have outplayed Atlanta Dream (12-4, 75.0%) across the full season.; ESPN's model gives Golden State Valkyries a 46.1% chance and Atlanta Dream a 53.9% chance.; Composite rating favors Atlanta Dream: 0.600 vs 0.800 (ESPN + MLB.com + form).",
         "reasons": [
           {
             "title": "Better season record",
-            "detail": "Golden State Valkyries (10-7, 58.8%) have outplayed Atlanta Dream (11-4, 73.3%) across the full season.",
+            "detail": "Golden State Valkyries (10-7, 58.8%) have outplayed Atlanta Dream (12-4, 75.0%) across the full season.",
             "impact": "high",
             "favors": "away"
           },
           {
             "title": "ESPN Matchup Predictor agrees",
-            "detail": "ESPN's model gives Golden State Valkyries a 46.6% chance and Atlanta Dream a 53.4% chance.",
+            "detail": "ESPN's model gives Golden State Valkyries a 46.1% chance and Atlanta Dream a 53.9% chance.",
             "impact": "high",
             "favors": "away",
             "source": "ESPN"
@@ -2200,7 +1959,7 @@
           },
           {
             "title": "Recent form trending up",
-            "detail": "Atlanta Dream are 4-1 in their last five (W-L-W-W-W) while Golden State Valkyries are 3-2.",
+            "detail": "Atlanta Dream are 4-1 in their last five (L-W-W-W-W) while Golden State Valkyries are 3-2.",
             "impact": "medium",
             "favors": "away",
             "source": "ESPN"
@@ -2223,7 +1982,7 @@
         "factors": [
           {
             "label": "Season record",
-            "detail": "Golden State Valkyries 10-7 vs Atlanta Dream 11-4",
+            "detail": "Golden State Valkyries 10-7 vs Atlanta Dream 12-4",
             "edge": "away"
           },
           {
@@ -2258,12 +2017,12 @@
           },
           {
             "label": "ESPN predictor",
-            "detail": "46.6% home / 53.4% away",
+            "detail": "46.1% home / 53.9% away",
             "edge": "away"
           },
           {
             "label": "Model probability",
-            "detail": "Data-driven estimate 27.8% home / 72.2% away",
+            "detail": "Data-driven estimate 27.0% home / 73.0% away",
             "edge": "away"
           }
         ],
@@ -2282,30 +2041,30 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.2777031727218706,
-            "away": 0.7222968272781294,
+            "home": 0.26991305603009846,
+            "away": 0.7300869439699016,
             "draw": null,
-            "homePct": 27.8,
-            "awayPct": 72.2,
+            "homePct": 27.0,
+            "awayPct": 73.0,
             "drawPct": null,
             "components": [
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 21.2,
+                "homePct": 20.3,
                 "weightPct": 74.1
               },
               {
                 "source": "ESPN Matchup Predictor",
-                "detail": "46.6% / 53.4%",
-                "homePct": 46.6,
+                "detail": "46.1% / 53.9%",
+                "homePct": 46.1,
                 "weightPct": 25.9
               }
             ]
           },
           "pick": {
-            "homePct": 30.4,
-            "awayPct": 69.6,
+            "homePct": 33.4,
+            "awayPct": 66.6,
             "drawPct": null,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
@@ -2315,23 +2074,23 @@
         },
         "teamProbabilities": {
           "home": {
-            "truePct": 27.8,
+            "truePct": 27.0,
             "impliedPct": null,
-            "blendedPct": 30.4,
+            "blendedPct": 33.4,
             "edgePct": null,
             "edgeLabel": null
           },
           "away": {
-            "truePct": 72.2,
+            "truePct": 73.0,
             "impliedPct": null,
-            "blendedPct": 69.6,
+            "blendedPct": 66.6,
             "edgePct": null,
             "edgeLabel": null
           }
         },
         "features": {
           "league": "wnba",
-          "recordDiff": -0.1451,
+          "recordDiff": -0.1618,
           "splitDiff": -0.05,
           "homePower": 0.6,
           "awayPower": 0.8000000000000002,
@@ -2343,9 +2102,9 @@
           "awayBackToBack": false,
           "impliedHome": null,
           "impliedAway": null,
-          "trueHome": 27.8,
-          "trueAway": 72.2,
-          "confidence": 69.6,
+          "trueHome": 27.0,
+          "trueAway": 73.0,
+          "confidence": 66.6,
           "predictedSide": "away",
           "hasLineup": true,
           "dataCoverage": {
@@ -2365,10 +2124,10 @@
           }
         }
       },
-      "predictionRank": 4
+      "predictionRank": 3
     }
   ],
-  "fetchedAt": "2026-06-22T00:08:54.305836+00:00",
+  "fetchedAt": "2026-06-24T00:04:37.854385+00:00",
   "scheduleTimezone": "America/New_York",
-  "defaultScheduleDate": "2026-06-21"
+  "defaultScheduleDate": "2026-06-23"
 }

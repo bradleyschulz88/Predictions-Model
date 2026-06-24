@@ -1,0 +1,103 @@
+{
+  "events": [
+    {
+      "id": "401815803",
+      "date": "2026-06-18T23:05Z",
+      "status": {
+        "type": {
+          "name": "STATUS_IN_PROGRESS",
+          "state": "in",
+          "completed": false,
+          "description": "In Progress",
+          "detail": "End 1st"
+        }
+      },
+      "competitions": [
+        {
+          "date": "2026-06-18T23:05Z",
+          "attendance": 0,
+          "competitors": [
+            {
+              "homeAway": "away",
+              "score": "0",
+              "team": {"displayName": "Chicago White Sox"},
+              "records": [{"type": "total", "summary": "30-40"}]
+            },
+            {
+              "homeAway": "home",
+              "score": "0",
+              "team": {"displayName": "New York Yankees"},
+              "records": [{"type": "total", "summary": "45-25"}]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "401815804",
+      "date": "2026-06-18T23:10Z",
+      "status": {
+        "type": {
+          "name": "STATUS_POSTPONED",
+          "state": "post",
+          "completed": false,
+          "description": "Postponed",
+          "detail": "Postponed"
+        }
+      },
+      "competitions": [
+        {
+          "date": "2026-06-18T23:10Z",
+          "attendance": 0,
+          "competitors": [
+            {
+              "homeAway": "away",
+              "score": "0",
+              "team": {"displayName": "San Francisco Giants"},
+              "records": [{"type": "total", "summary": "35-35"}]
+            },
+            {
+              "homeAway": "home",
+              "score": "0",
+              "team": {"displayName": "Atlanta Braves"},
+              "records": [{"type": "total", "summary": "40-30"}]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "401815805",
+      "date": "2026-06-18T23:15Z",
+      "status": {
+        "type": {
+          "name": "STATUS_FINAL",
+          "state": "post",
+          "completed": true,
+          "description": "Final",
+          "detail": "Final"
+        }
+      },
+      "competitions": [
+        {
+          "date": "2026-06-18T23:15Z",
+          "attendance": 32000,
+          "competitors": [
+            {
+              "homeAway": "away",
+              "score": "2",
+              "team": {"displayName": "Toronto Blue Jays"},
+              "records": [{"type": "total", "summary": "38-32"}]
+            },
+            {
+              "homeAway": "home",
+              "score": "5",
+              "team": {"displayName": "Boston Red Sox"},
+              "records": [{"type": "total", "summary": "42-28"}]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

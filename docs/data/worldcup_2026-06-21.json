@@ -43,8 +43,7 @@
   "scheduleDate": "2026-06-21",
   "gameCount": 5,
   "statusCounts": {
-    "Full Time": 4,
-    "Scheduled": 1
+    "Full Time": 5
   },
   "topPick": "Japan to win",
   "games": [
@@ -499,9 +498,9 @@
       "prediction": {
         "predictedWinner": "Japan",
         "predictedSide": "away",
-        "homeWinPct": 9.7,
-        "awayWinPct": 70.1,
-        "confidence": 70.1,
+        "homeWinPct": 5.8,
+        "awayWinPct": 76.3,
+        "confidence": 76.3,
         "confidenceLabel": "Strong pick",
         "outcomeLabel": "Japan to win",
         "whyTheyWin": "Japan are projected to win because Tunisia (0-0-2, 0.0%) have outplayed Japan (1-1-0, 75.0%) across the full season.; Composite rating favors Japan: 0.059 vs 0.783 (ESPN + MLB.com + form).; Tunisia are 0-0-2 at home while Japan are 1-1-0 on the road.",
@@ -608,9 +607,9 @@
             ]
           },
           "pick": {
-            "homePct": 9.7,
-            "awayPct": 70.1,
-            "drawPct": 20.1,
+            "homePct": 5.8,
+            "awayPct": 76.3,
+            "drawPct": 17.9,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
           "implied": {
@@ -642,26 +641,26 @@
           "home": {
             "truePct": 4.1,
             "impliedPct": 10.7,
-            "blendedPct": 9.7,
+            "blendedPct": 5.8,
             "edgePct": -6.6,
             "edgeLabel": "-6.6%"
           },
           "away": {
             "truePct": 78.3,
             "impliedPct": 66.8,
-            "blendedPct": 70.1,
+            "blendedPct": 76.3,
             "edgePct": 11.5,
             "edgeLabel": "+11.5%"
           },
           "draw": {
             "truePct": 17.6,
             "impliedPct": 22.4,
-            "blendedPct": 20.1,
+            "blendedPct": 17.9,
             "edgePct": -4.8,
             "edgeLabel": "-4.8%"
           }
         },
-        "drawWinPct": 20.1,
+        "drawWinPct": 17.9,
         "features": {
           "league": "worldcup",
           "recordDiff": -0.75,
@@ -678,7 +677,7 @@
           "impliedAway": 66.8,
           "trueHome": 4.1,
           "trueAway": 78.3,
-          "confidence": 70.1,
+          "confidence": 76.3,
           "predictedSide": "away",
           "hasLineup": true,
           "dataCoverage": {
@@ -1156,9 +1155,9 @@
       "prediction": {
         "predictedWinner": "Spain",
         "predictedSide": "home",
-        "homeWinPct": 70.1,
-        "awayWinPct": 9.7,
-        "confidence": 70.1,
+        "homeWinPct": 76.3,
+        "awayWinPct": 5.8,
+        "confidence": 76.3,
         "confidenceLabel": "Strong pick",
         "outcomeLabel": "Spain to win",
         "whyTheyWin": "Spain are projected to win because Spain (1-1-0, 75.0%) have outplayed Saudi Arabia (0-1-1, 25.0%) across the full season.; Composite rating favors Spain: 0.665 vs 0.168 (ESPN + MLB.com + form).; Spain are 1-1-0 at home while Saudi Arabia are 0-1-1 on the road.",
@@ -1290,9 +1289,9 @@
             ]
           },
           "pick": {
-            "homePct": 70.1,
-            "awayPct": 9.7,
-            "drawPct": 20.1,
+            "homePct": 76.3,
+            "awayPct": 5.8,
+            "drawPct": 17.9,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
           "implied": {
@@ -1324,26 +1323,26 @@
           "home": {
             "truePct": 78.3,
             "impliedPct": 86.7,
-            "blendedPct": 70.1,
+            "blendedPct": 76.3,
             "edgePct": -8.4,
             "edgeLabel": "-8.4%"
           },
           "away": {
             "truePct": 4.1,
             "impliedPct": 4.6,
-            "blendedPct": 9.7,
+            "blendedPct": 5.8,
             "edgePct": -0.5,
             "edgeLabel": "-0.5%"
           },
           "draw": {
             "truePct": 17.6,
             "impliedPct": 8.8,
-            "blendedPct": 20.1,
+            "blendedPct": 17.9,
             "edgePct": 8.8,
             "edgeLabel": "+8.8%"
           }
         },
-        "drawWinPct": 20.1,
+        "drawWinPct": 17.9,
         "features": {
           "league": "worldcup",
           "recordDiff": 0.5,
@@ -1360,7 +1359,7 @@
           "impliedAway": 4.6,
           "trueHome": 78.3,
           "trueAway": 4.1,
-          "confidence": 70.1,
+          "confidence": 76.3,
           "predictedSide": "home",
           "hasLineup": true,
           "dataCoverage": {
@@ -1830,827 +1829,7 @@
       },
       "homeMajorInjuries": [],
       "awayMajorInjuries": [],
-      "prediction": {
-        "predictedWinner": "Belgium",
-        "predictedSide": "home",
-        "homeWinPct": 45.0,
-        "awayWinPct": 25.4,
-        "confidence": 45.0,
-        "confidenceLabel": "Coin flip",
-        "outcomeLabel": "Belgium to win",
-        "whyTheyWin": "Belgium are projected to win because Belgium are 3-2-0 in their last five (W-D-W-W-D) while Iran are 3-1-1.; Belgium play at SoFi Stadium, where home sides often perform better.; Belgium have 6 days rest vs 5 for Iran.",
-        "reasons": [
-          {
-            "title": "Recent form trending up",
-            "detail": "Belgium are 3-2-0 in their last five (W-D-W-W-D) while Iran are 3-1-1.",
-            "impact": "medium",
-            "favors": "home",
-            "source": "ESPN"
-          },
-          {
-            "title": "Home-field advantage",
-            "detail": "Belgium play at SoFi Stadium, where home sides often perform better.",
-            "impact": "low",
-            "favors": "home"
-          },
-          {
-            "title": "Rest advantage",
-            "detail": "Belgium have 6 days rest vs 5 for Iran.",
-            "impact": "low",
-            "favors": "home",
-            "source": "Schedule"
-          }
-        ],
-        "factors": [
-          {
-            "label": "Season record",
-            "detail": "Belgium 0-2-0 vs Iran 0-2-0",
-            "edge": "even"
-          },
-          {
-            "label": "Home/road splits",
-            "detail": "Home 0-2-0 vs away 0-2-0",
-            "edge": "even"
-          },
-          {
-            "label": "Home-field advantage",
-            "detail": "Historical home edge applied",
-            "edge": "home"
-          },
-          {
-            "label": "Last five games",
-            "detail": "Belgium 3-2-0 vs Iran 3-1-1",
-            "edge": "home"
-          },
-          {
-            "label": "Advanced team profile",
-            "detail": "Power 0.381 vs 0.396 (ESPN/MLB.com)",
-            "edge": "away"
-          },
-          {
-            "label": "Rest days",
-            "detail": "Home 6 vs away 5 days rest",
-            "edge": "home"
-          },
-          {
-            "label": "Model probability",
-            "detail": "Data-driven estimate 47.4% home / 23.8% away / 28.9% draw",
-            "edge": "home"
-          }
-        ],
-        "dataSources": [
-          "Derived schedule metrics",
-          "ESPN betting odds",
-          "ESPN game summary",
-          "ESPN injury report",
-          "ESPN last-five form",
-          "ESPN scoreboard",
-          "ESPN standings",
-          "ESPN team stats",
-          "Key players",
-          "Probability model"
-        ],
-        "probabilities": {
-          "true": {
-            "home": 0.47351004288421567,
-            "away": 0.23791705982034347,
-            "draw": 0.28857289729544083,
-            "homePct": 47.4,
-            "awayPct": 23.8,
-            "drawPct": 28.9,
-            "components": [
-              {
-                "source": "Analytics model",
-                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 65.0,
-                "weightPct": 100.0
-              }
-            ]
-          },
-          "pick": {
-            "homePct": 45.0,
-            "awayPct": 25.4,
-            "drawPct": 29.6,
-            "method": "Model data only (records, form, injuries, advanced stats)"
-          },
-          "implied": {
-            "available": true,
-            "booksUsed": 1,
-            "books": [
-              {
-                "sportsbook": "DraftKings",
-                "homePct": 66.7,
-                "awayPct": 12.0,
-                "drawPct": 21.3,
-                "vigPct": 4.42
-              }
-            ],
-            "consensus": {
-              "home": 0.6674727932285369,
-              "away": 0.11970979443772674,
-              "draw": 0.2128174123337364,
-              "homePct": 66.7,
-              "awayPct": 12.0,
-              "drawPct": 21.3,
-              "rawHomePct": 69.7,
-              "rawAwayPct": 12.5,
-              "avgVigPct": 4.42
-            }
-          }
-        },
-        "teamProbabilities": {
-          "home": {
-            "truePct": 47.4,
-            "impliedPct": 66.7,
-            "blendedPct": 45.0,
-            "edgePct": -19.3,
-            "edgeLabel": "-19.3%"
-          },
-          "away": {
-            "truePct": 23.8,
-            "impliedPct": 12.0,
-            "blendedPct": 25.4,
-            "edgePct": 11.8,
-            "edgeLabel": "+11.8%"
-          },
-          "draw": {
-            "truePct": 28.9,
-            "impliedPct": 21.3,
-            "blendedPct": 29.6,
-            "edgePct": 7.6,
-            "edgeLabel": "+7.6%"
-          }
-        },
-        "drawWinPct": 29.6,
-        "features": {
-          "league": "worldcup",
-          "recordDiff": 0.0,
-          "splitDiff": 0.0,
-          "homePower": 0.38148148148148153,
-          "awayPower": 0.39629629629629626,
-          "homeInjuryLoad": 0,
-          "awayInjuryLoad": 0,
-          "homeRest": 6,
-          "awayRest": 5,
-          "homeBackToBack": false,
-          "awayBackToBack": false,
-          "impliedHome": 66.7,
-          "impliedAway": 12.0,
-          "trueHome": 47.4,
-          "trueAway": 23.8,
-          "confidence": 45.0,
-          "predictedSide": "home",
-          "hasLineup": true,
-          "dataCoverage": {
-            "lineup": true,
-            "injuries": false,
-            "espnPredictor": false,
-            "advancedStats": true,
-            "restData": true,
-            "scheduleFlags": true,
-            "mlbPitching": false,
-            "leagueMetrics": true,
-            "impliedOdds": true
-          },
-          "mlbPitching": null,
-          "leagueMetrics": {
-            "league": "worldcup",
-            "goalDiffEdge": 0.0,
-            "drawBaseRate": 0.22
-          }
-        }
-      },
-      "predictionRank": 3
-    },
-    {
-      "league": "worldcup",
-      "leagueLabel": "FIFA World Cup",
-      "eventId": "760452",
-      "startDate": "2026-06-22T01:00Z",
-      "awayTeam": "Egypt",
-      "homeTeam": "New Zealand",
-      "matchup": "Egypt @ New Zealand",
-      "gameStatusText": "Scheduled",
-      "gameStatusDetail": "Sun, June 21st at 9:00 PM EDT",
-      "statusType": "STATUS_SCHEDULED",
-      "venueName": "BC Place",
-      "broadcast": "FS1, Tele, FOX One",
-      "awayRecord": "0-1-0",
-      "homeRecord": "0-1-0",
-      "awayRoadRecord": "0-1-0",
-      "homeHomeRecord": "0-1-0",
-      "awayScore": "0",
-      "homeScore": "0",
-      "isLive": false,
-      "isFinal": false,
-      "isScheduled": true,
-      "isPostponed": false,
-      "isCanceled": false,
-      "isSuspended": false,
-      "isDelayed": false,
-      "isVoided": false,
-      "isWashedOut": false,
-      "attendance": 0,
-      "source": "espn",
-      "viewTypes": [
-        "MoneyLine",
-        "Spread",
-        "Total"
-      ],
-      "enrichment": {
-        "espnPredictorHome": null,
-        "espnPredictorAway": null,
-        "homeLastFive": {
-          "record": "1-1-3",
-          "results": [
-            "L",
-            "W",
-            "L",
-            "L",
-            "D"
-          ],
-          "games": [
-            {
-              "result": "L",
-              "score": "2-0",
-              "opponent": "Finland"
-            },
-            {
-              "result": "W",
-              "score": "4-1",
-              "opponent": "Chile"
-            },
-            {
-              "result": "L",
-              "score": "4-0",
-              "opponent": "Haiti"
-            },
-            {
-              "result": "L",
-              "score": "1-0",
-              "opponent": "England"
-            },
-            {
-              "result": "D",
-              "score": "2-2",
-              "opponent": "Iran"
-            }
-          ]
-        },
-        "awayLastFive": {
-          "record": "2-2-1",
-          "results": [
-            "W",
-            "D",
-            "W",
-            "L",
-            "D"
-          ],
-          "games": [
-            {
-              "result": "W",
-              "score": "4-0",
-              "opponent": "Saudi Arabia"
-            },
-            {
-              "result": "D",
-              "score": "0-0",
-              "opponent": "Spain"
-            },
-            {
-              "result": "W",
-              "score": "1-0",
-              "opponent": "Russia"
-            },
-            {
-              "result": "L",
-              "score": "2-1",
-              "opponent": "Brazil"
-            },
-            {
-              "result": "D",
-              "score": "1-1",
-              "opponent": "Belgium"
-            }
-          ]
-        },
-        "seasonSeries": {
-          "title": "Head-to-head",
-          "summary": "New Zealand 0-1-1 in recent meetings",
-          "seriesScore": null
-        },
-        "weather": null,
-        "homeInjuries": [],
-        "awayInjuries": [],
-        "homeMajorInjuries": [],
-        "awayMajorInjuries": [],
-        "homeKeyInjuries": [],
-        "awayKeyInjuries": [],
-        "homeLineup": {
-          "status": "confirmed",
-          "source": "espn_roster",
-          "note": "Starting lineup from ESPN.",
-          "batters": [
-            {
-              "order": null,
-              "name": "Max Crocombe",
-              "position": "G"
-            },
-            {
-              "order": null,
-              "name": "Michael Boxall",
-              "position": "D"
-            },
-            {
-              "order": null,
-              "name": "Finn Surman",
-              "position": "D"
-            },
-            {
-              "order": null,
-              "name": "Tim Payne",
-              "position": "D"
-            },
-            {
-              "order": null,
-              "name": "Liberato Cacace",
-              "position": "D"
-            },
-            {
-              "order": null,
-              "name": "Marko Stamenic",
-              "position": "M"
-            },
-            {
-              "order": null,
-              "name": "Sarpreet Singh",
-              "position": "M"
-            },
-            {
-              "order": null,
-              "name": "Joe Bell",
-              "position": "M"
-            },
-            {
-              "order": null,
-              "name": "Elijah Just",
-              "position": "M"
-            }
-          ]
-        },
-        "awayLineup": {
-          "status": "confirmed",
-          "source": "espn_roster",
-          "note": "Starting lineup from ESPN.",
-          "batters": [
-            {
-              "order": null,
-              "name": "Mostafa Shoubir",
-              "position": "G"
-            },
-            {
-              "order": null,
-              "name": "Ahmed Fatouh",
-              "position": "D"
-            },
-            {
-              "order": null,
-              "name": "Mohamed Hany",
-              "position": "D"
-            },
-            {
-              "order": null,
-              "name": "Yasser Ibrahim",
-              "position": "D"
-            },
-            {
-              "order": null,
-              "name": "Hamdy Fathy",
-              "position": "D"
-            },
-            {
-              "order": null,
-              "name": "Mohanad Lashin",
-              "position": "M"
-            },
-            {
-              "order": null,
-              "name": "Mostafa Zico",
-              "position": "M"
-            },
-            {
-              "order": null,
-              "name": "Marawan Attia",
-              "position": "M"
-            },
-            {
-              "order": null,
-              "name": "Mohamed Salah",
-              "position": "M"
-            }
-          ]
-        },
-        "espnOdds": [
-          {
-            "sportsbook": "DraftKings",
-            "viewType": "MoneyLine",
-            "currentLine": {
-              "home": 500,
-              "away": -180,
-              "draw": 320
-            },
-            "openingLine": {
-              "home": 380,
-              "away": -140,
-              "draw": 290
-            }
-          },
-          {
-            "sportsbook": "DraftKings",
-            "viewType": "Spread",
-            "currentLine": {
-              "home": "+0.5 (+145)",
-              "away": "-0.5 (-190)"
-            }
-          },
-          {
-            "sportsbook": "DraftKings",
-            "viewType": "Total",
-            "currentLine": {
-              "over": "o2.5 (-105)",
-              "under": "u2.5 (-120)"
-            }
-          }
-        ],
-        "sources": [
-          "Derived schedule metrics",
-          "ESPN betting odds",
-          "ESPN game summary",
-          "ESPN head-to-head",
-          "ESPN injury report",
-          "ESPN last-five form",
-          "ESPN standings",
-          "ESPN team stats",
-          "Key players"
-        ],
-        "homeAdvanced": {
-          "sources": [
-            "ESPN standings",
-            "ESPN team stats"
-          ],
-          "wins": 0,
-          "losses": 0,
-          "points": 1.0,
-          "goalDifference": 0.0,
-          "pointsPerGame": 2.0,
-          "goalsAgainstPerGame": 2.0,
-          "battingAvg": null,
-          "onBasePct": null,
-          "sluggingPct": null,
-          "era": null,
-          "runsScored": null,
-          "runsAllowed": null,
-          "powerRating": 0.2981481481481481,
-          "opsProxy": null,
-          "winPct": 0.0
-        },
-        "awayAdvanced": {
-          "sources": [
-            "ESPN standings",
-            "ESPN team stats"
-          ],
-          "wins": 0,
-          "losses": 0,
-          "points": 1.0,
-          "goalDifference": 0.0,
-          "pointsPerGame": 1.0,
-          "goalsAgainstPerGame": 1.0,
-          "battingAvg": null,
-          "onBasePct": null,
-          "sluggingPct": null,
-          "era": null,
-          "runsScored": null,
-          "runsAllowed": null,
-          "powerRating": 0.37407407407407406,
-          "opsProxy": null,
-          "winPct": 0.0
-        },
-        "restDays": {
-          "home": 6,
-          "away": 6
-        },
-        "weatherImpact": null,
-        "headToHead": {
-          "homeSeriesWinPct": null,
-          "awaySeriesWinPct": null,
-          "summary": "New Zealand 0-1-1 in recent meetings",
-          "seriesScore": null
-        },
-        "homeScheduleFlags": {
-          "restDays": 6,
-          "backToBack": false,
-          "threeInFour": false,
-          "gamesLast4Days": 1
-        },
-        "awayScheduleFlags": {
-          "restDays": 7,
-          "backToBack": false,
-          "threeInFour": false,
-          "gamesLast4Days": 1
-        },
-        "leagueMetrics": {
-          "league": "worldcup",
-          "goalDiffEdge": 0.0,
-          "drawBaseRate": 0.22
-        }
-      },
-      "homeLineup": {
-        "status": "confirmed",
-        "source": "espn_roster",
-        "note": "Starting lineup from ESPN.",
-        "batters": [
-          {
-            "order": null,
-            "name": "Max Crocombe",
-            "position": "G"
-          },
-          {
-            "order": null,
-            "name": "Michael Boxall",
-            "position": "D"
-          },
-          {
-            "order": null,
-            "name": "Finn Surman",
-            "position": "D"
-          },
-          {
-            "order": null,
-            "name": "Tim Payne",
-            "position": "D"
-          },
-          {
-            "order": null,
-            "name": "Liberato Cacace",
-            "position": "D"
-          },
-          {
-            "order": null,
-            "name": "Marko Stamenic",
-            "position": "M"
-          },
-          {
-            "order": null,
-            "name": "Sarpreet Singh",
-            "position": "M"
-          },
-          {
-            "order": null,
-            "name": "Joe Bell",
-            "position": "M"
-          },
-          {
-            "order": null,
-            "name": "Elijah Just",
-            "position": "M"
-          }
-        ]
-      },
-      "awayLineup": {
-        "status": "confirmed",
-        "source": "espn_roster",
-        "note": "Starting lineup from ESPN.",
-        "batters": [
-          {
-            "order": null,
-            "name": "Mostafa Shoubir",
-            "position": "G"
-          },
-          {
-            "order": null,
-            "name": "Ahmed Fatouh",
-            "position": "D"
-          },
-          {
-            "order": null,
-            "name": "Mohamed Hany",
-            "position": "D"
-          },
-          {
-            "order": null,
-            "name": "Yasser Ibrahim",
-            "position": "D"
-          },
-          {
-            "order": null,
-            "name": "Hamdy Fathy",
-            "position": "D"
-          },
-          {
-            "order": null,
-            "name": "Mohanad Lashin",
-            "position": "M"
-          },
-          {
-            "order": null,
-            "name": "Mostafa Zico",
-            "position": "M"
-          },
-          {
-            "order": null,
-            "name": "Marawan Attia",
-            "position": "M"
-          },
-          {
-            "order": null,
-            "name": "Mohamed Salah",
-            "position": "M"
-          }
-        ]
-      },
-      "homeMajorInjuries": [],
-      "awayMajorInjuries": [],
-      "prediction": {
-        "predictedWinner": "Egypt",
-        "predictedSide": "away",
-        "homeWinPct": 28.6,
-        "awayWinPct": 40.7,
-        "confidence": 40.7,
-        "confidenceLabel": "Coin flip",
-        "outcomeLabel": "Egypt to win",
-        "whyTheyWin": "Egypt are projected to win because Composite rating favors Egypt: 0.298 vs 0.374 (ESPN + MLB.com + form).; Egypt are 2-2-1 in their last five (W-D-W-L-D) while New Zealand are 1-1-3.",
-        "reasons": [
-          {
-            "title": "Power rating edge",
-            "detail": "Composite rating favors Egypt: 0.298 vs 0.374 (ESPN + MLB.com + form).",
-            "impact": "high",
-            "favors": "away",
-            "source": "Multi-source"
-          },
-          {
-            "title": "Recent form trending up",
-            "detail": "Egypt are 2-2-1 in their last five (W-D-W-L-D) while New Zealand are 1-1-3.",
-            "impact": "medium",
-            "favors": "away",
-            "source": "ESPN"
-          }
-        ],
-        "factors": [
-          {
-            "label": "Season record",
-            "detail": "New Zealand 0-1-0 vs Egypt 0-1-0",
-            "edge": "even"
-          },
-          {
-            "label": "Home/road splits",
-            "detail": "Home 0-1-0 vs away 0-1-0",
-            "edge": "even"
-          },
-          {
-            "label": "Home-field advantage",
-            "detail": "Historical home edge applied",
-            "edge": "home"
-          },
-          {
-            "label": "Last five games",
-            "detail": "New Zealand 1-1-3 vs Egypt 2-2-1",
-            "edge": "away"
-          },
-          {
-            "label": "Advanced team profile",
-            "detail": "Power 0.298 vs 0.374 (ESPN/MLB.com)",
-            "edge": "away"
-          },
-          {
-            "label": "Model probability",
-            "detail": "Data-driven estimate 27.6% home / 42.2% away / 30.2% draw",
-            "edge": "away"
-          }
-        ],
-        "dataSources": [
-          "Derived schedule metrics",
-          "ESPN betting odds",
-          "ESPN game summary",
-          "ESPN head-to-head",
-          "ESPN injury report",
-          "ESPN last-five form",
-          "ESPN scoreboard",
-          "ESPN standings",
-          "ESPN team stats",
-          "Key players",
-          "Probability model"
-        ],
-        "probabilities": {
-          "true": {
-            "home": 0.2759969200155289,
-            "away": 0.4220140087523038,
-            "draw": 0.3019890712321674,
-            "homePct": 27.6,
-            "awayPct": 42.2,
-            "drawPct": 30.2,
-            "components": [
-              {
-                "source": "Analytics model",
-                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 41.2,
-                "weightPct": 100.0
-              }
-            ]
-          },
-          "pick": {
-            "homePct": 28.6,
-            "awayPct": 40.7,
-            "drawPct": 30.7,
-            "method": "Model data only (records, form, injuries, advanced stats)"
-          },
-          "implied": {
-            "available": true,
-            "booksUsed": 1,
-            "books": [
-              {
-                "sportsbook": "DraftKings",
-                "homePct": 15.9,
-                "awayPct": 61.4,
-                "drawPct": 22.7,
-                "vigPct": 4.76
-              }
-            ],
-            "consensus": {
-              "home": 0.15909090909090906,
-              "away": 0.6136363636363636,
-              "draw": 0.22727272727272724,
-              "homePct": 15.9,
-              "awayPct": 61.4,
-              "drawPct": 22.7,
-              "rawHomePct": 16.7,
-              "rawAwayPct": 64.3,
-              "avgVigPct": 4.76
-            }
-          }
-        },
-        "teamProbabilities": {
-          "home": {
-            "truePct": 27.6,
-            "impliedPct": 15.9,
-            "blendedPct": 28.6,
-            "edgePct": 11.7,
-            "edgeLabel": "+11.7%"
-          },
-          "away": {
-            "truePct": 42.2,
-            "impliedPct": 61.4,
-            "blendedPct": 40.7,
-            "edgePct": -19.2,
-            "edgeLabel": "-19.2%"
-          },
-          "draw": {
-            "truePct": 30.2,
-            "impliedPct": 22.7,
-            "blendedPct": 30.7,
-            "edgePct": 7.5,
-            "edgeLabel": "+7.5%"
-          }
-        },
-        "drawWinPct": 30.7,
-        "features": {
-          "league": "worldcup",
-          "recordDiff": 0.0,
-          "splitDiff": 0.0,
-          "homePower": 0.2981481481481481,
-          "awayPower": 0.37407407407407406,
-          "homeInjuryLoad": 0,
-          "awayInjuryLoad": 0,
-          "homeRest": 6,
-          "awayRest": 6,
-          "homeBackToBack": false,
-          "awayBackToBack": false,
-          "impliedHome": 15.9,
-          "impliedAway": 61.4,
-          "trueHome": 27.6,
-          "trueAway": 42.2,
-          "confidence": 40.7,
-          "predictedSide": "away",
-          "hasLineup": true,
-          "dataCoverage": {
-            "lineup": true,
-            "injuries": false,
-            "espnPredictor": false,
-            "advancedStats": true,
-            "restData": true,
-            "scheduleFlags": true,
-            "mlbPitching": false,
-            "leagueMetrics": true,
-            "impliedOdds": true
-          },
-          "mlbPitching": null,
-          "leagueMetrics": {
-            "league": "worldcup",
-            "goalDiffEdge": 0.0,
-            "drawBaseRate": 0.22
-          }
-        }
-      },
-      "predictionRank": 4
+      "prediction": null
     },
     {
       "league": "worldcup",
@@ -2680,7 +1859,7 @@
       "isDelayed": false,
       "isVoided": false,
       "isWashedOut": false,
-      "attendance": 0,
+      "attendance": 64003,
       "source": "espn",
       "viewTypes": [
         "MoneyLine",
@@ -3095,33 +2274,510 @@
       },
       "homeMajorInjuries": [],
       "awayMajorInjuries": [],
+      "prediction": null
+    },
+    {
+      "league": "worldcup",
+      "leagueLabel": "FIFA World Cup",
+      "eventId": "760452",
+      "startDate": "2026-06-22T01:00Z",
+      "awayTeam": "Egypt",
+      "homeTeam": "New Zealand",
+      "matchup": "Egypt @ New Zealand",
+      "gameStatusText": "Full Time",
+      "gameStatusDetail": "FT",
+      "statusType": "STATUS_FULL_TIME",
+      "venueName": "BC Place",
+      "broadcast": "FS1, Tele, FOX One",
+      "awayRecord": "1-1-0",
+      "homeRecord": "0-1-1",
+      "awayRoadRecord": "1-1-0",
+      "homeHomeRecord": "0-1-1",
+      "awayScore": "3",
+      "homeScore": "1",
+      "isLive": false,
+      "isFinal": true,
+      "isScheduled": false,
+      "isPostponed": false,
+      "isCanceled": false,
+      "isSuspended": false,
+      "isDelayed": false,
+      "isVoided": false,
+      "isWashedOut": false,
+      "attendance": 52497,
+      "source": "espn",
+      "viewTypes": [
+        "MoneyLine",
+        "Spread",
+        "Total"
+      ],
+      "enrichment": {
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
+        "homeLastFive": {
+          "record": "1-1-3",
+          "results": [
+            "W",
+            "L",
+            "L",
+            "D",
+            "L"
+          ],
+          "games": [
+            {
+              "result": "W",
+              "score": "4-1",
+              "opponent": "Chile"
+            },
+            {
+              "result": "L",
+              "score": "4-0",
+              "opponent": "Haiti"
+            },
+            {
+              "result": "L",
+              "score": "1-0",
+              "opponent": "England"
+            },
+            {
+              "result": "D",
+              "score": "2-2",
+              "opponent": "Iran"
+            },
+            {
+              "result": "L",
+              "score": "3-1",
+              "opponent": "Egypt"
+            }
+          ]
+        },
+        "awayLastFive": {
+          "record": "2-2-1",
+          "results": [
+            "D",
+            "W",
+            "L",
+            "D",
+            "W"
+          ],
+          "games": [
+            {
+              "result": "D",
+              "score": "0-0",
+              "opponent": "Spain"
+            },
+            {
+              "result": "W",
+              "score": "1-0",
+              "opponent": "Russia"
+            },
+            {
+              "result": "L",
+              "score": "2-1",
+              "opponent": "Brazil"
+            },
+            {
+              "result": "D",
+              "score": "1-1",
+              "opponent": "Belgium"
+            },
+            {
+              "result": "W",
+              "score": "3-1",
+              "opponent": "New Zealand"
+            }
+          ]
+        },
+        "seasonSeries": {
+          "title": "Head-to-head",
+          "summary": "New Zealand 0-1-2 in recent meetings",
+          "seriesScore": null
+        },
+        "weather": null,
+        "homeInjuries": [],
+        "awayInjuries": [],
+        "homeMajorInjuries": [],
+        "awayMajorInjuries": [],
+        "homeKeyInjuries": [],
+        "awayKeyInjuries": [],
+        "homeLineup": {
+          "status": "confirmed",
+          "source": "espn_roster",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Max Crocombe",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Michael Boxall",
+              "position": "CD-L"
+            },
+            {
+              "order": null,
+              "name": "Finn Surman",
+              "position": "CD-R"
+            },
+            {
+              "order": null,
+              "name": "Liberato Cacace",
+              "position": "LB"
+            },
+            {
+              "order": null,
+              "name": "Tim Payne",
+              "position": "RB"
+            },
+            {
+              "order": null,
+              "name": "Sarpreet Singh",
+              "position": "AM"
+            },
+            {
+              "order": null,
+              "name": "Marko Stamenic",
+              "position": "LM"
+            },
+            {
+              "order": null,
+              "name": "Joe Bell",
+              "position": "RM"
+            },
+            {
+              "order": null,
+              "name": "Chris Wood",
+              "position": "F"
+            }
+          ]
+        },
+        "awayLineup": {
+          "status": "confirmed",
+          "source": "espn_roster",
+          "note": "Starting lineup from ESPN.",
+          "batters": [
+            {
+              "order": null,
+              "name": "Mostafa Shoubir",
+              "position": "G"
+            },
+            {
+              "order": null,
+              "name": "Hamdy Fathy",
+              "position": "CD-L"
+            },
+            {
+              "order": null,
+              "name": "Yasser Ibrahim",
+              "position": "CD-R"
+            },
+            {
+              "order": null,
+              "name": "Ahmed Fatouh",
+              "position": "LB"
+            },
+            {
+              "order": null,
+              "name": "Mohamed Hany",
+              "position": "RB"
+            },
+            {
+              "order": null,
+              "name": "Mohamed Salah",
+              "position": "AM"
+            },
+            {
+              "order": null,
+              "name": "Mohanad Lashin",
+              "position": "LM"
+            },
+            {
+              "order": null,
+              "name": "Marawan Attia",
+              "position": "RM"
+            },
+            {
+              "order": null,
+              "name": "Omar Marmoush",
+              "position": "F"
+            }
+          ]
+        },
+        "espnOdds": [
+          {
+            "sportsbook": "DraftKings",
+            "viewType": "MoneyLine",
+            "currentLine": {
+              "home": 500,
+              "away": -160,
+              "draw": 285
+            },
+            "openingLine": {
+              "home": 380,
+              "away": -140,
+              "draw": 290
+            }
+          },
+          {
+            "sportsbook": "DraftKings",
+            "viewType": "Spread",
+            "currentLine": {
+              "home": "+0.5 (+130)",
+              "away": "-0.5 (-165)"
+            }
+          },
+          {
+            "sportsbook": "DraftKings",
+            "viewType": "Total",
+            "currentLine": {
+              "over": "o2.5 (+120)",
+              "under": "u2.5 (-150)"
+            }
+          }
+        ],
+        "sources": [
+          "Derived schedule metrics",
+          "ESPN betting odds",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN standings",
+          "ESPN team stats",
+          "Key players"
+        ],
+        "homeAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 0,
+          "losses": 1,
+          "points": 1.0,
+          "goalDifference": -2.0,
+          "pointsPerGame": 1.5,
+          "goalsAgainstPerGame": 2.5,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": 0.21944444444444444,
+          "opsProxy": null,
+          "winPct": 0.0
+        },
+        "awayAdvanced": {
+          "sources": [
+            "ESPN standings",
+            "ESPN team stats"
+          ],
+          "wins": 1,
+          "losses": 0,
+          "points": 4.0,
+          "goalDifference": 2.0,
+          "pointsPerGame": 2.0,
+          "goalsAgainstPerGame": 1.0,
+          "battingAvg": null,
+          "onBasePct": null,
+          "sluggingPct": null,
+          "era": null,
+          "runsScored": null,
+          "runsAllowed": null,
+          "powerRating": 0.6425925925925926,
+          "opsProxy": null,
+          "winPct": 0.5
+        },
+        "restDays": {
+          "home": 6,
+          "away": 6
+        },
+        "weatherImpact": null,
+        "headToHead": {
+          "homeSeriesWinPct": null,
+          "awaySeriesWinPct": null,
+          "summary": "New Zealand 0-1-2 in recent meetings",
+          "seriesScore": null
+        },
+        "homeScheduleFlags": {
+          "restDays": 6,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 1
+        },
+        "awayScheduleFlags": {
+          "restDays": 7,
+          "backToBack": false,
+          "threeInFour": false,
+          "gamesLast4Days": 1
+        },
+        "leagueMetrics": {
+          "league": "worldcup",
+          "goalDiffEdge": -4.0,
+          "drawBaseRate": 0.22
+        }
+      },
+      "homeLineup": {
+        "status": "confirmed",
+        "source": "espn_roster",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Max Crocombe",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Michael Boxall",
+            "position": "CD-L"
+          },
+          {
+            "order": null,
+            "name": "Finn Surman",
+            "position": "CD-R"
+          },
+          {
+            "order": null,
+            "name": "Liberato Cacace",
+            "position": "LB"
+          },
+          {
+            "order": null,
+            "name": "Tim Payne",
+            "position": "RB"
+          },
+          {
+            "order": null,
+            "name": "Sarpreet Singh",
+            "position": "AM"
+          },
+          {
+            "order": null,
+            "name": "Marko Stamenic",
+            "position": "LM"
+          },
+          {
+            "order": null,
+            "name": "Joe Bell",
+            "position": "RM"
+          },
+          {
+            "order": null,
+            "name": "Chris Wood",
+            "position": "F"
+          }
+        ]
+      },
+      "awayLineup": {
+        "status": "confirmed",
+        "source": "espn_roster",
+        "note": "Starting lineup from ESPN.",
+        "batters": [
+          {
+            "order": null,
+            "name": "Mostafa Shoubir",
+            "position": "G"
+          },
+          {
+            "order": null,
+            "name": "Hamdy Fathy",
+            "position": "CD-L"
+          },
+          {
+            "order": null,
+            "name": "Yasser Ibrahim",
+            "position": "CD-R"
+          },
+          {
+            "order": null,
+            "name": "Ahmed Fatouh",
+            "position": "LB"
+          },
+          {
+            "order": null,
+            "name": "Mohamed Hany",
+            "position": "RB"
+          },
+          {
+            "order": null,
+            "name": "Mohamed Salah",
+            "position": "AM"
+          },
+          {
+            "order": null,
+            "name": "Mohanad Lashin",
+            "position": "LM"
+          },
+          {
+            "order": null,
+            "name": "Marawan Attia",
+            "position": "RM"
+          },
+          {
+            "order": null,
+            "name": "Omar Marmoush",
+            "position": "F"
+          }
+        ]
+      },
+      "homeMajorInjuries": [],
+      "awayMajorInjuries": [],
       "prediction": {
-        "predictedWinner": "Uruguay",
-        "predictedSide": "home",
-        "homeWinPct": 37.3,
-        "awayWinPct": 31.0,
-        "confidence": 37.3,
-        "confidenceLabel": "Coin flip",
-        "outcomeLabel": "Uruguay to win",
-        "whyTheyWin": "Uruguay are projected to win because Uruguay play at Hard Rock Stadium, where home sides often perform better.",
+        "predictedWinner": "Egypt",
+        "predictedSide": "away",
+        "homeWinPct": 5.8,
+        "awayWinPct": 76.3,
+        "confidence": 76.3,
+        "confidenceLabel": "Strong pick",
+        "outcomeLabel": "Egypt to win",
+        "whyTheyWin": "Egypt are projected to win because New Zealand (0-1-1, 25.0%) have outplayed Egypt (1-1-0, 75.0%) across the full season.; Composite rating favors Egypt: 0.219 vs 0.643 (ESPN + MLB.com + form).; New Zealand are 0-1-1 at home while Egypt are 1-1-0 on the road.",
         "reasons": [
           {
-            "title": "Home-field advantage",
-            "detail": "Uruguay play at Hard Rock Stadium, where home sides often perform better.",
-            "impact": "low",
-            "favors": "home"
+            "title": "Better season record",
+            "detail": "New Zealand (0-1-1, 25.0%) have outplayed Egypt (1-1-0, 75.0%) across the full season.",
+            "impact": "high",
+            "favors": "away"
+          },
+          {
+            "title": "Power rating edge",
+            "detail": "Composite rating favors Egypt: 0.219 vs 0.643 (ESPN + MLB.com + form).",
+            "impact": "high",
+            "favors": "away",
+            "source": "Multi-source"
+          },
+          {
+            "title": "Favorable home/road split",
+            "detail": "New Zealand are 0-1-1 at home while Egypt are 1-1-0 on the road.",
+            "impact": "medium",
+            "favors": "away"
+          },
+          {
+            "title": "Recent form trending up",
+            "detail": "Egypt are 2-2-1 in their last five (D-W-L-D-W) while New Zealand are 1-1-3.",
+            "impact": "medium",
+            "favors": "away",
+            "source": "ESPN"
+          },
+          {
+            "title": "Goal difference edge",
+            "detail": "New Zealand GD -2 vs Egypt +2.",
+            "impact": "medium",
+            "favors": "away",
+            "source": "ESPN"
           }
         ],
         "factors": [
           {
             "label": "Season record",
-            "detail": "Uruguay 0-2-0 vs Cape Verde 0-2-0",
-            "edge": "even"
+            "detail": "New Zealand 0-1-1 vs Egypt 1-1-0",
+            "edge": "away"
           },
           {
             "label": "Home/road splits",
-            "detail": "Home 0-2-0 vs away 0-2-0",
-            "edge": "even"
+            "detail": "Home 0-1-1 vs away 1-1-0",
+            "edge": "away"
           },
           {
             "label": "Home-field advantage",
@@ -3130,24 +2786,30 @@
           },
           {
             "label": "Last five games",
-            "detail": "Uruguay 0-4-1 vs Cape Verde 2-1-2",
+            "detail": "New Zealand 1-1-3 vs Egypt 2-2-1",
+            "edge": "away"
+          },
+          {
+            "label": "League advanced metrics",
+            "detail": "{'league': 'worldcup', 'goalDiffEdge': -4.0, 'drawBaseRate': 0.22}",
             "edge": "away"
           },
           {
             "label": "Advanced team profile",
-            "detail": "Power 0.325 vs 0.352 (ESPN/MLB.com)",
+            "detail": "Power 0.219 vs 0.643 (ESPN/MLB.com)",
             "edge": "away"
           },
           {
             "label": "Model probability",
-            "detail": "Data-driven estimate 38.1% home / 30.6% away / 31.3% draw",
-            "edge": "home"
+            "detail": "Data-driven estimate 4.1% home / 78.3% away / 17.6% draw",
+            "edge": "away"
           }
         ],
         "dataSources": [
           "Derived schedule metrics",
           "ESPN betting odds",
           "ESPN game summary",
+          "ESPN head-to-head",
           "ESPN injury report",
           "ESPN last-five form",
           "ESPN scoreboard",
@@ -3158,25 +2820,25 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.3813410031926747,
-            "away": 0.30575913361203333,
-            "draw": 0.312899863195292,
-            "homePct": 38.1,
-            "awayPct": 30.6,
-            "drawPct": 31.3,
+            "home": 0.0412,
+            "away": 0.7827999999999999,
+            "draw": 0.17600000000000002,
+            "homePct": 4.1,
+            "awayPct": 78.3,
+            "drawPct": 17.6,
             "components": [
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 52.8,
+                "homePct": 0.8,
                 "weightPct": 100.0
               }
             ]
           },
           "pick": {
-            "homePct": 37.3,
-            "awayPct": 31.0,
-            "drawPct": 31.6,
+            "homePct": 5.8,
+            "awayPct": 76.3,
+            "drawPct": 17.9,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
           "implied": {
@@ -3185,67 +2847,67 @@
             "books": [
               {
                 "sportsbook": "DraftKings",
-                "homePct": 68.5,
-                "awayPct": 10.7,
-                "drawPct": 20.8,
-                "vigPct": 4.28
+                "homePct": 16.0,
+                "awayPct": 59.1,
+                "drawPct": 24.9,
+                "vigPct": 4.18
               }
             ],
             "consensus": {
-              "home": 0.684976836532098,
-              "away": 0.10655195234943744,
-              "draw": 0.2084712111184646,
-              "homePct": 68.5,
-              "awayPct": 10.7,
-              "drawPct": 20.8,
-              "rawHomePct": 71.4,
-              "rawAwayPct": 11.1,
-              "avgVigPct": 4.28
+              "home": 0.15998082147994247,
+              "away": 0.5906984177720953,
+              "draw": 0.24932076074796228,
+              "homePct": 16.0,
+              "awayPct": 59.1,
+              "drawPct": 24.9,
+              "rawHomePct": 16.7,
+              "rawAwayPct": 61.5,
+              "avgVigPct": 4.18
             }
           }
         },
         "teamProbabilities": {
           "home": {
-            "truePct": 38.1,
-            "impliedPct": 68.5,
-            "blendedPct": 37.3,
-            "edgePct": -30.4,
-            "edgeLabel": "-30.4%"
+            "truePct": 4.1,
+            "impliedPct": 16.0,
+            "blendedPct": 5.8,
+            "edgePct": -11.9,
+            "edgeLabel": "-11.9%"
           },
           "away": {
-            "truePct": 30.6,
-            "impliedPct": 10.7,
-            "blendedPct": 31.0,
-            "edgePct": 19.9,
-            "edgeLabel": "+19.9%"
+            "truePct": 78.3,
+            "impliedPct": 59.1,
+            "blendedPct": 76.3,
+            "edgePct": 19.2,
+            "edgeLabel": "+19.2%"
           },
           "draw": {
-            "truePct": 31.3,
-            "impliedPct": 20.8,
-            "blendedPct": 31.6,
-            "edgePct": 10.5,
-            "edgeLabel": "+10.5%"
+            "truePct": 17.6,
+            "impliedPct": 24.9,
+            "blendedPct": 17.9,
+            "edgePct": -7.3,
+            "edgeLabel": "-7.3%"
           }
         },
-        "drawWinPct": 31.6,
+        "drawWinPct": 17.9,
         "features": {
           "league": "worldcup",
-          "recordDiff": 0.0,
-          "splitDiff": 0.0,
-          "homePower": 0.32499999999999996,
-          "awayPower": 0.3518518518518518,
+          "recordDiff": -0.5,
+          "splitDiff": -0.5,
+          "homePower": 0.21944444444444444,
+          "awayPower": 0.6425925925925926,
           "homeInjuryLoad": 0,
           "awayInjuryLoad": 0,
           "homeRest": 6,
           "awayRest": 6,
           "homeBackToBack": false,
           "awayBackToBack": false,
-          "impliedHome": 68.5,
-          "impliedAway": 10.7,
-          "trueHome": 38.1,
-          "trueAway": 30.6,
-          "confidence": 37.3,
-          "predictedSide": "home",
+          "impliedHome": 16.0,
+          "impliedAway": 59.1,
+          "trueHome": 4.1,
+          "trueAway": 78.3,
+          "confidence": 76.3,
+          "predictedSide": "away",
           "hasLineup": true,
           "dataCoverage": {
             "lineup": true,
@@ -3261,15 +2923,15 @@
           "mlbPitching": null,
           "leagueMetrics": {
             "league": "worldcup",
-            "goalDiffEdge": 0.0,
+            "goalDiffEdge": -4.0,
             "drawBaseRate": 0.22
           }
         }
       },
-      "predictionRank": 5
+      "predictionRank": 3
     }
   ],
-  "fetchedAt": "2026-06-22T00:09:40.282622+00:00",
+  "fetchedAt": "2026-06-24T00:05:21.371777+00:00",
   "scheduleTimezone": "America/New_York",
-  "defaultScheduleDate": "2026-06-21"
+  "defaultScheduleDate": "2026-06-23"
 }
