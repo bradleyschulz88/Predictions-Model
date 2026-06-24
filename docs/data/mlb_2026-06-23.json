@@ -44,11 +44,11 @@
   "gameCount": 15,
   "statusCounts": {
     "Final": 1,
-    "Washed out": 9,
-    "Delayed": 1,
-    "Scheduled": 4
+    "Washed out": 10,
+    "In Progress": 1,
+    "Scheduled": 3
   },
-  "topPick": "Houston Astros to win",
+  "topPick": "Boston Red Sox to win",
   "games": [
     {
       "league": "mlb",
@@ -792,9 +792,10 @@
             "opsEdge": -0.021,
             "eraEdge": 0.73
           }
-        }
+        },
+        "publishable": true
       },
-      "predictionRank": 2
+      "predictionRank": 3
     },
     {
       "league": "mlb",
@@ -805,7 +806,7 @@
       "homeTeam": "Tampa Bay Rays",
       "matchup": "Kansas City Royals @ Tampa Bay Rays",
       "gameStatusText": "Washed out",
-      "gameStatusDetail": "Top 5th",
+      "gameStatusDetail": "Bottom 8th",
       "statusType": "STATUS_IN_PROGRESS",
       "venueName": "Tropicana Field",
       "broadcast": "MLB.TV, Royals.TV, Rays.TV",
@@ -813,7 +814,7 @@
       "homeRecord": "43-32",
       "awayRoadRecord": "14-24",
       "homeHomeRecord": "26-11",
-      "awayScore": "6",
+      "awayScore": "11",
       "homeScore": "1",
       "isLive": false,
       "isFinal": false,
@@ -863,7 +864,7 @@
           "summary": "KC leads series 1-0",
           "seriesScore": "1-0"
         },
-        "weather": "88\u00b0F, 7% precipitation",
+        "weather": "87\u00b0F, 7% precipitation",
         "homeInjuries": [
           {
             "player": "Jesse Scholtens",
@@ -1147,7 +1148,7 @@
           "away": 1
         },
         "weatherImpact": {
-          "temperatureF": 88.0,
+          "temperatureF": 87.0,
           "precipitationPct": 7.0,
           "windMph": null,
           "runEnvironmentAdj": 0.04,
@@ -1183,14 +1184,14 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 3.36,
+          "homePitcherApiEra": 3.3,
           "homePitcherRecentEra": 4.09,
-          "homeTeamPitchingEra": 3.89,
-          "homeBullpenEra": 3.93,
-          "awayPitcherApiEra": 5.18,
+          "homeTeamPitchingEra": 3.93,
+          "homeBullpenEra": 3.95,
+          "awayPitcherApiEra": 5.06,
           "awayPitcherRecentEra": 9.0,
-          "awayTeamPitchingEra": 4.52,
-          "awayBullpenEra": 4.55
+          "awayTeamPitchingEra": 4.5,
+          "awayBullpenEra": 4.53
         }
       },
       "homeLineup": {
@@ -1375,7 +1376,7 @@
           },
           {
             "title": "Game conditions",
-            "detail": "Forecast at Tropicana Field: 88\u00b0F, 7% precipitation.",
+            "detail": "Forecast at Tropicana Field: 87\u00b0F, 7% precipitation.",
             "impact": "low",
             "favors": "even",
             "source": "ESPN"
@@ -1448,8 +1449,8 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.9482638196575208,
-            "away": 0.051736180342479066,
+            "home": 0.9482290154811066,
+            "away": 0.05177098451889346,
             "draw": null,
             "homePct": 94.8,
             "awayPct": 5.2,
@@ -1581,14 +1582,14 @@
               "MLB Stats API pitcher",
               "MLB Stats API team pitching"
             ],
-            "homePitcherApiEra": 3.36,
+            "homePitcherApiEra": 3.3,
             "homePitcherRecentEra": 4.09,
-            "homeTeamPitchingEra": 3.89,
-            "homeBullpenEra": 3.93,
-            "awayPitcherApiEra": 5.18,
+            "homeTeamPitchingEra": 3.93,
+            "homeBullpenEra": 3.95,
+            "awayPitcherApiEra": 5.06,
             "awayPitcherRecentEra": 9.0,
-            "awayTeamPitchingEra": 4.52,
-            "awayBullpenEra": 4.55
+            "awayTeamPitchingEra": 4.5,
+            "awayBullpenEra": 4.53
           },
           "leagueMetrics": {
             "league": "mlb",
@@ -1596,9 +1597,10 @@
             "opsEdge": 0.003,
             "eraEdge": 0.65
           }
-        }
+        },
+        "publishable": true
       },
-      "predictionRank": 1
+      "predictionRank": 2
     },
     {
       "league": "mlb",
@@ -1609,7 +1611,7 @@
       "homeTeam": "Detroit Tigers",
       "matchup": "New York Yankees @ Detroit Tigers",
       "gameStatusText": "Washed out",
-      "gameStatusDetail": "Middle 5th",
+      "gameStatusDetail": "Top 7th",
       "statusType": "STATUS_IN_PROGRESS",
       "venueName": "Comerica Park",
       "broadcast": "MLB.TV, Tigers.TV, YES",
@@ -1617,8 +1619,8 @@
       "homeRecord": "34-44",
       "awayRoadRecord": "24-16",
       "homeHomeRecord": "22-16",
-      "awayScore": "1",
-      "homeScore": "2",
+      "awayScore": "4",
+      "homeScore": "3",
       "isLive": false,
       "isFinal": false,
       "isScheduled": false,
@@ -1667,7 +1669,7 @@
           "summary": "DET leads series 1-0",
           "seriesScore": "1-0"
         },
-        "weather": "71\u00b0F, 0% precipitation",
+        "weather": "69\u00b0F, 0% precipitation",
         "homeInjuries": [
           {
             "player": "Parker Meadows",
@@ -1774,7 +1776,7 @@
             {
               "order": 1,
               "name": "Kevin McGonigle",
-              "position": "3B"
+              "position": "SS"
             },
             {
               "order": 2,
@@ -1802,19 +1804,19 @@
               "position": "DH"
             },
             {
+              "order": 6,
+              "name": "Kerry Carpenter",
+              "position": "DH"
+            },
+            {
               "order": 7,
               "name": "Hao-Yu Lee",
               "position": "2B"
             },
             {
-              "order": 8,
-              "name": "Zach McKinstry",
-              "position": "SS"
-            },
-            {
-              "order": 9,
-              "name": "Ben Malgeri",
-              "position": "RF"
+              "order": 7,
+              "name": "Colt Keith",
+              "position": "3B"
             }
           ]
         },
@@ -1943,7 +1945,7 @@
           "away": 1
         },
         "weatherImpact": {
-          "temperatureF": 71.0,
+          "temperatureF": 69.0,
           "precipitationPct": 0.0,
           "windMph": null,
           "runEnvironmentAdj": 0.0,
@@ -1979,11 +1981,11 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 2.53,
+          "homePitcherApiEra": 2.95,
           "homePitcherRecentEra": 4.12,
-          "homeTeamPitchingEra": 3.81,
-          "homeBullpenEra": 3.87,
-          "awayPitcherApiEra": 3.6,
+          "homeTeamPitchingEra": 3.84,
+          "homeBullpenEra": 3.89,
+          "awayPitcherApiEra": 3.7,
           "awayPitcherRecentEra": 4.39,
           "awayTeamPitchingEra": 3.38,
           "awayBullpenEra": 3.4
@@ -1997,7 +1999,7 @@
           {
             "order": 1,
             "name": "Kevin McGonigle",
-            "position": "3B"
+            "position": "SS"
           },
           {
             "order": 2,
@@ -2025,19 +2027,19 @@
             "position": "DH"
           },
           {
+            "order": 6,
+            "name": "Kerry Carpenter",
+            "position": "DH"
+          },
+          {
             "order": 7,
             "name": "Hao-Yu Lee",
             "position": "2B"
           },
           {
-            "order": 8,
-            "name": "Zach McKinstry",
-            "position": "SS"
-          },
-          {
-            "order": 9,
-            "name": "Ben Malgeri",
-            "position": "RF"
+            "order": 7,
+            "name": "Colt Keith",
+            "position": "3B"
           }
         ]
       },
@@ -2159,7 +2161,7 @@
           },
           {
             "title": "Game conditions",
-            "detail": "Forecast at Comerica Park: 71\u00b0F, 0% precipitation.",
+            "detail": "Forecast at Comerica Park: 69\u00b0F, 0% precipitation.",
             "impact": "low",
             "favors": "even",
             "source": "ESPN"
@@ -2237,8 +2239,8 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.12246352715886036,
-            "away": 0.8775364728411397,
+            "home": 0.12238202757287653,
+            "away": 0.8776179724271236,
             "draw": null,
             "homePct": 12.2,
             "awayPct": 87.8,
@@ -2370,11 +2372,11 @@
               "MLB Stats API pitcher",
               "MLB Stats API team pitching"
             ],
-            "homePitcherApiEra": 2.53,
+            "homePitcherApiEra": 2.95,
             "homePitcherRecentEra": 4.12,
-            "homeTeamPitchingEra": 3.81,
-            "homeBullpenEra": 3.87,
-            "awayPitcherApiEra": 3.6,
+            "homeTeamPitchingEra": 3.84,
+            "homeBullpenEra": 3.89,
+            "awayPitcherApiEra": 3.7,
             "awayPitcherRecentEra": 4.39,
             "awayTeamPitchingEra": 3.38,
             "awayBullpenEra": 3.4
@@ -2385,9 +2387,10 @@
             "opsEdge": -0.058,
             "eraEdge": -0.45
           }
-        }
+        },
+        "publishable": true
       },
-      "predictionRank": 6
+      "predictionRank": 7
     },
     {
       "league": "mlb",
@@ -2398,7 +2401,7 @@
       "homeTeam": "Pittsburgh Pirates",
       "matchup": "Seattle Mariners @ Pittsburgh Pirates",
       "gameStatusText": "Washed out",
-      "gameStatusDetail": "Bottom 5th",
+      "gameStatusDetail": "Bottom 7th",
       "statusType": "STATUS_IN_PROGRESS",
       "venueName": "PNC Park",
       "broadcast": "MLB.TV, Mariners.TV",
@@ -2406,7 +2409,7 @@
       "homeRecord": "39-39",
       "awayRoadRecord": "18-20",
       "homeHomeRecord": "20-19",
-      "awayScore": "1",
+      "awayScore": "3",
       "homeScore": "2",
       "isLive": false,
       "isFinal": false,
@@ -2456,7 +2459,7 @@
           "summary": "",
           "seriesScore": "0-0"
         },
-        "weather": "72\u00b0F, 0% precipitation",
+        "weather": "71\u00b0F, 0% precipitation",
         "homeInjuries": [
           {
             "player": "Mike Clevinger",
@@ -2734,7 +2737,7 @@
           "away": 2
         },
         "weatherImpact": {
-          "temperatureF": 72.0,
+          "temperatureF": 71.0,
           "precipitationPct": 0.0,
           "windMph": null,
           "runEnvironmentAdj": 0.0,
@@ -2770,14 +2773,14 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 4.74,
+          "homePitcherApiEra": 4.89,
           "homePitcherRecentEra": 1.0,
-          "homeTeamPitchingEra": 4.16,
-          "homeBullpenEra": 4.18,
-          "awayPitcherApiEra": 4.02,
+          "homeTeamPitchingEra": 4.17,
+          "homeBullpenEra": 4.19,
+          "awayPitcherApiEra": 3.94,
           "awayPitcherRecentEra": 3.6,
-          "awayTeamPitchingEra": 3.62,
-          "awayBullpenEra": 3.64
+          "awayTeamPitchingEra": 3.6,
+          "awayBullpenEra": 3.63
         }
       },
       "homeLineup": {
@@ -2937,7 +2940,7 @@
           },
           {
             "title": "Game conditions",
-            "detail": "Forecast at PNC Park: 72\u00b0F, 0% precipitation.",
+            "detail": "Forecast at PNC Park: 71\u00b0F, 0% precipitation.",
             "impact": "low",
             "favors": "even",
             "source": "ESPN"
@@ -3010,8 +3013,8 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.6953063071690891,
-            "away": 0.30469369283091086,
+            "home": 0.6950897417146168,
+            "away": 0.3049102582853832,
             "draw": null,
             "homePct": 69.5,
             "awayPct": 30.5,
@@ -3020,7 +3023,7 @@
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 72.3,
+                "homePct": 72.2,
                 "weightPct": 100.0
               }
             ]
@@ -3143,14 +3146,14 @@
               "MLB Stats API pitcher",
               "MLB Stats API team pitching"
             ],
-            "homePitcherApiEra": 4.74,
+            "homePitcherApiEra": 4.89,
             "homePitcherRecentEra": 1.0,
-            "homeTeamPitchingEra": 4.16,
-            "homeBullpenEra": 4.18,
-            "awayPitcherApiEra": 4.02,
+            "homeTeamPitchingEra": 4.17,
+            "homeBullpenEra": 4.19,
+            "awayPitcherApiEra": 3.94,
             "awayPitcherRecentEra": 3.6,
-            "awayTeamPitchingEra": 3.62,
-            "awayBullpenEra": 3.64
+            "awayTeamPitchingEra": 3.6,
+            "awayBullpenEra": 3.63
           },
           "leagueMetrics": {
             "league": "mlb",
@@ -3158,7 +3161,8 @@
             "opsEdge": 0.044,
             "eraEdge": -0.55
           }
-        }
+        },
+        "publishable": true
       },
       "predictionRank": 12
     },
@@ -3171,7 +3175,7 @@
       "homeTeam": "Miami Marlins",
       "matchup": "Texas Rangers @ Miami Marlins",
       "gameStatusText": "Washed out",
-      "gameStatusDetail": "Top 5th",
+      "gameStatusDetail": "Top 7th",
       "statusType": "STATUS_IN_PROGRESS",
       "venueName": "loanDepot park",
       "broadcast": "MLB.TV, Rangers Sports Network, Marlins.TV",
@@ -3180,7 +3184,7 @@
       "awayRoadRecord": "19-22",
       "homeHomeRecord": "26-17",
       "awayScore": "1",
-      "homeScore": "2",
+      "homeScore": "6",
       "isLive": false,
       "isFinal": false,
       "isScheduled": false,
@@ -3566,14 +3570,14 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 4.11,
+          "homePitcherApiEra": 4.01,
           "homePitcherRecentEra": 0.75,
-          "homeTeamPitchingEra": 4.06,
-          "homeBullpenEra": 4.09,
+          "homeTeamPitchingEra": 4.05,
+          "homeBullpenEra": 4.08,
           "awayPitcherApiEra": 3.73,
           "awayPitcherRecentEra": 6.43,
-          "awayTeamPitchingEra": 3.93,
-          "awayBullpenEra": 3.97
+          "awayTeamPitchingEra": 3.98,
+          "awayBullpenEra": 4.02
         }
       },
       "homeLineup": {
@@ -3860,8 +3864,8 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.8810233513458573,
-            "away": 0.1189766486541427,
+            "home": 0.8812795761746431,
+            "away": 0.11872042382535694,
             "draw": null,
             "homePct": 88.1,
             "awayPct": 11.9,
@@ -3870,7 +3874,7 @@
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 91.3,
+                "homePct": 91.4,
                 "weightPct": 100.0
               }
             ]
@@ -3993,14 +3997,14 @@
               "MLB Stats API pitcher",
               "MLB Stats API team pitching"
             ],
-            "homePitcherApiEra": 4.11,
+            "homePitcherApiEra": 4.01,
             "homePitcherRecentEra": 0.75,
-            "homeTeamPitchingEra": 4.06,
-            "homeBullpenEra": 4.09,
+            "homeTeamPitchingEra": 4.05,
+            "homeBullpenEra": 4.08,
             "awayPitcherApiEra": 3.73,
             "awayPitcherRecentEra": 6.43,
-            "awayTeamPitchingEra": 3.93,
-            "awayBullpenEra": 3.97
+            "awayTeamPitchingEra": 3.98,
+            "awayBullpenEra": 4.02
           },
           "leagueMetrics": {
             "league": "mlb",
@@ -4008,9 +4012,10 @@
             "opsEdge": 0.003,
             "eraEdge": -0.14
           }
-        }
+        },
+        "publishable": true
       },
-      "predictionRank": 5
+      "predictionRank": 6
     },
     {
       "league": "mlb",
@@ -4021,7 +4026,7 @@
       "homeTeam": "Washington Nationals",
       "matchup": "Philadelphia Phillies @ Washington Nationals",
       "gameStatusText": "Washed out",
-      "gameStatusDetail": "Bottom 5th",
+      "gameStatusDetail": "Top 8th",
       "statusType": "STATUS_IN_PROGRESS",
       "venueName": "Nationals Park",
       "broadcast": "MLB.TV, NBC Sports Phil, Nationals.TV",
@@ -4029,7 +4034,7 @@
       "homeRecord": "41-38",
       "awayRoadRecord": "19-17",
       "homeHomeRecord": "17-22",
-      "awayScore": "2",
+      "awayScore": "3",
       "homeScore": "5",
       "isLive": false,
       "isFinal": false,
@@ -4079,7 +4084,7 @@
           "summary": "Series tied 2-2",
           "seriesScore": "2-2"
         },
-        "weather": "76\u00b0F, 34% precipitation",
+        "weather": "74\u00b0F, 34% precipitation",
         "homeInjuries": [
           {
             "player": "Jake Irvin",
@@ -4356,7 +4361,7 @@
           "away": 1
         },
         "weatherImpact": {
-          "temperatureF": 76.0,
+          "temperatureF": 74.0,
           "precipitationPct": 34.0,
           "windMph": null,
           "runEnvironmentAdj": 0.0,
@@ -4396,10 +4401,10 @@
           "homePitcherRecentEra": 0.0,
           "homeTeamPitchingEra": 4.58,
           "homeBullpenEra": 4.63,
-          "awayPitcherApiEra": 4.48,
+          "awayPitcherApiEra": 4.39,
           "awayPitcherRecentEra": 6.59,
-          "awayTeamPitchingEra": 4.1,
-          "awayBullpenEra": 4.14
+          "awayTeamPitchingEra": 4.09,
+          "awayBullpenEra": 4.13
         }
       },
       "homeLineup": {
@@ -4565,7 +4570,7 @@
           },
           {
             "title": "Game conditions",
-            "detail": "Forecast at Nationals Park: 76\u00b0F, 34% precipitation.",
+            "detail": "Forecast at Nationals Park: 74\u00b0F, 34% precipitation.",
             "impact": "low",
             "favors": "even",
             "source": "ESPN"
@@ -4638,8 +4643,8 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.8128644531498355,
-            "away": 0.1871355468501646,
+            "home": 0.8128003658340689,
+            "away": 0.1871996341659311,
             "draw": null,
             "homePct": 81.3,
             "awayPct": 18.7,
@@ -4775,10 +4780,10 @@
             "homePitcherRecentEra": 0.0,
             "homeTeamPitchingEra": 4.58,
             "homeBullpenEra": 4.63,
-            "awayPitcherApiEra": 4.48,
+            "awayPitcherApiEra": 4.39,
             "awayPitcherRecentEra": 6.59,
-            "awayTeamPitchingEra": 4.1,
-            "awayBullpenEra": 4.14
+            "awayTeamPitchingEra": 4.09,
+            "awayBullpenEra": 4.13
           },
           "leagueMetrics": {
             "league": "mlb",
@@ -4786,7 +4791,8 @@
             "opsEdge": 0.051,
             "eraEdge": -0.53
           }
-        }
+        },
+        "publishable": true
       },
       "predictionRank": 9
     },
@@ -4799,7 +4805,7 @@
       "homeTeam": "New York Mets",
       "matchup": "Chicago Cubs @ New York Mets",
       "gameStatusText": "Washed out",
-      "gameStatusDetail": "Bottom 2nd",
+      "gameStatusDetail": "Top 4th",
       "statusType": "STATUS_IN_PROGRESS",
       "venueName": "Citi Field",
       "broadcast": "MLB.TV, Marquee Sports Net, SNY",
@@ -4807,8 +4813,8 @@
       "homeRecord": "34-43",
       "awayRoadRecord": "17-20",
       "homeHomeRecord": "18-18",
-      "awayScore": "5",
-      "homeScore": "0",
+      "awayScore": "7",
+      "homeScore": "2",
       "isLive": false,
       "isFinal": false,
       "isScheduled": false,
@@ -5176,14 +5182,14 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 10.04,
+          "homePitcherApiEra": 10.21,
           "homePitcherRecentEra": 7.44,
-          "homeTeamPitchingEra": 4.13,
-          "homeBullpenEra": 4.16,
-          "awayPitcherApiEra": 5.11,
+          "homeTeamPitchingEra": 4.15,
+          "homeBullpenEra": 4.17,
+          "awayPitcherApiEra": 5.25,
           "awayPitcherRecentEra": 1.67,
-          "awayTeamPitchingEra": 4.27,
-          "awayBullpenEra": 4.31
+          "awayTeamPitchingEra": 4.29,
+          "awayBullpenEra": 4.32
         }
       },
       "homeLineup": {
@@ -5566,14 +5572,14 @@
               "MLB Stats API pitcher",
               "MLB Stats API team pitching"
             ],
-            "homePitcherApiEra": 10.04,
+            "homePitcherApiEra": 10.21,
             "homePitcherRecentEra": 7.44,
-            "homeTeamPitchingEra": 4.13,
-            "homeBullpenEra": 4.16,
-            "awayPitcherApiEra": 5.11,
+            "homeTeamPitchingEra": 4.15,
+            "homeBullpenEra": 4.17,
+            "awayPitcherApiEra": 5.25,
             "awayPitcherRecentEra": 1.67,
-            "awayTeamPitchingEra": 4.27,
-            "awayBullpenEra": 4.31
+            "awayTeamPitchingEra": 4.29,
+            "awayBullpenEra": 4.32
           },
           "leagueMetrics": {
             "league": "mlb",
@@ -5581,9 +5587,10 @@
             "opsEdge": -0.069,
             "eraEdge": 0.2
           }
-        }
+        },
+        "publishable": true
       },
-      "predictionRank": 3
+      "predictionRank": 4
     },
     {
       "league": "mlb",
@@ -5594,7 +5601,7 @@
       "homeTeam": "Cincinnati Reds",
       "matchup": "Milwaukee Brewers @ Cincinnati Reds",
       "gameStatusText": "Washed out",
-      "gameStatusDetail": "Top 4th",
+      "gameStatusDetail": "Top 6th",
       "statusType": "STATUS_IN_PROGRESS",
       "venueName": "Great American Ball Park",
       "broadcast": "MLB.TV, Reds.TV, Brewers.TV",
@@ -5652,13 +5659,19 @@
           "summary": "MIL leads series 1-0",
           "seriesScore": "1-0"
         },
-        "weather": "78\u00b0F, 0% precipitation",
+        "weather": "74\u00b0F, 0% precipitation",
         "homeInjuries": [
           {
             "player": "Connor Burns",
             "status": "Day-To-Day",
             "detail": "Not Specified",
             "returnDate": "2026-06-26"
+          },
+          {
+            "player": "Nick Lodolo",
+            "status": "Day-To-Day",
+            "detail": "Bruise (Left)",
+            "returnDate": "2026-06-29"
           },
           {
             "player": "Emilio Pagan",
@@ -5677,12 +5690,6 @@
             "status": "60-Day-IL",
             "detail": "Surgery (Right)",
             "returnDate": "2026-07-04"
-          },
-          {
-            "player": "Brandon Williamson",
-            "status": "60-Day-IL",
-            "detail": "Soreness (Left)",
-            "returnDate": "2026-07-17"
           }
         ],
         "awayInjuries": [
@@ -5729,12 +5736,6 @@
             "status": "60-Day-IL",
             "detail": "Surgery (Right)",
             "returnDate": "2026-07-04"
-          },
-          {
-            "player": "Brandon Williamson",
-            "status": "60-Day-IL",
-            "detail": "Soreness (Left)",
-            "returnDate": "2026-07-17"
           }
         ],
         "awayMajorInjuries": [
@@ -5771,10 +5772,10 @@
         ],
         "homeKeyInjuries": [
           "Connor Burns (Day-To-Day)",
+          "Nick Lodolo (Day-To-Day)",
           "Emilio Pagan (15-Day-IL)",
           "Ke'Bryan Hayes (10-Day-IL)",
-          "Hunter Greene (60-Day-IL)",
-          "Brandon Williamson (60-Day-IL)"
+          "Hunter Greene (60-Day-IL)"
         ],
         "awayKeyInjuries": [
           "Jared Koenig (15-Day-IL)",
@@ -5876,14 +5877,14 @@
               "position": "CF"
             },
             {
+              "order": 7,
+              "name": "Garrett Mitchell",
+              "position": "CF"
+            },
+            {
               "order": 8,
               "name": "Cooper Pratt",
               "position": "SS"
-            },
-            {
-              "order": 9,
-              "name": "Joey Ortiz",
-              "position": "3B"
             }
           ]
         },
@@ -5960,7 +5961,7 @@
           "away": 1
         },
         "weatherImpact": {
-          "temperatureF": 78.0,
+          "temperatureF": 74.0,
           "precipitationPct": 0.0,
           "windMph": null,
           "runEnvironmentAdj": 0.0,
@@ -5996,14 +5997,14 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 5.72,
+          "homePitcherApiEra": 5.59,
           "homePitcherRecentEra": 7.55,
-          "homeTeamPitchingEra": 4.51,
-          "homeBullpenEra": 4.55,
-          "awayPitcherApiEra": 5.67,
+          "homeTeamPitchingEra": 4.5,
+          "homeBullpenEra": 4.54,
+          "awayPitcherApiEra": 5.5,
           "awayPitcherRecentEra": 11.49,
-          "awayTeamPitchingEra": 3.38,
-          "awayBullpenEra": 3.4
+          "awayTeamPitchingEra": 3.37,
+          "awayBullpenEra": 3.39
         }
       },
       "homeLineup": {
@@ -6099,14 +6100,14 @@
             "position": "CF"
           },
           {
+            "order": 7,
+            "name": "Garrett Mitchell",
+            "position": "CF"
+          },
+          {
             "order": 8,
             "name": "Cooper Pratt",
             "position": "SS"
-          },
-          {
-            "order": 9,
-            "name": "Joey Ortiz",
-            "position": "3B"
           }
         ]
       },
@@ -6122,12 +6123,6 @@
           "status": "60-Day-IL",
           "detail": "Surgery (Right)",
           "returnDate": "2026-07-04"
-        },
-        {
-          "player": "Brandon Williamson",
-          "status": "60-Day-IL",
-          "detail": "Soreness (Left)",
-          "returnDate": "2026-07-17"
         }
       ],
       "awayMajorInjuries": [
@@ -6165,9 +6160,9 @@
       "prediction": {
         "predictedWinner": "Milwaukee Brewers",
         "predictedSide": "away",
-        "homeWinPct": 32.1,
-        "awayWinPct": 67.9,
-        "confidence": 67.9,
+        "homeWinPct": 33.7,
+        "awayWinPct": 66.3,
+        "confidence": 66.3,
         "confidenceLabel": "Lean",
         "outcomeLabel": "Milwaukee Brewers to win",
         "whyTheyWin": "Milwaukee Brewers are projected to win because Cincinnati Reds (37-40, 48.1%) have outplayed Milwaukee Brewers (47-29, 61.8%) across the full season.; Milwaukee Brewers send out Brandon Sproat (5.94 ERA) against Nick Lodolo (6.12 ERA).; Composite rating favors Milwaukee Brewers: 0.409 vs 0.721 (ESPN + MLB.com + form).",
@@ -6206,7 +6201,7 @@
           },
           {
             "title": "Game conditions",
-            "detail": "Forecast at Great American Ball Park: 78\u00b0F, 0% precipitation.",
+            "detail": "Forecast at Great American Ball Park: 74\u00b0F, 0% precipitation.",
             "impact": "low",
             "favors": "even",
             "source": "ESPN"
@@ -6235,7 +6230,7 @@
           },
           {
             "label": "Injury impact",
-            "detail": "Weighted injury load: home 3.4 vs away 5.8",
+            "detail": "Weighted injury load: home 2.3 vs away 5.8",
             "edge": "home"
           },
           {
@@ -6265,7 +6260,7 @@
           },
           {
             "label": "Model probability",
-            "detail": "Data-driven estimate 19.9% home / 80.1% away",
+            "detail": "Data-driven estimate 22.7% home / 77.3% away",
             "edge": "away"
           }
         ],
@@ -6284,24 +6279,24 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.19910645807916938,
-            "away": 0.8008935419208306,
+            "home": 0.22664626792216042,
+            "away": 0.7733537320778396,
             "draw": null,
-            "homePct": 19.9,
-            "awayPct": 80.1,
+            "homePct": 22.7,
+            "awayPct": 77.3,
             "drawPct": null,
             "components": [
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 16.6,
+                "homePct": 19.6,
                 "weightPct": 100.0
               }
             ]
           },
           "pick": {
-            "homePct": 32.1,
-            "awayPct": 67.9,
+            "homePct": 33.7,
+            "awayPct": 66.3,
             "drawPct": null,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
@@ -6367,18 +6362,18 @@
         },
         "teamProbabilities": {
           "home": {
-            "truePct": 19.9,
+            "truePct": 22.7,
             "impliedPct": 50.1,
-            "blendedPct": 32.1,
-            "edgePct": -30.2,
-            "edgeLabel": "-30.2%"
+            "blendedPct": 33.7,
+            "edgePct": -27.4,
+            "edgeLabel": "-27.4%"
           },
           "away": {
-            "truePct": 80.1,
+            "truePct": 77.3,
             "impliedPct": 49.9,
-            "blendedPct": 67.9,
-            "edgePct": 30.2,
-            "edgeLabel": "+30.2%"
+            "blendedPct": 66.3,
+            "edgePct": 27.4,
+            "edgeLabel": "+27.4%"
           }
         },
         "features": {
@@ -6387,7 +6382,7 @@
           "splitDiff": -0.1239,
           "homePower": 0.40871864608225106,
           "awayPower": 0.7205742320175438,
-          "homeInjuryLoad": 3.45,
+          "homeInjuryLoad": 2.3,
           "awayInjuryLoad": 5.75,
           "homeRest": 1,
           "awayRest": 1,
@@ -6395,9 +6390,9 @@
           "awayBackToBack": true,
           "impliedHome": 50.1,
           "impliedAway": 49.9,
-          "trueHome": 19.9,
-          "trueAway": 80.1,
-          "confidence": 67.9,
+          "trueHome": 22.7,
+          "trueAway": 77.3,
+          "confidence": 66.3,
           "predictedSide": "away",
           "hasLineup": true,
           "dataCoverage": {
@@ -6417,14 +6412,14 @@
               "MLB Stats API pitcher",
               "MLB Stats API team pitching"
             ],
-            "homePitcherApiEra": 5.72,
+            "homePitcherApiEra": 5.59,
             "homePitcherRecentEra": 7.55,
-            "homeTeamPitchingEra": 4.51,
-            "homeBullpenEra": 4.55,
-            "awayPitcherApiEra": 5.67,
+            "homeTeamPitchingEra": 4.5,
+            "homeBullpenEra": 4.54,
+            "awayPitcherApiEra": 5.5,
             "awayPitcherRecentEra": 11.49,
-            "awayTeamPitchingEra": 3.38,
-            "awayBullpenEra": 3.4
+            "awayTeamPitchingEra": 3.37,
+            "awayBullpenEra": 3.39
           },
           "leagueMetrics": {
             "league": "mlb",
@@ -6432,7 +6427,8 @@
             "opsEdge": -0.029,
             "eraEdge": -1.13
           }
-        }
+        },
+        "publishable": true
       },
       "predictionRank": 10
     },
@@ -6445,7 +6441,7 @@
       "homeTeam": "Chicago White Sox",
       "matchup": "Cleveland Guardians @ Chicago White Sox",
       "gameStatusText": "Washed out",
-      "gameStatusDetail": "Bottom 2nd",
+      "gameStatusDetail": "Top 5th",
       "statusType": "STATUS_IN_PROGRESS",
       "venueName": "Rate Field",
       "broadcast": "MLB.TV, CLEGuardians.TV, CHSN",
@@ -6453,8 +6449,8 @@
       "homeRecord": "40-37",
       "awayRoadRecord": "22-21",
       "homeHomeRecord": "25-12",
-      "awayScore": "0",
-      "homeScore": "0",
+      "awayScore": "1",
+      "homeScore": "1",
       "isLive": false,
       "isFinal": false,
       "isScheduled": false,
@@ -6815,14 +6811,14 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 3.8,
+          "homePitcherApiEra": 3.77,
           "homePitcherRecentEra": 3.6,
-          "homeTeamPitchingEra": 4.41,
-          "homeBullpenEra": 4.44,
-          "awayPitcherApiEra": 2.67,
+          "homeTeamPitchingEra": 4.4,
+          "homeBullpenEra": 4.42,
+          "awayPitcherApiEra": 2.68,
           "awayPitcherRecentEra": 0.52,
-          "awayTeamPitchingEra": 3.82,
-          "awayBullpenEra": 3.85
+          "awayTeamPitchingEra": 3.81,
+          "awayBullpenEra": 3.84
         }
       },
       "homeLineup": {
@@ -7053,8 +7049,8 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.2976618140745412,
-            "away": 0.7023381859254588,
+            "home": 0.29776981825631144,
+            "away": 0.7022301817436887,
             "draw": null,
             "homePct": 29.8,
             "awayPct": 70.2,
@@ -7186,14 +7182,14 @@
               "MLB Stats API pitcher",
               "MLB Stats API team pitching"
             ],
-            "homePitcherApiEra": 3.8,
+            "homePitcherApiEra": 3.77,
             "homePitcherRecentEra": 3.6,
-            "homeTeamPitchingEra": 4.41,
-            "homeBullpenEra": 4.44,
-            "awayPitcherApiEra": 2.67,
+            "homeTeamPitchingEra": 4.4,
+            "homeBullpenEra": 4.42,
+            "awayPitcherApiEra": 2.68,
             "awayPitcherRecentEra": 0.52,
-            "awayTeamPitchingEra": 3.82,
-            "awayBullpenEra": 3.85
+            "awayTeamPitchingEra": 3.81,
+            "awayBullpenEra": 3.84
           },
           "leagueMetrics": {
             "league": "mlb",
@@ -7201,7 +7197,8 @@
             "opsEdge": 0.048,
             "eraEdge": -0.59
           }
-        }
+        },
+        "publishable": true
       },
       "predictionRank": 11
     },
@@ -7213,16 +7210,16 @@
       "awayTeam": "Los Angeles Dodgers",
       "homeTeam": "Minnesota Twins",
       "matchup": "Los Angeles Dodgers @ Minnesota Twins",
-      "gameStatusText": "Delayed",
-      "gameStatusDetail": "Rain Delay, Top 1st",
-      "statusType": "STATUS_RAIN_DELAY",
+      "gameStatusText": "Washed out",
+      "gameStatusDetail": "Bottom 2nd",
+      "statusType": "STATUS_IN_PROGRESS",
       "venueName": "Target Field",
       "broadcast": "MLB.TV, TBS, Twins.TV, Sportsnet LA",
       "awayRecord": "50-29",
       "homeRecord": "38-42",
       "awayRoadRecord": "24-15",
       "homeHomeRecord": "20-20",
-      "awayScore": "0",
+      "awayScore": "1",
       "homeScore": "0",
       "isLive": false,
       "isFinal": false,
@@ -7231,8 +7228,8 @@
       "isCanceled": false,
       "isSuspended": false,
       "isDelayed": true,
-      "isVoided": false,
-      "isWashedOut": false,
+      "isVoided": true,
+      "isWashedOut": true,
       "attendance": 0,
       "source": "espn",
       "viewTypes": [
@@ -7272,7 +7269,7 @@
           "summary": "LAD lead series 1-0",
           "seriesScore": "1-0"
         },
-        "weather": "64\u00b0F, 77% precipitation",
+        "weather": "63\u00b0F, 77% precipitation",
         "homeInjuries": [
           {
             "player": "Joe Ryan",
@@ -7544,7 +7541,7 @@
           "away": 1
         },
         "weatherImpact": {
-          "temperatureF": 64.0,
+          "temperatureF": 63.0,
           "precipitationPct": 77.0,
           "windMph": null,
           "runEnvironmentAdj": 0.0,
@@ -7580,14 +7577,14 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 1.26,
+          "homePitcherApiEra": 1.65,
           "homePitcherRecentEra": 2.54,
           "homeTeamPitchingEra": 4.75,
           "homeBullpenEra": 4.8,
-          "awayPitcherApiEra": 2.72,
+          "awayPitcherApiEra": 2.67,
           "awayPitcherRecentEra": 2.12,
-          "awayTeamPitchingEra": 3.43,
-          "awayBullpenEra": 3.45
+          "awayTeamPitchingEra": 3.42,
+          "awayBullpenEra": 3.44
         }
       },
       "homeLineup": {
@@ -7748,7 +7745,7 @@
           },
           {
             "title": "Game conditions",
-            "detail": "Forecast at Target Field: 64\u00b0F, 77% precipitation.",
+            "detail": "Forecast at Target Field: 63\u00b0F, 77% precipitation.",
             "impact": "low",
             "favors": "even",
             "source": "ESPN"
@@ -7816,8 +7813,8 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.10841383116473013,
-            "away": 0.8915861688352698,
+            "home": 0.10837539763881471,
+            "away": 0.8916246023611853,
             "draw": null,
             "homePct": 10.8,
             "awayPct": 89.2,
@@ -7949,14 +7946,14 @@
               "MLB Stats API pitcher",
               "MLB Stats API team pitching"
             ],
-            "homePitcherApiEra": 1.26,
+            "homePitcherApiEra": 1.65,
             "homePitcherRecentEra": 2.54,
             "homeTeamPitchingEra": 4.75,
             "homeBullpenEra": 4.8,
-            "awayPitcherApiEra": 2.72,
+            "awayPitcherApiEra": 2.67,
             "awayPitcherRecentEra": 2.12,
-            "awayTeamPitchingEra": 3.43,
-            "awayBullpenEra": 3.45
+            "awayTeamPitchingEra": 3.42,
+            "awayBullpenEra": 3.44
           },
           "leagueMetrics": {
             "league": "mlb",
@@ -7964,9 +7961,10 @@
             "opsEdge": -0.047,
             "eraEdge": -1.33
           }
-        }
+        },
+        "publishable": true
       },
-      "predictionRank": 4
+      "predictionRank": 5
     },
     {
       "league": "mlb",
@@ -7977,7 +7975,7 @@
       "homeTeam": "St. Louis Cardinals",
       "matchup": "Arizona Diamondbacks @ St. Louis Cardinals",
       "gameStatusText": "Washed out",
-      "gameStatusDetail": "Bottom 1st",
+      "gameStatusDetail": "End 4th",
       "statusType": "STATUS_IN_PROGRESS",
       "venueName": "Busch Stadium",
       "broadcast": "MLB.TV, DBACKS.TV, Cardinals.TV",
@@ -8334,14 +8332,14 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 4.56,
+          "homePitcherApiEra": 4.36,
           "homePitcherRecentEra": 5.14,
-          "homeTeamPitchingEra": 4.26,
-          "homeBullpenEra": 4.29,
-          "awayPitcherApiEra": 2.44,
+          "homeTeamPitchingEra": 4.24,
+          "homeBullpenEra": 4.27,
+          "awayPitcherApiEra": 2.34,
           "awayPitcherRecentEra": 0.5,
-          "awayTeamPitchingEra": 4.29,
-          "awayBullpenEra": 4.38
+          "awayTeamPitchingEra": 4.27,
+          "awayBullpenEra": 4.35
         }
       },
       "homeLineup": {
@@ -8550,8 +8548,8 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.3278322353093814,
-            "away": 0.6721677646906187,
+            "home": 0.3277171062279429,
+            "away": 0.6722828937720571,
             "draw": null,
             "homePct": 32.8,
             "awayPct": 67.2,
@@ -8683,21 +8681,22 @@
               "MLB Stats API pitcher",
               "MLB Stats API team pitching"
             ],
-            "homePitcherApiEra": 4.56,
+            "homePitcherApiEra": 4.36,
             "homePitcherRecentEra": 5.14,
-            "homeTeamPitchingEra": 4.26,
-            "homeBullpenEra": 4.29,
-            "awayPitcherApiEra": 2.44,
+            "homeTeamPitchingEra": 4.24,
+            "homeBullpenEra": 4.27,
+            "awayPitcherApiEra": 2.34,
             "awayPitcherRecentEra": 0.5,
-            "awayTeamPitchingEra": 4.29,
-            "awayBullpenEra": 4.38
+            "awayTeamPitchingEra": 4.27,
+            "awayBullpenEra": 4.35
           },
           "leagueMetrics": {
             "league": "mlb",
             "opsEdge": 0.035,
             "eraEdge": 0.03
           }
-        }
+        },
+        "publishable": true
       },
       "predictionRank": 13
     },
@@ -8709,9 +8708,9 @@
       "awayTeam": "Boston Red Sox",
       "homeTeam": "Colorado Rockies",
       "matchup": "Boston Red Sox @ Colorado Rockies",
-      "gameStatusText": "Scheduled",
-      "gameStatusDetail": "Scheduled",
-      "statusType": "STATUS_SCHEDULED",
+      "gameStatusText": "In Progress",
+      "gameStatusDetail": "Top 1st",
+      "statusType": "STATUS_IN_PROGRESS",
       "venueName": "Coors Field",
       "broadcast": "MLB.TV, Rockies.TV, NESN",
       "awayRecord": "31-45",
@@ -8720,9 +8719,9 @@
       "homeHomeRecord": "17-21",
       "awayScore": "0",
       "homeScore": "0",
-      "isLive": false,
+      "isLive": true,
       "isFinal": false,
-      "isScheduled": true,
+      "isScheduled": false,
       "isPostponed": false,
       "isCanceled": false,
       "isSuspended": false,
@@ -8751,88 +8750,24 @@
         "mlbId": 807743
       },
       "enrichment": {
-        "espnPredictorHome": 41.9,
-        "espnPredictorAway": 58.1,
+        "espnPredictorHome": null,
+        "espnPredictorAway": null,
         "homeLastFive": {
-          "record": "3-2",
-          "results": [
-            "L",
-            "W",
-            "W",
-            "L",
-            "W"
-          ],
-          "games": [
-            {
-              "result": "L",
-              "score": "8-6",
-              "opponent": "Chicago Cubs"
-            },
-            {
-              "result": "W",
-              "score": "4-3",
-              "opponent": "Pittsburgh Pirates"
-            },
-            {
-              "result": "W",
-              "score": "2-1",
-              "opponent": "Pittsburgh Pirates"
-            },
-            {
-              "result": "L",
-              "score": "8-6",
-              "opponent": "Pittsburgh Pirates"
-            },
-            {
-              "result": "W",
-              "score": "3-2",
-              "opponent": "Boston Red Sox"
-            }
-          ]
+          "record": null,
+          "results": [],
+          "games": []
         },
         "awayLastFive": {
-          "record": "2-3",
-          "results": [
-            "L",
-            "W",
-            "W",
-            "L",
-            "L"
-          ],
-          "games": [
-            {
-              "result": "L",
-              "score": "4-3",
-              "opponent": "Toronto Blue Jays"
-            },
-            {
-              "result": "W",
-              "score": "6-2",
-              "opponent": "Seattle Mariners"
-            },
-            {
-              "result": "W",
-              "score": "5-1",
-              "opponent": "Seattle Mariners"
-            },
-            {
-              "result": "L",
-              "score": "3-1",
-              "opponent": "Seattle Mariners"
-            },
-            {
-              "result": "L",
-              "score": "3-2",
-              "opponent": "Colorado Rockies"
-            }
-          ]
+          "record": null,
+          "results": [],
+          "games": []
         },
         "seasonSeries": {
           "title": "Regular Season Series",
           "summary": "COL leads series 1-0",
           "seriesScore": "1-0"
         },
-        "weather": "76\u00b0F, 51% precipitation",
+        "weather": "81\u00b0F, 51% precipitation",
         "homeInjuries": [
           {
             "player": "McCade Brown",
@@ -9053,7 +8988,6 @@
         "sources": [
           "Batting lineup",
           "Derived schedule metrics",
-          "ESPN Matchup Predictor",
           "ESPN game summary",
           "ESPN head-to-head",
           "ESPN injury report",
@@ -9086,7 +9020,7 @@
           "era": 5.4805193,
           "runsScored": 359.0,
           "runsAllowed": 448.0,
-          "powerRating": 0.36791660774683543,
+          "powerRating": 0.30989575968354427,
           "opsProxy": 0.7328105,
           "winPct": 0.3924050632911392
         },
@@ -9114,7 +9048,7 @@
           "era": 3.8456175,
           "runsScored": 296.0,
           "runsAllowed": 304.0,
-          "powerRating": 0.4341595238596492,
+          "powerRating": 0.44269940482456144,
           "opsProxy": 0.69020002,
           "winPct": 0.40789473684210525
         },
@@ -9123,7 +9057,7 @@
           "away": 1
         },
         "weatherImpact": {
-          "temperatureF": 76.0,
+          "temperatureF": 81.0,
           "precipitationPct": 51.0,
           "windMph": null,
           "runEnvironmentAdj": 0.0,
@@ -9159,10 +9093,10 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 10.29,
-          "homePitcherRecentEra": 10.29,
+          "homePitcherApiEra": 9.82,
+          "homePitcherRecentEra": 10.14,
           "homeTeamPitchingEra": 5.48,
-          "homeBullpenEra": 5.53,
+          "homeBullpenEra": 5.52,
           "awayPitcherApiEra": 3.12,
           "awayPitcherRecentEra": 2.8,
           "awayTeamPitchingEra": 3.85,
@@ -9310,12 +9244,12 @@
       "prediction": {
         "predictedWinner": "Boston Red Sox",
         "predictedSide": "away",
-        "homeWinPct": 28.8,
-        "awayWinPct": 71.2,
-        "confidence": 71.2,
+        "homeWinPct": 23.2,
+        "awayWinPct": 76.8,
+        "confidence": 76.8,
         "confidenceLabel": "Strong pick",
         "outcomeLabel": "Boston Red Sox to win",
-        "whyTheyWin": "Boston Red Sox are projected to win because Colorado Rockies (31-48, 39.2%) have outplayed Boston Red Sox (31-45, 40.8%) across the full season.; Boston Red Sox send out Sonny Gray (3.12 ERA) against Sean Sullivan (10.29 ERA).; ESPN's model gives Colorado Rockies a 41.9% chance and Boston Red Sox a 58.1% chance.",
+        "whyTheyWin": "Boston Red Sox are projected to win because Colorado Rockies (31-48, 39.2%) have outplayed Boston Red Sox (31-45, 40.8%) across the full season.; Boston Red Sox send out Sonny Gray (3.12 ERA) against Sean Sullivan (10.29 ERA).; Composite rating favors Boston Red Sox: 0.310 vs 0.443 (ESPN + MLB.com + form).",
         "reasons": [
           {
             "title": "Better season record",
@@ -9330,15 +9264,8 @@
             "favors": "away"
           },
           {
-            "title": "ESPN Matchup Predictor agrees",
-            "detail": "ESPN's model gives Colorado Rockies a 41.9% chance and Boston Red Sox a 58.1% chance.",
-            "impact": "high",
-            "favors": "away",
-            "source": "ESPN"
-          },
-          {
             "title": "Power rating edge",
-            "detail": "Composite rating favors Boston Red Sox: 0.368 vs 0.434 (ESPN + MLB.com + form).",
+            "detail": "Composite rating favors Boston Red Sox: 0.310 vs 0.443 (ESPN + MLB.com + form).",
             "impact": "high",
             "favors": "away",
             "source": "Multi-source"
@@ -9358,7 +9285,7 @@
           },
           {
             "title": "Game conditions",
-            "detail": "Forecast at Coors Field: 76\u00b0F, 51% precipitation.",
+            "detail": "Forecast at Coors Field: 81\u00b0F, 51% precipitation.",
             "impact": "low",
             "favors": "even",
             "source": "ESPN"
@@ -9384,11 +9311,6 @@
             "label": "Starting pitching",
             "detail": "Sean Sullivan (10.29 ERA) vs Sonny Gray (3.12 ERA)",
             "edge": "away"
-          },
-          {
-            "label": "Last five games",
-            "detail": "Colorado Rockies 3-2 vs Boston Red Sox 2-3",
-            "edge": "home"
           },
           {
             "label": "Injury impact",
@@ -9417,24 +9339,18 @@
           },
           {
             "label": "Advanced team profile",
-            "detail": "Power 0.368 vs 0.434 (ESPN/MLB.com)",
-            "edge": "away"
-          },
-          {
-            "label": "ESPN predictor",
-            "detail": "41.9% home / 58.1% away",
+            "detail": "Power 0.310 vs 0.443 (ESPN/MLB.com)",
             "edge": "away"
           },
           {
             "label": "Model probability",
-            "detail": "Data-driven estimate 14.4% home / 85.6% away",
+            "detail": "Data-driven estimate 5.0% home / 95.0% away",
             "edge": "away"
           }
         ],
         "dataSources": [
           "Batting lineup",
           "Derived schedule metrics",
-          "ESPN Matchup Predictor",
           "ESPN game summary",
           "ESPN head-to-head",
           "ESPN injury report",
@@ -9447,30 +9363,24 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.14359391767290014,
-            "away": 0.8564060823270999,
+            "home": 0.05,
+            "away": 0.95,
             "draw": null,
-            "homePct": 14.4,
-            "awayPct": 85.6,
+            "homePct": 5.0,
+            "awayPct": 95.0,
             "drawPct": null,
             "components": [
               {
                 "source": "Analytics model",
                 "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
-                "homePct": 0.8,
-                "weightPct": 74.1
-              },
-              {
-                "source": "ESPN Matchup Predictor",
-                "detail": "41.9% / 58.1%",
-                "homePct": 41.9,
-                "weightPct": 25.9
+                "homePct": 0.5,
+                "weightPct": 100.0
               }
             ]
           },
           "pick": {
-            "homePct": 28.8,
-            "awayPct": 71.2,
+            "homePct": 23.2,
+            "awayPct": 76.8,
             "drawPct": null,
             "method": "Model data only (records, form, injuries, advanced stats)"
           },
@@ -9536,26 +9446,26 @@
         },
         "teamProbabilities": {
           "home": {
-            "truePct": 14.4,
+            "truePct": 5.0,
             "impliedPct": 40.4,
-            "blendedPct": 28.8,
-            "edgePct": -26.0,
-            "edgeLabel": "-26.0%"
+            "blendedPct": 23.2,
+            "edgePct": -35.4,
+            "edgeLabel": "-35.4%"
           },
           "away": {
-            "truePct": 85.6,
+            "truePct": 95.0,
             "impliedPct": 59.6,
-            "blendedPct": 71.2,
-            "edgePct": 26.0,
-            "edgeLabel": "+26.0%"
+            "blendedPct": 76.8,
+            "edgePct": 35.4,
+            "edgeLabel": "+35.4%"
           }
         },
         "features": {
           "league": "mlb",
           "recordDiff": -0.0155,
           "splitDiff": -0.0398,
-          "homePower": 0.36791660774683543,
-          "awayPower": 0.4341595238596492,
+          "homePower": 0.30989575968354427,
+          "awayPower": 0.44269940482456144,
           "homeInjuryLoad": 2.3,
           "awayInjuryLoad": 3.45,
           "homeRest": 1,
@@ -9564,15 +9474,15 @@
           "awayBackToBack": true,
           "impliedHome": 40.4,
           "impliedAway": 59.6,
-          "trueHome": 14.4,
-          "trueAway": 85.6,
-          "confidence": 71.2,
+          "trueHome": 5.0,
+          "trueAway": 95.0,
+          "confidence": 76.8,
           "predictedSide": "away",
           "hasLineup": true,
           "dataCoverage": {
             "lineup": true,
             "injuries": true,
-            "espnPredictor": true,
+            "espnPredictor": false,
             "advancedStats": true,
             "restData": true,
             "scheduleFlags": true,
@@ -9586,10 +9496,10 @@
               "MLB Stats API pitcher",
               "MLB Stats API team pitching"
             ],
-            "homePitcherApiEra": 10.29,
-            "homePitcherRecentEra": 10.29,
+            "homePitcherApiEra": 9.82,
+            "homePitcherRecentEra": 10.14,
             "homeTeamPitchingEra": 5.48,
-            "homeBullpenEra": 5.53,
+            "homeBullpenEra": 5.52,
             "awayPitcherApiEra": 3.12,
             "awayPitcherRecentEra": 2.8,
             "awayTeamPitchingEra": 3.85,
@@ -9601,9 +9511,10 @@
             "opsEdge": 0.043,
             "eraEdge": -1.63
           }
-        }
+        },
+        "publishable": true
       },
-      "predictionRank": 8
+      "predictionRank": 1
     },
     {
       "league": "mlb",
@@ -9736,7 +9647,7 @@
           "summary": "BAL leads series 1-0",
           "seriesScore": "1-0"
         },
-        "weather": "78\u00b0F, 4% precipitation",
+        "weather": "75\u00b0F, 40% precipitation",
         "homeInjuries": [
           {
             "player": "Niko Kavadas",
@@ -10008,11 +9919,11 @@
           "away": 1
         },
         "weatherImpact": {
-          "temperatureF": 78.0,
-          "precipitationPct": 4.0,
+          "temperatureF": 75.0,
+          "precipitationPct": 40.0,
           "windMph": null,
           "runEnvironmentAdj": 0.0,
-          "summary": null
+          "summary": "rain risk"
         },
         "headToHead": {
           "homeSeriesWinPct": null,
@@ -10232,7 +10143,7 @@
           },
           {
             "title": "Game conditions",
-            "detail": "Forecast at Angel Stadium: 78\u00b0F, 4% precipitation.",
+            "detail": "Forecast at Angel Stadium: 75\u00b0F, 40% precipitation.",
             "impact": "low",
             "favors": "even",
             "source": "ESPN"
@@ -10321,8 +10232,8 @@
         ],
         "probabilities": {
           "true": {
-            "home": 0.13884990675400527,
-            "away": 0.8611500932459948,
+            "home": 0.13856446601794675,
+            "away": 0.8614355339820533,
             "draw": null,
             "homePct": 13.9,
             "awayPct": 86.1,
@@ -10368,17 +10279,17 @@
               },
               {
                 "sportsbook": "caesars",
-                "homePct": 44.7,
-                "awayPct": 55.3,
+                "homePct": 44.0,
+                "awayPct": 56.0,
                 "drawPct": null,
-                "vigPct": 3.96
+                "vigPct": 4.2
               },
               {
                 "sportsbook": "bet365",
-                "homePct": 44.7,
-                "awayPct": 55.3,
+                "homePct": 43.7,
+                "awayPct": 56.3,
                 "drawPct": null,
-                "vigPct": 6.47
+                "vigPct": 6.35
               },
               {
                 "sportsbook": "draftkings",
@@ -10396,32 +10307,32 @@
               }
             ],
             "consensus": {
-              "home": 0.44286366798935356,
-              "away": 0.5571363320106465,
+              "home": 0.44000926062876866,
+              "away": 0.5599907393712313,
               "draw": null,
-              "homePct": 44.3,
-              "awayPct": 55.7,
+              "homePct": 44.0,
+              "awayPct": 56.0,
               "drawPct": null,
-              "rawHomePct": 46.4,
-              "rawAwayPct": 58.4,
-              "avgVigPct": 4.8
+              "rawHomePct": 46.1,
+              "rawAwayPct": 58.7,
+              "avgVigPct": 4.82
             }
           }
         },
         "teamProbabilities": {
           "home": {
             "truePct": 13.9,
-            "impliedPct": 44.3,
+            "impliedPct": 44.0,
             "blendedPct": 28.5,
-            "edgePct": -30.4,
-            "edgeLabel": "-30.4%"
+            "edgePct": -30.1,
+            "edgeLabel": "-30.1%"
           },
           "away": {
             "truePct": 86.1,
-            "impliedPct": 55.7,
+            "impliedPct": 56.0,
             "blendedPct": 71.5,
-            "edgePct": 30.4,
-            "edgeLabel": "+30.4%"
+            "edgePct": 30.1,
+            "edgeLabel": "+30.1%"
           }
         },
         "features": {
@@ -10436,8 +10347,8 @@
           "awayRest": 1,
           "homeBackToBack": true,
           "awayBackToBack": true,
-          "impliedHome": 44.3,
-          "impliedAway": 55.7,
+          "impliedHome": 44.0,
+          "impliedAway": 56.0,
           "trueHome": 13.9,
           "trueAway": 86.1,
           "confidence": 71.5,
@@ -10475,9 +10386,10 @@
             "opsEdge": -0.007,
             "eraEdge": -0.26
           }
-        }
+        },
+        "publishable": true
       },
-      "predictionRank": 7
+      "predictionRank": 8
     },
     {
       "league": "mlb",
@@ -10610,7 +10522,7 @@
           "summary": "SD leads series 1-0",
           "seriesScore": "1-0"
         },
-        "weather": "71\u00b0F, 5% precipitation",
+        "weather": "70\u00b0F, 5% precipitation",
         "homeInjuries": [
           {
             "player": "German Marquez",
@@ -10625,12 +10537,6 @@
             "returnDate": "2026-06-23"
           },
           {
-            "player": "Freddy Fermin",
-            "status": "7-day il",
-            "detail": "Concussion (Not Specified)",
-            "returnDate": "2026-06-25"
-          },
-          {
             "player": "Luis Campusano",
             "status": "10-Day-IL",
             "detail": "Fracture (Left)",
@@ -10641,6 +10547,12 @@
             "status": "15-Day-IL",
             "detail": "Inflammation (Right)",
             "returnDate": "2026-06-25"
+          },
+          {
+            "player": "Jake Cronenworth",
+            "status": "7-Day IL",
+            "detail": "Concussion (Not Specified)",
+            "returnDate": "2026-07-01"
           }
         ],
         "awayInjuries": [
@@ -10693,6 +10605,12 @@
             "status": "15-Day-IL",
             "detail": "Inflammation (Right)",
             "returnDate": "2026-06-25"
+          },
+          {
+            "player": "Jake Cronenworth",
+            "status": "7-Day IL",
+            "detail": "Concussion (Not Specified)",
+            "returnDate": "2026-07-01"
           }
         ],
         "awayMajorInjuries": [
@@ -10719,7 +10637,8 @@
           "German Marquez (15-Day-IL)",
           "Matt Waldron (15-Day-IL)",
           "Luis Campusano (10-Day-IL)",
-          "Jeremiah Estrada (15-Day-IL)"
+          "Jeremiah Estrada (15-Day-IL)",
+          "Jake Cronenworth (7-Day IL)"
         ],
         "awayKeyInjuries": [
           "Tyler Kinley (15-Day-IL)",
@@ -10906,7 +10825,7 @@
           "away": 0
         },
         "weatherImpact": {
-          "temperatureF": 71.0,
+          "temperatureF": 70.0,
           "precipitationPct": 5.0,
           "windMph": null,
           "runEnvironmentAdj": 0.0,
@@ -11074,6 +10993,12 @@
           "status": "15-Day-IL",
           "detail": "Inflammation (Right)",
           "returnDate": "2026-06-25"
+        },
+        {
+          "player": "Jake Cronenworth",
+          "status": "7-Day IL",
+          "detail": "Concussion (Not Specified)",
+          "returnDate": "2026-07-01"
         }
       ],
       "awayMajorInjuries": [
@@ -11096,7 +11021,283 @@
           "returnDate": "2026-07-17"
         }
       ],
-      "prediction": null
+      "prediction": {
+        "predictedWinner": "San Diego Padres",
+        "predictedSide": "home",
+        "homeWinPct": 51.0,
+        "awayWinPct": 49.0,
+        "confidence": 51.0,
+        "confidenceLabel": "Coin flip",
+        "outcomeLabel": "San Diego Padres to win",
+        "whyTheyWin": "San Diego Padres are projected to win because San Diego Padres send out Wandy Peralta (1.91 ERA) against JR Ritchie (4.54 ERA).; San Diego Padres are 3-2 in their last five (W-L-W-L-W) while Atlanta Braves are 2-3.; San Diego Padres play at Petco Park, where home teams historically win more often.",
+        "reasons": [
+          {
+            "title": "Starting pitching edge",
+            "detail": "San Diego Padres send out Wandy Peralta (1.91 ERA) against JR Ritchie (4.54 ERA).",
+            "impact": "high",
+            "favors": "home"
+          },
+          {
+            "title": "Recent form trending up",
+            "detail": "San Diego Padres are 3-2 in their last five (W-L-W-L-W) while Atlanta Braves are 2-3.",
+            "impact": "medium",
+            "favors": "home",
+            "source": "ESPN"
+          },
+          {
+            "title": "Home-field advantage",
+            "detail": "San Diego Padres play at Petco Park, where home teams historically win more often.",
+            "impact": "low",
+            "favors": "home"
+          },
+          {
+            "title": "Game conditions",
+            "detail": "Forecast at Petco Park: 70\u00b0F, 5% precipitation.",
+            "impact": "low",
+            "favors": "even",
+            "source": "ESPN"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "San Diego Padres 40-37 vs Atlanta Braves 48-29",
+            "edge": "away"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home 20-19 vs away 24-15",
+            "edge": "away"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Starting pitching",
+            "detail": "Wandy Peralta (1.91 ERA) vs JR Ritchie (4.54 ERA)",
+            "edge": "home"
+          },
+          {
+            "label": "Last five games",
+            "detail": "San Diego Padres 3-2 vs Atlanta Braves 2-3",
+            "edge": "home"
+          },
+          {
+            "label": "Injury impact",
+            "detail": "Weighted injury load: home 4.6 vs away 3.4",
+            "edge": "away"
+          },
+          {
+            "label": "Win/loss streak",
+            "detail": "MLB.com / standings streak momentum",
+            "edge": "home"
+          },
+          {
+            "label": "Lineup quality",
+            "detail": "Confirmed lineup strength vs opponent",
+            "edge": "away"
+          },
+          {
+            "label": "League advanced metrics",
+            "detail": "{'league': 'mlb', 'runDiffEdge': -105.0, 'opsEdge': -0.078, 'eraEdge': -0.48}",
+            "edge": "away"
+          },
+          {
+            "label": "Pitcher/bullpen depth",
+            "detail": "MLB Stats API SP and bullpen ERA context",
+            "edge": "away"
+          },
+          {
+            "label": "Advanced team profile",
+            "detail": "Power 0.489 vs 0.642 (ESPN/MLB.com)",
+            "edge": "away"
+          },
+          {
+            "label": "ESPN predictor",
+            "detail": "45.3% home / 54.7% away",
+            "edge": "away"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 52.0% home / 48.0% away",
+            "edge": "home"
+          }
+        ],
+        "dataSources": [
+          "Batting lineup",
+          "Derived schedule metrics",
+          "ESPN Matchup Predictor",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "ESPN standings",
+          "ESPN team stats",
+          "MLB.com",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.5204547209015623,
+            "away": 0.47954527909843775,
+            "draw": null,
+            "homePct": 52.0,
+            "awayPct": 48.0,
+            "drawPct": null,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 54.8,
+                "weightPct": 74.1
+              },
+              {
+                "source": "ESPN Matchup Predictor",
+                "detail": "45.3% / 54.7%",
+                "homePct": 45.3,
+                "weightPct": 25.9
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 51.0,
+            "awayPct": 49.0,
+            "drawPct": null,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": true,
+            "booksUsed": 6,
+            "books": [
+              {
+                "sportsbook": "betmgm",
+                "homePct": 50.0,
+                "awayPct": 50.0,
+                "drawPct": null,
+                "vigPct": 4.76
+              },
+              {
+                "sportsbook": "fanduel",
+                "homePct": 49.1,
+                "awayPct": 50.9,
+                "drawPct": null,
+                "vigPct": 3.81
+              },
+              {
+                "sportsbook": "caesars",
+                "homePct": 48.9,
+                "awayPct": 51.1,
+                "drawPct": null,
+                "vigPct": 4.71
+              },
+              {
+                "sportsbook": "bet365",
+                "homePct": 48.8,
+                "awayPct": 51.2,
+                "drawPct": null,
+                "vigPct": 7.34
+              },
+              {
+                "sportsbook": "draftkings",
+                "homePct": 49.6,
+                "awayPct": 50.4,
+                "drawPct": null,
+                "vigPct": 4.75
+              },
+              {
+                "sportsbook": "fanatics",
+                "homePct": 50.0,
+                "awayPct": 50.0,
+                "drawPct": null,
+                "vigPct": 4.76
+              }
+            ],
+            "consensus": {
+              "home": 0.49398935373057257,
+              "away": 0.5060106462694275,
+              "draw": null,
+              "homePct": 49.4,
+              "awayPct": 50.6,
+              "drawPct": null,
+              "rawHomePct": 51.9,
+              "rawAwayPct": 53.1,
+              "avgVigPct": 5.02
+            }
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 52.0,
+            "impliedPct": 49.4,
+            "blendedPct": 51.0,
+            "edgePct": 2.6,
+            "edgeLabel": "+2.6%"
+          },
+          "away": {
+            "truePct": 48.0,
+            "impliedPct": 50.6,
+            "blendedPct": 49.0,
+            "edgePct": -2.6,
+            "edgeLabel": "-2.6%"
+          }
+        },
+        "features": {
+          "league": "mlb",
+          "recordDiff": -0.1039,
+          "splitDiff": -0.1026,
+          "homePower": 0.4894225883463203,
+          "awayPower": 0.6418941201038961,
+          "homeInjuryLoad": 4.6,
+          "awayInjuryLoad": 3.45,
+          "homeRest": 0,
+          "awayRest": 0,
+          "homeBackToBack": true,
+          "awayBackToBack": true,
+          "impliedHome": 49.4,
+          "impliedAway": 50.6,
+          "trueHome": 52.0,
+          "trueAway": 48.0,
+          "confidence": 51.0,
+          "predictedSide": "home",
+          "hasLineup": true,
+          "dataCoverage": {
+            "lineup": true,
+            "injuries": true,
+            "espnPredictor": true,
+            "advancedStats": true,
+            "restData": true,
+            "scheduleFlags": true,
+            "mlbPitching": true,
+            "leagueMetrics": true,
+            "impliedOdds": true
+          },
+          "mlbPitching": {
+            "sources": [
+              "MLB Stats API bullpen",
+              "MLB Stats API pitcher",
+              "MLB Stats API team pitching"
+            ],
+            "homePitcherApiEra": 1.91,
+            "homePitcherRecentEra": 0.0,
+            "homeTeamPitchingEra": 3.85,
+            "homeBullpenEra": 3.88,
+            "awayPitcherApiEra": 4.54,
+            "awayPitcherRecentEra": 3.68,
+            "awayTeamPitchingEra": 3.38,
+            "awayBullpenEra": 3.4
+          },
+          "leagueMetrics": {
+            "league": "mlb",
+            "runDiffEdge": -105.0,
+            "opsEdge": -0.078,
+            "eraEdge": -0.48
+          }
+        },
+        "publishable": false
+      }
     },
     {
       "league": "mlb",
@@ -11726,10 +11927,237 @@
           "returnDate": "2026-07-29"
         }
       ],
-      "prediction": null
+      "prediction": {
+        "predictedWinner": "San Francisco Giants",
+        "predictedSide": "home",
+        "homeWinPct": 52.0,
+        "awayWinPct": 48.0,
+        "confidence": 52.0,
+        "confidenceLabel": "Coin flip",
+        "outcomeLabel": "San Francisco Giants to win",
+        "whyTheyWin": "San Francisco Giants are projected to win because San Francisco Giants send out Robbie Ray (4.07 ERA) against Aaron Civale (4.91 ERA).; ESPN's model gives San Francisco Giants a 59.1% chance and Athletics a 40.9% chance.; Athletics missing or limited players: Wei-En Lin (Out), Mark Leiter Jr. (15-Day-IL), Brooks Kriske (60-Day-IL).",
+        "reasons": [
+          {
+            "title": "Starting pitching edge",
+            "detail": "San Francisco Giants send out Robbie Ray (4.07 ERA) against Aaron Civale (4.91 ERA).",
+            "impact": "high",
+            "favors": "home"
+          },
+          {
+            "title": "ESPN Matchup Predictor agrees",
+            "detail": "ESPN's model gives San Francisco Giants a 59.1% chance and Athletics a 40.9% chance.",
+            "impact": "high",
+            "favors": "home",
+            "source": "ESPN"
+          },
+          {
+            "title": "Opponent injury issues",
+            "detail": "Athletics missing or limited players: Wei-En Lin (Out), Mark Leiter Jr. (15-Day-IL), Brooks Kriske (60-Day-IL).",
+            "impact": "medium",
+            "favors": "home",
+            "source": "ESPN"
+          },
+          {
+            "title": "Home-field advantage",
+            "detail": "San Francisco Giants play at Oracle Park, where home teams historically win more often.",
+            "impact": "low",
+            "favors": "home"
+          },
+          {
+            "title": "Game conditions",
+            "detail": "Forecast at Oracle Park: 62\u00b0F, 0% precipitation.",
+            "impact": "low",
+            "favors": "even",
+            "source": "ESPN"
+          }
+        ],
+        "factors": [
+          {
+            "label": "Season record",
+            "detail": "San Francisco Giants 31-46 vs Athletics 38-40",
+            "edge": "away"
+          },
+          {
+            "label": "Home/road splits",
+            "detail": "Home 14-20 vs away 20-17",
+            "edge": "away"
+          },
+          {
+            "label": "Home-field advantage",
+            "detail": "Historical home edge applied",
+            "edge": "home"
+          },
+          {
+            "label": "Starting pitching",
+            "detail": "Robbie Ray (4.07 ERA) vs Aaron Civale (4.91 ERA)",
+            "edge": "home"
+          },
+          {
+            "label": "Last five games",
+            "detail": "San Francisco Giants 2-3 vs Athletics 2-3",
+            "edge": "even"
+          },
+          {
+            "label": "Injury impact",
+            "detail": "Weighted injury load: home 3.4 vs away 4.6",
+            "edge": "home"
+          },
+          {
+            "label": "Win/loss streak",
+            "detail": "MLB.com / standings streak momentum",
+            "edge": "away"
+          },
+          {
+            "label": "Lineup quality",
+            "detail": "Confirmed lineup strength vs opponent",
+            "edge": "away"
+          },
+          {
+            "label": "Schedule fatigue",
+            "detail": "Home B2B=False \u00b7 Away B2B=False",
+            "edge": "home"
+          },
+          {
+            "label": "Pitcher/bullpen depth",
+            "detail": "MLB Stats API SP and bullpen ERA context",
+            "edge": "home"
+          },
+          {
+            "label": "Advanced team profile",
+            "detail": "Power 0.395 vs 0.419 (ESPN/MLB.com)",
+            "edge": "away"
+          },
+          {
+            "label": "ESPN predictor",
+            "detail": "59.1% home / 40.9% away",
+            "edge": "home"
+          },
+          {
+            "label": "Model probability",
+            "detail": "Data-driven estimate 53.9% home / 46.1% away",
+            "edge": "home"
+          }
+        ],
+        "dataSources": [
+          "Batting lineup",
+          "Derived schedule metrics",
+          "ESPN Matchup Predictor",
+          "ESPN game summary",
+          "ESPN head-to-head",
+          "ESPN injury report",
+          "ESPN last-five form",
+          "ESPN scoreboard",
+          "ESPN standings",
+          "ESPN team stats",
+          "MLB.com",
+          "Probability model"
+        ],
+        "probabilities": {
+          "true": {
+            "home": 0.539109798095271,
+            "away": 0.46089020190472896,
+            "draw": null,
+            "homePct": 53.9,
+            "awayPct": 46.1,
+            "drawPct": null,
+            "components": [
+              {
+                "source": "Analytics model",
+                "detail": "Records, splits, pitching, form, injuries, rest, H2H, advanced stats",
+                "homePct": 52.1,
+                "weightPct": 74.1
+              },
+              {
+                "source": "ESPN Matchup Predictor",
+                "detail": "59.1% / 40.9%",
+                "homePct": 59.1,
+                "weightPct": 25.9
+              }
+            ]
+          },
+          "pick": {
+            "homePct": 52.0,
+            "awayPct": 48.0,
+            "drawPct": null,
+            "method": "Model data only (records, form, injuries, advanced stats)"
+          },
+          "implied": {
+            "available": false
+          }
+        },
+        "teamProbabilities": {
+          "home": {
+            "truePct": 53.9,
+            "impliedPct": null,
+            "blendedPct": 52.0,
+            "edgePct": null,
+            "edgeLabel": null
+          },
+          "away": {
+            "truePct": 46.1,
+            "impliedPct": null,
+            "blendedPct": 48.0,
+            "edgePct": null,
+            "edgeLabel": null
+          }
+        },
+        "features": {
+          "league": "mlb",
+          "recordDiff": -0.0846,
+          "splitDiff": -0.1288,
+          "homePower": 0.3951528420779221,
+          "awayPower": 0.4185898564102563,
+          "homeInjuryLoad": 3.45,
+          "awayInjuryLoad": 4.6,
+          "homeRest": 2,
+          "awayRest": 2,
+          "homeBackToBack": false,
+          "awayBackToBack": false,
+          "impliedHome": null,
+          "impliedAway": null,
+          "trueHome": 53.9,
+          "trueAway": 46.1,
+          "confidence": 52.0,
+          "predictedSide": "home",
+          "hasLineup": true,
+          "dataCoverage": {
+            "lineup": true,
+            "injuries": true,
+            "espnPredictor": true,
+            "advancedStats": true,
+            "restData": true,
+            "scheduleFlags": true,
+            "mlbPitching": true,
+            "leagueMetrics": true,
+            "impliedOdds": false
+          },
+          "mlbPitching": {
+            "sources": [
+              "MLB Stats API bullpen",
+              "MLB Stats API pitcher",
+              "MLB Stats API team pitching"
+            ],
+            "homePitcherApiEra": 4.07,
+            "homePitcherRecentEra": 2.2,
+            "homeTeamPitchingEra": 4.46,
+            "homeBullpenEra": 4.51,
+            "awayPitcherApiEra": 4.91,
+            "awayPitcherRecentEra": 1.78,
+            "awayTeamPitchingEra": 5.0,
+            "awayBullpenEra": 5.09
+          },
+          "leagueMetrics": {
+            "league": "mlb",
+            "runDiffEdge": 0.0,
+            "opsEdge": -0.022,
+            "eraEdge": 0.54
+          }
+        },
+        "publishable": false
+      }
     }
   ],
-  "fetchedAt": "2026-06-23T23:59:47.624071+00:00",
+  "fetchedAt": "2026-06-24T00:45:50.483337+00:00",
   "scheduleTimezone": "America/New_York",
   "defaultScheduleDate": "2026-06-23"
 }
