@@ -1516,7 +1516,9 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
 
 def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for game in games:
-        game["prediction"] = predict_game(game)
+        prediction = predict_game(game)
+        prediction["publishable"] = is_publishable_pick(prediction)
+        game["prediction"] = prediction
 
     publishable = [game for game in games if is_publishable_pick(game.get("prediction"))]
     publishable.sort(key=lambda game: game.get("prediction", {}).get("confidence", 0), reverse=True)
@@ -1524,9 +1526,11 @@ def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
         game["predictionRank"] = index
 
     for game in games:
-        if game not in publishable:
-            game.pop("predictionRank", None)
-            if not is_publishable_pick(game.get("prediction")):
-                game["prediction"] = None
+        if game in publishable:
+            continue
+        game.pop("predictionRank", None)
+        prediction = game.get("prediction") or {}
+        prediction["publishable"] = False
+        game["prediction"] = prediction
 
     return games

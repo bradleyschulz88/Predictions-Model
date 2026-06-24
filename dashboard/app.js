@@ -49,6 +49,34 @@ const modelTrackerViewEl = document.getElementById("model-tracker-view");
 const dateFieldEl = document.getElementById("date-field");
 const modelDayResultEl = document.getElementById("model-day-result");
 
+const MIN_PUBLISHABLE_CONFIDENCE = 57;
+
+function isPublishablePrediction(prediction) {
+  if (!prediction?.predictedWinner && !prediction?.outcomeLabel) return false;
+  if (prediction.publishable === false) return false;
+  const confidence = Number(prediction?.confidence);
+  if (Number.isNaN(confidence)) return Boolean(prediction?.predictedWinner);
+  return confidence >= MIN_PUBLISHABLE_CONFIDENCE;
+}
+
+function coverageFromGame(game) {
+  const fromPrediction = game?.prediction?.features?.dataCoverage;
+  if (fromPrediction) return fromPrediction;
+  const enrichment = game?.enrichment || {};
+  const hasLineup = Boolean(game?.homeLineup?.batters?.length || game?.awayLineup?.batters?.length);
+  const hasOdds = Boolean(game?.viewTypes?.some((viewType) => String(viewType).includes("MoneyLine")));
+  return {
+    lineup: hasLineup,
+    injuries: Boolean(game?.homeMajorInjuries?.length || game?.awayMajorInjuries?.length),
+    espnPredictor: enrichment.espnPredictorHome != null && enrichment.espnPredictorAway != null,
+    advancedStats: Boolean(enrichment.homeAdvanced?.powerRating != null || enrichment.awayAdvanced?.powerRating != null),
+    restData: enrichment.restDays?.home != null && enrichment.restDays?.away != null,
+    scheduleFlags: Boolean(enrichment.homeScheduleFlags || enrichment.awayScheduleFlags),
+    mlbPitching: Boolean(enrichment.mlbPitching),
+    leagueMetrics: Boolean(enrichment.leagueMetrics && Object.keys(enrichment.leagueMetrics).length > 1),
+    impliedOdds: hasOdds,
+  };
+}
 const COVERAGE_LABELS = {
   lineup: "Lineup",
   injuries: "Injuries",
@@ -3210,7 +3238,7 @@ function renderScoreboardProbBar(prediction) {
 }
 
 function renderCoverageChips(game) {
-  const coverage = game.prediction?.features?.dataCoverage;
+  const coverage = coverageFromGame(game);
   if (!coverage) return "";
   const chips = Object.entries(COVERAGE_LABELS)
     .map(([key, label]) => {
@@ -3322,7 +3350,8 @@ function filterGames(games) {
 }
 
 function gameDisplayRank(game) {
-  return game?.displayRank ?? game?.predictionRank ?? "?";
+  if (game?.displayRank != null) return game.displayRank;
+  return game?.predictionRank ?? "—";
 }
 
 function confidenceLabelFromConfidence(confidence) {
@@ -3359,19 +3388,19 @@ function hydrateGamePredictions(games, { league, scheduleDate } = {}) {
   }
 
   return (games || []).map((game) => {
-    if (game?.prediction?.outcomeLabel || game?.prediction?.predictedWinner) return game;
+    if (isPublishablePrediction(game?.prediction)) return game;
     const record = records.get(String(game.eventId));
     if (!record) return game;
     if (league && record.league && record.league !== league) return game;
     if (scheduleDate && record.scheduleDate && record.scheduleDate !== scheduleDate) return game;
     const prediction = recordToPrediction(record);
-    if (!prediction) return game;
+    if (!prediction || !isPublishablePrediction(prediction)) return game;
     return { ...game, prediction };
   });
 }
 
 function countGamesWithPredictions(games) {
-  return (games || []).filter((game) => game.prediction?.outcomeLabel || game.prediction?.predictedWinner).length;
+  return (games || []).filter((game) => isPublishablePrediction(game?.prediction)).length;
 }
 
 function enrichPayloadWithPredictions(payload, league, scheduleDate) {
@@ -3392,17 +3421,24 @@ function enrichPayloadWithPredictions(payload, league, scheduleDate) {
 }
 
 function gameHasPrediction(game) {
-  return Boolean(game?.prediction?.outcomeLabel || game?.prediction?.predictedWinner);
+  return isPublishablePrediction(game?.prediction);
 }
 
 function prepareGamesForDisplay(games) {
   const refreshed = (games || []).map(refreshGameStatusFlags);
   const filtered = filterGames(refreshed);
   const playable = filtered.filter((game) => !isUnplayableGame(game));
-  const withPicks = playable.filter((game) => gameHasPrediction(game));
-  return [...withPicks]
-    .sort((left, right) => (right.prediction?.confidence ?? 0) - (left.prediction?.confidence ?? 0))
-    .map((game, index) => ({ ...game, displayRank: index + 1 }));
+  const publishable = playable
+    .filter((game) => isPublishablePrediction(game?.prediction))
+    .sort((left, right) => (right.prediction?.confidence ?? 0) - (left.prediction?.confidence ?? 0));
+  const unpublished = playable
+    .filter((game) => !isPublishablePrediction(game?.prediction))
+    .sort((left, right) => String(left.startDate || "").localeCompare(String(right.startDate || "")));
+
+  let rank = 1;
+  const rankedPublishable = publishable.map((game) => ({ ...game, displayRank: rank++ }));
+  const rankedUnpublished = unpublished.map((game) => ({ ...game, displayRank: null }));
+  return [...rankedPublishable, ...rankedUnpublished];
 }
 
 function countRemovedGames(games) {
@@ -3774,8 +3810,8 @@ function renderGames(games) {
     return;
   }
 
-  const topPickLabel = visible[0]?.prediction?.outcomeLabel;
-  renderTopPicks(visible);
+  const topPickLabel = visible.find((game) => isPublishablePrediction(game?.prediction))?.prediction?.outcomeLabel;
+  renderTopPicks(visible.filter((game) => isPublishablePrediction(game?.prediction)));
   renderStats(lastPayload || {}, visible, { topPick: topPickLabel, gameCount: refreshedGames.length });
   renderModelDayResult(refreshedGames);
   if (removedCount) {
@@ -3795,6 +3831,7 @@ function renderGames(games) {
   gamesEl.innerHTML = visible
     .map((game) => {
       const prediction = game.prediction;
+      const hasPick = isPublishablePrediction(prediction);
       const labelClass = prediction?.confidenceLabel === "Strong pick" ? "label-strong" : prediction?.confidenceLabel === "Lean" ? "label-lean" : "label-coin";
       const records = game.awayRecord || game.homeRecord ? `${game.awayTeam} ${game.awayRecord || "—"} · ${game.homeTeam} ${game.homeRecord || "—"}` : null;
       const pitchers = sport === "mlb" && (game.awayPitcher?.name || game.homePitcher?.name) ? `SP: ${game.awayPitcher?.name || "TBD"} vs ${game.homePitcher?.name || "TBD"}` : null;
@@ -3808,36 +3845,39 @@ function renderGames(games) {
       const modelTracked = isModelPickTracked(game.eventId);
       const detailsOpen = hashGameId && String(game.eventId) === hashGameId;
       const timeLabel = game.isLive ? "LIVE" : gameStatusLabel(game);
-      const pickShort = pickTeamAbbrev(game, prediction);
-      const confLabel = prediction?.confidenceLabel === "Strong pick" ? "Strong" : prediction?.confidenceLabel === "Lean" ? "Lean" : "";
+      const pickShort = hasPick ? pickTeamAbbrev(game, prediction) : "No pick";
+      const confLabel = hasPick && prediction?.confidenceLabel === "Strong pick" ? "Strong" : hasPick && prediction?.confidenceLabel === "Lean" ? "Lean" : "";
       const rowStateClass = game.isLive ? " game-live" : game.isFinal ? " game-final" : isGameVoided(game) ? " game-voided" : game.isDelayed ? " game-delayed" : "";
+      const rankLabel = hasPick ? `#${gameDisplayRank(game)}` : "—";
+      const rankClass = hasPick ? rankTierClass(gameDisplayRank(game)) : "rank-none";
 
       return `
-        <article class="scoreboard-row game-card${rowStateClass}" id="game-${game.eventId}" data-game-id="${game.eventId}">
+        <article class="scoreboard-row game-card${rowStateClass}${hasPick ? "" : " game-no-pick"}" id="game-${game.eventId}" data-game-id="${game.eventId}">
           <details class="game-details"${detailsOpen ? " open" : ""}>
             <summary class="scoreboard-summary game-summary-bar">
-              <span class="scoreboard-rank" aria-label="Rank ${gameDisplayRank(game)}">#${gameDisplayRank(game)}</span>
+              <span class="scoreboard-rank ${rankClass}" aria-label="${hasPick ? `Rank ${gameDisplayRank(game)}` : "No ranked pick"}">${rankLabel}</span>
               <div class="scoreboard-matchup-block">
                 ${renderScoreboardTeams(game)}
-                ${renderScoreboardProbBar(prediction)}
+                ${hasPick ? renderScoreboardProbBar(prediction) : ""}
                 <div class="scoreboard-summary-chips">${renderCoverageChips(game)}</div>
               </div>
               <div class="scoreboard-pick-block">
                 <span class="scoreboard-pick-label">Pick</span>
-                <span class="scoreboard-pick-value" title="${escapeAttr(prediction?.outcomeLabel || "")}">${escapeHtml(pickShort)} <span class="tabular-nums">${formatConfidenceDisplay(prediction?.confidence || 0)}%</span></span>
+                <span class="scoreboard-pick-value${hasPick ? "" : " scoreboard-no-pick"}" title="${escapeAttr(hasPick ? prediction?.outcomeLabel || "" : "Below 57% confidence threshold")}">${escapeHtml(pickShort)}${hasPick ? ` <span class="tabular-nums">${formatConfidenceDisplay(prediction?.confidence || 0)}%</span>` : ""}</span>
                 <span class="scoreboard-pick-conf">
                   ${confLabel ? `<span class="confidence-label ${labelClass}">${confLabel}</span>` : ""}
+                  ${!hasPick && prediction?.confidence != null ? `<span class="confidence-label label-coin">${formatConfidenceDisplay(prediction.confidence)}% lean</span>` : ""}
                   <span class="scoreboard-time${game.isLive ? " scoreboard-live-badge" : isGameVoided(game) ? " scoreboard-voided-badge" : game.isDelayed ? " scoreboard-delayed-badge" : ""}" data-live-time="${game.eventId}">${escapeHtml(timeLabel)}</span>
                 </span>
               </div>
             </summary>
             <div class="scoreboard-details-body game-details-body">
-              ${renderPrediction(game)}
+              ${hasPick ? renderPrediction(game) : `<section class="detail-panel"><p class="lineup-note">No official pick — model confidence is below ${MIN_PUBLISHABLE_CONFIDENCE}%.</p>${prediction?.confidence != null ? `<p class="lineup-note">Raw model lean: ${formatConfidenceDisplay(prediction.confidence)}%.</p>` : ""}</section>`}
               <div class="game-head game-head-compact">
                 <p class="meta">${metaParts.join(" · ")}</p>
                 <div class="game-actions">
                   <span class="status-pill ${game.isLive ? "live" : ""}${isGameVoided(game) ? " voided" : ""}${game.isDelayed ? " delayed" : ""}">${escapeHtml(game.gameStatusText || "Scheduled")}</span>
-                  <button type="button" class="track-btn model-track-btn${modelTracked ? " tracked" : ""}" data-model-track-id="${game.eventId}"${!prediction?.outcomeLabel && !prediction?.predictedWinner ? " disabled" : ""}>${modelTracked ? '<span class="track-btn-label track-btn-label-long">Already tracked</span><span class="track-btn-label track-btn-label-short">Tracked</span>' : '<span class="track-btn-label track-btn-label-long">Track model pick</span><span class="track-btn-label track-btn-label-short">Track pick</span>'}</button>
+                  <button type="button" class="track-btn model-track-btn${modelTracked ? " tracked" : ""}" data-model-track-id="${game.eventId}"${!hasPick ? " disabled" : ""}>${modelTracked ? '<span class="track-btn-label track-btn-label-long">Already tracked</span><span class="track-btn-label track-btn-label-short">Tracked</span>' : '<span class="track-btn-label track-btn-label-long">Track model pick</span><span class="track-btn-label track-btn-label-short">Track pick</span>'}</button>
                   <button type="button" class="track-btn${logged ? " tracked" : ""}" data-event-id="${game.eventId}">${logged ? '<span class="track-btn-label track-btn-label-long">Bet logged</span><span class="track-btn-label track-btn-label-short">Logged</span>' : "Log bet"}</button>
                   <button type="button" class="share-btn" data-share-url="${shareUrl}" data-share-title="${prediction?.outcomeLabel || game.matchup}">Share</button>
                 </div>

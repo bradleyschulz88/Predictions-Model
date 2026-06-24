@@ -10,6 +10,7 @@ from typing import Any
 from data_providers.utils import team_match_score
 from espn_client import fetch_scoreboard, parse_scoreboard
 from mlb_predictions import _line_odds_value
+from calibration_params import is_publishable_pick
 from schedule_dates import league_schedule_date
 from sports_config import list_league_ids
 
@@ -171,6 +172,8 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
             prediction = game.get("prediction") or {}
             event_id = str(game.get("eventId") or "")
             if not event_id or not prediction.get("predictedWinner"):
+                continue
+            if not is_publishable_pick(prediction):
                 continue
             log["predictions"][event_id] = {
                 "eventId": event_id,

@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT))
 from accuracy_tracker import grade_predictions, record_predictions  # noqa: E402
 from data_coverage import coverage_warnings, emit_ci_warnings, summarize_coverage  # noqa: E402
 from mlb_data import fetch_dashboard_data, strip_betting_lines_for_display  # noqa: E402
+from calibration_params import is_publishable_pick  # noqa: E402
 from scripts.backtest_model import write_calibration_report  # noqa: E402
 from schedule_dates import default_game_date, get_schedule_timezone, schedule_dates_for_league  # noqa: E402
 from sports_config import LEAGUES, get_league, list_league_ids  # noqa: E402
@@ -91,7 +92,11 @@ def build_overview(payloads: dict[str, dict]) -> dict:
     for league_id, payload in payloads.items():
         games = payload.get("games") or []
         publishable = sorted(
-            [game for game in games if (game.get("prediction") or {}).get("predictedWinner")],
+            [
+                game
+                for game in games
+                if is_publishable_pick(game.get("prediction"))
+            ],
             key=lambda game: (game.get("prediction") or {}).get("confidence") or 0,
             reverse=True,
         )

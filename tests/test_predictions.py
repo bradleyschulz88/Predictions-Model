@@ -39,7 +39,7 @@ class PredictionModelTests(unittest.TestCase):
 
         ranked = apply_predictions(games)
         publishable = sorted(
-            (game for game in ranked if game.get("prediction")),
+            (game for game in ranked if game.get("predictionRank") is not None),
             key=lambda game: game["predictionRank"],
         )
         confidences = [game["prediction"]["confidence"] for game in publishable]

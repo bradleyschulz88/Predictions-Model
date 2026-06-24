@@ -159,16 +159,17 @@ class ApplyPredictionsTests(unittest.TestCase):
             "awayRecord": "40-40",
             "enrichment": {},
         }
-        with patch("mlb_predictions.predict_game", return_value={"predictedWinner": "A", "confidence": 52.0}):
+        with patch("mlb_predictions.predict_game", return_value={"predictedWinner": "A", "confidence": 52.0, "outcomeLabel": "A to win"}):
             result = apply_predictions([game])
-        self.assertIsNone(result[0].get("prediction"))
+        self.assertFalse(result[0]["prediction"].get("publishable"))
+        self.assertIsNone(result[0].get("predictionRank"))
 
     def test_apply_predictions_only_ranks_publishable(self) -> None:
         with open(ESPN_FIXTURE, encoding="utf-8") as handle:
             games = parse_scoreboard(json.load(handle), league="mlb")
         ranked = apply_predictions(games)
         publishable = sorted(
-            (game for game in ranked if game.get("prediction")),
+            (game for game in ranked if game.get("predictionRank") is not None),
             key=lambda game: game["predictionRank"],
         )
         confidences = [game["prediction"]["confidence"] for game in publishable]

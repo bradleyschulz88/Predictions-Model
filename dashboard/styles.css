@@ -4152,6 +4152,16 @@ button:active:not(:disabled) {
   white-space: nowrap;
 }
 
+.scoreboard-pick-value.scoreboard-no-pick {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.game-no-pick .scoreboard-rank.rank-none {
+  color: var(--muted);
+  font-weight: 600;
+}
+
 .scoreboard-time {
   font-weight: 600;
   text-transform: uppercase;
