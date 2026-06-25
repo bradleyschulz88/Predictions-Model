@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-06-25T18:35:13.960234+00:00",
+  "updatedAt": "2026-06-25T20:56:48.576241+00:00",
   "summary": {
     "last7Days": {
       "correct": 87,
-      "total": 145,
-      "pct": 60.0,
-      "units": 14.233,
-      "roiPct": 9.8,
+      "total": 146,
+      "pct": 59.6,
+      "units": 13.233,
+      "roiPct": 9.1,
       "pending": 50
     },
     "allTime": {
       "correct": 87,
-      "total": 145,
-      "pct": 60.0,
-      "units": 14.233,
-      "roiPct": 9.8,
-      "pending": 154
+      "total": 146,
+      "pct": 59.6,
+      "units": 13.233,
+      "roiPct": 9.1,
+      "pending": 153
     },
     "byLeague": {
       "mlb": {
         "correct": 49,
-        "total": 94,
-        "pct": 52.1,
-        "units": -5.304,
-        "roiPct": -5.6,
+        "total": 95,
+        "pct": 51.6,
+        "units": -6.304,
+        "roiPct": -6.6,
         "pending": 0
       },
       "afl": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 2,
+      "current": 1,
       "type": "win",
       "bestWin": 7,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401815902",
+      "league": "mlb",
+      "scheduleDate": "2026-06-25",
+      "matchup": "Seattle Mariners @ Pittsburgh Pirates",
+      "predicted": "Seattle Mariners",
+      "predictedSide": "away",
+      "outcomeLabel": "Seattle Mariners to win",
+      "confidence": 60.9,
+      "pickOdds": -150,
+      "status": "graded",
+      "actual": "Pittsburgh Pirates",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "5",
+      "awayScore": "1",
+      "gradedAt": "2026-06-25T20:56:36.576143+00:00",
+      "date": "2026-06-25"
+    },
     {
       "eventId": "401815899",
       "league": "mlb",
@@ -1938,25 +1957,6 @@
       "homeScore": "2",
       "awayScore": "1",
       "gradedAt": "2026-06-22T00:19:14.557907+00:00",
-      "date": "2026-06-21"
-    },
-    {
-      "eventId": "401815844",
-      "league": "mlb",
-      "scheduleDate": "2026-06-21",
-      "matchup": "Washington Nationals @ Tampa Bay Rays",
-      "predicted": "Tampa Bay Rays",
-      "predictedSide": "home",
-      "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 75.2,
-      "pickOdds": -135,
-      "status": "graded",
-      "actual": "Tampa Bay Rays",
-      "correct": true,
-      "units": 0.741,
-      "homeScore": "4",
-      "awayScore": "3",
-      "gradedAt": "2026-06-22T00:19:14.557903+00:00",
       "date": "2026-06-21"
     }
   ],
@@ -5331,18 +5331,18 @@
       "league": "mlb",
       "scheduleDate": "2026-06-25",
       "matchup": "Seattle Mariners @ Pittsburgh Pirates",
-      "predicted": "Pittsburgh Pirates",
-      "predictedSide": "home",
-      "outcomeLabel": "Pittsburgh Pirates to win",
-      "confidence": 63.0,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "predicted": "Seattle Mariners",
+      "predictedSide": "away",
+      "outcomeLabel": "Seattle Mariners to win",
+      "confidence": 60.9,
+      "pickOdds": -150,
+      "status": "graded",
+      "actual": "Pittsburgh Pirates",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "5",
+      "awayScore": "1",
+      "gradedAt": "2026-06-25T20:56:36.576143+00:00",
       "date": "2026-06-25"
     },
     "401815905": {
