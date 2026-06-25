@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-06-25T22:21:39.735009+00:00",
+  "updatedAt": "2026-06-25T23:54:37.791779+00:00",
   "summary": {
     "last7Days": {
       "correct": 88,
-      "total": 148,
-      "pct": 59.5,
+      "total": 149,
+      "pct": 59.1,
       "units": 12.415,
-      "roiPct": 8.4,
+      "roiPct": 8.3,
       "pending": 50
     },
     "allTime": {
       "correct": 88,
-      "total": 148,
-      "pct": 59.5,
+      "total": 149,
+      "pct": 59.1,
       "units": 12.415,
-      "roiPct": 8.4,
-      "pending": 152
+      "roiPct": 8.3,
+      "pending": 151
     },
     "byLeague": {
+      "mlb": {
+        "correct": 49,
+        "total": 96,
+        "pct": 51.0,
+        "units": -6.304,
+        "roiPct": -6.6,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 22,
         "total": 28,
         "pct": 78.6,
         "units": 7.719,
         "roiPct": 27.6,
-        "pending": 0
-      },
-      "mlb": {
-        "correct": 49,
-        "total": 95,
-        "pct": 51.6,
-        "units": -6.304,
-        "roiPct": -6.6,
         "pending": 0
       },
       "afl": {
@@ -53,12 +53,31 @@
     },
     "streak": {
       "current": 1,
-      "type": "loss",
+      "type": "win",
       "bestWin": 7,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401815905",
+      "league": "mlb",
+      "scheduleDate": "2026-06-25",
+      "matchup": "Athletics @ San Francisco Giants",
+      "predicted": "San Francisco Giants",
+      "predictedSide": "home",
+      "outcomeLabel": "San Francisco Giants to win",
+      "confidence": 58.6,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Athletics",
+      "correct": false,
+      "units": null,
+      "homeScore": "6",
+      "awayScore": "9",
+      "gradedAt": "2026-06-25T23:54:25.072384+00:00",
+      "date": "2026-06-25"
+    },
     {
       "eventId": "760468",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "6",
       "awayScore": "8",
       "gradedAt": "2026-06-22T00:19:14.557936+00:00",
-      "date": "2026-06-21"
-    },
-    {
-      "eventId": "401815846",
-      "league": "mlb",
-      "scheduleDate": "2026-06-21",
-      "matchup": "San Diego Padres @ Texas Rangers",
-      "predicted": "San Diego Padres",
-      "predictedSide": "away",
-      "outcomeLabel": "San Diego Padres to win",
-      "confidence": 84.5,
-      "pickOdds": 135,
-      "status": "graded",
-      "actual": "Texas Rangers",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "4",
-      "awayScore": "3",
-      "gradedAt": "2026-06-22T00:19:14.557930+00:00",
       "date": "2026-06-21"
     }
   ],
@@ -5353,15 +5353,15 @@
       "predicted": "San Francisco Giants",
       "predictedSide": "home",
       "outcomeLabel": "San Francisco Giants to win",
-      "confidence": 52.0,
+      "confidence": 58.6,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Athletics",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "6",
+      "awayScore": "9",
+      "gradedAt": "2026-06-25T23:54:25.072384+00:00",
       "date": "2026-06-25"
     },
     "401815919": {
