@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-06-25T16:23:27.883236+00:00",
+  "updatedAt": "2026-06-25T18:35:13.960234+00:00",
   "summary": {
     "last7Days": {
-      "correct": 86,
-      "total": 144,
-      "pct": 59.7,
-      "units": 13.566,
-      "roiPct": 9.4,
+      "correct": 87,
+      "total": 145,
+      "pct": 60.0,
+      "units": 14.233,
+      "roiPct": 9.8,
       "pending": 50
     },
     "allTime": {
-      "correct": 86,
-      "total": 144,
-      "pct": 59.7,
-      "units": 13.566,
-      "roiPct": 9.4,
-      "pending": 155
+      "correct": 87,
+      "total": 145,
+      "pct": 60.0,
+      "units": 14.233,
+      "roiPct": 9.8,
+      "pending": 154
     },
     "byLeague": {
+      "mlb": {
+        "correct": 49,
+        "total": 94,
+        "pct": 52.1,
+        "units": -5.304,
+        "roiPct": -5.6,
+        "pending": 0
+      },
       "afl": {
         "correct": 5,
         "total": 6,
@@ -41,24 +49,35 @@
         "units": 6.0,
         "roiPct": 31.6,
         "pending": 0
-      },
-      "mlb": {
-        "correct": 48,
-        "total": 93,
-        "pct": 51.6,
-        "units": -5.971,
-        "roiPct": -6.4,
-        "pending": 0
       }
     },
     "streak": {
-      "current": 1,
-      "type": "loss",
+      "current": 2,
+      "type": "win",
       "bestWin": 7,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401815899",
+      "league": "mlb",
+      "scheduleDate": "2026-06-25",
+      "matchup": "Kansas City Royals @ Tampa Bay Rays",
+      "predicted": "Tampa Bay Rays",
+      "predictedSide": "home",
+      "outcomeLabel": "Tampa Bay Rays to win",
+      "confidence": 74.0,
+      "pickOdds": -150,
+      "status": "graded",
+      "actual": "Tampa Bay Rays",
+      "correct": true,
+      "units": 0.667,
+      "homeScore": "13",
+      "awayScore": "2",
+      "gradedAt": "2026-06-25T18:35:03.721693+00:00",
+      "date": "2026-06-25"
+    },
     {
       "eventId": "1133611",
       "league": "afl",
@@ -1938,25 +1957,6 @@
       "homeScore": "4",
       "awayScore": "3",
       "gradedAt": "2026-06-22T00:19:14.557903+00:00",
-      "date": "2026-06-21"
-    },
-    {
-      "eventId": "401815843",
-      "league": "mlb",
-      "scheduleDate": "2026-06-21",
-      "matchup": "San Francisco Giants @ Miami Marlins",
-      "predicted": "San Francisco Giants",
-      "predictedSide": "away",
-      "outcomeLabel": "San Francisco Giants to win",
-      "confidence": 63.8,
-      "pickOdds": -145,
-      "status": "graded",
-      "actual": "Miami Marlins",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "2",
-      "awayScore": "1",
-      "gradedAt": "2026-06-22T00:19:14.557897+00:00",
       "date": "2026-06-21"
     }
   ],
@@ -5277,15 +5277,15 @@
       "predicted": "Tampa Bay Rays",
       "predictedSide": "home",
       "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 76.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 74.0,
+      "pickOdds": -150,
+      "status": "graded",
+      "actual": "Tampa Bay Rays",
+      "correct": true,
+      "units": 0.667,
+      "homeScore": "13",
+      "awayScore": "2",
+      "gradedAt": "2026-06-25T18:35:03.721693+00:00",
       "date": "2026-06-25"
     },
     "401815897": {
