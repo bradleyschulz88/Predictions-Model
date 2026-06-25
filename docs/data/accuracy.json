@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-06-25T11:16:22.759262+00:00",
+  "updatedAt": "2026-06-25T13:36:50.379808+00:00",
   "summary": {
     "last7Days": {
       "correct": 86,
-      "total": 143,
-      "pct": 60.1,
+      "total": 144,
+      "pct": 59.7,
       "units": 13.566,
-      "roiPct": 9.5,
+      "roiPct": 9.4,
       "pending": 50
     },
     "allTime": {
       "correct": 86,
-      "total": 143,
-      "pct": 60.1,
+      "total": 144,
+      "pct": 59.7,
       "units": 13.566,
-      "roiPct": 9.5,
-      "pending": 154
+      "roiPct": 9.4,
+      "pending": 153
     },
     "byLeague": {
+      "afl": {
+        "correct": 5,
+        "total": 6,
+        "pct": 83.3,
+        "units": 5.0,
+        "roiPct": 83.3,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 21,
         "total": 26,
@@ -41,24 +49,35 @@
         "units": -5.971,
         "roiPct": -6.4,
         "pending": 0
-      },
-      "afl": {
-        "correct": 5,
-        "total": 5,
-        "pct": 100.0,
-        "units": 5.0,
-        "roiPct": 100.0,
-        "pending": 0
       }
     },
     "streak": {
       "current": 1,
-      "type": "win",
+      "type": "loss",
       "bestWin": 7,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133611",
+      "league": "afl",
+      "scheduleDate": "2026-06-25",
+      "matchup": "Sydney Swans @ Brisbane Lions",
+      "predicted": "Sydney Swans",
+      "predictedSide": "away",
+      "outcomeLabel": "Sydney Swans to win",
+      "confidence": 80.5,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Brisbane Lions",
+      "correct": false,
+      "units": null,
+      "homeScore": "126",
+      "awayScore": "83",
+      "gradedAt": "2026-06-25T13:36:39.764820+00:00",
+      "date": "2026-06-25"
+    },
     {
       "eventId": "760466",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "2",
       "awayScore": "1",
       "gradedAt": "2026-06-22T00:19:14.557897+00:00",
-      "date": "2026-06-21"
-    },
-    {
-      "eventId": "401815839",
-      "league": "mlb",
-      "scheduleDate": "2026-06-21",
-      "matchup": "Chicago White Sox @ Detroit Tigers",
-      "predicted": "Detroit Tigers",
-      "predictedSide": "home",
-      "outcomeLabel": "Detroit Tigers to win",
-      "confidence": 56.0,
-      "pickOdds": -120,
-      "status": "graded",
-      "actual": "Detroit Tigers",
-      "correct": true,
-      "units": 0.833,
-      "homeScore": "5",
-      "awayScore": "4",
-      "gradedAt": "2026-06-22T00:19:14.557884+00:00",
       "date": "2026-06-21"
     }
   ],
@@ -7310,15 +7310,15 @@
       "predicted": "Sydney Swans",
       "predictedSide": "away",
       "outcomeLabel": "Sydney Swans to win",
-      "confidence": 89.6,
+      "confidence": 80.5,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Brisbane Lions",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "126",
+      "awayScore": "83",
+      "gradedAt": "2026-06-25T13:36:39.764820+00:00",
       "date": "2026-06-25"
     },
     "1133614": {
