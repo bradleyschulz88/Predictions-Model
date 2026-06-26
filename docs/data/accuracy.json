@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-26T21:07:27.753083+00:00",
+  "updatedAt": "2026-06-26T22:46:16.752572+00:00",
   "summary": {
     "last7Days": {
       "correct": 95,
@@ -15,7 +15,7 @@
       "pct": 57.9,
       "units": 8.564,
       "roiPct": 5.2,
-      "pending": 155
+      "pending": 156
     },
     "byLeague": {
       "worldcup": {
@@ -2836,6 +2836,25 @@
       "date": "2026-07-01"
     },
     {
+      "eventId": "760492",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-30",
+      "matchup": "Third Place Group C/D/F/G/H @ France",
+      "predicted": "France",
+      "predictedSide": "home",
+      "outcomeLabel": "France to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-06-30"
+    },
+    {
       "eventId": "760491",
       "league": "worldcup",
       "scheduleDate": "2026-06-30",
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "New York Liberty to win",
       "confidence": 59.2,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-06-30"
-    },
-    {
-      "eventId": "401815978",
-      "league": "mlb",
-      "scheduleDate": "2026-06-30",
-      "matchup": "San Francisco Giants @ Arizona Diamondbacks",
-      "predicted": "Arizona Diamondbacks",
-      "predictedSide": "home",
-      "outcomeLabel": "Arizona Diamondbacks to win",
-      "confidence": 61.0,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -8973,6 +8973,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-04"
+    },
+    "760492": {
+      "eventId": "760492",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-30",
+      "matchup": "Third Place Group C/D/F/G/H @ France",
+      "predicted": "France",
+      "predictedSide": "home",
+      "outcomeLabel": "France to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-06-30"
     }
   },
   "skippedDates": []
