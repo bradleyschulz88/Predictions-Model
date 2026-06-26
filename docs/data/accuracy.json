@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-06-26T10:23:46.885537+00:00",
+  "updatedAt": "2026-06-26T12:33:27.980320+00:00",
   "summary": {
     "last7Days": {
-      "correct": 92,
-      "total": 161,
-      "pct": 57.1,
+      "correct": 93,
+      "total": 162,
+      "pct": 57.4,
       "units": 8.008,
-      "roiPct": 5.0,
+      "roiPct": 4.9,
       "pending": 50
     },
     "allTime": {
-      "correct": 92,
-      "total": 161,
-      "pct": 57.1,
+      "correct": 93,
+      "total": 162,
+      "pct": 57.4,
       "units": 8.008,
-      "roiPct": 5.0,
-      "pending": 154
+      "roiPct": 4.9,
+      "pending": 153
     },
     "byLeague": {
+      "afl": {
+        "correct": 6,
+        "total": 7,
+        "pct": 85.7,
+        "units": 5.0,
+        "roiPct": 71.4,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 23,
         "total": 32,
@@ -41,24 +49,35 @@
         "units": -7.854,
         "roiPct": -7.8,
         "pending": 0
-      },
-      "afl": {
-        "correct": 5,
-        "total": 6,
-        "pct": 83.3,
-        "units": 5.0,
-        "roiPct": 83.3,
-        "pending": 0
       }
     },
     "streak": {
       "current": 1,
-      "type": "win",
+      "type": "loss",
       "bestWin": 7,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133614",
+      "league": "afl",
+      "scheduleDate": "2026-06-26",
+      "matchup": "GWS GIANTS @ Hawthorn",
+      "predicted": "Hawthorn",
+      "predictedSide": "home",
+      "outcomeLabel": "Hawthorn to win",
+      "confidence": 81.9,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Hawthorn",
+      "correct": true,
+      "units": null,
+      "homeScore": "96",
+      "awayScore": "82",
+      "gradedAt": "2026-06-26T12:33:17.156563+00:00",
+      "date": "2026-06-26"
+    },
     {
       "eventId": "760470",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "79",
       "awayScore": "84",
       "gradedAt": "2026-06-22T00:19:16.687829+00:00",
-      "date": "2026-06-21"
-    },
-    {
-      "eventId": "401857009",
-      "league": "wnba",
-      "scheduleDate": "2026-06-21",
-      "matchup": "Golden State Valkyries @ Las Vegas Aces",
-      "predicted": "Las Vegas Aces",
-      "predictedSide": "home",
-      "outcomeLabel": "Las Vegas Aces to win",
-      "confidence": 81.2,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Las Vegas Aces",
-      "correct": true,
-      "units": 1.0,
-      "homeScore": "92",
-      "awayScore": "73",
-      "gradedAt": "2026-06-22T00:19:16.687795+00:00",
       "date": "2026-06-21"
     }
   ],
@@ -7329,15 +7329,15 @@
       "predicted": "Hawthorn",
       "predictedSide": "home",
       "outcomeLabel": "Hawthorn to win",
-      "confidence": 87.6,
+      "confidence": 81.9,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Hawthorn",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "96",
+      "awayScore": "82",
+      "gradedAt": "2026-06-26T12:33:17.156563+00:00",
       "date": "2026-06-26"
     },
     "1133612": {
