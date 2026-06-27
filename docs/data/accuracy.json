@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-06-27T11:57:33.402494+00:00",
+  "updatedAt": "2026-06-27T13:26:56.331989+00:00",
   "summary": {
     "last7Days": {
       "correct": 107,
-      "total": 188,
-      "pct": 56.9,
+      "total": 189,
+      "pct": 56.6,
       "units": 4.221,
       "roiPct": 2.2,
       "pending": 50
     },
     "allTime": {
       "correct": 107,
-      "total": 188,
-      "pct": 56.9,
+      "total": 189,
+      "pct": 56.6,
       "units": 4.221,
       "roiPct": 2.2,
-      "pending": 156
+      "pending": 155
     },
     "byLeague": {
       "afl": {
         "correct": 8,
-        "total": 9,
-        "pct": 88.9,
+        "total": 10,
+        "pct": 80.0,
         "units": 5.0,
-        "roiPct": 55.6,
+        "roiPct": 50.0,
         "pending": 0
       },
       "worldcup": {
@@ -53,12 +53,31 @@
     },
     "streak": {
       "current": 1,
-      "type": "win",
+      "type": "loss",
       "bestWin": 7,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133616",
+      "league": "afl",
+      "scheduleDate": "2026-06-27",
+      "matchup": "Adelaide Crows @ Port Adelaide",
+      "predicted": "Adelaide Crows",
+      "predictedSide": "away",
+      "outcomeLabel": "Adelaide Crows to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Port Adelaide",
+      "correct": false,
+      "units": null,
+      "homeScore": "97",
+      "awayScore": "71",
+      "gradedAt": "2026-06-27T13:26:33.962339+00:00",
+      "date": "2026-06-27"
+    },
     {
       "eventId": "1133613",
       "league": "afl",
@@ -1938,25 +1957,6 @@
       "homeScore": "3",
       "awayScore": "2",
       "gradedAt": "2026-06-24T00:16:24.747383+00:00",
-      "date": "2026-06-22"
-    },
-    {
-      "eventId": "401815861",
-      "league": "mlb",
-      "scheduleDate": "2026-06-22",
-      "matchup": "Arizona Diamondbacks @ St. Louis Cardinals",
-      "predicted": "St. Louis Cardinals",
-      "predictedSide": "home",
-      "outcomeLabel": "St. Louis Cardinals to win",
-      "confidence": 75.1,
-      "pickOdds": -150,
-      "status": "graded",
-      "actual": "St. Louis Cardinals",
-      "correct": true,
-      "units": 0.667,
-      "homeScore": "3",
-      "awayScore": "2",
-      "gradedAt": "2026-06-24T00:16:24.747370+00:00",
       "date": "2026-06-22"
     }
   ],
@@ -7367,15 +7367,15 @@
       "predicted": "Adelaide Crows",
       "predictedSide": "away",
       "outcomeLabel": "Adelaide Crows to win",
-      "confidence": 89.6,
+      "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Port Adelaide",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "97",
+      "awayScore": "71",
+      "gradedAt": "2026-06-27T13:26:33.962339+00:00",
       "date": "2026-06-27"
     },
     "1133613": {
