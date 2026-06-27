@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-06-27T07:50:47.366659+00:00",
+  "updatedAt": "2026-06-27T10:03:17.431832+00:00",
   "summary": {
     "last7Days": {
-      "correct": 106,
-      "total": 187,
-      "pct": 56.7,
+      "correct": 107,
+      "total": 188,
+      "pct": 56.9,
       "units": 4.221,
-      "roiPct": 2.3,
+      "roiPct": 2.2,
       "pending": 50
     },
     "allTime": {
-      "correct": 106,
-      "total": 187,
-      "pct": 56.7,
+      "correct": 107,
+      "total": 188,
+      "pct": 56.9,
       "units": 4.221,
-      "roiPct": 2.3,
-      "pending": 157
+      "roiPct": 2.2,
+      "pending": 156
     },
     "byLeague": {
+      "afl": {
+        "correct": 8,
+        "total": 9,
+        "pct": 88.9,
+        "units": 5.0,
+        "roiPct": 55.6,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 27,
         "total": 38,
@@ -34,14 +42,6 @@
         "roiPct": -9.5,
         "pending": 0
       },
-      "afl": {
-        "correct": 7,
-        "total": 8,
-        "pct": 87.5,
-        "units": 5.0,
-        "roiPct": 62.5,
-        "pending": 0
-      },
       "wnba": {
         "correct": 14,
         "total": 25,
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 2,
+      "current": 1,
       "type": "win",
       "bestWin": 7,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133613",
+      "league": "afl",
+      "scheduleDate": "2026-06-27",
+      "matchup": "Richmond @ Collingwood",
+      "predicted": "Collingwood",
+      "predictedSide": "home",
+      "outcomeLabel": "Collingwood to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Collingwood",
+      "correct": true,
+      "units": null,
+      "homeScore": "106",
+      "awayScore": "72",
+      "gradedAt": "2026-06-27T10:03:07.803449+00:00",
+      "date": "2026-06-27"
+    },
     {
       "eventId": "760477",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "3",
       "awayScore": "2",
       "gradedAt": "2026-06-24T00:16:24.747370+00:00",
-      "date": "2026-06-22"
-    },
-    {
-      "eventId": "401815863",
-      "league": "mlb",
-      "scheduleDate": "2026-06-22",
-      "matchup": "Los Angeles Dodgers @ Minnesota Twins",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "away",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 66.5,
-      "pickOdds": -155,
-      "status": "graded",
-      "actual": "Los Angeles Dodgers",
-      "correct": true,
-      "units": 0.645,
-      "homeScore": "1",
-      "awayScore": "2",
-      "gradedAt": "2026-06-24T00:16:24.747364+00:00",
       "date": "2026-06-22"
     }
   ],
@@ -7386,15 +7386,15 @@
       "predicted": "Collingwood",
       "predictedSide": "home",
       "outcomeLabel": "Collingwood to win",
-      "confidence": 89.0,
+      "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Collingwood",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "106",
+      "awayScore": "72",
+      "gradedAt": "2026-06-27T10:03:07.803449+00:00",
       "date": "2026-06-27"
     },
     "1133615": {
