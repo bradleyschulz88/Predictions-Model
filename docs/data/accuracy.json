@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-06-28T06:16:14.729879+00:00",
+  "updatedAt": "2026-06-28T09:43:09.580073+00:00",
   "summary": {
     "last7Days": {
-      "correct": 117,
-      "total": 213,
-      "pct": 54.9,
+      "correct": 119,
+      "total": 215,
+      "pct": 55.3,
       "units": -1.788,
       "roiPct": -0.8,
       "pending": 50
     },
     "allTime": {
-      "correct": 117,
-      "total": 213,
-      "pct": 54.9,
+      "correct": 119,
+      "total": 215,
+      "pct": 55.3,
       "units": -1.788,
       "roiPct": -0.8,
-      "pending": 149
+      "pending": 147
     },
     "byLeague": {
+      "afl": {
+        "correct": 10,
+        "total": 12,
+        "pct": 83.3,
+        "units": 5.0,
+        "roiPct": 41.7,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 30,
         "total": 44,
@@ -41,24 +49,54 @@
         "units": -15.065,
         "roiPct": -11.5,
         "pending": 0
-      },
-      "afl": {
-        "correct": 8,
-        "total": 10,
-        "pct": 80.0,
-        "units": 5.0,
-        "roiPct": 50.0,
-        "pending": 0
       }
     },
     "streak": {
-      "current": 1,
-      "type": "loss",
+      "current": 3,
+      "type": "win",
       "bestWin": 4,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133617",
+      "league": "afl",
+      "scheduleDate": "2026-06-28",
+      "matchup": "Gold Coast SUNS @ Fremantle",
+      "predicted": "Fremantle",
+      "predictedSide": "home",
+      "outcomeLabel": "Fremantle to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Fremantle",
+      "correct": true,
+      "units": null,
+      "homeScore": "80",
+      "awayScore": "29",
+      "gradedAt": "2026-06-28T09:42:57.008269+00:00",
+      "date": "2026-06-28"
+    },
+    {
+      "eventId": "1133615",
+      "league": "afl",
+      "scheduleDate": "2026-06-28",
+      "matchup": "Essendon @ North Melbourne",
+      "predicted": "North Melbourne",
+      "predictedSide": "home",
+      "outcomeLabel": "North Melbourne to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "North Melbourne",
+      "correct": true,
+      "units": null,
+      "homeScore": "79",
+      "awayScore": "65",
+      "gradedAt": "2026-06-28T09:42:57.008251+00:00",
+      "date": "2026-06-28"
+    },
     {
       "eventId": "760483",
       "league": "worldcup",
@@ -1919,44 +1957,6 @@
       "homeScore": "76",
       "awayScore": "87",
       "gradedAt": "2026-06-24T06:45:52.961324+00:00",
-      "date": "2026-06-23"
-    },
-    {
-      "eventId": "401815879",
-      "league": "mlb",
-      "scheduleDate": "2026-06-23",
-      "matchup": "Athletics @ San Francisco Giants",
-      "predicted": "San Francisco Giants",
-      "predictedSide": "home",
-      "outcomeLabel": "San Francisco Giants to win",
-      "confidence": 55.1,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "San Francisco Giants",
-      "correct": true,
-      "units": null,
-      "homeScore": "3",
-      "awayScore": "1",
-      "gradedAt": "2026-06-24T06:45:45.749172+00:00",
-      "date": "2026-06-23"
-    },
-    {
-      "eventId": "401815880",
-      "league": "mlb",
-      "scheduleDate": "2026-06-23",
-      "matchup": "Atlanta Braves @ San Diego Padres",
-      "predicted": "Atlanta Braves",
-      "predictedSide": "away",
-      "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 72.4,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "San Diego Padres",
-      "correct": false,
-      "units": null,
-      "homeScore": "7",
-      "awayScore": "6",
-      "gradedAt": "2026-06-24T06:45:45.749165+00:00",
       "date": "2026-06-23"
     }
   ],
@@ -7405,15 +7405,15 @@
       "predicted": "North Melbourne",
       "predictedSide": "home",
       "outcomeLabel": "North Melbourne to win",
-      "confidence": 89.6,
+      "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "North Melbourne",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "79",
+      "awayScore": "65",
+      "gradedAt": "2026-06-28T09:42:57.008251+00:00",
       "date": "2026-06-28"
     },
     "1133617": {
@@ -7424,15 +7424,15 @@
       "predicted": "Fremantle",
       "predictedSide": "home",
       "outcomeLabel": "Fremantle to win",
-      "confidence": 89.6,
+      "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Fremantle",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "80",
+      "awayScore": "29",
+      "gradedAt": "2026-06-28T09:42:57.008269+00:00",
       "date": "2026-06-28"
     },
     "401815951": {
