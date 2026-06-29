@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-06-29T18:30:53.725642+00:00",
+  "updatedAt": "2026-06-29T20:32:37.218149+00:00",
   "summary": {
     "last7Days": {
-      "correct": 132,
-      "total": 235,
-      "pct": 56.2,
+      "correct": 133,
+      "total": 236,
+      "pct": 56.4,
       "units": -1.775,
       "roiPct": -0.8,
       "pending": 50
     },
     "allTime": {
-      "correct": 132,
-      "total": 235,
-      "pct": 56.2,
+      "correct": 133,
+      "total": 236,
+      "pct": 56.4,
       "units": -1.775,
       "roiPct": -0.8,
       "pending": 141
     },
     "byLeague": {
+      "worldcup": {
+        "correct": 32,
+        "total": 46,
+        "pct": 69.6,
+        "units": 2.277,
+        "roiPct": 5.0,
+        "pending": 0
+      },
       "wnba": {
         "correct": 19,
         "total": 32,
@@ -34,14 +42,6 @@
         "roiPct": -10.3,
         "pending": 0
       },
-      "worldcup": {
-        "correct": 31,
-        "total": 45,
-        "pct": 68.9,
-        "units": 2.277,
-        "roiPct": 5.1,
-        "pending": 0
-      },
       "afl": {
         "correct": 10,
         "total": 12,
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 3,
+      "current": 2,
       "type": "loss",
       "bestWin": 5,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "760487",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-29",
+      "matchup": "Group F 2nd Place @ Brazil",
+      "predicted": "Brazil",
+      "predictedSide": "home",
+      "outcomeLabel": "Brazil to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Brazil",
+      "correct": true,
+      "units": null,
+      "homeScore": "2",
+      "awayScore": "1",
+      "gradedAt": "2026-06-29T20:32:35.194157+00:00",
+      "date": "2026-06-29"
+    },
     {
       "eventId": "401857033",
       "league": "wnba",
@@ -1939,25 +1958,6 @@
       "awayScore": "1",
       "gradedAt": "2026-06-25T04:45:10.902144+00:00",
       "date": "2026-06-24"
-    },
-    {
-      "eventId": "401815895",
-      "league": "mlb",
-      "scheduleDate": "2026-06-24",
-      "matchup": "Atlanta Braves @ San Diego Padres",
-      "predicted": "Atlanta Braves",
-      "predictedSide": "away",
-      "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 71.8,
-      "pickOdds": -118,
-      "status": "graded",
-      "actual": "San Diego Padres",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "5",
-      "awayScore": "2",
-      "gradedAt": "2026-06-25T04:45:10.902132+00:00",
-      "date": "2026-06-24"
     }
   ],
   "pendingPicks": [
@@ -2150,6 +2150,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-06"
+    },
+    {
+      "eventId": "760504",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-05",
+      "matchup": "Round of 32 6 Winner @ Brazil",
+      "predicted": "Brazil",
+      "predictedSide": "home",
+      "outcomeLabel": "Brazil to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-05"
     },
     {
       "eventId": "401857042",
@@ -2891,25 +2910,6 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-04"
-    },
-    {
-      "eventId": "760501",
-      "league": "worldcup",
-      "scheduleDate": "2026-07-03",
-      "matchup": "Ghana @ Group K Winner",
-      "predicted": "Ghana",
-      "predictedSide": "away",
-      "outcomeLabel": "Ghana to win",
-      "confidence": 73.8,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-03"
     }
   ],
   "picksByEventId": {
@@ -8338,13 +8338,13 @@
       "outcomeLabel": "Brazil to win",
       "confidence": 76.3,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Brazil",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "2",
+      "awayScore": "1",
+      "gradedAt": "2026-06-29T20:32:35.194157+00:00",
       "date": "2026-06-29"
     },
     "401815994": {
@@ -10056,6 +10056,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-06"
+    },
+    "760504": {
+      "eventId": "760504",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-05",
+      "matchup": "Round of 32 6 Winner @ Brazil",
+      "predicted": "Brazil",
+      "predictedSide": "home",
+      "outcomeLabel": "Brazil to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-05"
     }
   },
   "skippedDates": []
