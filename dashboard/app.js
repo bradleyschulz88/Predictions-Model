@@ -2793,14 +2793,22 @@ function filterGamesForScheduleDate(games, scheduleDate, league) {
   });
 }
 
+function scheduleDateMatchesPayload(payload, scheduleDate) {
+  if (!payload || !scheduleDate) return false;
+  return payload.scheduleDate === scheduleDate || payload._requestedDate === scheduleDate;
+}
+
 function applyScheduleDateToPayload(payload, scheduleDate, league) {
   if (!payload || !scheduleDate || !league) return payload;
-  const snapshotMatchesDate = payload.scheduleDate === scheduleDate;
+  if (scheduleDateMatchesPayload(payload, scheduleDate)) {
+    const games = payload.games || [];
+    return { ...payload, scheduleDate, games, gameCount: games.length };
+  }
   const shouldFilterByStartDate =
     payload._liveFallback ||
     payload.liveScheduleOnly ||
     payload.source === "espn-live" ||
-    (payload.scheduleDate && !snapshotMatchesDate);
+    Boolean(payload.scheduleDate);
   if (!shouldFilterByStartDate) {
     const games = payload.games || [];
     return { ...payload, games, gameCount: games.length };
@@ -2808,6 +2816,7 @@ function applyScheduleDateToPayload(payload, scheduleDate, league) {
   const games = filterGamesForScheduleDate(payload.games || [], scheduleDate, league);
   return {
     ...payload,
+    scheduleDate,
     games,
     gameCount: games.length,
   };
@@ -2815,9 +2824,13 @@ function applyScheduleDateToPayload(payload, scheduleDate, league) {
 
 function describeScheduleSource(payload) {
   if (!payload) return "—";
-  if (payload._liveFallback || payload.source === "espn-live" || payload.liveScheduleOnly) {
+  const liveOnly = payload._liveFallback || payload.source === "espn-live" || payload.liveScheduleOnly;
+  if (liveOnly && countGamesWithPredictions(payload.games) === 0) {
     if (lastLiveScoreAt && liveScoresToggle?.checked) return "Live ESPN + scores";
     return "Live ESPN";
+  }
+  if (payload._liveScoresMerged && lastLiveScoreAt && liveScoresToggle?.checked) {
+    return "Snapshot + live scores";
   }
   if (payload._dateFallback) return "No snapshot";
   if (lastLiveScoreAt && liveScoresToggle?.checked) return "Snapshot + scores";
@@ -3342,7 +3355,14 @@ function filterGames(games) {
   const { minConfidence, query } = getFilterValues();
   return (games || []).filter((game) => {
     const confidence = game.prediction?.confidence;
-    if (confidence != null && confidence < minConfidence) return false;
+    if (
+      minConfidence > 0 &&
+      confidence != null &&
+      isPublishablePrediction(game?.prediction) &&
+      confidence < minConfidence
+    ) {
+      return false;
+    }
     if (!query) return true;
     const haystack = `${game.homeTeam || ""} ${game.awayTeam || ""} ${game.matchup || ""}`.toLowerCase();
     return haystack.includes(query);
@@ -3374,6 +3394,7 @@ function recordToPrediction(record) {
     outcomeLabel,
     confidence,
     confidenceLabel: confidenceLabelFromConfidence(confidence),
+    publishable: record.publishable,
     features: record.features,
   };
 }
@@ -4054,6 +4075,25 @@ async function fetchEspnSchedule(league, dateValue) {
   };
 }
 
+function mergeSnapshotWithLiveSchedule(snapshotPayload, livePayload, dateValue) {
+  const liveGames = livePayload?.games || [];
+  const mergedGames = liveGames.length
+    ? mergeLiveSchedule(snapshotPayload.games || [], liveGames)
+    : snapshotPayload.games || [];
+  const pickCount = countGamesWithPredictions(mergedGames);
+  return {
+    ...snapshotPayload,
+    scheduleDate: dateValue,
+    games: mergedGames,
+    gameCount: mergedGames.length,
+    fetchedAt: livePayload?.fetchedAt || snapshotPayload.fetchedAt,
+    _requestedDate: dateValue,
+    _liveScoresMerged: Boolean(liveGames.length),
+    _liveFallback: pickCount === 0 && Boolean(liveGames.length),
+    liveScheduleOnly: pickCount === 0,
+  };
+}
+
 async function fetchStaticPayloadForDate(league, dateValue, { force = false } = {}) {
   const meta = leagueMeta(league);
   const candidatePaths = [
@@ -4063,6 +4103,9 @@ async function fetchStaticPayloadForDate(league, dateValue, { force = false } = 
         .map((filePath) => String(filePath).replace(/^\//, ""))
     ),
   ];
+
+  const livePayload = await fetchEspnSchedule(league, dateValue);
+  const liveGames = livePayload?.games || [];
 
   let snapshotPayload = null;
   let snapshotWithPredictions = null;
@@ -4081,23 +4124,12 @@ async function fetchStaticPayloadForDate(league, dateValue, { force = false } = 
     if (!snapshotPayload) snapshotPayload = payload;
   }
 
-  if (snapshotWithPredictions) return snapshotWithPredictions;
-
-  const livePayload = await fetchEspnSchedule(league, dateValue);
-  const liveGames = livePayload?.games || [];
+  if (snapshotWithPredictions) {
+    return mergeSnapshotWithLiveSchedule(snapshotWithPredictions, livePayload, dateValue);
+  }
 
   if (snapshotPayload?.games?.length) {
-    const mergedGames = liveGames.length ? mergeLiveSchedule(snapshotPayload.games, liveGames) : snapshotPayload.games;
-    return {
-      ...snapshotPayload,
-      scheduleDate: dateValue,
-      games: mergedGames,
-      gameCount: mergedGames.length,
-      fetchedAt: livePayload?.fetchedAt || snapshotPayload.fetchedAt,
-      _requestedDate: dateValue,
-      _liveFallback: Boolean(liveGames.length),
-      liveScheduleOnly: countGamesWithPredictions(mergedGames) === 0,
-    };
+    return mergeSnapshotWithLiveSchedule(snapshotPayload, livePayload, dateValue);
   }
 
   if (livePayload && liveGames.length > 0) {
@@ -4434,12 +4466,7 @@ async function loadDashboard(force = false) {
     } else {
       const displayDate = requestedDate;
       const league = sportSelect.value;
-      let normalizedPayload = payload;
-      if (!(payload._dateFallback && payload.scheduleDate !== displayDate)) {
-        normalizedPayload = applyScheduleDateToPayload(payload, displayDate, league);
-      } else {
-        normalizedPayload = { ...payload, games: [], gameCount: 0 };
-      }
+      const normalizedPayload = applyScheduleDateToPayload(payload, displayDate, league);
       lastPayload = normalizedPayload;
       updateFreshnessNote();
 
@@ -4460,7 +4487,8 @@ async function loadDashboard(force = false) {
         showBanner(`Data build error: ${normalizedPayload.error}. Try another date or re-run GitHub Actions.`);
       } else if (IS_STATIC_HOST) {
         const summaryParts = [`${displayDate}${tz ? ` (${formatTimezoneLabel(tz)})` : ""}`];
-        if (normalizedPayload._liveFallback) {
+        const publishablePickCount = countGamesWithPredictions(games);
+        if (normalizedPayload._liveFallback && publishablePickCount === 0) {
           summaryParts.push("live ESPN schedule");
         } else if (normalizedPayload._dateFallback) {
           summaryParts.push("no snapshot for this date");
@@ -4478,7 +4506,7 @@ async function loadDashboard(force = false) {
         if (tz && US_SCHEDULE_SPORTS.has(league)) {
           detailParts.push(`US sports use ${formatTimezoneLabel(tz)} calendar dates (not your local day).`);
         }
-        if (normalizedPayload._liveFallback) {
+        if (normalizedPayload._liveFallback && publishablePickCount === 0) {
           detailParts.push(
             `Showing live ESPN for ${displayDate} — model picks appear after the next snapshot build.`
           );
@@ -4490,7 +4518,7 @@ async function loadDashboard(force = false) {
         }
 
         const needsBanner =
-          normalizedPayload._liveFallback ||
+          (normalizedPayload._liveFallback && publishablePickCount === 0) ||
           normalizedPayload._dateFallback ||
           games.length === 0;
 
