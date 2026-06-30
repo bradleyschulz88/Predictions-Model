@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-06-30T21:58:37.884474+00:00",
+  "updatedAt": "2026-06-30T23:12:13.494009+00:00",
   "summary": {
     "last7Days": {
-      "correct": 143,
-      "total": 252,
-      "pct": 56.7,
-      "units": 0.72,
-      "roiPct": 0.3,
+      "correct": 144,
+      "total": 253,
+      "pct": 56.9,
+      "units": 1.014,
+      "roiPct": 0.4,
       "pending": 50
     },
     "allTime": {
-      "correct": 143,
-      "total": 252,
-      "pct": 56.7,
-      "units": 0.72,
-      "roiPct": 0.3,
-      "pending": 143
+      "correct": 144,
+      "total": 253,
+      "pct": 56.9,
+      "units": 1.014,
+      "roiPct": 0.4,
+      "pending": 142
     },
     "byLeague": {
       "worldcup": {
-        "correct": 32,
-        "total": 49,
-        "pct": 65.3,
-        "units": 1.277,
-        "roiPct": 2.6,
+        "correct": 33,
+        "total": 50,
+        "pct": 66.0,
+        "units": 1.571,
+        "roiPct": 3.1,
         "pending": 0
       },
       "mlb": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 1,
-      "type": "win",
+      "current": 3,
+      "type": "loss",
       "bestWin": 5,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "760492",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-30",
+      "matchup": "Sweden @ France",
+      "predicted": "France",
+      "predictedSide": "home",
+      "outcomeLabel": "France to win",
+      "confidence": 76.3,
+      "pickOdds": -340,
+      "status": "graded",
+      "actual": "France",
+      "correct": true,
+      "units": 0.294,
+      "homeScore": "3",
+      "awayScore": "0",
+      "gradedAt": "2026-06-30T23:12:13.141631+00:00",
+      "date": "2026-06-30"
+    },
     {
       "eventId": "760490",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "6",
       "awayScore": "3",
       "gradedAt": "2026-06-26T02:54:21.107549+00:00",
-      "date": "2026-06-25"
-    },
-    {
-      "eventId": "401815897",
-      "league": "mlb",
-      "scheduleDate": "2026-06-25",
-      "matchup": "Chicago Cubs @ New York Mets",
-      "predicted": "Chicago Cubs",
-      "predictedSide": "away",
-      "outcomeLabel": "Chicago Cubs to win",
-      "confidence": 64.7,
-      "pickOdds": -110,
-      "status": "graded",
-      "actual": "Chicago Cubs",
-      "correct": true,
-      "units": 0.909,
-      "homeScore": "3",
-      "awayScore": "4",
-      "gradedAt": "2026-06-26T02:54:21.107536+00:00",
       "date": "2026-06-25"
     }
   ],
@@ -8978,19 +8978,19 @@
       "eventId": "760492",
       "league": "worldcup",
       "scheduleDate": "2026-06-30",
-      "matchup": "Third Place Group C/D/F/G/H @ France",
+      "matchup": "Sweden @ France",
       "predicted": "France",
       "predictedSide": "home",
       "outcomeLabel": "France to win",
       "confidence": 76.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "pickOdds": -340,
+      "status": "graded",
+      "actual": "France",
+      "correct": true,
+      "units": 0.294,
+      "homeScore": "3",
+      "awayScore": "0",
+      "gradedAt": "2026-06-30T23:12:13.141631+00:00",
       "date": "2026-06-30"
     },
     "401815985": {
