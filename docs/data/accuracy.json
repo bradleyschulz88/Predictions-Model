@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-06-30T18:21:14.669156+00:00",
+  "updatedAt": "2026-06-30T20:32:56.461750+00:00",
   "summary": {
     "last7Days": {
       "correct": 143,
-      "total": 251,
-      "pct": 57.0,
+      "total": 252,
+      "pct": 56.7,
       "units": 0.72,
       "roiPct": 0.3,
       "pending": 50
     },
     "allTime": {
       "correct": 143,
-      "total": 251,
-      "pct": 57.0,
+      "total": 252,
+      "pct": 56.7,
       "units": 0.72,
       "roiPct": 0.3,
-      "pending": 144
+      "pending": 143
     },
     "byLeague": {
+      "worldcup": {
+        "correct": 32,
+        "total": 49,
+        "pct": 65.3,
+        "units": 1.277,
+        "roiPct": 2.6,
+        "pending": 0
+      },
       "mlb": {
         "correct": 82,
         "total": 159,
         "pct": 51.6,
         "units": -11.557,
         "roiPct": -7.3,
-        "pending": 0
-      },
-      "worldcup": {
-        "correct": 32,
-        "total": 48,
-        "pct": 66.7,
-        "units": 1.277,
-        "roiPct": 2.7,
         "pending": 0
       },
       "wnba": {
@@ -53,12 +53,31 @@
     },
     "streak": {
       "current": 1,
-      "type": "loss",
+      "type": "win",
       "bestWin": 5,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "760490",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-30",
+      "matchup": "Group I 2nd Place @ Ivory Coast",
+      "predicted": "Ivory Coast",
+      "predictedSide": "home",
+      "outcomeLabel": "Ivory Coast to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Norway",
+      "correct": false,
+      "units": null,
+      "homeScore": "1",
+      "awayScore": "2",
+      "gradedAt": "2026-06-30T20:32:55.728541+00:00",
+      "date": "2026-06-30"
+    },
     {
       "eventId": "401815963",
       "league": "mlb",
@@ -1938,25 +1957,6 @@
       "homeScore": "3",
       "awayScore": "4",
       "gradedAt": "2026-06-26T02:54:21.107536+00:00",
-      "date": "2026-06-25"
-    },
-    {
-      "eventId": "401815903",
-      "league": "mlb",
-      "scheduleDate": "2026-06-25",
-      "matchup": "Texas Rangers @ Toronto Blue Jays",
-      "predicted": "Toronto Blue Jays",
-      "predictedSide": "home",
-      "outcomeLabel": "Toronto Blue Jays to win",
-      "confidence": 58.2,
-      "pickOdds": -145,
-      "status": "graded",
-      "actual": "Texas Rangers",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "5",
-      "awayScore": "6",
-      "gradedAt": "2026-06-26T02:54:21.107527+00:00",
       "date": "2026-06-25"
     }
   ],
@@ -8604,13 +8604,13 @@
       "outcomeLabel": "Ivory Coast to win",
       "confidence": 76.3,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Norway",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "1",
+      "awayScore": "2",
+      "gradedAt": "2026-06-30T20:32:55.728541+00:00",
       "date": "2026-06-30"
     },
     "401815997": {
