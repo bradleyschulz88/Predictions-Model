@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-06-29T22:54:19.784601+00:00",
+  "updatedAt": "2026-06-30T00:01:58.889534+00:00",
   "summary": {
     "last7Days": {
       "correct": 133,
-      "total": 236,
-      "pct": 56.4,
-      "units": -1.775,
-      "roiPct": -0.8,
+      "total": 237,
+      "pct": 56.1,
+      "units": -2.775,
+      "roiPct": -1.2,
       "pending": 50
     },
     "allTime": {
       "correct": 133,
-      "total": 236,
-      "pct": 56.4,
-      "units": -1.775,
-      "roiPct": -0.8,
+      "total": 237,
+      "pct": 56.1,
+      "units": -2.775,
+      "roiPct": -1.2,
       "pending": 141
     },
     "byLeague": {
       "worldcup": {
         "correct": 32,
-        "total": 46,
-        "pct": 69.6,
-        "units": 2.277,
-        "roiPct": 5.0,
+        "total": 47,
+        "pct": 68.1,
+        "units": 1.277,
+        "roiPct": 2.7,
         "pending": 0
       },
       "wnba": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 2,
+      "current": 1,
       "type": "loss",
       "bestWin": 5,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "760489",
+      "league": "worldcup",
+      "scheduleDate": "2026-06-29",
+      "matchup": "Paraguay @ Germany",
+      "predicted": "Germany",
+      "predictedSide": "home",
+      "outcomeLabel": "Germany to win",
+      "confidence": 76.3,
+      "pickOdds": -300,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "1",
+      "gradedAt": "2026-06-30T00:01:58.571483+00:00",
+      "date": "2026-06-29"
+    },
     {
       "eventId": "760487",
       "league": "worldcup",
@@ -1939,25 +1958,6 @@
       "awayScore": "111",
       "gradedAt": "2026-06-25T04:45:16.453117+00:00",
       "date": "2026-06-24"
-    },
-    {
-      "eventId": "401815894",
-      "league": "mlb",
-      "scheduleDate": "2026-06-24",
-      "matchup": "Athletics @ San Francisco Giants",
-      "predicted": "Athletics",
-      "predictedSide": "away",
-      "outcomeLabel": "Athletics to win",
-      "confidence": 69.3,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "San Francisco Giants",
-      "correct": false,
-      "units": null,
-      "homeScore": "2",
-      "awayScore": "1",
-      "gradedAt": "2026-06-25T04:45:10.902144+00:00",
-      "date": "2026-06-24"
     }
   ],
   "pendingPicks": [
@@ -2494,6 +2494,25 @@
       "date": "2026-07-05"
     },
     {
+      "eventId": "760503",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-04",
+      "matchup": "Round of 32 5 Winner @ Paraguay",
+      "predicted": "Paraguay",
+      "predictedSide": "home",
+      "outcomeLabel": "Paraguay to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-04"
+    },
+    {
       "eventId": "760502",
       "league": "worldcup",
       "scheduleDate": "2026-07-04",
@@ -2882,25 +2901,6 @@
       "predictedSide": "away",
       "outcomeLabel": "Fremantle to win",
       "confidence": 82.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-04"
-    },
-    {
-      "eventId": "1133620",
-      "league": "afl",
-      "scheduleDate": "2026-07-04",
-      "matchup": "Collingwood @ Gold Coast SUNS",
-      "predicted": "Collingwood",
-      "predictedSide": "away",
-      "outcomeLabel": "Collingwood to win",
-      "confidence": 59.4,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -7667,19 +7667,19 @@
       "eventId": "760489",
       "league": "worldcup",
       "scheduleDate": "2026-06-29",
-      "matchup": "Third Place Group A/B/C/D/F @ Germany",
+      "matchup": "Paraguay @ Germany",
       "predicted": "Germany",
       "predictedSide": "home",
       "outcomeLabel": "Germany to win",
       "confidence": 76.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "pickOdds": -300,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "1",
+      "gradedAt": "2026-06-30T00:01:58.571483+00:00",
       "date": "2026-06-29"
     },
     "401815964": {
@@ -10075,6 +10075,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-05"
+    },
+    "760503": {
+      "eventId": "760503",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-04",
+      "matchup": "Round of 32 5 Winner @ Paraguay",
+      "predicted": "Paraguay",
+      "predictedSide": "home",
+      "outcomeLabel": "Paraguay to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-04"
     }
   },
   "skippedDates": []
