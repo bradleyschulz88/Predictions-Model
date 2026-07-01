@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-07-01T16:07:01.006759+00:00",
+  "updatedAt": "2026-07-01T18:27:01.391790+00:00",
   "summary": {
     "last7Days": {
-      "correct": 155,
-      "total": 270,
-      "pct": 57.4,
-      "units": 3.359,
-      "roiPct": 1.2,
+      "correct": 156,
+      "total": 271,
+      "pct": 57.6,
+      "units": 3.662,
+      "roiPct": 1.4,
       "pending": 50
     },
     "allTime": {
-      "correct": 155,
-      "total": 270,
-      "pct": 57.4,
-      "units": 3.359,
-      "roiPct": 1.2,
-      "pending": 143
+      "correct": 156,
+      "total": 271,
+      "pct": 57.6,
+      "units": 3.662,
+      "roiPct": 1.4,
+      "pending": 142
     },
     "byLeague": {
       "worldcup": {
-        "correct": 34,
-        "total": 51,
-        "pct": 66.7,
-        "units": 2.921,
-        "roiPct": 5.7,
+        "correct": 35,
+        "total": 52,
+        "pct": 67.3,
+        "units": 3.224,
+        "roiPct": 6.2,
         "pending": 0
       },
       "mlb": {
@@ -53,12 +53,31 @@
     },
     "streak": {
       "current": 1,
-      "type": "win",
-      "bestWin": 5,
+      "type": "loss",
+      "bestWin": 6,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "760495",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-01",
+      "matchup": "Congo DR @ England",
+      "predicted": "England",
+      "predictedSide": "home",
+      "outcomeLabel": "England to win",
+      "confidence": 68.9,
+      "pickOdds": -330,
+      "status": "graded",
+      "actual": "England",
+      "correct": true,
+      "units": 0.303,
+      "homeScore": "2",
+      "awayScore": "1",
+      "gradedAt": "2026-07-01T18:27:01.106251+00:00",
+      "date": "2026-07-01"
+    },
     {
       "eventId": "760491",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "1",
       "awayScore": "3",
       "gradedAt": "2026-06-27T04:34:46.266190+00:00",
-      "date": "2026-06-26"
-    },
-    {
-      "eventId": "401815910",
-      "league": "mlb",
-      "scheduleDate": "2026-06-26",
-      "matchup": "Philadelphia Phillies @ New York Mets",
-      "predicted": "Philadelphia Phillies",
-      "predictedSide": "away",
-      "outcomeLabel": "Philadelphia Phillies to win",
-      "confidence": 74.4,
-      "pickOdds": -160,
-      "status": "graded",
-      "actual": "Philadelphia Phillies",
-      "correct": true,
-      "units": 0.625,
-      "homeScore": "1",
-      "awayScore": "2",
-      "gradedAt": "2026-06-27T04:34:46.266178+00:00",
       "date": "2026-06-26"
     }
   ],
@@ -9510,19 +9510,19 @@
       "eventId": "760495",
       "league": "worldcup",
       "scheduleDate": "2026-07-01",
-      "matchup": "Third Place Group E/H/I/J/K @ England",
+      "matchup": "Congo DR @ England",
       "predicted": "England",
       "predictedSide": "home",
       "outcomeLabel": "England to win",
-      "confidence": 76.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 68.9,
+      "pickOdds": -330,
+      "status": "graded",
+      "actual": "England",
+      "correct": true,
+      "units": 0.303,
+      "homeScore": "2",
+      "awayScore": "1",
+      "gradedAt": "2026-07-01T18:27:01.106251+00:00",
       "date": "2026-07-01"
     },
     "760496": {
