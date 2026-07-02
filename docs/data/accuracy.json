@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-07-01T23:21:55.542638+00:00",
+  "updatedAt": "2026-07-02T01:34:32.428213+00:00",
   "summary": {
     "last7Days": {
-      "correct": 160,
-      "total": 278,
-      "pct": 57.6,
-      "units": 3.093,
-      "roiPct": 1.1,
+      "correct": 161,
+      "total": 279,
+      "pct": 57.7,
+      "units": 3.834,
+      "roiPct": 1.4,
       "pending": 50
     },
     "allTime": {
-      "correct": 160,
-      "total": 278,
-      "pct": 57.6,
-      "units": 3.093,
-      "roiPct": 1.1,
-      "pending": 138
+      "correct": 161,
+      "total": 279,
+      "pct": 57.7,
+      "units": 3.834,
+      "roiPct": 1.4,
+      "pending": 137
     },
     "byLeague": {
+      "mlb": {
+        "correct": 95,
+        "total": 181,
+        "pct": 52.5,
+        "units": -10.39,
+        "roiPct": -5.7,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 36,
         "total": 53,
         "pct": 67.9,
         "units": 3.224,
         "roiPct": 6.1,
-        "pending": 0
-      },
-      "mlb": {
-        "correct": 94,
-        "total": 180,
-        "pct": 52.2,
-        "units": -11.131,
-        "roiPct": -6.2,
         "pending": 0
       },
       "wnba": {
@@ -53,12 +53,31 @@
     },
     "streak": {
       "current": 1,
-      "type": "loss",
+      "type": "win",
       "bestWin": 6,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401815983",
+      "league": "mlb",
+      "scheduleDate": "2026-07-01",
+      "matchup": "St. Louis Cardinals @ Atlanta Braves",
+      "predicted": "Atlanta Braves",
+      "predictedSide": "home",
+      "outcomeLabel": "Atlanta Braves to win",
+      "confidence": 66.6,
+      "pickOdds": -135,
+      "status": "graded",
+      "actual": "Atlanta Braves",
+      "correct": true,
+      "units": 0.741,
+      "homeScore": "5",
+      "awayScore": "1",
+      "gradedAt": "2026-07-02T01:34:16.658887+00:00",
+      "date": "2026-07-01"
+    },
     {
       "eventId": "760493",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "78",
       "awayScore": "75",
       "gradedAt": "2026-06-27T04:34:50.927089+00:00",
-      "date": "2026-06-26"
-    },
-    {
-      "eventId": "401857025",
-      "league": "wnba",
-      "scheduleDate": "2026-06-26",
-      "matchup": "Portland Fire @ Chicago Sky",
-      "predicted": "Portland Fire",
-      "predictedSide": "away",
-      "outcomeLabel": "Portland Fire to win",
-      "confidence": 58.7,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Chicago Sky",
-      "correct": false,
-      "units": null,
-      "homeScore": "124",
-      "awayScore": "94",
-      "gradedAt": "2026-06-27T04:34:50.927081+00:00",
       "date": "2026-06-26"
     }
   ],
@@ -8147,14 +8147,14 @@
       "predictedSide": "home",
       "outcomeLabel": "Atlanta Braves to win",
       "confidence": 66.6,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "pickOdds": -135,
+      "status": "graded",
+      "actual": "Atlanta Braves",
+      "correct": true,
+      "units": 0.741,
+      "homeScore": "5",
+      "awayScore": "1",
+      "gradedAt": "2026-07-02T01:34:16.658887+00:00",
       "date": "2026-07-01"
     },
     "401815986": {
