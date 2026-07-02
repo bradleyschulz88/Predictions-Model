@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-02T11:33:33.961866+00:00",
+  "updatedAt": "2026-07-02T13:23:25.959892+00:00",
   "summary": {
     "last7Days": {
-      "correct": 166,
-      "total": 287,
-      "pct": 57.8,
+      "correct": 167,
+      "total": 288,
+      "pct": 58.0,
       "units": 5.514,
       "roiPct": 1.9,
       "pending": 50
     },
     "allTime": {
-      "correct": 166,
-      "total": 287,
-      "pct": 57.8,
+      "correct": 167,
+      "total": 288,
+      "pct": 58.0,
       "units": 5.514,
       "roiPct": 1.9,
-      "pending": 146
+      "pending": 145
     },
     "byLeague": {
+      "afl": {
+        "correct": 11,
+        "total": 13,
+        "pct": 84.6,
+        "units": 5.0,
+        "roiPct": 38.5,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 37,
         "total": 54,
@@ -41,24 +49,35 @@
         "units": 6.0,
         "roiPct": 18.2,
         "pending": 0
-      },
-      "afl": {
-        "correct": 10,
-        "total": 12,
-        "pct": 83.3,
-        "units": 5.0,
-        "roiPct": 41.7,
-        "pending": 0
       }
     },
     "streak": {
-      "current": 1,
-      "type": "win",
+      "current": 2,
+      "type": "loss",
       "bestWin": 8,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133619",
+      "league": "afl",
+      "scheduleDate": "2026-07-02",
+      "matchup": "Brisbane Lions @ Geelong Cats",
+      "predicted": "Brisbane Lions",
+      "predictedSide": "away",
+      "outcomeLabel": "Brisbane Lions to win",
+      "confidence": 65.6,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Brisbane Lions",
+      "correct": true,
+      "units": null,
+      "homeScore": "101",
+      "awayScore": "123",
+      "gradedAt": "2026-07-02T13:23:11.298677+00:00",
+      "date": "2026-07-02"
+    },
     {
       "eventId": "760494",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "97",
       "awayScore": "71",
       "gradedAt": "2026-06-27T13:26:33.962339+00:00",
-      "date": "2026-06-27"
-    },
-    {
-      "eventId": "1133613",
-      "league": "afl",
-      "scheduleDate": "2026-06-27",
-      "matchup": "Richmond @ Collingwood",
-      "predicted": "Collingwood",
-      "predictedSide": "home",
-      "outcomeLabel": "Collingwood to win",
-      "confidence": 82.4,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Collingwood",
-      "correct": true,
-      "units": null,
-      "homeScore": "106",
-      "awayScore": "72",
-      "gradedAt": "2026-06-27T10:03:07.803449+00:00",
       "date": "2026-06-27"
     }
   ],
@@ -8257,18 +8257,18 @@
       "league": "afl",
       "scheduleDate": "2026-07-02",
       "matchup": "Brisbane Lions @ Geelong Cats",
-      "predicted": "Geelong Cats",
-      "predictedSide": "home",
-      "outcomeLabel": "Geelong Cats to win",
-      "confidence": 57.9,
+      "predicted": "Brisbane Lions",
+      "predictedSide": "away",
+      "outcomeLabel": "Brisbane Lions to win",
+      "confidence": 65.6,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Brisbane Lions",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "101",
+      "awayScore": "123",
+      "gradedAt": "2026-07-02T13:23:11.298677+00:00",
       "date": "2026-07-02"
     },
     "401879401": {
