@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-02T13:23:25.959892+00:00",
+  "updatedAt": "2026-07-02T15:42:56.107703+00:00",
   "summary": {
     "last7Days": {
       "correct": 167,
@@ -15,7 +15,7 @@
       "pct": 58.0,
       "units": 5.514,
       "roiPct": 1.9,
-      "pending": 145
+      "pending": 146
     },
     "byLeague": {
       "afl": {
@@ -1962,6 +1962,25 @@
   ],
   "pendingPicks": [
     {
+      "eventId": "1133629",
+      "league": "afl",
+      "scheduleDate": "2026-07-10",
+      "matchup": "North Melbourne @ Collingwood",
+      "predicted": "North Melbourne",
+      "predictedSide": "away",
+      "outcomeLabel": "North Melbourne to win",
+      "confidence": 63.9,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-10"
+    },
+    {
       "eventId": "401857053",
       "league": "wnba",
       "scheduleDate": "2026-07-09",
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Pittsburgh Pirates to win",
       "confidence": 57.2,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-07"
-    },
-    {
-      "eventId": "401816053",
-      "league": "mlb",
-      "scheduleDate": "2026-07-07",
-      "matchup": "Athletics @ Detroit Tigers",
-      "predicted": "Detroit Tigers",
-      "predictedSide": "home",
-      "outcomeLabel": "Detroit Tigers to win",
-      "confidence": 64.3,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -11139,6 +11139,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-09"
+    },
+    "1133629": {
+      "eventId": "1133629",
+      "league": "afl",
+      "scheduleDate": "2026-07-10",
+      "matchup": "North Melbourne @ Collingwood",
+      "predicted": "North Melbourne",
+      "predictedSide": "away",
+      "outcomeLabel": "North Melbourne to win",
+      "confidence": 63.9,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-10"
     }
   },
   "skippedDates": []
