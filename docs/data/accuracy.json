@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-03T22:04:56.617210+00:00",
+  "updatedAt": "2026-07-03T23:37:12.156412+00:00",
   "summary": {
     "last7Days": {
-      "correct": 178,
-      "total": 306,
-      "pct": 58.2,
-      "units": 4.338,
-      "roiPct": 1.4,
+      "correct": 179,
+      "total": 307,
+      "pct": 58.3,
+      "units": 5.438,
+      "roiPct": 1.8,
       "pending": 50
     },
     "allTime": {
-      "correct": 178,
-      "total": 306,
-      "pct": 58.2,
-      "units": 4.338,
-      "roiPct": 1.4,
-      "pending": 148
+      "correct": 179,
+      "total": 307,
+      "pct": 58.3,
+      "units": 5.438,
+      "roiPct": 1.8,
+      "pending": 147
     },
     "byLeague": {
+      "mlb": {
+        "correct": 104,
+        "total": 198,
+        "pct": 52.5,
+        "units": -10.507,
+        "roiPct": -5.3,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 39,
         "total": 58,
@@ -41,24 +49,35 @@
         "units": 6.0,
         "roiPct": 16.7,
         "pending": 0
-      },
-      "mlb": {
-        "correct": 103,
-        "total": 197,
-        "pct": 52.3,
-        "units": -11.607,
-        "roiPct": -5.9,
-        "pending": 0
       }
     },
     "streak": {
       "current": 1,
-      "type": "win",
+      "type": "loss",
       "bestWin": 8,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816007",
+      "league": "mlb",
+      "scheduleDate": "2026-07-03",
+      "matchup": "St. Louis Cardinals @ Chicago Cubs",
+      "predicted": "St. Louis Cardinals",
+      "predictedSide": "away",
+      "outcomeLabel": "St. Louis Cardinals to win",
+      "confidence": 58.8,
+      "pickOdds": 110,
+      "status": "graded",
+      "actual": "St. Louis Cardinals",
+      "correct": true,
+      "units": 1.1,
+      "homeScore": "1",
+      "awayScore": "17",
+      "gradedAt": "2026-07-03T23:37:00.740115+00:00",
+      "date": "2026-07-03"
+    },
     {
       "eventId": "760499",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "5",
       "awayScore": "0",
       "gradedAt": "2026-06-28T06:16:06.191770+00:00",
-      "date": "2026-06-27"
-    },
-    {
-      "eventId": "401815935",
-      "league": "mlb",
-      "scheduleDate": "2026-06-27",
-      "matchup": "Los Angeles Dodgers @ San Diego Padres",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "away",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 76.8,
-      "pickOdds": -210,
-      "status": "graded",
-      "actual": "Los Angeles Dodgers",
-      "correct": true,
-      "units": 0.476,
-      "homeScore": "3",
-      "awayScore": "15",
-      "gradedAt": "2026-06-28T06:16:06.191758+00:00",
       "date": "2026-06-27"
     }
   ],
@@ -8637,18 +8637,18 @@
       "league": "mlb",
       "scheduleDate": "2026-07-03",
       "matchup": "St. Louis Cardinals @ Chicago Cubs",
-      "predicted": "Chicago Cubs",
-      "predictedSide": "home",
-      "outcomeLabel": "Chicago Cubs to win",
-      "confidence": 70.7,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "predicted": "St. Louis Cardinals",
+      "predictedSide": "away",
+      "outcomeLabel": "St. Louis Cardinals to win",
+      "confidence": 58.8,
+      "pickOdds": 110,
+      "status": "graded",
+      "actual": "St. Louis Cardinals",
+      "correct": true,
+      "units": 1.1,
+      "homeScore": "1",
+      "awayScore": "17",
+      "gradedAt": "2026-07-03T23:37:00.740115+00:00",
       "date": "2026-07-03"
     },
     "401816006": {
