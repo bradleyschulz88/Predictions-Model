@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-03T12:08:52.231276+00:00",
+  "updatedAt": "2026-07-03T14:43:07.948925+00:00",
   "summary": {
     "last7Days": {
-      "correct": 176,
-      "total": 303,
-      "pct": 58.1,
+      "correct": 178,
+      "total": 305,
+      "pct": 58.4,
       "units": 4.338,
       "roiPct": 1.4,
       "pending": 50
     },
     "allTime": {
-      "correct": 176,
-      "total": 303,
-      "pct": 58.1,
+      "correct": 178,
+      "total": 305,
+      "pct": 58.4,
       "units": 4.338,
       "roiPct": 1.4,
-      "pending": 149
+      "pending": 148
     },
     "byLeague": {
+      "afl": {
+        "correct": 13,
+        "total": 15,
+        "pct": 86.7,
+        "units": 5.0,
+        "roiPct": 33.3,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 39,
         "total": 57,
@@ -41,24 +49,54 @@
         "units": -11.607,
         "roiPct": -5.9,
         "pending": 0
-      },
-      "afl": {
-        "correct": 11,
-        "total": 13,
-        "pct": 84.6,
-        "units": 5.0,
-        "roiPct": 38.5,
-        "pending": 0
       }
     },
     "streak": {
-      "current": 3,
+      "current": 1,
       "type": "loss",
       "bestWin": 8,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133626",
+      "league": "afl",
+      "scheduleDate": "2026-07-03",
+      "matchup": "Adelaide Crows @ West Coast Eagles",
+      "predicted": "Adelaide Crows",
+      "predictedSide": "away",
+      "outcomeLabel": "Adelaide Crows to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Adelaide Crows",
+      "correct": true,
+      "units": null,
+      "homeScore": "74",
+      "awayScore": "99",
+      "gradedAt": "2026-07-03T14:42:53.382813+00:00",
+      "date": "2026-07-03"
+    },
+    {
+      "eventId": "1133624",
+      "league": "afl",
+      "scheduleDate": "2026-07-03",
+      "matchup": "Western Bulldogs @ Sydney Swans",
+      "predicted": "Sydney Swans",
+      "predictedSide": "home",
+      "outcomeLabel": "Sydney Swans to win",
+      "confidence": 64.0,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Sydney Swans",
+      "correct": true,
+      "units": null,
+      "homeScore": "90",
+      "awayScore": "55",
+      "gradedAt": "2026-07-03T14:42:53.382791+00:00",
+      "date": "2026-07-03"
+    },
     {
       "eventId": "760498",
       "league": "worldcup",
@@ -1920,47 +1958,28 @@
       "awayScore": "5",
       "gradedAt": "2026-06-28T06:16:06.191745+00:00",
       "date": "2026-06-27"
-    },
-    {
-      "eventId": "401815930",
-      "league": "mlb",
-      "scheduleDate": "2026-06-27",
-      "matchup": "Colorado Rockies @ Minnesota Twins",
-      "predicted": "Minnesota Twins",
-      "predictedSide": "home",
-      "outcomeLabel": "Minnesota Twins to win",
-      "confidence": 75.9,
-      "pickOdds": -135,
-      "status": "graded",
-      "actual": "Colorado Rockies",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "5",
-      "awayScore": "8",
-      "gradedAt": "2026-06-28T06:16:06.191732+00:00",
-      "date": "2026-06-27"
-    },
-    {
-      "eventId": "401815929",
-      "league": "mlb",
-      "scheduleDate": "2026-06-27",
-      "matchup": "Chicago Cubs @ Milwaukee Brewers",
-      "predicted": "Milwaukee Brewers",
-      "predictedSide": "home",
-      "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 76.2,
-      "pickOdds": -165,
-      "status": "graded",
-      "actual": "Chicago Cubs",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "2",
-      "awayScore": "8",
-      "gradedAt": "2026-06-28T06:16:06.191719+00:00",
-      "date": "2026-06-27"
     }
   ],
   "pendingPicks": [
+    {
+      "eventId": "1133634",
+      "league": "afl",
+      "scheduleDate": "2026-07-11",
+      "matchup": "Gold Coast SUNS @ Adelaide Crows",
+      "predicted": "Adelaide Crows",
+      "predictedSide": "home",
+      "outcomeLabel": "Adelaide Crows to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-11"
+    },
     {
       "eventId": "401857055",
       "league": "wnba",
@@ -2891,25 +2910,6 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-08"
-    },
-    {
-      "eventId": "760508",
-      "league": "worldcup",
-      "scheduleDate": "2026-07-07",
-      "matchup": "Round of 32 15 Winner @ Switzerland",
-      "predicted": "Switzerland",
-      "predictedSide": "home",
-      "outcomeLabel": "Switzerland to win",
-      "confidence": 76.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-07"
     }
   ],
   "picksByEventId": {
@@ -8564,15 +8564,15 @@
       "predicted": "Sydney Swans",
       "predictedSide": "home",
       "outcomeLabel": "Sydney Swans to win",
-      "confidence": 72.9,
+      "confidence": 64.0,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Sydney Swans",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "90",
+      "awayScore": "55",
+      "gradedAt": "2026-07-03T14:42:53.382791+00:00",
       "date": "2026-07-03"
     },
     "1133626": {
@@ -8585,13 +8585,13 @@
       "outcomeLabel": "Adelaide Crows to win",
       "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Adelaide Crows",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "74",
+      "awayScore": "99",
+      "gradedAt": "2026-07-03T14:42:53.382813+00:00",
       "date": "2026-07-03"
     },
     "760490": {
@@ -11500,6 +11500,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-07"
+    },
+    "1133634": {
+      "eventId": "1133634",
+      "league": "afl",
+      "scheduleDate": "2026-07-11",
+      "matchup": "Gold Coast SUNS @ Adelaide Crows",
+      "predicted": "Adelaide Crows",
+      "predictedSide": "home",
+      "outcomeLabel": "Adelaide Crows to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-11"
     }
   },
   "skippedDates": []
