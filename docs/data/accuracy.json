@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-07-03T20:40:20.520389+00:00",
+  "updatedAt": "2026-07-03T22:04:56.617210+00:00",
   "summary": {
     "last7Days": {
       "correct": 178,
-      "total": 305,
-      "pct": 58.4,
+      "total": 306,
+      "pct": 58.2,
       "units": 4.338,
       "roiPct": 1.4,
       "pending": 50
     },
     "allTime": {
       "correct": 178,
-      "total": 305,
-      "pct": 58.4,
+      "total": 306,
+      "pct": 58.2,
       "units": 4.338,
       "roiPct": 1.4,
       "pending": 148
     },
     "byLeague": {
+      "worldcup": {
+        "correct": 39,
+        "total": 58,
+        "pct": 67.2,
+        "units": 4.945,
+        "roiPct": 8.5,
+        "pending": 0
+      },
       "afl": {
         "correct": 13,
         "total": 15,
         "pct": 86.7,
         "units": 5.0,
         "roiPct": 33.3,
-        "pending": 0
-      },
-      "worldcup": {
-        "correct": 39,
-        "total": 57,
-        "pct": 68.4,
-        "units": 4.945,
-        "roiPct": 8.7,
         "pending": 0
       },
       "wnba": {
@@ -53,12 +53,31 @@
     },
     "streak": {
       "current": 1,
-      "type": "loss",
+      "type": "win",
       "bestWin": 8,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "760499",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-03",
+      "matchup": "Group G 2nd Place @ Australia",
+      "predicted": "Australia",
+      "predictedSide": "home",
+      "outcomeLabel": "Australia to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": null,
+      "homeScore": "1",
+      "awayScore": "1",
+      "gradedAt": "2026-07-03T22:04:56.430313+00:00",
+      "date": "2026-07-03"
+    },
     {
       "eventId": "1133626",
       "league": "afl",
@@ -1938,25 +1957,6 @@
       "homeScore": "3",
       "awayScore": "15",
       "gradedAt": "2026-06-28T06:16:06.191758+00:00",
-      "date": "2026-06-27"
-    },
-    {
-      "eventId": "401815932",
-      "league": "mlb",
-      "scheduleDate": "2026-06-27",
-      "matchup": "Miami Marlins @ St. Louis Cardinals",
-      "predicted": "St. Louis Cardinals",
-      "predictedSide": "home",
-      "outcomeLabel": "St. Louis Cardinals to win",
-      "confidence": 73.5,
-      "pickOdds": -145,
-      "status": "graded",
-      "actual": "Miami Marlins",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "1",
-      "awayScore": "5",
-      "gradedAt": "2026-06-28T06:16:06.191745+00:00",
       "date": "2026-06-27"
     }
   ],
@@ -8870,13 +8870,13 @@
       "outcomeLabel": "Australia to win",
       "confidence": 76.3,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "1",
+      "awayScore": "1",
+      "gradedAt": "2026-07-03T22:04:56.430313+00:00",
       "date": "2026-07-03"
     },
     "760500": {
@@ -11519,6 +11519,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-11"
+    },
+    "760509": {
+      "eventId": "760509",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-07",
+      "matchup": "Egypt @ Round of 32 14 Winner",
+      "predicted": "Egypt",
+      "predictedSide": "away",
+      "outcomeLabel": "Egypt to win",
+      "confidence": 76.0,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-07"
     }
   },
   "skippedDates": []
