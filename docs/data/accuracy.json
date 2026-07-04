@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-07-04T08:45:06.039290+00:00",
+  "updatedAt": "2026-07-04T10:55:16.823421+00:00",
   "summary": {
     "last7Days": {
-      "correct": 193,
-      "total": 325,
-      "pct": 59.4,
+      "correct": 194,
+      "total": 326,
+      "pct": 59.5,
       "units": 12.222,
-      "roiPct": 3.8,
+      "roiPct": 3.7,
       "pending": 50
     },
     "allTime": {
-      "correct": 193,
-      "total": 325,
-      "pct": 59.4,
+      "correct": 194,
+      "total": 326,
+      "pct": 59.5,
       "units": 12.222,
-      "roiPct": 3.8,
-      "pending": 145
+      "roiPct": 3.7,
+      "pending": 144
     },
     "byLeague": {
       "afl": {
-        "correct": 13,
-        "total": 17,
-        "pct": 76.5,
+        "correct": 14,
+        "total": 18,
+        "pct": 77.8,
         "units": 5.0,
-        "roiPct": 29.4,
+        "roiPct": 27.8,
         "pending": 0
       },
       "worldcup": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 1,
-      "type": "win",
+      "current": 4,
+      "type": "loss",
       "bestWin": 8,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133620",
+      "league": "afl",
+      "scheduleDate": "2026-07-04",
+      "matchup": "Collingwood @ Gold Coast SUNS",
+      "predicted": "Collingwood",
+      "predictedSide": "away",
+      "outcomeLabel": "Collingwood to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Collingwood",
+      "correct": true,
+      "units": null,
+      "homeScore": "98",
+      "awayScore": "104",
+      "gradedAt": "2026-07-04T10:54:52.264519+00:00",
+      "date": "2026-07-04"
+    },
     {
       "eventId": "1133621",
       "league": "afl",
@@ -1938,25 +1957,6 @@
       "homeScore": "3",
       "awayScore": "4",
       "gradedAt": "2026-06-28T22:06:19.305115+00:00",
-      "date": "2026-06-28"
-    },
-    {
-      "eventId": "401815941",
-      "league": "mlb",
-      "scheduleDate": "2026-06-28",
-      "matchup": "Seattle Mariners @ Cleveland Guardians",
-      "predicted": "Cleveland Guardians",
-      "predictedSide": "home",
-      "outcomeLabel": "Cleveland Guardians to win",
-      "confidence": 57.0,
-      "pickOdds": -108,
-      "status": "graded",
-      "actual": "Cleveland Guardians",
-      "correct": true,
-      "units": 0.926,
-      "homeScore": "6",
-      "awayScore": "5",
-      "gradedAt": "2026-06-28T22:06:19.305088+00:00",
       "date": "2026-06-28"
     }
   ],
@@ -8944,15 +8944,15 @@
       "predicted": "Collingwood",
       "predictedSide": "away",
       "outcomeLabel": "Collingwood to win",
-      "confidence": 59.4,
+      "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Collingwood",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "98",
+      "awayScore": "104",
+      "gradedAt": "2026-07-04T10:54:52.264519+00:00",
       "date": "2026-07-04"
     },
     "1133623": {
