@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-04T20:54:29.376676+00:00",
+  "updatedAt": "2026-07-04T21:59:28.612363+00:00",
   "summary": {
     "last7Days": {
-      "correct": 197,
-      "total": 330,
-      "pct": 59.7,
-      "units": 12.843,
-      "roiPct": 3.9,
+      "correct": 198,
+      "total": 331,
+      "pct": 59.8,
+      "units": 14.093,
+      "roiPct": 4.3,
       "pending": 50
     },
     "allTime": {
-      "correct": 197,
-      "total": 330,
-      "pct": 59.7,
-      "units": 12.843,
-      "roiPct": 3.9,
-      "pending": 144
+      "correct": 198,
+      "total": 331,
+      "pct": 59.8,
+      "units": 14.093,
+      "roiPct": 4.3,
+      "pending": 143
     },
     "byLeague": {
+      "mlb": {
+        "correct": 117,
+        "total": 212,
+        "pct": 55.2,
+        "units": -2.439,
+        "roiPct": -1.2,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 41,
         "total": 61,
@@ -34,14 +42,6 @@
         "roiPct": 15.4,
         "pending": 0
       },
-      "mlb": {
-        "correct": 116,
-        "total": 211,
-        "pct": 55.0,
-        "units": -3.689,
-        "roiPct": -1.7,
-        "pending": 0
-      },
       "afl": {
         "correct": 15,
         "total": 19,
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 3,
+      "current": 2,
       "type": "win",
       "bestWin": 8,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816017",
+      "league": "mlb",
+      "scheduleDate": "2026-07-04",
+      "matchup": "Minnesota Twins @ New York Yankees",
+      "predicted": "Minnesota Twins",
+      "predictedSide": "away",
+      "outcomeLabel": "Minnesota Twins to win",
+      "confidence": 67.4,
+      "pickOdds": 125,
+      "status": "graded",
+      "actual": "Minnesota Twins",
+      "correct": true,
+      "units": 1.25,
+      "homeScore": "4",
+      "awayScore": "11",
+      "gradedAt": "2026-07-04T21:59:01.769560+00:00",
+      "date": "2026-07-04"
+    },
     {
       "eventId": "760502",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "124",
       "awayScore": "123",
       "gradedAt": "2026-06-28T23:40:02.698740+00:00",
-      "date": "2026-06-28"
-    },
-    {
-      "eventId": "401815950",
-      "league": "mlb",
-      "scheduleDate": "2026-06-28",
-      "matchup": "Los Angeles Dodgers @ San Diego Padres",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "away",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 69.1,
-      "pickOdds": -140,
-      "status": "graded",
-      "actual": "Los Angeles Dodgers",
-      "correct": true,
-      "units": 0.714,
-      "homeScore": "2",
-      "awayScore": "4",
-      "gradedAt": "2026-06-28T23:39:54.430975+00:00",
       "date": "2026-06-28"
     }
   ],
@@ -9112,18 +9112,18 @@
       "league": "mlb",
       "scheduleDate": "2026-07-04",
       "matchup": "Minnesota Twins @ New York Yankees",
-      "predicted": "New York Yankees",
-      "predictedSide": "home",
-      "outcomeLabel": "New York Yankees to win",
-      "confidence": 73.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "predicted": "Minnesota Twins",
+      "predictedSide": "away",
+      "outcomeLabel": "Minnesota Twins to win",
+      "confidence": 67.4,
+      "pickOdds": 125,
+      "status": "graded",
+      "actual": "Minnesota Twins",
+      "correct": true,
+      "units": 1.25,
+      "homeScore": "4",
+      "awayScore": "11",
+      "gradedAt": "2026-07-04T21:59:01.769560+00:00",
       "date": "2026-07-04"
     },
     "401816020": {
