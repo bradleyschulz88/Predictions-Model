@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-04T17:02:26.939237+00:00",
+  "updatedAt": "2026-07-04T18:10:01.610858+00:00",
   "summary": {
     "last7Days": {
-      "correct": 195,
-      "total": 327,
-      "pct": 59.6,
-      "units": 12.222,
-      "roiPct": 3.7,
+      "correct": 196,
+      "total": 328,
+      "pct": 59.8,
+      "units": 12.843,
+      "roiPct": 3.9,
       "pending": 50
     },
     "allTime": {
-      "correct": 195,
-      "total": 327,
-      "pct": 59.6,
-      "units": 12.222,
-      "roiPct": 3.7,
-      "pending": 146
+      "correct": 196,
+      "total": 328,
+      "pct": 59.8,
+      "units": 12.843,
+      "roiPct": 3.9,
+      "pending": 145
     },
     "byLeague": {
+      "mlb": {
+        "correct": 116,
+        "total": 211,
+        "pct": 55.0,
+        "units": -3.689,
+        "roiPct": -1.7,
+        "pending": 0
+      },
       "afl": {
         "correct": 15,
         "total": 19,
@@ -41,24 +49,35 @@
         "units": 6.0,
         "roiPct": 15.8,
         "pending": 0
-      },
-      "mlb": {
-        "correct": 115,
-        "total": 210,
-        "pct": 54.8,
-        "units": -4.31,
-        "roiPct": -2.1,
-        "pending": 0
       }
     },
     "streak": {
-      "current": 3,
+      "current": 2,
       "type": "loss",
       "bestWin": 8,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816019",
+      "league": "mlb",
+      "scheduleDate": "2026-07-04",
+      "matchup": "Pittsburgh Pirates @ Washington Nationals",
+      "predicted": "Pittsburgh Pirates",
+      "predictedSide": "away",
+      "outcomeLabel": "Pittsburgh Pirates to win",
+      "confidence": 67.8,
+      "pickOdds": -161,
+      "status": "graded",
+      "actual": "Pittsburgh Pirates",
+      "correct": true,
+      "units": 0.621,
+      "homeScore": "1",
+      "awayScore": "7",
+      "gradedAt": "2026-07-04T18:09:52.130008+00:00",
+      "date": "2026-07-04"
+    },
     {
       "eventId": "1133623",
       "league": "afl",
@@ -1938,25 +1957,6 @@
       "homeScore": "4",
       "awayScore": "1",
       "gradedAt": "2026-06-28T22:06:19.305144+00:00",
-      "date": "2026-06-28"
-    },
-    {
-      "eventId": "401815946",
-      "league": "mlb",
-      "scheduleDate": "2026-06-28",
-      "matchup": "Kansas City Royals @ Chicago White Sox",
-      "predicted": "Chicago White Sox",
-      "predictedSide": "home",
-      "outcomeLabel": "Chicago White Sox to win",
-      "confidence": 76.4,
-      "pickOdds": -140,
-      "status": "graded",
-      "actual": "Kansas City Royals",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "4",
-      "awayScore": "5",
-      "gradedAt": "2026-06-28T22:06:19.305131+00:00",
       "date": "2026-06-28"
     }
   ],
@@ -9096,15 +9096,15 @@
       "predicted": "Pittsburgh Pirates",
       "predictedSide": "away",
       "outcomeLabel": "Pittsburgh Pirates to win",
-      "confidence": 71.8,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 67.8,
+      "pickOdds": -161,
+      "status": "graded",
+      "actual": "Pittsburgh Pirates",
+      "correct": true,
+      "units": 0.621,
+      "homeScore": "1",
+      "awayScore": "7",
+      "gradedAt": "2026-07-04T18:09:52.130008+00:00",
       "date": "2026-07-04"
     },
     "401816017": {
