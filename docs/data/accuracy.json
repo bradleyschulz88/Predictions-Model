@@ -1,23 +1,39 @@
 {
-  "updatedAt": "2026-07-04T18:10:01.610858+00:00",
+  "updatedAt": "2026-07-04T19:46:56.685868+00:00",
   "summary": {
     "last7Days": {
-      "correct": 196,
-      "total": 328,
-      "pct": 59.8,
+      "correct": 197,
+      "total": 330,
+      "pct": 59.7,
       "units": 12.843,
       "roiPct": 3.9,
       "pending": 50
     },
     "allTime": {
-      "correct": 196,
-      "total": 328,
-      "pct": 59.8,
+      "correct": 197,
+      "total": 330,
+      "pct": 59.7,
       "units": 12.843,
       "roiPct": 3.9,
-      "pending": 145
+      "pending": 144
     },
     "byLeague": {
+      "worldcup": {
+        "correct": 41,
+        "total": 61,
+        "pct": 67.2,
+        "units": 5.532,
+        "roiPct": 9.1,
+        "pending": 0
+      },
+      "wnba": {
+        "correct": 25,
+        "total": 39,
+        "pct": 64.1,
+        "units": 6.0,
+        "roiPct": 15.4,
+        "pending": 0
+      },
       "mlb": {
         "correct": 116,
         "total": 211,
@@ -33,32 +49,54 @@
         "units": 5.0,
         "roiPct": 26.3,
         "pending": 0
-      },
-      "worldcup": {
-        "correct": 41,
-        "total": 60,
-        "pct": 68.3,
-        "units": 5.532,
-        "roiPct": 9.2,
-        "pending": 0
-      },
-      "wnba": {
-        "correct": 24,
-        "total": 38,
-        "pct": 63.2,
-        "units": 6.0,
-        "roiPct": 15.8,
-        "pending": 0
       }
     },
     "streak": {
-      "current": 2,
-      "type": "loss",
+      "current": 3,
+      "type": "win",
       "bestWin": 8,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "760502",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-04",
+      "matchup": "Round of 32 3 Winner @ Canada",
+      "predicted": "Canada",
+      "predictedSide": "home",
+      "outcomeLabel": "Canada to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Morocco",
+      "correct": false,
+      "units": null,
+      "homeScore": "0",
+      "awayScore": "3",
+      "gradedAt": "2026-07-04T19:46:56.438205+00:00",
+      "date": "2026-07-04"
+    },
+    {
+      "eventId": "401857039",
+      "league": "wnba",
+      "scheduleDate": "2026-07-04",
+      "matchup": "Golden State Valkyries @ Atlanta Dream",
+      "predicted": "Golden State Valkyries",
+      "predictedSide": "away",
+      "outcomeLabel": "Golden State Valkyries to win",
+      "confidence": 64.9,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Golden State Valkyries",
+      "correct": true,
+      "units": null,
+      "homeScore": "83",
+      "awayScore": "88",
+      "gradedAt": "2026-07-04T19:46:53.832546+00:00",
+      "date": "2026-07-04"
+    },
     {
       "eventId": "401816019",
       "league": "mlb",
@@ -1920,44 +1958,6 @@
       "awayScore": "4",
       "gradedAt": "2026-06-28T23:39:54.430975+00:00",
       "date": "2026-06-28"
-    },
-    {
-      "eventId": "401815949",
-      "league": "mlb",
-      "scheduleDate": "2026-06-28",
-      "matchup": "Atlanta Braves @ San Francisco Giants",
-      "predicted": "Atlanta Braves",
-      "predictedSide": "away",
-      "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 72.8,
-      "pickOdds": -185,
-      "status": "graded",
-      "actual": "San Francisco Giants",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "3",
-      "awayScore": "2",
-      "gradedAt": "2026-06-28T23:39:54.430945+00:00",
-      "date": "2026-06-28"
-    },
-    {
-      "eventId": "401815948",
-      "league": "mlb",
-      "scheduleDate": "2026-06-28",
-      "matchup": "Athletics @ Los Angeles Angels",
-      "predicted": "Athletics",
-      "predictedSide": "away",
-      "outcomeLabel": "Athletics to win",
-      "confidence": 57.8,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Los Angeles Angels",
-      "correct": false,
-      "units": null,
-      "homeScore": "4",
-      "awayScore": "1",
-      "gradedAt": "2026-06-28T22:06:19.305144+00:00",
-      "date": "2026-06-28"
     }
   ],
   "pendingPicks": [
@@ -2627,6 +2627,25 @@
       "date": "2026-07-10"
     },
     {
+      "eventId": "760510",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-09",
+      "matchup": "Morocco @ Round of 16 1 Winner",
+      "predicted": "Morocco",
+      "predictedSide": "away",
+      "outcomeLabel": "Morocco to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-09"
+    },
+    {
       "eventId": "401857053",
       "league": "wnba",
       "scheduleDate": "2026-07-09",
@@ -2882,25 +2901,6 @@
       "predictedSide": "away",
       "outcomeLabel": "Chicago Cubs to win",
       "confidence": 60.9,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-09"
-    },
-    {
-      "eventId": "401816084",
-      "league": "mlb",
-      "scheduleDate": "2026-07-09",
-      "matchup": "Atlanta Braves @ Pittsburgh Pirates",
-      "predicted": "Atlanta Braves",
-      "predictedSide": "away",
-      "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 58.0,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -9359,18 +9359,18 @@
       "league": "wnba",
       "scheduleDate": "2026-07-04",
       "matchup": "Golden State Valkyries @ Atlanta Dream",
-      "predicted": "Atlanta Dream",
-      "predictedSide": "home",
-      "outcomeLabel": "Atlanta Dream to win",
-      "confidence": 59.2,
+      "predicted": "Golden State Valkyries",
+      "predictedSide": "away",
+      "outcomeLabel": "Golden State Valkyries to win",
+      "confidence": 64.9,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Golden State Valkyries",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "83",
+      "awayScore": "88",
+      "gradedAt": "2026-07-04T19:46:53.832546+00:00",
       "date": "2026-07-04"
     },
     "401857040": {
@@ -9858,13 +9858,13 @@
       "outcomeLabel": "Canada to win",
       "confidence": 76.3,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Morocco",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "0",
+      "awayScore": "3",
+      "gradedAt": "2026-07-04T19:46:56.438205+00:00",
       "date": "2026-07-04"
     },
     "401816049": {
@@ -11899,6 +11899,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-12"
+    },
+    "760510": {
+      "eventId": "760510",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-09",
+      "matchup": "Morocco @ Round of 16 1 Winner",
+      "predicted": "Morocco",
+      "predictedSide": "away",
+      "outcomeLabel": "Morocco to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-09"
     }
   },
   "skippedDates": []
