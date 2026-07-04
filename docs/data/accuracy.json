@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-04T06:01:12.741521+00:00",
+  "updatedAt": "2026-07-04T08:45:06.039290+00:00",
   "summary": {
     "last7Days": {
       "correct": 193,
-      "total": 324,
-      "pct": 59.6,
+      "total": 325,
+      "pct": 59.4,
       "units": 12.222,
       "roiPct": 3.8,
       "pending": 50
     },
     "allTime": {
       "correct": 193,
-      "total": 324,
-      "pct": 59.6,
+      "total": 325,
+      "pct": 59.4,
       "units": 12.222,
       "roiPct": 3.8,
-      "pending": 146
+      "pending": 145
     },
     "byLeague": {
+      "afl": {
+        "correct": 13,
+        "total": 17,
+        "pct": 76.5,
+        "units": 5.0,
+        "roiPct": 29.4,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 41,
         "total": 60,
@@ -41,24 +49,35 @@
         "units": -4.31,
         "roiPct": -2.1,
         "pending": 0
-      },
-      "afl": {
-        "correct": 13,
-        "total": 16,
-        "pct": 81.2,
-        "units": 5.0,
-        "roiPct": 31.2,
-        "pending": 0
       }
     },
     "streak": {
-      "current": 2,
+      "current": 1,
       "type": "win",
       "bestWin": 8,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133621",
+      "league": "afl",
+      "scheduleDate": "2026-07-04",
+      "matchup": "Fremantle @ GWS GIANTS",
+      "predicted": "Fremantle",
+      "predictedSide": "away",
+      "outcomeLabel": "Fremantle to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "GWS GIANTS",
+      "correct": false,
+      "units": null,
+      "homeScore": "109",
+      "awayScore": "88",
+      "gradedAt": "2026-07-04T08:44:54.360658+00:00",
+      "date": "2026-07-04"
+    },
     {
       "eventId": "760501",
       "league": "worldcup",
@@ -1938,25 +1957,6 @@
       "homeScore": "6",
       "awayScore": "5",
       "gradedAt": "2026-06-28T22:06:19.305088+00:00",
-      "date": "2026-06-28"
-    },
-    {
-      "eventId": "401815938",
-      "league": "mlb",
-      "scheduleDate": "2026-06-28",
-      "matchup": "Houston Astros @ Detroit Tigers",
-      "predicted": "Houston Astros",
-      "predictedSide": "away",
-      "outcomeLabel": "Houston Astros to win",
-      "confidence": 71.0,
-      "pickOdds": -115,
-      "status": "graded",
-      "actual": "Houston Astros",
-      "correct": true,
-      "units": 0.87,
-      "homeScore": "5",
-      "awayScore": "7",
-      "gradedAt": "2026-06-28T22:06:19.305078+00:00",
       "date": "2026-06-28"
     }
   ],
@@ -8927,13 +8927,13 @@
       "outcomeLabel": "Fremantle to win",
       "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "GWS GIANTS",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "109",
+      "awayScore": "88",
+      "gradedAt": "2026-07-04T08:44:54.360658+00:00",
       "date": "2026-07-04"
     },
     "1133620": {
