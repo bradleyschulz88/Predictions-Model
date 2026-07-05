@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-07-05T18:39:35.725068+00:00",
+  "updatedAt": "2026-07-05T20:13:43.790768+00:00",
   "summary": {
     "last7Days": {
       "correct": 209,
-      "total": 348,
-      "pct": 60.1,
-      "units": 13.138,
-      "roiPct": 3.8,
+      "total": 349,
+      "pct": 59.9,
+      "units": 12.138,
+      "roiPct": 3.5,
       "pending": 50
     },
     "allTime": {
       "correct": 209,
-      "total": 348,
-      "pct": 60.1,
-      "units": 13.138,
-      "roiPct": 3.8,
-      "pending": 144
+      "total": 349,
+      "pct": 59.9,
+      "units": 12.138,
+      "roiPct": 3.5,
+      "pending": 143
     },
     "byLeague": {
+      "mlb": {
+        "correct": 125,
+        "total": 226,
+        "pct": 55.3,
+        "units": -4.594,
+        "roiPct": -2.0,
+        "pending": 0
+      },
       "afl": {
         "correct": 16,
         "total": 21,
         "pct": 76.2,
         "units": 5.0,
         "roiPct": 23.8,
-        "pending": 0
-      },
-      "mlb": {
-        "correct": 125,
-        "total": 225,
-        "pct": 55.6,
-        "units": -3.594,
-        "roiPct": -1.6,
         "pending": 0
       },
       "wnba": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 1,
-      "type": "loss",
+      "current": 2,
+      "type": "win",
       "bestWin": 8,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816030",
+      "league": "mlb",
+      "scheduleDate": "2026-07-05",
+      "matchup": "Baltimore Orioles @ Cincinnati Reds",
+      "predicted": "Baltimore Orioles",
+      "predictedSide": "away",
+      "outcomeLabel": "Baltimore Orioles to win",
+      "confidence": 62.7,
+      "pickOdds": -118,
+      "status": "graded",
+      "actual": "Cincinnati Reds",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "3",
+      "awayScore": "2",
+      "gradedAt": "2026-07-05T20:13:31.323311+00:00",
+      "date": "2026-07-05"
+    },
     {
       "eventId": "1133625",
       "league": "afl",
@@ -1938,25 +1957,6 @@
       "homeScore": "4",
       "awayScore": "9",
       "gradedAt": "2026-06-30T08:08:12.609291+00:00",
-      "date": "2026-06-29"
-    },
-    {
-      "eventId": "760488",
-      "league": "worldcup",
-      "scheduleDate": "2026-06-29",
-      "matchup": "Morocco @ Group F Winner",
-      "predicted": "Morocco",
-      "predictedSide": "away",
-      "outcomeLabel": "Morocco to win",
-      "confidence": 76.3,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Draw",
-      "correct": false,
-      "units": null,
-      "homeScore": "1",
-      "awayScore": "1",
-      "gradedAt": "2026-06-30T04:09:44.649713+00:00",
       "date": "2026-06-29"
     }
   ],
@@ -9796,18 +9796,18 @@
       "league": "mlb",
       "scheduleDate": "2026-07-05",
       "matchup": "Baltimore Orioles @ Cincinnati Reds",
-      "predicted": "Cincinnati Reds",
-      "predictedSide": "home",
-      "outcomeLabel": "Cincinnati Reds to win",
-      "confidence": 58.0,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "predicted": "Baltimore Orioles",
+      "predictedSide": "away",
+      "outcomeLabel": "Baltimore Orioles to win",
+      "confidence": 62.7,
+      "pickOdds": -118,
+      "status": "graded",
+      "actual": "Cincinnati Reds",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "3",
+      "awayScore": "2",
+      "gradedAt": "2026-07-05T20:13:31.323311+00:00",
       "date": "2026-07-05"
     },
     "401816031": {
