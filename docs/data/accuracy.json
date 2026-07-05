@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-05T07:00:20.778322+00:00",
+  "updatedAt": "2026-07-05T09:42:57.764164+00:00",
   "summary": {
     "last7Days": {
-      "correct": 208,
-      "total": 346,
+      "correct": 209,
+      "total": 348,
       "pct": 60.1,
       "units": 13.138,
       "roiPct": 3.8,
       "pending": 50
     },
     "allTime": {
-      "correct": 208,
-      "total": 346,
+      "correct": 209,
+      "total": 348,
       "pct": 60.1,
       "units": 13.138,
       "roiPct": 3.8,
-      "pending": 144
+      "pending": 143
     },
     "byLeague": {
+      "afl": {
+        "correct": 16,
+        "total": 21,
+        "pct": 76.2,
+        "units": 5.0,
+        "roiPct": 23.8,
+        "pending": 0
+      },
       "mlb": {
         "correct": 125,
         "total": 225,
@@ -41,24 +49,54 @@
         "units": 5.732,
         "roiPct": 9.2,
         "pending": 0
-      },
-      "afl": {
-        "correct": 15,
-        "total": 19,
-        "pct": 78.9,
-        "units": 5.0,
-        "roiPct": 26.3,
-        "pending": 0
       }
     },
     "streak": {
-      "current": 2,
-      "type": "win",
+      "current": 1,
+      "type": "loss",
       "bestWin": 8,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133625",
+      "league": "afl",
+      "scheduleDate": "2026-07-05",
+      "matchup": "North Melbourne @ Port Adelaide",
+      "predicted": "North Melbourne",
+      "predictedSide": "away",
+      "outcomeLabel": "North Melbourne to win",
+      "confidence": 78.0,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Port Adelaide",
+      "correct": false,
+      "units": null,
+      "homeScore": "73",
+      "awayScore": "52",
+      "gradedAt": "2026-07-05T09:42:43.843628+00:00",
+      "date": "2026-07-05"
+    },
+    {
+      "eventId": "1133618",
+      "league": "afl",
+      "scheduleDate": "2026-07-05",
+      "matchup": "St Kilda @ Essendon",
+      "predicted": "St Kilda",
+      "predictedSide": "away",
+      "outcomeLabel": "St Kilda to win",
+      "confidence": 81.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "St Kilda",
+      "correct": true,
+      "units": null,
+      "homeScore": "50",
+      "awayScore": "117",
+      "gradedAt": "2026-07-05T09:42:43.843587+00:00",
+      "date": "2026-07-05"
+    },
     {
       "eventId": "401816028",
       "league": "mlb",
@@ -1920,44 +1958,6 @@
       "awayScore": "1",
       "gradedAt": "2026-06-30T04:09:44.649713+00:00",
       "date": "2026-06-29"
-    },
-    {
-      "eventId": "401815961",
-      "league": "mlb",
-      "scheduleDate": "2026-06-29",
-      "matchup": "Los Angeles Angels @ Seattle Mariners",
-      "predicted": "Seattle Mariners",
-      "predictedSide": "home",
-      "outcomeLabel": "Seattle Mariners to win",
-      "confidence": 76.8,
-      "pickOdds": -200,
-      "status": "graded",
-      "actual": "Seattle Mariners",
-      "correct": true,
-      "units": 0.5,
-      "homeScore": "6",
-      "awayScore": "2",
-      "gradedAt": "2026-06-30T04:09:19.097103+00:00",
-      "date": "2026-06-29"
-    },
-    {
-      "eventId": "401815960",
-      "league": "mlb",
-      "scheduleDate": "2026-06-29",
-      "matchup": "Miami Marlins @ Colorado Rockies",
-      "predicted": "Miami Marlins",
-      "predictedSide": "away",
-      "outcomeLabel": "Miami Marlins to win",
-      "confidence": 76.8,
-      "pickOdds": -155,
-      "status": "graded",
-      "actual": "Miami Marlins",
-      "correct": true,
-      "units": 0.645,
-      "homeScore": "7",
-      "awayScore": "10",
-      "gradedAt": "2026-06-30T04:09:19.097097+00:00",
-      "date": "2026-06-29"
     }
   ],
   "pendingPicks": [
@@ -2608,6 +2608,25 @@
       "date": "2026-07-11"
     },
     {
+      "eventId": "1133628",
+      "league": "afl",
+      "scheduleDate": "2026-07-11",
+      "matchup": "Hawthorn @ Carlton",
+      "predicted": "Carlton",
+      "predictedSide": "home",
+      "outcomeLabel": "Carlton to win",
+      "confidence": 68.2,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-11"
+    },
+    {
       "eventId": "401857055",
       "league": "wnba",
       "scheduleDate": "2026-07-10",
@@ -2882,25 +2901,6 @@
       "predictedSide": "away",
       "outcomeLabel": "Chicago Cubs to win",
       "confidence": 70.1,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-10"
-    },
-    {
-      "eventId": "401816096",
-      "league": "mlb",
-      "scheduleDate": "2026-07-10",
-      "matchup": "Boston Red Sox @ New York Mets",
-      "predicted": "Boston Red Sox",
-      "predictedSide": "away",
-      "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 66.0,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -9457,15 +9457,15 @@
       "predicted": "St Kilda",
       "predictedSide": "away",
       "outcomeLabel": "St Kilda to win",
-      "confidence": 80.1,
+      "confidence": 81.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "St Kilda",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "50",
+      "awayScore": "117",
+      "gradedAt": "2026-07-05T09:42:43.843587+00:00",
       "date": "2026-07-05"
     },
     "1133625": {
@@ -9476,15 +9476,15 @@
       "predicted": "North Melbourne",
       "predictedSide": "away",
       "outcomeLabel": "North Melbourne to win",
-      "confidence": 80.4,
+      "confidence": 78.0,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Port Adelaide",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "73",
+      "awayScore": "52",
+      "gradedAt": "2026-07-05T09:42:43.843628+00:00",
       "date": "2026-07-05"
     },
     "401816010": {
@@ -12222,6 +12222,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-12"
+    },
+    "1133628": {
+      "eventId": "1133628",
+      "league": "afl",
+      "scheduleDate": "2026-07-11",
+      "matchup": "Hawthorn @ Carlton",
+      "predicted": "Carlton",
+      "predictedSide": "home",
+      "outcomeLabel": "Carlton to win",
+      "confidence": 68.2,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-11"
     }
   },
   "skippedDates": []
