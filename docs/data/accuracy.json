@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-07-07T17:36:03.555104+00:00",
+  "updatedAt": "2026-07-07T19:50:40.260388+00:00",
   "summary": {
     "last7Days": {
-      "correct": 222,
-      "total": 380,
-      "pct": 58.4,
-      "units": 3.128,
-      "roiPct": 0.8,
+      "correct": 223,
+      "total": 381,
+      "pct": 58.5,
+      "units": 3.451,
+      "roiPct": 0.9,
       "pending": 50
     },
     "allTime": {
-      "correct": 222,
-      "total": 380,
-      "pct": 58.4,
-      "units": 3.128,
-      "roiPct": 0.8,
+      "correct": 223,
+      "total": 381,
+      "pct": 58.5,
+      "units": 3.451,
+      "roiPct": 0.9,
       "pending": 122
     },
     "byLeague": {
       "worldcup": {
-        "correct": 44,
-        "total": 66,
-        "pct": 66.7,
-        "units": 4.732,
-        "roiPct": 7.2,
+        "correct": 45,
+        "total": 67,
+        "pct": 67.2,
+        "units": 5.055,
+        "roiPct": 7.5,
         "pending": 0
       },
       "wnba": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 3,
+      "current": 2,
       "type": "win",
       "bestWin": 8,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "760509",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-07",
+      "matchup": "Egypt @ Argentina",
+      "predicted": "Argentina",
+      "predictedSide": "home",
+      "outcomeLabel": "Argentina to win",
+      "confidence": 75.8,
+      "pickOdds": -310,
+      "status": "graded",
+      "actual": "Argentina",
+      "correct": true,
+      "units": 0.323,
+      "homeScore": "3",
+      "awayScore": "2",
+      "gradedAt": "2026-07-07T19:50:40.075009+00:00",
+      "date": "2026-07-07"
+    },
     {
       "eventId": "760507",
       "league": "worldcup",
@@ -1939,25 +1958,6 @@
       "awayScore": "2",
       "gradedAt": "2026-07-02T05:57:27.473606+00:00",
       "date": "2026-07-01"
-    },
-    {
-      "eventId": "401815989",
-      "league": "mlb",
-      "scheduleDate": "2026-07-01",
-      "matchup": "Tampa Bay Rays @ Kansas City Royals",
-      "predicted": "Tampa Bay Rays",
-      "predictedSide": "away",
-      "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 69.0,
-      "pickOdds": -155,
-      "status": "graded",
-      "actual": "Tampa Bay Rays",
-      "correct": true,
-      "units": 0.645,
-      "homeScore": "0",
-      "awayScore": "4",
-      "gradedAt": "2026-07-02T05:57:27.473596+00:00",
-      "date": "2026-07-01"
     }
   ],
   "pendingPicks": [
@@ -2378,6 +2378,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-12"
+    },
+    {
+      "eventId": "760513",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-11",
+      "matchup": "Round of 16 8 Winner @ Argentina",
+      "predicted": "Argentina",
+      "predictedSide": "home",
+      "outcomeLabel": "Argentina to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-11"
     },
     {
       "eventId": "760512",
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Los Angeles Dodgers to win",
       "confidence": 75.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-10"
-    },
-    {
-      "eventId": "401816107",
-      "league": "mlb",
-      "scheduleDate": "2026-07-10",
-      "matchup": "Houston Astros @ Texas Rangers",
-      "predicted": "Houston Astros",
-      "predictedSide": "away",
-      "outcomeLabel": "Houston Astros to win",
-      "confidence": 63.6,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -11524,19 +11524,19 @@
       "eventId": "760509",
       "league": "worldcup",
       "scheduleDate": "2026-07-07",
-      "matchup": "Egypt @ Round of 32 14 Winner",
-      "predicted": "Egypt",
-      "predictedSide": "away",
-      "outcomeLabel": "Egypt to win",
-      "confidence": 76.0,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "matchup": "Egypt @ Argentina",
+      "predicted": "Argentina",
+      "predictedSide": "home",
+      "outcomeLabel": "Argentina to win",
+      "confidence": 75.8,
+      "pickOdds": -310,
+      "status": "graded",
+      "actual": "Argentina",
+      "correct": true,
+      "units": 0.323,
+      "homeScore": "3",
+      "awayScore": "2",
+      "gradedAt": "2026-07-07T19:50:40.075009+00:00",
       "date": "2026-07-07"
     },
     "401816101": {
@@ -12450,6 +12450,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-14"
+    },
+    "760513": {
+      "eventId": "760513",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-11",
+      "matchup": "Round of 16 8 Winner @ Argentina",
+      "predicted": "Argentina",
+      "predictedSide": "home",
+      "outcomeLabel": "Argentina to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-11"
     }
   },
   "skippedDates": []
