@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-07T19:50:40.260388+00:00",
+  "updatedAt": "2026-07-07T21:22:20.475545+00:00",
   "summary": {
     "last7Days": {
-      "correct": 223,
-      "total": 381,
-      "pct": 58.5,
-      "units": 3.451,
-      "roiPct": 0.9,
+      "correct": 224,
+      "total": 382,
+      "pct": 58.6,
+      "units": 4.284,
+      "roiPct": 1.1,
       "pending": 50
     },
     "allTime": {
-      "correct": 223,
-      "total": 381,
-      "pct": 58.5,
-      "units": 3.451,
-      "roiPct": 0.9,
+      "correct": 224,
+      "total": 382,
+      "pct": 58.6,
+      "units": 4.284,
+      "roiPct": 1.1,
       "pending": 122
     },
     "byLeague": {
+      "mlb": {
+        "correct": 135,
+        "total": 249,
+        "pct": 54.2,
+        "units": -11.771,
+        "roiPct": -4.7,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 45,
         "total": 67,
@@ -34,14 +42,6 @@
         "roiPct": 13.3,
         "pending": 0
       },
-      "mlb": {
-        "correct": 134,
-        "total": 248,
-        "pct": 54.0,
-        "units": -12.604,
-        "roiPct": -5.1,
-        "pending": 0
-      },
       "afl": {
         "correct": 16,
         "total": 21,
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 2,
+      "current": 1,
       "type": "win",
       "bestWin": 8,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "401871790",
+      "league": "mlb",
+      "scheduleDate": "2026-07-07",
+      "matchup": "Milwaukee Brewers @ St. Louis Cardinals",
+      "predicted": "Milwaukee Brewers",
+      "predictedSide": "away",
+      "outcomeLabel": "Milwaukee Brewers to win",
+      "confidence": 76.8,
+      "pickOdds": -120,
+      "status": "graded",
+      "actual": "Milwaukee Brewers",
+      "correct": true,
+      "units": 0.833,
+      "homeScore": "3",
+      "awayScore": "4",
+      "gradedAt": "2026-07-07T21:22:08.506742+00:00",
+      "date": "2026-07-07"
+    },
     {
       "eventId": "760509",
       "league": "worldcup",
@@ -1939,25 +1958,6 @@
       "awayScore": "8",
       "gradedAt": "2026-07-02T05:57:27.473614+00:00",
       "date": "2026-07-01"
-    },
-    {
-      "eventId": "401815986",
-      "league": "mlb",
-      "scheduleDate": "2026-07-01",
-      "matchup": "Cincinnati Reds @ Milwaukee Brewers",
-      "predicted": "Milwaukee Brewers",
-      "predictedSide": "home",
-      "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 74.8,
-      "pickOdds": -160,
-      "status": "graded",
-      "actual": "Milwaukee Brewers",
-      "correct": true,
-      "units": 0.625,
-      "homeScore": "4",
-      "awayScore": "2",
-      "gradedAt": "2026-07-02T05:57:27.473606+00:00",
-      "date": "2026-07-01"
     }
   ],
   "pendingPicks": [
@@ -1970,6 +1970,25 @@
       "predictedSide": "away",
       "outcomeLabel": "Washington Mystics to win",
       "confidence": 57.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-14"
+    },
+    {
+      "eventId": "401857066",
+      "league": "wnba",
+      "scheduleDate": "2026-07-14",
+      "matchup": "Portland Fire @ Connecticut Sun",
+      "predicted": "Connecticut Sun",
+      "predictedSide": "home",
+      "outcomeLabel": "Connecticut Sun to win",
+      "confidence": 63.5,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "San Francisco Giants to win",
       "confidence": 71.9,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-10"
-    },
-    {
-      "eventId": "401816108",
-      "league": "mlb",
-      "scheduleDate": "2026-07-10",
-      "matchup": "Arizona Diamondbacks @ Los Angeles Dodgers",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "home",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 75.4,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -10141,15 +10141,15 @@
       "predicted": "Milwaukee Brewers",
       "predictedSide": "away",
       "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 71.9,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 76.8,
+      "pickOdds": -120,
+      "status": "graded",
+      "actual": "Milwaukee Brewers",
+      "correct": true,
+      "units": 0.833,
+      "homeScore": "3",
+      "awayScore": "4",
+      "gradedAt": "2026-07-07T21:22:08.506742+00:00",
       "date": "2026-07-07"
     },
     "401816055": {
@@ -12469,6 +12469,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-11"
+    },
+    "401857066": {
+      "eventId": "401857066",
+      "league": "wnba",
+      "scheduleDate": "2026-07-14",
+      "matchup": "Portland Fire @ Connecticut Sun",
+      "predicted": "Connecticut Sun",
+      "predictedSide": "home",
+      "outcomeLabel": "Connecticut Sun to win",
+      "confidence": 63.5,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-14"
     }
   },
   "skippedDates": []
