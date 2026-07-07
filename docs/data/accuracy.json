@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-07-07T22:39:42.005815+00:00",
+  "updatedAt": "2026-07-07T23:58:04.887979+00:00",
   "summary": {
     "last7Days": {
       "correct": 224,
-      "total": 382,
-      "pct": 58.6,
+      "total": 383,
+      "pct": 58.5,
       "units": 4.284,
       "roiPct": 1.1,
       "pending": 50
     },
     "allTime": {
       "correct": 224,
-      "total": 382,
-      "pct": 58.6,
+      "total": 383,
+      "pct": 58.5,
       "units": 4.284,
       "roiPct": 1.1,
-      "pending": 122
+      "pending": 121
     },
     "byLeague": {
+      "worldcup": {
+        "correct": 45,
+        "total": 68,
+        "pct": 66.2,
+        "units": 5.055,
+        "roiPct": 7.4,
+        "pending": 0
+      },
       "mlb": {
         "correct": 135,
         "total": 249,
         "pct": 54.2,
         "units": -11.771,
         "roiPct": -4.7,
-        "pending": 0
-      },
-      "worldcup": {
-        "correct": 45,
-        "total": 67,
-        "pct": 67.2,
-        "units": 5.055,
-        "roiPct": 7.5,
         "pending": 0
       },
       "wnba": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 1,
-      "type": "win",
+      "current": 3,
+      "type": "loss",
       "bestWin": 8,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "760508",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-07",
+      "matchup": "Round of 32 15 Winner @ Switzerland",
+      "predicted": "Switzerland",
+      "predictedSide": "home",
+      "outcomeLabel": "Switzerland to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": null,
+      "homeScore": "0",
+      "awayScore": "0",
+      "gradedAt": "2026-07-07T23:58:04.573132+00:00",
+      "date": "2026-07-07"
+    },
     {
       "eventId": "401871790",
       "league": "mlb",
@@ -1938,25 +1957,6 @@
       "homeScore": "6",
       "awayScore": "3",
       "gradedAt": "2026-07-02T05:57:27.473638+00:00",
-      "date": "2026-07-01"
-    },
-    {
-      "eventId": "401815987",
-      "league": "mlb",
-      "scheduleDate": "2026-07-01",
-      "matchup": "Minnesota Twins @ Houston Astros",
-      "predicted": "Minnesota Twins",
-      "predictedSide": "away",
-      "outcomeLabel": "Minnesota Twins to win",
-      "confidence": 70.8,
-      "pickOdds": 135,
-      "status": "graded",
-      "actual": "Minnesota Twins",
-      "correct": true,
-      "units": 1.35,
-      "homeScore": "3",
-      "awayScore": "8",
-      "gradedAt": "2026-07-02T05:57:27.473614+00:00",
       "date": "2026-07-01"
     }
   ],
@@ -11492,13 +11492,13 @@
       "outcomeLabel": "Switzerland to win",
       "confidence": 76.3,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "0",
+      "awayScore": "0",
+      "gradedAt": "2026-07-07T23:58:04.573132+00:00",
       "date": "2026-07-07"
     },
     "1133634": {
