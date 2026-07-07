@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-07-06T23:05:27.834531+00:00",
+  "updatedAt": "2026-07-07T01:19:47.174683+00:00",
   "summary": {
     "last7Days": {
-      "correct": 216,
-      "total": 369,
-      "pct": 58.5,
-      "units": 4.19,
-      "roiPct": 1.1,
+      "correct": 217,
+      "total": 370,
+      "pct": 58.6,
+      "units": 4.959,
+      "roiPct": 1.3,
       "pending": 50
     },
     "allTime": {
-      "correct": 216,
-      "total": 369,
-      "pct": 58.5,
-      "units": 4.19,
-      "roiPct": 1.1,
-      "pending": 131
+      "correct": 217,
+      "total": 370,
+      "pct": 58.6,
+      "units": 4.959,
+      "roiPct": 1.3,
+      "pending": 130
     },
     "byLeague": {
+      "mlb": {
+        "correct": 131,
+        "total": 242,
+        "pct": 54.1,
+        "units": -10.773,
+        "roiPct": -4.5,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 43,
         "total": 65,
         "pct": 66.2,
         "units": 4.732,
         "roiPct": 7.3,
-        "pending": 0
-      },
-      "mlb": {
-        "correct": 130,
-        "total": 241,
-        "pct": 53.9,
-        "units": -11.542,
-        "roiPct": -4.8,
         "pending": 0
       },
       "wnba": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 2,
+      "current": 1,
       "type": "win",
       "bestWin": 8,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816046",
+      "league": "mlb",
+      "scheduleDate": "2026-07-06",
+      "matchup": "New York Yankees @ Tampa Bay Rays",
+      "predicted": "New York Yankees",
+      "predictedSide": "away",
+      "outcomeLabel": "New York Yankees to win",
+      "confidence": 75.8,
+      "pickOdds": -130,
+      "status": "graded",
+      "actual": "New York Yankees",
+      "correct": true,
+      "units": 0.769,
+      "homeScore": "1",
+      "awayScore": "5",
+      "gradedAt": "2026-07-07T01:19:30.127280+00:00",
+      "date": "2026-07-06"
+    },
     {
       "eventId": "760506",
       "league": "worldcup",
@@ -1939,25 +1958,6 @@
       "awayScore": "1",
       "gradedAt": "2026-07-01T18:27:01.106251+00:00",
       "date": "2026-07-01"
-    },
-    {
-      "eventId": "760491",
-      "league": "worldcup",
-      "scheduleDate": "2026-06-30",
-      "matchup": "Ecuador @ Mexico",
-      "predicted": "Mexico",
-      "predictedSide": "home",
-      "outcomeLabel": "Mexico to win",
-      "confidence": 76.0,
-      "pickOdds": 135,
-      "status": "graded",
-      "actual": "Mexico",
-      "correct": true,
-      "units": 1.35,
-      "homeScore": "2",
-      "awayScore": "0",
-      "gradedAt": "2026-07-01T06:24:54.897511+00:00",
-      "date": "2026-06-30"
     }
   ],
   "pendingPicks": [
@@ -10119,18 +10119,18 @@
       "league": "mlb",
       "scheduleDate": "2026-07-06",
       "matchup": "New York Yankees @ Tampa Bay Rays",
-      "predicted": "Tampa Bay Rays",
-      "predictedSide": "home",
-      "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 57.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "predicted": "New York Yankees",
+      "predictedSide": "away",
+      "outcomeLabel": "New York Yankees to win",
+      "confidence": 75.8,
+      "pickOdds": -130,
+      "status": "graded",
+      "actual": "New York Yankees",
+      "correct": true,
+      "units": 0.769,
+      "homeScore": "1",
+      "awayScore": "5",
+      "gradedAt": "2026-07-07T01:19:30.127280+00:00",
       "date": "2026-07-06"
     },
     "401871790": {
