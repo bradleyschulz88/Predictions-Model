@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-07-08T21:04:41.019465+00:00",
+  "updatedAt": "2026-07-08T22:34:24.674580+00:00",
   "summary": {
     "last7Days": {
-      "correct": 234,
-      "total": 400,
-      "pct": 58.5,
-      "units": 7.79,
-      "roiPct": 1.9,
+      "correct": 235,
+      "total": 401,
+      "pct": 58.6,
+      "units": 8.559,
+      "roiPct": 2.1,
       "pending": 50
     },
     "allTime": {
-      "correct": 234,
-      "total": 400,
-      "pct": 58.5,
-      "units": 7.79,
-      "roiPct": 1.9,
-      "pending": 108
+      "correct": 235,
+      "total": 401,
+      "pct": 58.6,
+      "units": 8.559,
+      "roiPct": 2.1,
+      "pending": 107
     },
     "byLeague": {
+      "mlb": {
+        "correct": 146,
+        "total": 265,
+        "pct": 55.1,
+        "units": -7.496,
+        "roiPct": -2.8,
+        "pending": 0
+      },
       "wnba": {
         "correct": 28,
         "total": 47,
         "pct": 59.6,
         "units": 6.0,
         "roiPct": 12.8,
-        "pending": 0
-      },
-      "mlb": {
-        "correct": 145,
-        "total": 264,
-        "pct": 54.9,
-        "units": -8.265,
-        "roiPct": -3.1,
         "pending": 0
       },
       "worldcup": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 5,
+      "current": 4,
       "type": "win",
       "bestWin": 8,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816082",
+      "league": "mlb",
+      "scheduleDate": "2026-07-08",
+      "matchup": "Toronto Blue Jays @ San Francisco Giants",
+      "predicted": "Toronto Blue Jays",
+      "predictedSide": "away",
+      "outcomeLabel": "Toronto Blue Jays to win",
+      "confidence": 66.5,
+      "pickOdds": -130,
+      "status": "graded",
+      "actual": "Toronto Blue Jays",
+      "correct": true,
+      "units": 0.769,
+      "homeScore": "0",
+      "awayScore": "10",
+      "gradedAt": "2026-07-08T22:34:12.128622+00:00",
+      "date": "2026-07-08"
+    },
     {
       "eventId": "401857047",
       "league": "wnba",
@@ -1938,25 +1957,6 @@
       "homeScore": "90",
       "awayScore": "67",
       "gradedAt": "2026-07-03T06:14:41.887869+00:00",
-      "date": "2026-07-02"
-    },
-    {
-      "eventId": "401857035",
-      "league": "wnba",
-      "scheduleDate": "2026-07-02",
-      "matchup": "Dallas Wings @ Connecticut Sun",
-      "predicted": "Dallas Wings",
-      "predictedSide": "away",
-      "outcomeLabel": "Dallas Wings to win",
-      "confidence": 65.5,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Dallas Wings",
-      "correct": true,
-      "units": null,
-      "homeScore": "83",
-      "awayScore": "86",
-      "gradedAt": "2026-07-03T06:14:41.887853+00:00",
       "date": "2026-07-02"
     }
   ],
@@ -10787,15 +10787,15 @@
       "predicted": "Toronto Blue Jays",
       "predictedSide": "away",
       "outcomeLabel": "Toronto Blue Jays to win",
-      "confidence": 58.9,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 66.5,
+      "pickOdds": -130,
+      "status": "graded",
+      "actual": "Toronto Blue Jays",
+      "correct": true,
+      "units": 0.769,
+      "homeScore": "0",
+      "awayScore": "10",
+      "gradedAt": "2026-07-08T22:34:12.128622+00:00",
       "date": "2026-07-08"
     },
     "760507": {
