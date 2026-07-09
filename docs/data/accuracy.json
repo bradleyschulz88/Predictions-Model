@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-09T20:46:21.822922+00:00",
+  "updatedAt": "2026-07-09T22:20:34.618079+00:00",
   "summary": {
     "last7Days": {
-      "correct": 252,
-      "total": 425,
-      "pct": 59.3,
-      "units": 12.425,
-      "roiPct": 2.9,
+      "correct": 253,
+      "total": 426,
+      "pct": 59.4,
+      "units": 13.013,
+      "roiPct": 3.1,
       "pending": 50
     },
     "allTime": {
-      "correct": 252,
-      "total": 425,
-      "pct": 59.3,
-      "units": 12.425,
-      "roiPct": 2.9,
+      "correct": 253,
+      "total": 426,
+      "pct": 59.4,
+      "units": 13.013,
+      "roiPct": 3.1,
       "pending": 89
     },
     "byLeague": {
+      "worldcup": {
+        "correct": 46,
+        "total": 69,
+        "pct": 66.7,
+        "units": 5.643,
+        "roiPct": 8.2,
+        "pending": 0
+      },
       "mlb": {
         "correct": 160,
         "total": 285,
@@ -41,24 +49,35 @@
         "units": 6.0,
         "roiPct": 12.0,
         "pending": 0
-      },
-      "worldcup": {
-        "correct": 45,
-        "total": 68,
-        "pct": 66.2,
-        "units": 5.055,
-        "roiPct": 7.4,
-        "pending": 0
       }
     },
     "streak": {
-      "current": 4,
+      "current": 3,
       "type": "win",
       "bestWin": 7,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "760510",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-09",
+      "matchup": "Morocco @ France",
+      "predicted": "France",
+      "predictedSide": "home",
+      "outcomeLabel": "France to win",
+      "confidence": 59.8,
+      "pickOdds": -170,
+      "status": "graded",
+      "actual": "France",
+      "correct": true,
+      "units": 0.588,
+      "homeScore": "2",
+      "awayScore": "0",
+      "gradedAt": "2026-07-09T22:20:34.454830+00:00",
+      "date": "2026-07-09"
+    },
     {
       "eventId": "401816091",
       "league": "mlb",
@@ -1939,25 +1958,6 @@
       "awayScore": "74",
       "gradedAt": "2026-07-04T14:10:48.860416+00:00",
       "date": "2026-07-04"
-    },
-    {
-      "eventId": "1133620",
-      "league": "afl",
-      "scheduleDate": "2026-07-04",
-      "matchup": "Collingwood @ Gold Coast SUNS",
-      "predicted": "Collingwood",
-      "predictedSide": "away",
-      "outcomeLabel": "Collingwood to win",
-      "confidence": 82.4,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Collingwood",
-      "correct": true,
-      "units": null,
-      "homeScore": "98",
-      "awayScore": "104",
-      "gradedAt": "2026-07-04T10:54:52.264519+00:00",
-      "date": "2026-07-04"
     }
   ],
   "pendingPicks": [
@@ -2074,6 +2074,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-15"
+    },
+    {
+      "eventId": "760514",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-14",
+      "matchup": "Quarterfinal 2 Winner @ France",
+      "predicted": "France",
+      "predictedSide": "home",
+      "outcomeLabel": "France to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-14"
     },
     {
       "eventId": "401857067",
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Baltimore Orioles to win",
       "confidence": 68.5,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-11"
-    },
-    {
-      "eventId": "401816113",
-      "league": "mlb",
-      "scheduleDate": "2026-07-11",
-      "matchup": "Cleveland Guardians @ Miami Marlins",
-      "predicted": "Miami Marlins",
-      "predictedSide": "home",
-      "outcomeLabel": "Miami Marlins to win",
-      "confidence": 61.6,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -11904,19 +11904,19 @@
       "eventId": "760510",
       "league": "worldcup",
       "scheduleDate": "2026-07-09",
-      "matchup": "Morocco @ Round of 16 1 Winner",
-      "predicted": "Morocco",
-      "predictedSide": "away",
-      "outcomeLabel": "Morocco to win",
-      "confidence": 76.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "matchup": "Morocco @ France",
+      "predicted": "France",
+      "predictedSide": "home",
+      "outcomeLabel": "France to win",
+      "confidence": 59.8,
+      "pickOdds": -170,
+      "status": "graded",
+      "actual": "France",
+      "correct": true,
+      "units": 0.588,
+      "homeScore": "2",
+      "awayScore": "0",
+      "gradedAt": "2026-07-09T22:20:34.454830+00:00",
       "date": "2026-07-09"
     },
     "401816106": {
@@ -12678,6 +12678,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-17"
+    },
+    "760514": {
+      "eventId": "760514",
+      "league": "worldcup",
+      "scheduleDate": "2026-07-14",
+      "matchup": "Quarterfinal 2 Winner @ France",
+      "predicted": "France",
+      "predictedSide": "home",
+      "outcomeLabel": "France to win",
+      "confidence": 76.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-14"
     }
   },
   "skippedDates": []
