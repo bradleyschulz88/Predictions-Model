@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-08T22:34:24.674580+00:00",
+  "updatedAt": "2026-07-09T00:08:35.579450+00:00",
   "summary": {
     "last7Days": {
       "correct": 235,
@@ -15,7 +15,7 @@
       "pct": 58.6,
       "units": 8.559,
       "roiPct": 2.1,
-      "pending": 107
+      "pending": 109
     },
     "byLeague": {
       "mlb": {
@@ -2057,6 +2057,25 @@
       "date": "2026-07-13"
     },
     {
+      "eventId": "401857064",
+      "league": "wnba",
+      "scheduleDate": "2026-07-13",
+      "matchup": "Los Angeles Sparks @ Atlanta Dream",
+      "predicted": "Atlanta Dream",
+      "predictedSide": "home",
+      "outcomeLabel": "Atlanta Dream to win",
+      "confidence": 58.2,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-13"
+    },
+    {
       "eventId": "401857063",
       "league": "wnba",
       "scheduleDate": "2026-07-12",
@@ -2274,6 +2293,25 @@
       "predictedSide": "home",
       "outcomeLabel": "Tampa Bay Rays to win",
       "confidence": 66.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-12"
+    },
+    {
+      "eventId": "401816132",
+      "league": "mlb",
+      "scheduleDate": "2026-07-12",
+      "matchup": "Philadelphia Phillies @ Detroit Tigers",
+      "predicted": "Detroit Tigers",
+      "predictedSide": "home",
+      "outcomeLabel": "Detroit Tigers to win",
+      "confidence": 57.0,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -2872,44 +2910,6 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-11"
-    },
-    {
-      "eventId": "760511",
-      "league": "worldcup",
-      "scheduleDate": "2026-07-10",
-      "matchup": "Round of 16 6 Winner @ Spain",
-      "predicted": "Spain",
-      "predictedSide": "home",
-      "outcomeLabel": "Spain to win",
-      "confidence": 76.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-10"
-    },
-    {
-      "eventId": "401857056",
-      "league": "wnba",
-      "scheduleDate": "2026-07-10",
-      "matchup": "Chicago Sky @ Los Angeles Sparks",
-      "predicted": "Los Angeles Sparks",
-      "predictedSide": "home",
-      "outcomeLabel": "Los Angeles Sparks to win",
-      "confidence": 61.1,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-10"
     }
   ],
   "picksByEventId": {
@@ -12564,6 +12564,44 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-15"
+    },
+    "401816132": {
+      "eventId": "401816132",
+      "league": "mlb",
+      "scheduleDate": "2026-07-12",
+      "matchup": "Philadelphia Phillies @ Detroit Tigers",
+      "predicted": "Detroit Tigers",
+      "predictedSide": "home",
+      "outcomeLabel": "Detroit Tigers to win",
+      "confidence": 57.0,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-12"
+    },
+    "401857064": {
+      "eventId": "401857064",
+      "league": "wnba",
+      "scheduleDate": "2026-07-13",
+      "matchup": "Los Angeles Sparks @ Atlanta Dream",
+      "predicted": "Atlanta Dream",
+      "predictedSide": "home",
+      "outcomeLabel": "Atlanta Dream to win",
+      "confidence": 58.2,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-13"
     }
   },
   "skippedDates": []
