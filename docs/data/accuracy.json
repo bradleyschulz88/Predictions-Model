@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-09T11:26:48.219059+00:00",
+  "updatedAt": "2026-07-09T14:07:19.112115+00:00",
   "summary": {
     "last7Days": {
-      "correct": 247,
-      "total": 418,
-      "pct": 59.1,
+      "correct": 248,
+      "total": 419,
+      "pct": 59.2,
       "units": 11.703,
       "roiPct": 2.8,
       "pending": 50
     },
     "allTime": {
-      "correct": 247,
-      "total": 418,
-      "pct": 59.1,
+      "correct": 248,
+      "total": 419,
+      "pct": 59.2,
       "units": 11.703,
       "roiPct": 2.8,
       "pending": 95
     },
     "byLeague": {
+      "afl": {
+        "correct": 17,
+        "total": 22,
+        "pct": 77.3,
+        "units": 5.0,
+        "roiPct": 22.7,
+        "pending": 0
+      },
       "mlb": {
         "correct": 156,
         "total": 279,
@@ -41,24 +49,35 @@
         "units": 5.055,
         "roiPct": 7.4,
         "pending": 0
-      },
-      "afl": {
-        "correct": 16,
-        "total": 21,
-        "pct": 76.2,
-        "units": 5.0,
-        "roiPct": 23.8,
-        "pending": 0
       }
     },
     "streak": {
-      "current": 6,
+      "current": 5,
       "type": "win",
       "bestWin": 7,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133635",
+      "league": "afl",
+      "scheduleDate": "2026-07-09",
+      "matchup": "Sydney Swans @ Fremantle",
+      "predicted": "Fremantle",
+      "predictedSide": "home",
+      "outcomeLabel": "Fremantle to win",
+      "confidence": 63.0,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Fremantle",
+      "correct": true,
+      "units": null,
+      "homeScore": "111",
+      "awayScore": "73",
+      "gradedAt": "2026-07-09T14:06:56.876317+00:00",
+      "date": "2026-07-09"
+    },
     {
       "eventId": "401816081",
       "league": "mlb",
@@ -1939,28 +1958,28 @@
       "awayScore": "7",
       "gradedAt": "2026-07-04T06:01:05.419196+00:00",
       "date": "2026-07-03"
-    },
-    {
-      "eventId": "401816011",
-      "league": "mlb",
-      "scheduleDate": "2026-07-03",
-      "matchup": "Miami Marlins @ Athletics",
-      "predicted": "Miami Marlins",
-      "predictedSide": "away",
-      "outcomeLabel": "Miami Marlins to win",
-      "confidence": 76.8,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Miami Marlins",
-      "correct": true,
-      "units": null,
-      "homeScore": "5",
-      "awayScore": "12",
-      "gradedAt": "2026-07-04T06:01:05.419190+00:00",
-      "date": "2026-07-03"
     }
   ],
   "pendingPicks": [
+    {
+      "eventId": "1133642",
+      "league": "afl",
+      "scheduleDate": "2026-07-17",
+      "matchup": "Adelaide Crows @ Sydney Swans",
+      "predicted": "Sydney Swans",
+      "predictedSide": "home",
+      "outcomeLabel": "Sydney Swans to win",
+      "confidence": 66.7,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-17"
+    },
     {
       "eventId": "401857072",
       "league": "wnba",
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Miami Marlins to win",
       "confidence": 61.6,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-11"
-    },
-    {
-      "eventId": "401816112",
-      "league": "mlb",
-      "scheduleDate": "2026-07-11",
-      "matchup": "Chicago Cubs @ Cincinnati Reds",
-      "predicted": "Chicago Cubs",
-      "predictedSide": "away",
-      "outcomeLabel": "Chicago Cubs to win",
-      "confidence": 70.2,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -10749,15 +10749,15 @@
       "predicted": "Fremantle",
       "predictedSide": "home",
       "outcomeLabel": "Fremantle to win",
-      "confidence": 80.3,
+      "confidence": 63.0,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Fremantle",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "111",
+      "awayScore": "73",
+      "gradedAt": "2026-07-09T14:06:56.876317+00:00",
       "date": "2026-07-09"
     },
     "401816063": {
@@ -12659,6 +12659,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-16"
+    },
+    "1133642": {
+      "eventId": "1133642",
+      "league": "afl",
+      "scheduleDate": "2026-07-17",
+      "matchup": "Adelaide Crows @ Sydney Swans",
+      "predicted": "Sydney Swans",
+      "predictedSide": "home",
+      "outcomeLabel": "Sydney Swans to win",
+      "confidence": 66.7,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-17"
     }
   },
   "skippedDates": []
