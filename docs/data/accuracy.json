@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-16T13:03:38.530351+00:00",
+  "updatedAt": "2026-07-16T15:18:59.125411+00:00",
   "summary": {
     "last7Days": {
       "correct": 306,
@@ -15,7 +15,7 @@
       "pct": 60.2,
       "units": 8.31,
       "roiPct": 1.6,
-      "pending": 103
+      "pending": 105
     },
     "byLeague": {
       "afl": {
@@ -1962,6 +1962,44 @@
   ],
   "pendingPicks": [
     {
+      "eventId": "1133653",
+      "league": "afl",
+      "scheduleDate": "2026-07-24",
+      "matchup": "West Coast Eagles @ Fremantle",
+      "predicted": "Fremantle",
+      "predictedSide": "home",
+      "outcomeLabel": "Fremantle to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-24"
+    },
+    {
+      "eventId": "1133650",
+      "league": "afl",
+      "scheduleDate": "2026-07-24",
+      "matchup": "Geelong Cats @ Melbourne",
+      "predicted": "Melbourne",
+      "predictedSide": "home",
+      "outcomeLabel": "Melbourne to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-24"
+    },
+    {
       "eventId": "401816234",
       "league": "mlb",
       "scheduleDate": "2026-07-23",
@@ -2872,44 +2910,6 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-20"
-    },
-    {
-      "eventId": "401816186",
-      "league": "mlb",
-      "scheduleDate": "2026-07-20",
-      "matchup": "Baltimore Orioles @ Boston Red Sox",
-      "predicted": "Boston Red Sox",
-      "predictedSide": "home",
-      "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 67.5,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-20"
-    },
-    {
-      "eventId": "401857081",
-      "league": "wnba",
-      "scheduleDate": "2026-07-19",
-      "matchup": "Chicago Sky @ Atlanta Dream",
-      "predicted": "Atlanta Dream",
-      "predictedSide": "home",
-      "outcomeLabel": "Atlanta Dream to win",
-      "confidence": 69.6,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-19"
     }
   ],
   "picksByEventId": {
@@ -14521,6 +14521,44 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-23"
+    },
+    "1133650": {
+      "eventId": "1133650",
+      "league": "afl",
+      "scheduleDate": "2026-07-24",
+      "matchup": "Geelong Cats @ Melbourne",
+      "predicted": "Melbourne",
+      "predictedSide": "home",
+      "outcomeLabel": "Melbourne to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-24"
+    },
+    "1133653": {
+      "eventId": "1133653",
+      "league": "afl",
+      "scheduleDate": "2026-07-24",
+      "matchup": "West Coast Eagles @ Fremantle",
+      "predicted": "Fremantle",
+      "predictedSide": "home",
+      "outcomeLabel": "Fremantle to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-24"
     }
   },
   "skippedDates": []
