@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-16T15:18:59.125411+00:00",
+  "updatedAt": "2026-07-16T16:50:56.504233+00:00",
   "summary": {
     "last7Days": {
       "correct": 306,
@@ -15,7 +15,7 @@
       "pct": 60.2,
       "units": 8.31,
       "roiPct": 1.6,
-      "pending": 105
+      "pending": 106
     },
     "byLeague": {
       "afl": {
@@ -2646,6 +2646,25 @@
       "date": "2026-07-21"
     },
     {
+      "eventId": "401892393",
+      "league": "wnba",
+      "scheduleDate": "2026-07-20",
+      "matchup": "New York Liberty @ Dallas Wings",
+      "predicted": "Dallas Wings",
+      "predictedSide": "home",
+      "outcomeLabel": "Dallas Wings to win",
+      "confidence": 72.5,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-20"
+    },
+    {
       "eventId": "401857085",
       "league": "wnba",
       "scheduleDate": "2026-07-20",
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Cleveland Guardians to win",
       "confidence": 66.5,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-20"
-    },
-    {
-      "eventId": "401816187",
-      "league": "mlb",
-      "scheduleDate": "2026-07-20",
-      "matchup": "Los Angeles Dodgers @ Philadelphia Phillies",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "away",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 62.0,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -14559,6 +14559,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-24"
+    },
+    "401892393": {
+      "eventId": "401892393",
+      "league": "wnba",
+      "scheduleDate": "2026-07-20",
+      "matchup": "New York Liberty @ Dallas Wings",
+      "predicted": "Dallas Wings",
+      "predictedSide": "home",
+      "outcomeLabel": "Dallas Wings to win",
+      "confidence": 72.5,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-20"
     }
   },
   "skippedDates": []
