@@ -30181,7 +30181,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:05:59.715033+00:00"
+      "recordedAt": "2026-07-16T05:25:05.287086+00:00"
     },
     "401816102": {
       "eventId": "401816102",
@@ -30412,7 +30412,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:01.170833+00:00"
+      "recordedAt": "2026-07-16T05:25:07.430025+00:00"
     },
     "760513": {
       "eventId": "760513",
@@ -30692,7 +30692,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:03.285538+00:00"
+      "recordedAt": "2026-07-16T05:25:10.051378+00:00"
     },
     "401857070": {
       "eventId": "401857070",
@@ -30704,15 +30704,15 @@
       "predictedWinner": "Golden State Valkyries",
       "predictedSide": "away",
       "outcomeLabel": "Golden State Valkyries to win",
-      "confidence": 61.5,
+      "confidence": 57.9,
       "pickOdds": null,
       "features": {
         "league": "wnba",
-        "recordDiff": -0.1242,
-        "splitDiff": 0.0667,
-        "homePower": 0.6,
-        "awayPower": 1.0,
-        "homeInjuryLoad": 1.61,
+        "recordDiff": -0.1367,
+        "splitDiff": -0.0513,
+        "homePower": null,
+        "awayPower": null,
+        "homeInjuryLoad": 0,
         "awayInjuryLoad": 1.61,
         "homeRest": 2,
         "awayRest": 5,
@@ -30720,16 +30720,16 @@
         "awayBackToBack": false,
         "impliedHome": null,
         "impliedAway": null,
-        "trueHome": 27.0,
-        "trueAway": 73.0,
-        "confidence": 61.5,
+        "trueHome": 40.6,
+        "trueAway": 59.4,
+        "confidence": 57.9,
         "predictedSide": "away",
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
           "injuries": true,
-          "espnPredictor": true,
-          "advancedStats": true,
+          "espnPredictor": false,
+          "advancedStats": false,
           "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
@@ -30741,7 +30741,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-10T02:32:13.341484+00:00"
+      "recordedAt": "2026-07-16T05:25:10.051378+00:00"
     },
     "401816132": {
       "eventId": "401816132",
@@ -30856,7 +30856,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:05:59.715033+00:00"
+      "recordedAt": "2026-07-16T05:25:05.287086+00:00"
     },
     "401816143": {
       "eventId": "401816143",
@@ -30869,7 +30869,7 @@
       "predictedSide": "home",
       "outcomeLabel": "Philadelphia Phillies to win",
       "confidence": 61.5,
-      "pickOdds": -135,
+      "pickOdds": -132,
       "features": {
         "league": "mlb",
         "recordDiff": 0.1443,
@@ -30882,8 +30882,8 @@
         "awayRest": 4,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 54.3,
-        "impliedAway": 45.7,
+        "impliedHome": 54.7,
+        "impliedAway": 45.3,
         "trueHome": 69.3,
         "trueAway": 30.7,
         "confidence": 61.5,
@@ -30922,7 +30922,7 @@
           "eraEdge": 0.04
         }
       },
-      "recordedAt": "2026-07-16T02:05:04.492144+00:00"
+      "recordedAt": "2026-07-16T05:23:28.782910+00:00"
     },
     "401857071": {
       "eventId": "401857071",
@@ -30971,7 +30971,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:04.549720+00:00"
+      "recordedAt": "2026-07-16T05:25:12.016157+00:00"
     },
     "401857072": {
       "eventId": "401857072",
@@ -31020,7 +31020,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:04.549720+00:00"
+      "recordedAt": "2026-07-16T05:25:12.016157+00:00"
     },
     "1133642": {
       "eventId": "1133642",
@@ -31180,8 +31180,8 @@
       "predictedWinner": "Boston Red Sox",
       "predictedSide": "home",
       "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 69.9,
-      "pickOdds": null,
+      "confidence": 68.0,
+      "pickOdds": -154,
       "features": {
         "league": "mlb",
         "recordDiff": -0.1064,
@@ -31194,11 +31194,11 @@
         "awayRest": 4,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 83.4,
-        "trueAway": 16.6,
-        "confidence": 69.9,
+        "impliedHome": 51.6,
+        "impliedAway": 48.4,
+        "trueHome": 80.2,
+        "trueAway": 19.8,
+        "confidence": 68.0,
         "predictedSide": "home",
         "hasLineup": true,
         "dataCoverage": {
@@ -31210,7 +31210,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -31234,7 +31234,7 @@
           "eraEdge": 0.21
         }
       },
-      "recordedAt": "2026-07-16T02:05:10.067280+00:00"
+      "recordedAt": "2026-07-16T05:23:51.994811+00:00"
     },
     "401816144": {
       "eventId": "401816144",
@@ -31247,7 +31247,7 @@
       "predictedSide": "home",
       "outcomeLabel": "Cleveland Guardians to win",
       "confidence": 62.8,
-      "pickOdds": -124,
+      "pickOdds": -127,
       "features": {
         "league": "mlb",
         "recordDiff": 0.0103,
@@ -31260,8 +31260,8 @@
         "awayRest": 5,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 53.3,
-        "impliedAway": 46.7,
+        "impliedHome": 52.4,
+        "impliedAway": 47.6,
         "trueHome": 71.5,
         "trueAway": 28.5,
         "confidence": 62.8,
@@ -31300,7 +31300,7 @@
           "eraEdge": 0.61
         }
       },
-      "recordedAt": "2026-07-16T02:05:10.067280+00:00"
+      "recordedAt": "2026-07-16T05:23:51.994811+00:00"
     },
     "401816146": {
       "eventId": "401816146",
@@ -31312,8 +31312,8 @@
       "predictedWinner": "Atlanta Braves",
       "predictedSide": "home",
       "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 69.9,
-      "pickOdds": null,
+      "confidence": 68.3,
+      "pickOdds": -154,
       "features": {
         "league": "mlb",
         "recordDiff": 0.0685,
@@ -31326,11 +31326,11 @@
         "awayRest": 5,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 83.4,
-        "trueAway": 16.6,
-        "confidence": 69.9,
+        "impliedHome": 57.0,
+        "impliedAway": 43.0,
+        "trueHome": 80.8,
+        "trueAway": 19.2,
+        "confidence": 68.3,
         "predictedSide": "home",
         "hasLineup": true,
         "dataCoverage": {
@@ -31342,7 +31342,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -31364,7 +31364,7 @@
           "eraEdge": 0.53
         }
       },
-      "recordedAt": "2026-07-16T02:05:10.067280+00:00"
+      "recordedAt": "2026-07-16T05:23:51.994811+00:00"
     },
     "401816148": {
       "eventId": "401816148",
@@ -31376,8 +31376,8 @@
       "predictedWinner": "Milwaukee Brewers",
       "predictedSide": "home",
       "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 67.8,
-      "pickOdds": null,
+      "confidence": 66.7,
+      "pickOdds": -182,
       "features": {
         "league": "mlb",
         "recordDiff": 0.0785,
@@ -31390,11 +31390,11 @@
         "awayRest": 5,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 80.0,
-        "trueAway": 20.0,
-        "confidence": 67.8,
+        "impliedHome": 60.2,
+        "impliedAway": 39.8,
+        "trueHome": 78.0,
+        "trueAway": 22.0,
+        "confidence": 66.7,
         "predictedSide": "home",
         "hasLineup": true,
         "dataCoverage": {
@@ -31406,7 +31406,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -31425,7 +31425,7 @@
           "eraEdge": 0.54
         }
       },
-      "recordedAt": "2026-07-16T02:05:10.067280+00:00"
+      "recordedAt": "2026-07-16T05:23:51.994811+00:00"
     },
     "401816149": {
       "eventId": "401816149",
@@ -31437,8 +31437,8 @@
       "predictedWinner": "Chicago Cubs",
       "predictedSide": "home",
       "outcomeLabel": "Chicago Cubs to win",
-      "confidence": 66.2,
-      "pickOdds": null,
+      "confidence": 65.0,
+      "pickOdds": -154,
       "features": {
         "league": "mlb",
         "recordDiff": 0.0677,
@@ -31451,11 +31451,11 @@
         "awayRest": 5,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 77.3,
-        "trueAway": 22.7,
-        "confidence": 66.2,
+        "impliedHome": 55.9,
+        "impliedAway": 44.1,
+        "trueHome": 75.1,
+        "trueAway": 24.9,
+        "confidence": 65.0,
         "predictedSide": "home",
         "hasLineup": true,
         "dataCoverage": {
@@ -31467,7 +31467,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -31489,7 +31489,7 @@
           "eraEdge": 0.29
         }
       },
-      "recordedAt": "2026-07-16T02:05:10.067280+00:00"
+      "recordedAt": "2026-07-16T05:23:51.994811+00:00"
     },
     "401816150": {
       "eventId": "401816150",
@@ -31502,7 +31502,7 @@
       "predictedSide": "away",
       "outcomeLabel": "San Diego Padres to win",
       "confidence": 65.5,
-      "pickOdds": 102,
+      "pickOdds": -103,
       "features": {
         "league": "mlb",
         "recordDiff": -0.1082,
@@ -31515,8 +31515,8 @@
         "awayRest": 5,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 52.4,
-        "impliedAway": 47.6,
+        "impliedHome": 51.8,
+        "impliedAway": 48.2,
         "trueHome": 24.0,
         "trueAway": 76.0,
         "confidence": 65.5,
@@ -31555,7 +31555,7 @@
           "eraEdge": -0.72
         }
       },
-      "recordedAt": "2026-07-16T02:05:10.067280+00:00"
+      "recordedAt": "2026-07-16T05:23:51.994811+00:00"
     },
     "401816151": {
       "eventId": "401816151",
@@ -31567,8 +31567,8 @@
       "predictedWinner": "Cincinnati Reds",
       "predictedSide": "away",
       "outcomeLabel": "Cincinnati Reds to win",
-      "confidence": 61.8,
-      "pickOdds": null,
+      "confidence": 60.7,
+      "pickOdds": -132,
       "features": {
         "league": "mlb",
         "recordDiff": -0.0547,
@@ -31581,11 +31581,11 @@
         "awayRest": 5,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 30.2,
-        "trueAway": 69.8,
-        "confidence": 61.8,
+        "impliedHome": 47.7,
+        "impliedAway": 52.3,
+        "trueHome": 31.9,
+        "trueAway": 68.1,
+        "confidence": 60.7,
         "predictedSide": "away",
         "hasLineup": true,
         "dataCoverage": {
@@ -31597,7 +31597,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -31619,7 +31619,7 @@
           "eraEdge": -0.92
         }
       },
-      "recordedAt": "2026-07-16T02:05:10.067280+00:00"
+      "recordedAt": "2026-07-16T05:23:51.994811+00:00"
     },
     "401816152": {
       "eventId": "401816152",
@@ -31631,8 +31631,8 @@
       "predictedWinner": "Detroit Tigers",
       "predictedSide": "away",
       "outcomeLabel": "Detroit Tigers to win",
-      "confidence": 58.3,
-      "pickOdds": null,
+      "confidence": 57.5,
+      "pickOdds": -116,
       "features": {
         "league": "mlb",
         "recordDiff": -0.0666,
@@ -31645,11 +31645,11 @@
         "awayRest": 5,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 33.4,
-        "trueAway": 66.6,
-        "confidence": 58.3,
+        "impliedHome": 49.2,
+        "impliedAway": 50.8,
+        "trueHome": 35.0,
+        "trueAway": 65.0,
+        "confidence": 57.5,
         "predictedSide": "away",
         "hasLineup": true,
         "dataCoverage": {
@@ -31661,7 +31661,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -31683,7 +31683,7 @@
           "eraEdge": -1.01
         }
       },
-      "recordedAt": "2026-07-16T02:05:10.067280+00:00"
+      "recordedAt": "2026-07-16T05:23:51.994811+00:00"
     },
     "401816155": {
       "eventId": "401816155",
@@ -31744,7 +31744,7 @@
           "eraEdge": -0.46
         }
       },
-      "recordedAt": "2026-07-16T02:05:10.067280+00:00"
+      "recordedAt": "2026-07-16T05:23:51.994811+00:00"
     },
     "401816164": {
       "eventId": "401816164",
@@ -31756,8 +31756,8 @@
       "predictedWinner": "Chicago Cubs",
       "predictedSide": "home",
       "outcomeLabel": "Chicago Cubs to win",
-      "confidence": 66.2,
-      "pickOdds": null,
+      "confidence": 65.2,
+      "pickOdds": -182,
       "features": {
         "league": "mlb",
         "recordDiff": 0.0677,
@@ -31770,11 +31770,11 @@
         "awayRest": 0,
         "homeBackToBack": true,
         "awayBackToBack": true,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 77.3,
-        "trueAway": 22.7,
-        "confidence": 66.2,
+        "impliedHome": 59.6,
+        "impliedAway": 40.4,
+        "trueHome": 75.5,
+        "trueAway": 24.5,
+        "confidence": 65.2,
         "predictedSide": "home",
         "hasLineup": true,
         "dataCoverage": {
@@ -31786,7 +31786,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -31808,7 +31808,7 @@
           "eraEdge": 0.29
         }
       },
-      "recordedAt": "2026-07-16T02:05:15.503558+00:00"
+      "recordedAt": "2026-07-16T05:24:02.063447+00:00"
     },
     "401816156": {
       "eventId": "401816156",
@@ -31820,8 +31820,8 @@
       "predictedWinner": "Chicago White Sox",
       "predictedSide": "away",
       "outcomeLabel": "Chicago White Sox to win",
-      "confidence": 70.1,
-      "pickOdds": null,
+      "confidence": 68.0,
+      "pickOdds": -111,
       "features": {
         "league": "mlb",
         "recordDiff": -0.0576,
@@ -31834,11 +31834,11 @@
         "awayRest": 0,
         "homeBackToBack": true,
         "awayBackToBack": true,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 16.2,
-        "trueAway": 83.8,
-        "confidence": 70.1,
+        "impliedHome": 51.5,
+        "impliedAway": 48.5,
+        "trueHome": 19.8,
+        "trueAway": 80.2,
+        "confidence": 68.0,
         "predictedSide": "away",
         "hasLineup": true,
         "dataCoverage": {
@@ -31850,7 +31850,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -31874,7 +31874,7 @@
           "eraEdge": -0.02
         }
       },
-      "recordedAt": "2026-07-16T02:05:15.503558+00:00"
+      "recordedAt": "2026-07-16T05:24:02.063447+00:00"
     },
     "401816166": {
       "eventId": "401816166",
@@ -31886,8 +31886,8 @@
       "predictedWinner": "Cincinnati Reds",
       "predictedSide": "away",
       "outcomeLabel": "Cincinnati Reds to win",
-      "confidence": 61.4,
-      "pickOdds": null,
+      "confidence": 58.8,
+      "pickOdds": -143,
       "features": {
         "league": "mlb",
         "recordDiff": -0.0547,
@@ -31900,11 +31900,11 @@
         "awayRest": 0,
         "homeBackToBack": true,
         "awayBackToBack": true,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 30.8,
-        "trueAway": 69.2,
-        "confidence": 61.4,
+        "impliedHome": 45.8,
+        "impliedAway": 54.2,
+        "trueHome": 32.3,
+        "trueAway": 67.7,
+        "confidence": 58.8,
         "predictedSide": "away",
         "hasLineup": true,
         "dataCoverage": {
@@ -31916,7 +31916,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -31938,7 +31938,7 @@
           "eraEdge": -0.92
         }
       },
-      "recordedAt": "2026-07-16T02:05:15.503558+00:00"
+      "recordedAt": "2026-07-16T05:24:02.063447+00:00"
     },
     "401816158": {
       "eventId": "401816158",
@@ -31950,8 +31950,8 @@
       "predictedWinner": "Philadelphia Phillies",
       "predictedSide": "home",
       "outcomeLabel": "Philadelphia Phillies to win",
-      "confidence": 66.2,
-      "pickOdds": null,
+      "confidence": 65.2,
+      "pickOdds": -182,
       "features": {
         "league": "mlb",
         "recordDiff": 0.1443,
@@ -31964,11 +31964,11 @@
         "awayRest": 1,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 77.3,
-        "trueAway": 22.7,
-        "confidence": 66.2,
+        "impliedHome": 59.1,
+        "impliedAway": 40.9,
+        "trueHome": 75.5,
+        "trueAway": 24.5,
+        "confidence": 65.2,
         "predictedSide": "home",
         "hasLineup": true,
         "dataCoverage": {
@@ -31980,7 +31980,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -32004,7 +32004,7 @@
           "eraEdge": 0.04
         }
       },
-      "recordedAt": "2026-07-16T02:05:15.503558+00:00"
+      "recordedAt": "2026-07-16T05:24:02.063447+00:00"
     },
     "401816161": {
       "eventId": "401816161",
@@ -32016,8 +32016,8 @@
       "predictedWinner": "Atlanta Braves",
       "predictedSide": "home",
       "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 69.9,
-      "pickOdds": null,
+      "confidence": 68.2,
+      "pickOdds": -143,
       "features": {
         "league": "mlb",
         "recordDiff": 0.0685,
@@ -32030,11 +32030,11 @@
         "awayRest": 0,
         "homeBackToBack": true,
         "awayBackToBack": true,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 83.4,
-        "trueAway": 16.6,
-        "confidence": 69.9,
+        "impliedHome": 54.2,
+        "impliedAway": 45.8,
+        "trueHome": 80.5,
+        "trueAway": 19.5,
+        "confidence": 68.2,
         "predictedSide": "home",
         "hasLineup": true,
         "dataCoverage": {
@@ -32046,7 +32046,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -32068,7 +32068,7 @@
           "eraEdge": 0.53
         }
       },
-      "recordedAt": "2026-07-16T02:05:15.503558+00:00"
+      "recordedAt": "2026-07-16T05:24:02.063447+00:00"
     },
     "401816163": {
       "eventId": "401816163",
@@ -32080,8 +32080,8 @@
       "predictedWinner": "Milwaukee Brewers",
       "predictedSide": "home",
       "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 67.8,
-      "pickOdds": null,
+      "confidence": 66.3,
+      "pickOdds": -143,
       "features": {
         "league": "mlb",
         "recordDiff": 0.0785,
@@ -32094,11 +32094,11 @@
         "awayRest": 0,
         "homeBackToBack": true,
         "awayBackToBack": true,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 80.0,
-        "trueAway": 20.0,
-        "confidence": 67.8,
+        "impliedHome": 54.7,
+        "impliedAway": 45.3,
+        "trueHome": 77.4,
+        "trueAway": 22.6,
+        "confidence": 66.3,
         "predictedSide": "home",
         "hasLineup": true,
         "dataCoverage": {
@@ -32110,7 +32110,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -32129,7 +32129,7 @@
           "eraEdge": 0.54
         }
       },
-      "recordedAt": "2026-07-16T02:05:15.503558+00:00"
+      "recordedAt": "2026-07-16T05:24:02.063447+00:00"
     },
     "401816165": {
       "eventId": "401816165",
@@ -32141,8 +32141,8 @@
       "predictedWinner": "San Diego Padres",
       "predictedSide": "away",
       "outcomeLabel": "San Diego Padres to win",
-      "confidence": 67.3,
-      "pickOdds": null,
+      "confidence": 65.6,
+      "pickOdds": -111,
       "features": {
         "league": "mlb",
         "recordDiff": -0.1082,
@@ -32155,11 +32155,11 @@
         "awayRest": 0,
         "homeBackToBack": true,
         "awayBackToBack": true,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 20.9,
-        "trueAway": 79.1,
-        "confidence": 67.3,
+        "impliedHome": 50.9,
+        "impliedAway": 49.1,
+        "trueHome": 23.9,
+        "trueAway": 76.1,
+        "confidence": 65.6,
         "predictedSide": "away",
         "hasLineup": true,
         "dataCoverage": {
@@ -32171,7 +32171,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -32193,7 +32193,7 @@
           "eraEdge": -0.72
         }
       },
-      "recordedAt": "2026-07-16T02:05:15.503558+00:00"
+      "recordedAt": "2026-07-16T05:24:02.063447+00:00"
     },
     "401816170": {
       "eventId": "401816170",
@@ -32254,7 +32254,7 @@
           "eraEdge": -0.46
         }
       },
-      "recordedAt": "2026-07-16T02:05:15.503558+00:00"
+      "recordedAt": "2026-07-16T05:24:02.063447+00:00"
     },
     "401816167": {
       "eventId": "401816167",
@@ -32266,8 +32266,8 @@
       "predictedWinner": "Detroit Tigers",
       "predictedSide": "away",
       "outcomeLabel": "Detroit Tigers to win",
-      "confidence": 61.0,
-      "pickOdds": null,
+      "confidence": 58.8,
+      "pickOdds": -175,
       "features": {
         "league": "mlb",
         "recordDiff": -0.0666,
@@ -32280,11 +32280,11 @@
         "awayRest": 1,
         "homeBackToBack": true,
         "awayBackToBack": true,
-        "impliedHome": null,
-        "impliedAway": null,
-        "trueHome": 31.4,
-        "trueAway": 68.6,
-        "confidence": 61.0,
+        "impliedHome": 41.8,
+        "impliedAway": 58.2,
+        "trueHome": 32.5,
+        "trueAway": 67.5,
+        "confidence": 58.8,
         "predictedSide": "away",
         "hasLineup": true,
         "dataCoverage": {
@@ -32296,7 +32296,7 @@
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
-          "impliedOdds": false
+          "impliedOdds": true
         },
         "mlbPitching": {
           "sources": [
@@ -32318,7 +32318,7 @@
           "eraEdge": -1.01
         }
       },
-      "recordedAt": "2026-07-16T02:05:15.503558+00:00"
+      "recordedAt": "2026-07-16T05:24:02.063447+00:00"
     },
     "401816171": {
       "eventId": "401816171",
@@ -32384,7 +32384,7 @@
           "eraEdge": -0.02
         }
       },
-      "recordedAt": "2026-07-16T02:05:21.370481+00:00"
+      "recordedAt": "2026-07-16T05:24:12.535993+00:00"
     },
     "401816173": {
       "eventId": "401816173",
@@ -32450,7 +32450,7 @@
           "eraEdge": 0.04
         }
       },
-      "recordedAt": "2026-07-16T02:05:21.370481+00:00"
+      "recordedAt": "2026-07-16T05:24:12.535993+00:00"
     },
     "401816175": {
       "eventId": "401816175",
@@ -32514,7 +32514,7 @@
           "eraEdge": 0.21
         }
       },
-      "recordedAt": "2026-07-16T02:05:21.370481+00:00"
+      "recordedAt": "2026-07-16T05:24:12.535993+00:00"
     },
     "401816176": {
       "eventId": "401816176",
@@ -32578,7 +32578,7 @@
           "eraEdge": 0.53
         }
       },
-      "recordedAt": "2026-07-16T02:05:21.370481+00:00"
+      "recordedAt": "2026-07-16T05:24:12.535993+00:00"
     },
     "401816174": {
       "eventId": "401816174",
@@ -32644,7 +32644,7 @@
           "eraEdge": 0.61
         }
       },
-      "recordedAt": "2026-07-16T02:05:21.370481+00:00"
+      "recordedAt": "2026-07-16T05:24:12.535993+00:00"
     },
     "401816178": {
       "eventId": "401816178",
@@ -32705,7 +32705,7 @@
           "eraEdge": 0.54
         }
       },
-      "recordedAt": "2026-07-16T02:05:21.370481+00:00"
+      "recordedAt": "2026-07-16T05:24:12.535993+00:00"
     },
     "401816180": {
       "eventId": "401816180",
@@ -32771,7 +32771,7 @@
           "eraEdge": -0.72
         }
       },
-      "recordedAt": "2026-07-16T02:05:21.370481+00:00"
+      "recordedAt": "2026-07-16T05:24:12.535993+00:00"
     },
     "401816179": {
       "eventId": "401816179",
@@ -32835,7 +32835,7 @@
           "eraEdge": 0.29
         }
       },
-      "recordedAt": "2026-07-16T02:05:21.370481+00:00"
+      "recordedAt": "2026-07-16T05:24:12.535993+00:00"
     },
     "401816181": {
       "eventId": "401816181",
@@ -32899,7 +32899,7 @@
           "eraEdge": -0.92
         }
       },
-      "recordedAt": "2026-07-16T02:05:21.370481+00:00"
+      "recordedAt": "2026-07-16T05:24:12.535993+00:00"
     },
     "401816185": {
       "eventId": "401816185",
@@ -32960,7 +32960,7 @@
           "eraEdge": -0.46
         }
       },
-      "recordedAt": "2026-07-16T02:05:21.370481+00:00"
+      "recordedAt": "2026-07-16T05:24:12.535993+00:00"
     },
     "401816182": {
       "eventId": "401816182",
@@ -33024,7 +33024,7 @@
           "eraEdge": -1.01
         }
       },
-      "recordedAt": "2026-07-16T02:05:21.370481+00:00"
+      "recordedAt": "2026-07-16T05:24:12.535993+00:00"
     },
     "401816188": {
       "eventId": "401816188",
@@ -33085,7 +33085,7 @@
           "eraEdge": 0.91
         }
       },
-      "recordedAt": "2026-07-16T02:05:26.143363+00:00"
+      "recordedAt": "2026-07-16T05:24:18.477513+00:00"
     },
     "401816187": {
       "eventId": "401816187",
@@ -33146,7 +33146,7 @@
           "eraEdge": -0.68
         }
       },
-      "recordedAt": "2026-07-16T02:05:26.143363+00:00"
+      "recordedAt": "2026-07-16T05:24:18.477513+00:00"
     },
     "401816189": {
       "eventId": "401816189",
@@ -33207,7 +33207,7 @@
           "eraEdge": 0.95
         }
       },
-      "recordedAt": "2026-07-16T02:05:26.143363+00:00"
+      "recordedAt": "2026-07-16T05:24:18.477513+00:00"
     },
     "401816186": {
       "eventId": "401816186",
@@ -33268,7 +33268,7 @@
           "eraEdge": 0.71
         }
       },
-      "recordedAt": "2026-07-16T02:05:26.143363+00:00"
+      "recordedAt": "2026-07-16T05:24:18.477513+00:00"
     },
     "401816190": {
       "eventId": "401816190",
@@ -33329,7 +33329,7 @@
           "eraEdge": 0.63
         }
       },
-      "recordedAt": "2026-07-16T02:05:26.143363+00:00"
+      "recordedAt": "2026-07-16T05:24:18.477513+00:00"
     },
     "401816195": {
       "eventId": "401816195",
@@ -33393,7 +33393,7 @@
           "eraEdge": 0.79
         }
       },
-      "recordedAt": "2026-07-16T02:05:26.143363+00:00"
+      "recordedAt": "2026-07-16T05:24:18.477513+00:00"
     },
     "401816196": {
       "eventId": "401816196",
@@ -33454,7 +33454,7 @@
           "eraEdge": -0.49
         }
       },
-      "recordedAt": "2026-07-16T02:05:26.143363+00:00"
+      "recordedAt": "2026-07-16T05:24:18.477513+00:00"
     },
     "401816193": {
       "eventId": "401816193",
@@ -33515,7 +33515,7 @@
           "eraEdge": -0.69
         }
       },
-      "recordedAt": "2026-07-16T02:05:26.143363+00:00"
+      "recordedAt": "2026-07-16T05:24:18.477513+00:00"
     },
     "401816197": {
       "eventId": "401816197",
@@ -33576,7 +33576,7 @@
           "eraEdge": -0.68
         }
       },
-      "recordedAt": "2026-07-16T02:05:26.143363+00:00"
+      "recordedAt": "2026-07-16T05:24:18.477513+00:00"
     },
     "401816198": {
       "eventId": "401816198",
@@ -33636,7 +33636,7 @@
           "eraEdge": 1.0
         }
       },
-      "recordedAt": "2026-07-16T02:05:26.143363+00:00"
+      "recordedAt": "2026-07-16T05:24:18.477513+00:00"
     },
     "401816199": {
       "eventId": "401816199",
@@ -33700,7 +33700,7 @@
           "eraEdge": 0.91
         }
       },
-      "recordedAt": "2026-07-16T02:05:26.143363+00:00"
+      "recordedAt": "2026-07-16T05:24:18.477513+00:00"
     },
     "401816200": {
       "eventId": "401816200",
@@ -33761,7 +33761,7 @@
           "eraEdge": -0.53
         }
       },
-      "recordedAt": "2026-07-16T02:05:26.143363+00:00"
+      "recordedAt": "2026-07-16T05:24:18.477513+00:00"
     },
     "401816202": {
       "eventId": "401816202",
@@ -33822,7 +33822,7 @@
           "eraEdge": -0.68
         }
       },
-      "recordedAt": "2026-07-16T02:05:30.727798+00:00"
+      "recordedAt": "2026-07-16T05:24:24.476539+00:00"
     },
     "401816203": {
       "eventId": "401816203",
@@ -33883,7 +33883,7 @@
           "eraEdge": 0.91
         }
       },
-      "recordedAt": "2026-07-16T02:05:30.727798+00:00"
+      "recordedAt": "2026-07-16T05:24:24.476539+00:00"
     },
     "401816204": {
       "eventId": "401816204",
@@ -33944,7 +33944,7 @@
           "eraEdge": 0.95
         }
       },
-      "recordedAt": "2026-07-16T02:05:30.727798+00:00"
+      "recordedAt": "2026-07-16T05:24:24.476539+00:00"
     },
     "401816201": {
       "eventId": "401816201",
@@ -34005,7 +34005,7 @@
           "eraEdge": 0.71
         }
       },
-      "recordedAt": "2026-07-16T02:05:30.727798+00:00"
+      "recordedAt": "2026-07-16T05:24:24.476539+00:00"
     },
     "401816205": {
       "eventId": "401816205",
@@ -34066,7 +34066,7 @@
           "eraEdge": 0.63
         }
       },
-      "recordedAt": "2026-07-16T02:05:30.727798+00:00"
+      "recordedAt": "2026-07-16T05:24:24.476539+00:00"
     },
     "401816210": {
       "eventId": "401816210",
@@ -34127,7 +34127,7 @@
           "eraEdge": 0.79
         }
       },
-      "recordedAt": "2026-07-16T02:05:30.727798+00:00"
+      "recordedAt": "2026-07-16T05:24:24.476539+00:00"
     },
     "401816211": {
       "eventId": "401816211",
@@ -34188,7 +34188,7 @@
           "eraEdge": -0.49
         }
       },
-      "recordedAt": "2026-07-16T02:05:30.727798+00:00"
+      "recordedAt": "2026-07-16T05:24:24.476539+00:00"
     },
     "401816208": {
       "eventId": "401816208",
@@ -34249,7 +34249,7 @@
           "eraEdge": -0.69
         }
       },
-      "recordedAt": "2026-07-16T02:05:30.727798+00:00"
+      "recordedAt": "2026-07-16T05:24:24.476539+00:00"
     },
     "401816212": {
       "eventId": "401816212",
@@ -34310,7 +34310,7 @@
           "eraEdge": -0.68
         }
       },
-      "recordedAt": "2026-07-16T02:05:30.727798+00:00"
+      "recordedAt": "2026-07-16T05:24:24.476539+00:00"
     },
     "401816215": {
       "eventId": "401816215",
@@ -34371,7 +34371,7 @@
           "eraEdge": -0.53
         }
       },
-      "recordedAt": "2026-07-16T02:05:30.727798+00:00"
+      "recordedAt": "2026-07-16T05:24:24.476539+00:00"
     },
     "401816213": {
       "eventId": "401816213",
@@ -34431,7 +34431,7 @@
           "eraEdge": 1.0
         }
       },
-      "recordedAt": "2026-07-16T02:05:30.727798+00:00"
+      "recordedAt": "2026-07-16T05:24:24.476539+00:00"
     },
     "401816214": {
       "eventId": "401816214",
@@ -34495,7 +34495,7 @@
           "eraEdge": 0.91
         }
       },
-      "recordedAt": "2026-07-16T02:05:30.727798+00:00"
+      "recordedAt": "2026-07-16T05:24:24.476539+00:00"
     },
     "401816219": {
       "eventId": "401816219",
@@ -34559,7 +34559,7 @@
           "eraEdge": 0.95
         }
       },
-      "recordedAt": "2026-07-16T02:05:35.221288+00:00"
+      "recordedAt": "2026-07-16T05:24:29.111306+00:00"
     },
     "401816225": {
       "eventId": "401816225",
@@ -34623,7 +34623,7 @@
           "eraEdge": 0.79
         }
       },
-      "recordedAt": "2026-07-16T02:05:35.221288+00:00"
+      "recordedAt": "2026-07-16T05:24:29.111306+00:00"
     },
     "401816226": {
       "eventId": "401816226",
@@ -34689,7 +34689,7 @@
           "eraEdge": -0.49
         }
       },
-      "recordedAt": "2026-07-16T02:05:35.221288+00:00"
+      "recordedAt": "2026-07-16T05:24:29.111306+00:00"
     },
     "401816227": {
       "eventId": "401816227",
@@ -34750,7 +34750,7 @@
           "eraEdge": -0.68
         }
       },
-      "recordedAt": "2026-07-16T02:05:35.221288+00:00"
+      "recordedAt": "2026-07-16T05:24:29.111306+00:00"
     },
     "401816228": {
       "eventId": "401816228",
@@ -34810,7 +34810,7 @@
           "eraEdge": 1.0
         }
       },
-      "recordedAt": "2026-07-16T02:05:35.221288+00:00"
+      "recordedAt": "2026-07-16T05:24:29.111306+00:00"
     },
     "401816229": {
       "eventId": "401816229",
@@ -34874,7 +34874,7 @@
           "eraEdge": 0.91
         }
       },
-      "recordedAt": "2026-07-16T02:05:35.221288+00:00"
+      "recordedAt": "2026-07-16T05:24:29.111306+00:00"
     },
     "401816230": {
       "eventId": "401816230",
@@ -34935,7 +34935,7 @@
           "eraEdge": -0.53
         }
       },
-      "recordedAt": "2026-07-16T02:05:35.221288+00:00"
+      "recordedAt": "2026-07-16T05:24:29.111306+00:00"
     },
     "401816217": {
       "eventId": "401816217",
@@ -34996,7 +34996,7 @@
           "eraEdge": -0.68
         }
       },
-      "recordedAt": "2026-07-16T02:05:35.221288+00:00"
+      "recordedAt": "2026-07-16T05:24:29.111306+00:00"
     },
     "401816218": {
       "eventId": "401816218",
@@ -35060,7 +35060,7 @@
           "eraEdge": 0.91
         }
       },
-      "recordedAt": "2026-07-16T02:05:35.221288+00:00"
+      "recordedAt": "2026-07-16T05:24:29.111306+00:00"
     },
     "401816216": {
       "eventId": "401816216",
@@ -35124,7 +35124,7 @@
           "eraEdge": 0.71
         }
       },
-      "recordedAt": "2026-07-16T02:05:35.221288+00:00"
+      "recordedAt": "2026-07-16T05:24:29.111306+00:00"
     },
     "401816220": {
       "eventId": "401816220",
@@ -35190,7 +35190,7 @@
           "eraEdge": 0.63
         }
       },
-      "recordedAt": "2026-07-16T02:05:35.221288+00:00"
+      "recordedAt": "2026-07-16T05:24:29.111306+00:00"
     },
     "401816223": {
       "eventId": "401816223",
@@ -35254,7 +35254,7 @@
           "eraEdge": -0.69
         }
       },
-      "recordedAt": "2026-07-16T02:05:35.221288+00:00"
+      "recordedAt": "2026-07-16T05:24:29.111306+00:00"
     },
     "401857073": {
       "eventId": "401857073",
@@ -35270,9 +35270,9 @@
       "pickOdds": null,
       "features": {
         "league": "wnba",
-        "recordDiff": 0.3779,
-        "splitDiff": 0.5238,
-        "homePower": 0.8000000000000002,
+        "recordDiff": 0.3526,
+        "splitDiff": 0.4725,
+        "homePower": 0.6,
         "awayPower": 0.20000000000000004,
         "homeInjuryLoad": 0,
         "awayInjuryLoad": 3.22,
@@ -35303,7 +35303,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:06.281341+00:00"
+      "recordedAt": "2026-07-16T05:25:14.513898+00:00"
     },
     "401857074": {
       "eventId": "401857074",
@@ -35352,7 +35352,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:06.281341+00:00"
+      "recordedAt": "2026-07-16T05:25:14.513898+00:00"
     },
     "401857075": {
       "eventId": "401857075",
@@ -35401,7 +35401,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:06.281341+00:00"
+      "recordedAt": "2026-07-16T05:25:14.513898+00:00"
     },
     "401857077": {
       "eventId": "401857077",
@@ -35413,13 +35413,13 @@
       "predictedWinner": "Indiana Fever",
       "predictedSide": "home",
       "outcomeLabel": "Indiana Fever to win",
-      "confidence": 68.3,
+      "confidence": 66.2,
       "pickOdds": null,
       "features": {
         "league": "wnba",
-        "recordDiff": 0.067,
-        "splitDiff": 0.1667,
-        "homePower": 0.8000000000000002,
+        "recordDiff": 0.0417,
+        "splitDiff": 0.1154,
+        "homePower": 0.6,
         "awayPower": 0.4000000000000001,
         "homeInjuryLoad": 0,
         "awayInjuryLoad": 4.83,
@@ -35429,9 +35429,9 @@
         "awayBackToBack": false,
         "impliedHome": null,
         "impliedAway": null,
-        "trueHome": 86.7,
-        "trueAway": 13.3,
-        "confidence": 68.3,
+        "trueHome": 82.3,
+        "trueAway": 17.7,
+        "confidence": 66.2,
         "predictedSide": "home",
         "hasLineup": true,
         "dataCoverage": {
@@ -35450,7 +35450,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:07.823010+00:00"
+      "recordedAt": "2026-07-16T05:25:16.626881+00:00"
     },
     "401857078": {
       "eventId": "401857078",
@@ -35499,7 +35499,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:07.823010+00:00"
+      "recordedAt": "2026-07-16T05:25:16.626881+00:00"
     },
     "401857079": {
       "eventId": "401857079",
@@ -35511,11 +35511,11 @@
       "predictedWinner": "Golden State Valkyries",
       "predictedSide": "home",
       "outcomeLabel": "Golden State Valkyries to win",
-      "confidence": 66.2,
+      "confidence": 66.4,
       "pickOdds": null,
       "features": {
         "league": "wnba",
-        "recordDiff": 0.1629,
+        "recordDiff": 0.1745,
         "splitDiff": 0.1859,
         "homePower": 1.0,
         "awayPower": 0.8000000000000002,
@@ -35527,9 +35527,9 @@
         "awayBackToBack": false,
         "impliedHome": null,
         "impliedAway": null,
-        "trueHome": 82.4,
-        "trueAway": 17.6,
-        "confidence": 66.2,
+        "trueHome": 82.7,
+        "trueAway": 17.3,
+        "confidence": 66.4,
         "predictedSide": "home",
         "hasLineup": true,
         "dataCoverage": {
@@ -35548,7 +35548,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:07.823010+00:00"
+      "recordedAt": "2026-07-16T05:25:16.626881+00:00"
     },
     "401857080": {
       "eventId": "401857080",
@@ -35597,7 +35597,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:09.343469+00:00"
+      "recordedAt": "2026-07-16T05:25:18.685384+00:00"
     },
     "401857081": {
       "eventId": "401857081",
@@ -35646,7 +35646,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:09.343469+00:00"
+      "recordedAt": "2026-07-16T05:25:18.685384+00:00"
     },
     "401857083": {
       "eventId": "401857083",
@@ -35695,7 +35695,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:10.652486+00:00"
+      "recordedAt": "2026-07-16T05:25:20.750937+00:00"
     },
     "401857084": {
       "eventId": "401857084",
@@ -35707,11 +35707,11 @@
       "predictedWinner": "Golden State Valkyries",
       "predictedSide": "home",
       "outcomeLabel": "Golden State Valkyries to win",
-      "confidence": 65.7,
+      "confidence": 65.8,
       "pickOdds": null,
       "features": {
         "league": "wnba",
-        "recordDiff": 0.1629,
+        "recordDiff": 0.1745,
         "splitDiff": 0.1859,
         "homePower": 1.0,
         "awayPower": 0.8000000000000002,
@@ -35723,9 +35723,9 @@
         "awayBackToBack": false,
         "impliedHome": null,
         "impliedAway": null,
-        "trueHome": 81.3,
-        "trueAway": 18.7,
-        "confidence": 65.7,
+        "trueHome": 81.7,
+        "trueAway": 18.3,
+        "confidence": 65.8,
         "predictedSide": "home",
         "hasLineup": true,
         "dataCoverage": {
@@ -35744,7 +35744,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:10.652486+00:00"
+      "recordedAt": "2026-07-16T05:25:20.750937+00:00"
     },
     "401857085": {
       "eventId": "401857085",
@@ -35793,7 +35793,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:10.652486+00:00"
+      "recordedAt": "2026-07-16T05:25:20.750937+00:00"
     },
     "401857086": {
       "eventId": "401857086",
@@ -35842,7 +35842,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:13.483707+00:00"
+      "recordedAt": "2026-07-16T05:25:24.877814+00:00"
     },
     "401857087": {
       "eventId": "401857087",
@@ -35891,7 +35891,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:13.483707+00:00"
+      "recordedAt": "2026-07-16T05:25:24.877814+00:00"
     },
     "401857088": {
       "eventId": "401857088",
@@ -35940,7 +35940,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:13.483707+00:00"
+      "recordedAt": "2026-07-16T05:25:24.877814+00:00"
     },
     "401857090": {
       "eventId": "401857090",
@@ -35956,9 +35956,9 @@
       "pickOdds": null,
       "features": {
         "league": "wnba",
-        "recordDiff": 0.3587,
-        "splitDiff": 0.4667,
-        "homePower": 0.8000000000000002,
+        "recordDiff": 0.3333,
+        "splitDiff": 0.4154,
+        "homePower": 0.6,
         "awayPower": 0.4000000000000001,
         "homeInjuryLoad": 0,
         "awayInjuryLoad": 3.22,
@@ -35989,7 +35989,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:13.483707+00:00"
+      "recordedAt": "2026-07-16T05:25:24.877814+00:00"
     },
     "401857091": {
       "eventId": "401857091",
@@ -36038,7 +36038,7 @@
           "league": "wnba"
         }
       },
-      "recordedAt": "2026-07-16T02:06:13.483707+00:00"
+      "recordedAt": "2026-07-16T05:25:24.877814+00:00"
     },
     "760516": {
       "eventId": "760516",
@@ -36050,7 +36050,7 @@
       "predictedWinner": "France",
       "predictedSide": "home",
       "outcomeLabel": "France to win",
-      "confidence": 57.6,
+      "confidence": 57.5,
       "pickOdds": 100,
       "features": {
         "league": "worldcup",
@@ -36064,11 +36064,11 @@
         "awayRest": 3,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 48.0,
-        "impliedAway": 26.3,
+        "impliedHome": 47.9,
+        "impliedAway": 26.6,
         "trueHome": 64.5,
         "trueAway": 14.9,
-        "confidence": 57.6,
+        "confidence": 57.5,
         "predictedSide": "home",
         "hasLineup": true,
         "dataCoverage": {
@@ -36089,7 +36089,7 @@
           "drawBaseRate": 0.22
         }
       },
-      "recordedAt": "2026-07-16T02:06:17.560696+00:00"
+      "recordedAt": "2026-07-16T05:25:30.806294+00:00"
     },
     "1133638": {
       "eventId": "1133638",
@@ -36138,7 +36138,7 @@
           "league": "afl"
         }
       },
-      "recordedAt": "2026-07-16T02:06:30.657963+00:00"
+      "recordedAt": "2026-07-16T05:25:53.835925+00:00"
     },
     "1133643": {
       "eventId": "1133643",
@@ -36187,7 +36187,7 @@
           "league": "afl"
         }
       },
-      "recordedAt": "2026-07-16T02:06:38.951617+00:00"
+      "recordedAt": "2026-07-16T05:26:02.707137+00:00"
     },
     "1133640": {
       "eventId": "1133640",
@@ -36236,7 +36236,7 @@
           "league": "afl"
         }
       },
-      "recordedAt": "2026-07-16T02:06:38.951617+00:00"
+      "recordedAt": "2026-07-16T05:26:02.707137+00:00"
     },
     "1133636": {
       "eventId": "1133636",
@@ -36285,7 +36285,7 @@
           "league": "afl"
         }
       },
-      "recordedAt": "2026-07-16T02:06:38.951617+00:00"
+      "recordedAt": "2026-07-16T05:26:02.707137+00:00"
     },
     "1133644": {
       "eventId": "1133644",
@@ -36334,7 +36334,7 @@
           "league": "afl"
         }
       },
-      "recordedAt": "2026-07-16T02:06:38.951617+00:00"
+      "recordedAt": "2026-07-16T05:26:02.707137+00:00"
     },
     "1133641": {
       "eventId": "1133641",
@@ -36383,7 +36383,7 @@
           "league": "afl"
         }
       },
-      "recordedAt": "2026-07-16T02:06:49.566416+00:00"
+      "recordedAt": "2026-07-16T05:26:08.142567+00:00"
     },
     "1133639": {
       "eventId": "1133639",
@@ -36432,7 +36432,7 @@
           "league": "afl"
         }
       },
-      "recordedAt": "2026-07-16T02:06:49.566416+00:00"
+      "recordedAt": "2026-07-16T05:26:08.142567+00:00"
     },
     "1133637": {
       "eventId": "1133637",
@@ -36481,7 +36481,7 @@
           "league": "afl"
         }
       },
-      "recordedAt": "2026-07-16T02:06:49.566416+00:00"
+      "recordedAt": "2026-07-16T05:26:08.142567+00:00"
     },
     "1133652": {
       "eventId": "1133652",
@@ -36530,7 +36530,201 @@
           "league": "afl"
         }
       },
-      "recordedAt": "2026-07-16T02:06:53.282883+00:00"
+      "recordedAt": "2026-07-16T05:26:11.811207+00:00"
+    },
+    "401816233": {
+      "eventId": "401816233",
+      "league": "mlb",
+      "scheduleDate": "2026-07-23",
+      "matchup": "San Diego Padres @ Atlanta Braves",
+      "homeTeam": "Atlanta Braves",
+      "awayTeam": "San Diego Padres",
+      "predictedWinner": "Atlanta Braves",
+      "predictedSide": "home",
+      "outcomeLabel": "Atlanta Braves to win",
+      "confidence": 74.5,
+      "pickOdds": null,
+      "features": {
+        "league": "mlb",
+        "recordDiff": 0.0789,
+        "splitDiff": 0.1333,
+        "homePower": 0.6317519694035088,
+        "awayPower": 0.45781800966666664,
+        "homeInjuryLoad": 2.3,
+        "awayInjuryLoad": 1.15,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
+        "impliedHome": null,
+        "impliedAway": null,
+        "trueHome": 91.2,
+        "trueAway": 8.8,
+        "confidence": 74.5,
+        "predictedSide": "home",
+        "hasLineup": true,
+        "dataCoverage": {
+          "lineup": true,
+          "injuries": true,
+          "espnPredictor": true,
+          "advancedStats": true,
+          "restData": true,
+          "scheduleFlags": true,
+          "mlbPitching": true,
+          "leagueMetrics": true,
+          "impliedOdds": false
+        },
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 2.25,
+          "homePitcherRecentEra": 2.25,
+          "homeTeamPitchingEra": 3.6,
+          "homeBullpenEra": 3.63,
+          "awayPitcherApiEra": 6.47,
+          "awayPitcherRecentEra": 11.36,
+          "awayTeamPitchingEra": 4.23,
+          "awayBullpenEra": 4.28
+        },
+        "leagueMetrics": {
+          "league": "mlb",
+          "runDiffEdge": 135.0,
+          "opsEdge": 0.049,
+          "eraEdge": 0.63
+        }
+      },
+      "recordedAt": "2026-07-16T05:24:31.555203+00:00"
+    },
+    "401816232": {
+      "eventId": "401816232",
+      "league": "mlb",
+      "scheduleDate": "2026-07-23",
+      "matchup": "Minnesota Twins @ Cleveland Guardians",
+      "homeTeam": "Cleveland Guardians",
+      "awayTeam": "Minnesota Twins",
+      "predictedWinner": "Cleveland Guardians",
+      "predictedSide": "home",
+      "outcomeLabel": "Cleveland Guardians to win",
+      "confidence": 66.0,
+      "pickOdds": null,
+      "features": {
+        "league": "mlb",
+        "recordDiff": 0.0309,
+        "splitDiff": 0.0435,
+        "homePower": 0.5586612574295533,
+        "awayPower": 0.5027318110652921,
+        "homeInjuryLoad": 1.15,
+        "awayInjuryLoad": 4.6,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
+        "impliedHome": null,
+        "impliedAway": null,
+        "trueHome": 76.9,
+        "trueAway": 23.1,
+        "confidence": 66.0,
+        "predictedSide": "home",
+        "hasLineup": true,
+        "dataCoverage": {
+          "lineup": true,
+          "injuries": true,
+          "espnPredictor": true,
+          "advancedStats": true,
+          "restData": true,
+          "scheduleFlags": true,
+          "mlbPitching": true,
+          "leagueMetrics": true,
+          "impliedOdds": false
+        },
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 3.56,
+          "homePitcherRecentEra": 2.67,
+          "homeTeamPitchingEra": 3.71,
+          "homeBullpenEra": 3.73,
+          "awayTeamPitchingEra": 4.62,
+          "awayBullpenEra": 4.66
+        },
+        "leagueMetrics": {
+          "league": "mlb",
+          "runDiffEdge": 12.0,
+          "opsEdge": -0.059,
+          "eraEdge": 0.91
+        }
+      },
+      "recordedAt": "2026-07-16T05:24:31.555203+00:00"
+    },
+    "401816231": {
+      "eventId": "401816231",
+      "league": "mlb",
+      "scheduleDate": "2026-07-23",
+      "matchup": "Kansas City Royals @ Detroit Tigers",
+      "homeTeam": "Detroit Tigers",
+      "awayTeam": "Kansas City Royals",
+      "predictedWinner": "Detroit Tigers",
+      "predictedSide": "home",
+      "outcomeLabel": "Detroit Tigers to win",
+      "confidence": 74.0,
+      "pickOdds": null,
+      "features": {
+        "league": "mlb",
+        "recordDiff": 0.0666,
+        "splitDiff": 0.2,
+        "homePower": 0.5363011066666666,
+        "awayPower": 0.2686941498006873,
+        "homeInjuryLoad": 3.45,
+        "awayInjuryLoad": 2.3,
+        "homeRest": 0,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
+        "impliedHome": null,
+        "impliedAway": null,
+        "trueHome": 90.3,
+        "trueAway": 9.7,
+        "confidence": 74.0,
+        "predictedSide": "home",
+        "hasLineup": true,
+        "dataCoverage": {
+          "lineup": true,
+          "injuries": true,
+          "espnPredictor": true,
+          "advancedStats": true,
+          "restData": true,
+          "scheduleFlags": true,
+          "mlbPitching": true,
+          "leagueMetrics": true,
+          "impliedOdds": false
+        },
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 1.82,
+          "homePitcherRecentEra": 1.78,
+          "homeTeamPitchingEra": 3.65,
+          "homeBullpenEra": 3.68,
+          "awayTeamPitchingEra": 4.95,
+          "awayBullpenEra": 4.99
+        },
+        "leagueMetrics": {
+          "league": "mlb",
+          "runDiffEdge": 112.0,
+          "opsEdge": -0.0,
+          "eraEdge": 1.3
+        }
+      },
+      "recordedAt": "2026-07-16T05:24:31.555203+00:00"
     }
   }
 }
