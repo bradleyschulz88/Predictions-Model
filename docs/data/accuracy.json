@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-16T11:32:51.565311+00:00",
+  "updatedAt": "2026-07-16T13:03:38.530351+00:00",
   "summary": {
     "last7Days": {
       "correct": 306,
-      "total": 507,
-      "pct": 60.4,
+      "total": 508,
+      "pct": 60.2,
       "units": 8.31,
       "roiPct": 1.6,
       "pending": 50
     },
     "allTime": {
       "correct": 306,
-      "total": 507,
-      "pct": 60.4,
+      "total": 508,
+      "pct": 60.2,
       "units": 8.31,
       "roiPct": 1.6,
-      "pending": 104
+      "pending": 103
     },
     "byLeague": {
+      "afl": {
+        "correct": 22,
+        "total": 29,
+        "pct": 75.9,
+        "units": 5.0,
+        "roiPct": 17.2,
+        "pending": 0
+      },
       "wnba": {
         "correct": 48,
         "total": 70,
@@ -41,24 +49,35 @@
         "units": -8.333,
         "roiPct": -2.5,
         "pending": 0
-      },
-      "afl": {
-        "correct": 22,
-        "total": 28,
-        "pct": 78.6,
-        "units": 5.0,
-        "roiPct": 17.9,
-        "pending": 0
       }
     },
     "streak": {
       "current": 1,
-      "type": "loss",
+      "type": "win",
       "bestWin": 11,
       "bestLoss": 6
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133638",
+      "league": "afl",
+      "scheduleDate": "2026-07-16",
+      "matchup": "St Kilda @ Geelong Cats",
+      "predicted": "St Kilda",
+      "predictedSide": "away",
+      "outcomeLabel": "St Kilda to win",
+      "confidence": 63.0,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Geelong Cats",
+      "correct": false,
+      "units": null,
+      "homeScore": "102",
+      "awayScore": "75",
+      "gradedAt": "2026-07-16T13:03:26.405640+00:00",
+      "date": "2026-07-16"
+    },
     {
       "eventId": "401857070",
       "league": "wnba",
@@ -1938,25 +1957,6 @@
       "homeScore": "6",
       "awayScore": "2",
       "gradedAt": "2026-07-09T04:30:41.539971+00:00",
-      "date": "2026-07-08"
-    },
-    {
-      "eventId": "401816074",
-      "league": "mlb",
-      "scheduleDate": "2026-07-08",
-      "matchup": "Philadelphia Phillies @ Cincinnati Reds",
-      "predicted": "Philadelphia Phillies",
-      "predictedSide": "away",
-      "outcomeLabel": "Philadelphia Phillies to win",
-      "confidence": 62.0,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Cincinnati Reds",
-      "correct": false,
-      "units": null,
-      "homeScore": "11",
-      "awayScore": "5",
-      "gradedAt": "2026-07-09T04:30:41.539962+00:00",
       "date": "2026-07-08"
     }
   ],
@@ -14283,15 +14283,15 @@
       "predicted": "St Kilda",
       "predictedSide": "away",
       "outcomeLabel": "St Kilda to win",
-      "confidence": 67.3,
+      "confidence": 63.0,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Geelong Cats",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "102",
+      "awayScore": "75",
+      "gradedAt": "2026-07-16T13:03:26.405640+00:00",
       "date": "2026-07-16"
     },
     "1133643": {
