@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-16T10:00:12.320375+00:00",
+  "updatedAt": "2026-07-16T11:32:51.565311+00:00",
   "summary": {
     "last7Days": {
       "correct": 306,
@@ -15,7 +15,7 @@
       "pct": 60.4,
       "units": 8.31,
       "roiPct": 1.6,
-      "pending": 103
+      "pending": 104
     },
     "byLeague": {
       "wnba": {
@@ -1962,6 +1962,25 @@
   ],
   "pendingPicks": [
     {
+      "eventId": "401816234",
+      "league": "mlb",
+      "scheduleDate": "2026-07-23",
+      "matchup": "Tampa Bay Rays @ Toronto Blue Jays",
+      "predicted": "Tampa Bay Rays",
+      "predictedSide": "away",
+      "outcomeLabel": "Tampa Bay Rays to win",
+      "confidence": 57.1,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-23"
+    },
+    {
       "eventId": "401816233",
       "league": "mlb",
       "scheduleDate": "2026-07-23",
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Atlanta Dream to win",
       "confidence": 69.6,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-19"
-    },
-    {
-      "eventId": "401857080",
-      "league": "wnba",
-      "scheduleDate": "2026-07-19",
-      "matchup": "Los Angeles Sparks @ Dallas Wings",
-      "predicted": "Dallas Wings",
-      "predictedSide": "home",
-      "outcomeLabel": "Dallas Wings to win",
-      "confidence": 68.6,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -14493,6 +14493,25 @@
       "predictedSide": "home",
       "outcomeLabel": "Detroit Tigers to win",
       "confidence": 74.0,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-23"
+    },
+    "401816234": {
+      "eventId": "401816234",
+      "league": "mlb",
+      "scheduleDate": "2026-07-23",
+      "matchup": "Tampa Bay Rays @ Toronto Blue Jays",
+      "predicted": "Tampa Bay Rays",
+      "predictedSide": "away",
+      "outcomeLabel": "Tampa Bay Rays to win",
+      "confidence": 57.1,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
