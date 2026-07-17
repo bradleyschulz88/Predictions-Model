@@ -3701,7 +3701,8 @@ function renderTeamProbabilityTable(prediction, game) {
     .map((item) => `<li><strong>${item.source}</strong> (${item.weightPct}% weight): ${item.homePct}% home — ${item.detail}</li>`)
     .join("");
 
-  const body = rows
+  // Desktop table
+  const tableBody = rows
     .map((row) => {
       const stats = teams[row.key] || {};
       return `
@@ -3713,18 +3714,43 @@ function renderTeamProbabilityTable(prediction, game) {
     })
     .join("");
 
+  // Mobile cards
+  const cardsHtml = rows
+    .map((row) => {
+      const stats = teams[row.key] || {};
+      const modelPct = formatPct(stats.truePct ?? stats.blendedPct);
+      return `
+        <article class="prob-card-mobile ${row.favored ? "prob-pick-row" : ""}">
+          <div class="prob-card-mobile-header">
+            <strong>${row.label}</strong>
+            ${row.favored ? '<span class="rank-badge small">Pick</span>' : ""}
+          </div>
+          <div class="prob-card-mobile-body">
+            <span class="prob-card-mobile-label">Model %</span>
+            <span class="prob-card-mobile-value true-pct">${modelPct}</span>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
   return `
     <section class="probability-compare">
       <h4>Win probability by team</h4>
-      <table class="lines-table prob-pct-table prob-sheet-table">
-        <thead>
-          <tr>
-            <th>Team</th>
-            <th>Model %</th>
-          </tr>
-        </thead>
-        <tbody>${body}</tbody>
-      </table>
+      <!-- Desktop table -->
+      <div class="prob-table-wrap">
+        <table class="lines-table prob-pct-table prob-sheet-table">
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Model %</th>
+            </tr>
+          </thead>
+          <tbody>${tableBody}</tbody>
+        </table>
+      </div>
+      <!-- Mobile cards -->
+      <div class="prob-cards-wrap">${cardsHtml}</div>
       ${componentRows ? `<ul class="prob-components">${componentRows}</ul>` : ""}
       <p class="lineup-note">Model % uses records, form, injuries, lineups, and advanced stats.</p>
     </section>
@@ -3738,13 +3764,36 @@ function renderProbabilityCompare(prediction, game) {
   const trueP = probs.true || {};
   const pick = probs.pick || probs.blended || {};
 
+  // Calculate edge (model - market)
+  const implied = probs.implied || {};
+  const modelHome = Number(trueP.homePct ?? pick.homePct ?? prediction.homeWinPct ?? 0);
+  const modelAway = Number(trueP.awayPct ?? pick.awayPct ?? prediction.awayWinPct ?? 0);
+  const marketHome = Number(implied.homePct ?? 0);
+  const marketAway = Number(implied.awayPct ?? 0);
+  const edgeHome = marketHome > 0 ? Math.round(modelHome - marketHome) : null;
+  const edgeAway = marketAway > 0 ? Math.round(modelAway - marketAway) : null;
+
   const componentRows = (trueP.components || [])
     .map((item) => `<li><strong>${item.source}</strong> (${item.weightPct}% weight): ${item.homePct}% home — ${item.detail}</li>`)
     .join("");
 
+  function edgeBadge(edge, teamName) {
+    if (edge === null || edge === 0) return "";
+    const isPositive = edge > 0;
+    return `<span class="edge-badge ${isPositive ? "edge-positive" : "edge-negative"}" title="Model vs market: ${isPositive ? "+" : ""}${edge}%">
+      ${isPositive ? "↑" : "↓"} ${Math.abs(edge)}% edge — ${teamName}
+    </span>`;
+  }
+
   return `
     <section class="probability-compare">
       <h4>Model win probability</h4>
+      ${edgeHome !== null || edgeAway !== null ? `
+        <div class="edge-badges" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+          ${edgeBadge(edgeHome, game.homeTeam)}
+          ${edgeBadge(edgeAway, game.awayTeam)}
+        </div>
+      ` : ""}
       <div class="prob-grid">
         <article class="prob-card true-card">
           <p class="prob-card-label">Model estimate</p>
@@ -3752,6 +3801,13 @@ function renderProbabilityCompare(prediction, game) {
           <p class="lineup-note">Records, form, injuries, advanced stats, and ESPN predictor.</p>
           ${componentRows ? `<ul class="prob-components">${componentRows}</ul>` : ""}
         </article>
+        ${implied.homePct != null ? `
+        <article class="prob-card implied-card">
+          <p class="prob-card-label">Market implied</p>
+          <p class="prob-card-values">${game.homeTeam}: <strong>${implied.homePct}%</strong> · ${game.awayTeam}: <strong>${implied.awayPct}%</strong>${implied.drawPct != null ? ` · Draw: <strong>${implied.drawPct}%</strong>` : ""}</p>
+          <p class="lineup-note">Consensus moneyline odds (no vig).</p>
+        </article>
+        ` : ""}
       </div>
     </section>
   `;
@@ -3895,6 +3951,14 @@ function renderGames(games) {
               <div class="scoreboard-pick-block">
                 <span class="scoreboard-pick-label">Pick</span>
                 <span class="scoreboard-pick-value${hasPick ? "" : " scoreboard-no-pick"}" title="${escapeAttr(hasPick ? prediction?.outcomeLabel || "" : "Below 57% confidence threshold")}">${escapeHtml(pickShort)}${hasPick ? ` <span class="tabular-nums">${formatConfidenceDisplay(prediction?.confidence || 0)}%</span>` : ""}</span>
+                ${hasPick ? `<span class="scoreboard-confidence-ring" title="Model confidence ${Math.round(prediction.confidence || 0)}%">
+                  <span class="confidence-ring-sm" style="--pct: ${Math.round(prediction.confidence || 0)}" role="img" aria-label="Confidence ${Math.round(prediction.confidence || 0)}%">
+                    <span class="confidence-ring-inner">
+                      <span class="confidence-ring-value">${Math.round(prediction.confidence || 0)}</span>
+                      <span class="confidence-ring-unit">%</span>
+                    </span>
+                  </span>
+                </span>` : ""}
                 <span class="scoreboard-pick-conf">
                   ${confLabel ? `<span class="confidence-label ${labelClass}">${confLabel}</span>` : ""}
                   ${!hasPick && prediction?.confidence != null ? `<span class="confidence-label label-coin">${formatConfidenceDisplay(prediction.confidence)}% lean</span>` : ""}
