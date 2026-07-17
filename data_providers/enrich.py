@@ -22,7 +22,7 @@ from data_providers.espn_advanced import (
     resolve_team_id,
 )
 from data_providers.mlb_official import fetch_mlb_standings, lookup_mlb_official
-from mlb_predictions import parse_record, win_pct_from_record
+from shared_utils import parse_record, win_pct_from_record
 
 
 def _form_pct_from_enrichment(enrichment: dict[str, Any], side: str) -> float | None:

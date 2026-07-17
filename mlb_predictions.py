@@ -20,6 +20,7 @@ from data_providers.league_metrics import (
 )
 from data_providers.mlb_pitcher import mlb_pitching_logit_adjustment
 from data_providers.schedule_advanced import schedule_flags_logit_adjustment
+from shared_utils import parse_record, win_pct_from_record, format_record, format_win_pct
 
 HOME_FIELD_LOGIT = {
     "mlb": 0.28,
@@ -45,36 +46,6 @@ MARKET_BLEND_WEIGHT = {
 DEFAULT_MARKET_BLEND_WEIGHT = 0.10
 
 _CALIBRATION_PARAMS: dict[str, Any] | None = None
-
-
-def parse_record(summary: str | None) -> tuple[int, ...] | None:
-    if not summary:
-        return None
-    match = re.match(r"(\d+)-(\d+)(?:-(\d+))?", summary.strip())
-    if not match:
-        return None
-    parts = [int(match.group(1)), int(match.group(2))]
-    if match.group(3) is not None:
-        parts.append(int(match.group(3)))
-    return tuple(parts)
-
-
-def win_pct_from_record(summary: str | None, default: float = 0.5) -> float:
-    parsed = parse_record(summary)
-    if not parsed:
-        return default
-    if len(parsed) == 3:
-        wins, draws, losses = parsed
-        total = wins + draws + losses
-        return (wins + 0.5 * draws) / total if total else default
-    wins, losses = parsed
-    total = wins + losses
-    return wins / total if total else default
-
-
-def format_win_pct(summary: str | None) -> str:
-    pct = win_pct_from_record(summary)
-    return f"{pct * 100:.1f}%"
 
 
 def american_odds_to_implied(odds: int | float) -> float:
