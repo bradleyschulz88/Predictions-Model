@@ -1,0 +1,159 @@
+{
+  "model_type": "XGBoost",
+  "cv_metrics": {
+    "log_loss": {
+      "mean": 0.7943355372624966,
+      "std": 0.12983343926204732
+    },
+    "brier": {
+      "mean": 0.2743500036728136,
+      "std": 0.040886057623241906
+    },
+    "auc": {
+      "mean": 0.5922192699093992,
+      "std": 0.06925831461836632
+    },
+    "accuracy": {
+      "mean": 0.5929411764705882,
+      "std": 0.058870569426808475
+    }
+  },
+  "feature_columns": [
+    "confidence",
+    "recordDiff",
+    "splitDiff",
+    "homePower",
+    "awayPower",
+    "homeInjuryLoad",
+    "awayInjuryLoad",
+    "homeRest",
+    "awayRest",
+    "impliedHome",
+    "impliedAway",
+    "trueHome",
+    "trueAway",
+    "mlbPitching_homePitcherApiEra",
+    "mlbPitching_homePitcherRecentEra",
+    "mlbPitching_homeTeamPitchingEra",
+    "mlbPitching_homeBullpenEra",
+    "mlbPitching_awayPitcherApiEra",
+    "mlbPitching_awayPitcherRecentEra",
+    "mlbPitching_awayTeamPitchingEra",
+    "mlbPitching_awayBullpenEra",
+    "leagueMetrics_runDiffEdge",
+    "leagueMetrics_opsEdge",
+    "leagueMetrics_eraEdge",
+    "leagueMetrics_goalDiffEdge",
+    "leagueMetrics_drawBaseRate"
+  ],
+  "n_features": 26,
+  "n_training_samples": 510,
+  "home_win_rate": 0.6,
+  "feature_importance": [
+    {
+      "feature": "mlbPitching_homeBullpenEra",
+      "importance": 0.059448279440402985
+    },
+    {
+      "feature": "mlbPitching_homeTeamPitchingEra",
+      "importance": 0.047433800995349884
+    },
+    {
+      "feature": "recordDiff",
+      "importance": 0.04689354449510574
+    },
+    {
+      "feature": "mlbPitching_awayBullpenEra",
+      "importance": 0.04493914917111397
+    },
+    {
+      "feature": "confidence",
+      "importance": 0.04470491409301758
+    },
+    {
+      "feature": "impliedHome",
+      "importance": 0.04461200535297394
+    },
+    {
+      "feature": "leagueMetrics_eraEdge",
+      "importance": 0.04457417130470276
+    },
+    {
+      "feature": "leagueMetrics_goalDiffEdge",
+      "importance": 0.041722383350133896
+    },
+    {
+      "feature": "leagueMetrics_opsEdge",
+      "importance": 0.040843479335308075
+    },
+    {
+      "feature": "impliedAway",
+      "importance": 0.04001395404338837
+    },
+    {
+      "feature": "mlbPitching_homePitcherApiEra",
+      "importance": 0.0397777333855629
+    },
+    {
+      "feature": "splitDiff",
+      "importance": 0.03895597904920578
+    },
+    {
+      "feature": "mlbPitching_awayPitcherApiEra",
+      "importance": 0.03870732709765434
+    },
+    {
+      "feature": "trueHome",
+      "importance": 0.03859930485486984
+    },
+    {
+      "feature": "awayPower",
+      "importance": 0.03788277134299278
+    },
+    {
+      "feature": "homeRest",
+      "importance": 0.037763241678476334
+    },
+    {
+      "feature": "awayInjuryLoad",
+      "importance": 0.03669136390089989
+    },
+    {
+      "feature": "homeInjuryLoad",
+      "importance": 0.03644229844212532
+    },
+    {
+      "feature": "homePower",
+      "importance": 0.03637479618191719
+    },
+    {
+      "feature": "mlbPitching_awayPitcherRecentEra",
+      "importance": 0.03629770129919052
+    },
+    {
+      "feature": "mlbPitching_homePitcherRecentEra",
+      "importance": 0.03573485463857651
+    },
+    {
+      "feature": "leagueMetrics_runDiffEdge",
+      "importance": 0.034646570682525635
+    },
+    {
+      "feature": "mlbPitching_awayTeamPitchingEra",
+      "importance": 0.03429888188838959
+    },
+    {
+      "feature": "awayRest",
+      "importance": 0.03175253048539162
+    },
+    {
+      "feature": "trueAway",
+      "importance": 0.030888959765434265
+    },
+    {
+      "feature": "leagueMetrics_drawBaseRate",
+      "importance": 0.0
+    }
+  ],
+  "trained_at": "2026-07-17T02:34:57.042297"
+}
