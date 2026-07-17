@@ -4493,6 +4493,62 @@ button:active:not(:disabled) {
   }
 }
 
+.scoreboard-total,
+.scoreboard-spread {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 12px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  border: 1px solid var(--panel-border-soft);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.scoreboard-total-label,
+.scoreboard-spread-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.scoreboard-total-value,
+.scoreboard-spread-value {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-bright);
+  white-space: nowrap;
+}
+
+.scoreboard-total:hover,
+.scoreboard-spread:hover {
+  border-color: var(--accent);
+  background: var(--panel-hover);
+}
+
+@media (max-width: 767px) {
+  .scoreboard-confidence-ring {
+    display: none; /* Hide on mobile to save space */
+  }
+  
+  .scoreboard-total,
+  .scoreboard-spread {
+    margin-left: 8px;
+    padding: 3px 6px;
+    font-size: 0.7rem;
+  }
+  
+  .scoreboard-total-value,
+  .scoreboard-spread-value {
+    font-size: 0.75rem;
+  }
+}
+
 .scoreboard-pick-value.scoreboard-no-pick {
   color: var(--muted);
   font-weight: 600;
