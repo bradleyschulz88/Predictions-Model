@@ -188,7 +188,6 @@ def enrich_mlb_pitching_context(game: dict[str, Any], *, verify_ssl: bool = True
     context: dict[str, Any] = {"sources": []}
     for side in ("home", "away"):
         pitcher = game.get(f"{side}Pitcher") or {}
-        name = pitcher.get("name")
         team = game.get(f"{side}Team")
         player_id = _resolve_pitcher_id(pitcher, team, verify_ssl=verify_ssl)
         if player_id:

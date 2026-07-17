@@ -255,7 +255,7 @@ def _build_lineup_payload(
         return {
             "status": "confirmed",
             "source": source,
-            "note": f"Starting lineup from ESPN.",
+            "note": "Starting lineup from ESPN.",
             "batters": lineup,
         }
 
@@ -433,7 +433,6 @@ def parse_event_enrichment(
 ) -> dict[str, Any]:
     league_config = get_league(league) if isinstance(league, str) else league
     espn_predictor_home, espn_predictor_away = _parse_espn_predictor(summary)
-    predictor = summary.get("predictor") or {}
 
     home_last_five = _last_five_for_team(summary.get("lastFiveGames"), home_team)
     away_last_five = _last_five_for_team(summary.get("lastFiveGames"), away_team)

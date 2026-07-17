@@ -11,9 +11,7 @@ from mlb_data import fetch_dashboard_data
 from mlb_predictions import (
     _injury_logit_adjustment,
     _lineup_logit_adjustment,
-    _streak_logit_adjustment,
     apply_predictions,
-    extract_prediction_features,
     predict_game,
 )
 

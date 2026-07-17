@@ -9,7 +9,6 @@ from typing import Any
 from sports_config import get_league
 
 from calibration_params import (
-    MIN_PICK_CONFIDENCE,
     calibrate_probability as _calibrate_probability,
     is_publishable_pick,
     load_calibration_params,

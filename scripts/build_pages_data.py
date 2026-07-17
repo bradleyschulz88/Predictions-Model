@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import date, datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -17,7 +17,7 @@ from mlb_data import fetch_dashboard_data, strip_betting_lines_for_display  # no
 from calibration_params import is_publishable_pick  # noqa: E402
 from scripts.backtest_model import write_calibration_report  # noqa: E402
 from schedule_dates import default_game_date, get_schedule_timezone, schedule_dates_for_league  # noqa: E402
-from sports_config import LEAGUES, get_league, list_league_ids  # noqa: E402
+from sports_config import get_league, list_league_ids  # noqa: E402
 
 OUTPUT_DIR = ROOT / "docs" / "data"
 
