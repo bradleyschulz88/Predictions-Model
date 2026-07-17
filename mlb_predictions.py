@@ -731,10 +731,10 @@ def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment:
     pace = _scoring_pace_from_form(enrichment)
     if pace is not None:
         if pace >= total_line + 0.8:
-            over_lean += 0.12
+            over_lean += 0.20
             detail_parts.append(f"Recent scoring pace ({pace:.1f}) runs hot vs the {total_line} line.")
         elif pace <= total_line - 0.8:
-            over_lean -= 0.12
+            over_lean -= 0.20
             detail_parts.append(f"Recent scoring pace ({pace:.1f}) runs cool vs the {total_line} line.")
 
     home_pitcher = game.get("homePitcher") or {}
@@ -742,10 +742,10 @@ def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment:
     if home_pitcher.get("era") is not None and away_pitcher.get("era") is not None:
         avg_era = (home_pitcher["era"] + away_pitcher["era"]) / 2
         if avg_era <= 3.6:
-            over_lean -= 0.08
+            over_lean -= 0.12
             detail_parts.append(f"Strong pitching matchup (avg ERA {avg_era:.2f}) favors the under.")
         elif avg_era >= 4.6:
-            over_lean += 0.08
+            over_lean += 0.12
             detail_parts.append(f"Weaker pitching matchup (avg ERA {avg_era:.2f}) favors the over.")
 
     weather_impact = enrichment.get("weatherImpact") or {}
@@ -760,20 +760,21 @@ def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment:
     if home_adv.get("runsPerGame") is not None and away_adv.get("runsPerGame") is not None:
         combined = home_adv["runsPerGame"] + away_adv["runsPerGame"]
         if combined >= total_line + 1.5:
-            over_lean += 0.06
+            over_lean += 0.10
             detail_parts.append(f"Season scoring pace ({combined:.1f} combined R/G) leans over.")
         elif combined <= total_line - 1.5:
-            over_lean -= 0.06
+            over_lean -= 0.10
             detail_parts.append(f"Season scoring pace ({combined:.1f} combined R/G) leans under.")
 
     if league in {"nba", "wnba", "afl"}:
         home_overall = win_pct_from_record(game.get("homeRecord"))
         away_overall = win_pct_from_record(game.get("awayRecord"))
         if home_overall + away_overall > 1.05:
-            over_lean += 0.05
+            over_lean += 0.08
             detail_parts.append("Both teams have strong records — higher-scoring game possible.")
 
-    over_lean = clamp(over_lean, 0.35, 0.65)
+    # Wider clamp range for more decisive predictions (30-70% instead of 35-65%)
+    over_lean = clamp(over_lean, 0.30, 0.70)
     under_lean = 1.0 - over_lean
     pick = "Over" if over_lean >= under_lean else "Under"
     confidence = max(over_lean, under_lean) * 100
@@ -1538,33 +1539,40 @@ def predict_spread(game: dict[str, Any], lines: list[dict[str, Any]], enrichment
     # Compare model spread to market spread
     edge = model_spread - spread_line
     
-    # Determine pick
-    if abs(edge) < 0.5:
-        # Too close to call
+    # Determine pick with clearer thresholds
+    if abs(edge) < 0.3:
+        # Too close to call - lean slightly but low confidence
         pick_side = "push"
         confidence = 50
     elif edge > 0:
         # Model favors home more than market
         pick_side = "home"
-        confidence = min(50 + abs(edge) * 10, 85)
+        # Higher confidence for larger edges
+        confidence = min(55 + abs(edge) * 20, 90)
     else:
         # Model favors away more than market
         pick_side = "away"
-        confidence = min(50 + abs(edge) * 10, 85)
+        confidence = min(55 + abs(edge) * 20, 90)
+    
+    # Clear directional language
+    if pick_side == "push":
+        pick_text = f"Push (no lean)"
+    elif pick_side == "home":
+        pick_text = f"Home {spread_line:+.1f}"
+    else:
+        pick_text = f"Away {spread_line:+.1f}"
     
     return {
         "line": spread_line,
         "modelLine": round(model_spread, 1),
-        "pick": f"{pick_side.capitalize()} {spread_line:+.1f}",
+        "pick": pick_text,
         "pickSide": pick_side,
-        "homePct": round((1 + (spread_line / 100)) * 50, 1),  # Simplified
+        "homePct": round((1 + (spread_line / 100)) * 50, 1),
         "awayPct": round((1 - (spread_line / 100)) * 50, 1),
         "edgePct": round(edge, 1),
         "confidence": confidence,
-        "detail": f"Model spread: {model_spread:+.1f}, Market: {spread_line:+.1f}, Edge: {edge:+.1f}",
+        "detail": f"Model: {model_spread:+.1f} | Market: {spread_line:+.1f} | Edge: {edge:+.1f} | {pick_text}",
     }
-
-
 def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for game in games:
         # First enrich the game
