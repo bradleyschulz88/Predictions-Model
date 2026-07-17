@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-17T12:00:01.945185+00:00",
+  "updatedAt": "2026-07-17T13:07:00.073501+00:00",
   "summary": {
     "last7Days": {
       "correct": 306,
-      "total": 510,
-      "pct": 60.0,
+      "total": 511,
+      "pct": 59.9,
       "units": 7.31,
       "roiPct": 1.4,
       "pending": 50
     },
     "allTime": {
       "correct": 306,
-      "total": 510,
-      "pct": 60.0,
+      "total": 511,
+      "pct": 59.9,
       "units": 7.31,
       "roiPct": 1.4,
-      "pending": 126
+      "pending": 125
     },
     "byLeague": {
+      "afl": {
+        "correct": 22,
+        "total": 30,
+        "pct": 73.3,
+        "units": 5.0,
+        "roiPct": 16.7,
+        "pending": 0
+      },
       "wnba": {
         "correct": 48,
         "total": 71,
@@ -34,14 +42,6 @@
         "roiPct": -2.8,
         "pending": 0
       },
-      "afl": {
-        "correct": 22,
-        "total": 29,
-        "pct": 75.9,
-        "units": 5.0,
-        "roiPct": 17.2,
-        "pending": 0
-      },
       "worldcup": {
         "correct": 48,
         "total": 73,
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 1,
-      "type": "win",
+      "current": 2,
+      "type": "loss",
       "bestWin": 11,
       "bestLoss": 6
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133642",
+      "league": "afl",
+      "scheduleDate": "2026-07-17",
+      "matchup": "Adelaide Crows @ Sydney Swans",
+      "predicted": "Sydney Swans",
+      "predictedSide": "home",
+      "outcomeLabel": "Sydney Swans to win",
+      "confidence": 66.7,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Adelaide Crows",
+      "correct": false,
+      "units": null,
+      "homeScore": "71",
+      "awayScore": "87",
+      "gradedAt": "2026-07-17T13:06:42.424424+00:00",
+      "date": "2026-07-17"
+    },
     {
       "eventId": "401857071",
       "league": "wnba",
@@ -1938,25 +1957,6 @@
       "homeScore": "5",
       "awayScore": "1",
       "gradedAt": "2026-07-09T04:30:41.540006+00:00",
-      "date": "2026-07-08"
-    },
-    {
-      "eventId": "401816078",
-      "league": "mlb",
-      "scheduleDate": "2026-07-08",
-      "matchup": "Cleveland Guardians @ Minnesota Twins",
-      "predicted": "Minnesota Twins",
-      "predictedSide": "home",
-      "outcomeLabel": "Minnesota Twins to win",
-      "confidence": 60.8,
-      "pickOdds": -130,
-      "status": "graded",
-      "actual": "Minnesota Twins",
-      "correct": true,
-      "units": 0.769,
-      "homeScore": "6",
-      "awayScore": "5",
-      "gradedAt": "2026-07-09T04:30:41.539993+00:00",
       "date": "2026-07-08"
     }
   ],
@@ -12670,13 +12670,13 @@
       "outcomeLabel": "Sydney Swans to win",
       "confidence": 66.7,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Adelaide Crows",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "71",
+      "awayScore": "87",
+      "gradedAt": "2026-07-17T13:06:42.424424+00:00",
       "date": "2026-07-17"
     },
     "760514": {
