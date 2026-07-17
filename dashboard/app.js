@@ -11,6 +11,7 @@ const oddsFormatSelect = document.getElementById("odds-format");
 const teamSearch = document.getElementById("team-search");
 const teamSearchMobile = document.getElementById("team-search-mobile");
 const refreshBtn = document.getElementById("refresh-btn");
+const themeToggleBtn = document.getElementById("theme-toggle");
 const autoRefresh = document.getElementById("auto-refresh");
 const autoRefreshMobile = document.getElementById("auto-refresh-mobile");
 const gamesEl = document.getElementById("games");
@@ -3603,6 +3604,7 @@ function renderTopPicks(games) {
 
   const rank = gameDisplayRank(top);
   const prediction = top.prediction;
+  const confidence = Math.round(prediction.confidence || 0);
   const labelClass = prediction.confidenceLabel === "Strong pick" ? "label-strong" : prediction.confidenceLabel === "Lean" ? "label-lean" : "";
   const timeLabel = top.isLive
     ? `<span class="featured-pick-time featured-pick-live" data-featured-time="${top.eventId}">LIVE</span>`
@@ -3610,16 +3612,24 @@ function renderTopPicks(games) {
 
   topPicksEl.classList.remove("hidden");
   topPicksEl.innerHTML = `
-    <article class="featured-pick-card">
-      <div class="featured-pick-rank ${rankTierClass(rank)}" aria-label="Rank ${rank}">#${rank}</div>
-      <div class="featured-pick-matchup">
-        <p class="featured-pick-teams">${escapeHtml(top.matchup || `${top.awayTeam} @ ${top.homeTeam}`)}</p>
-        <p class="featured-pick-pick">Pick: <strong>${escapeHtml(prediction.outcomeLabel)}</strong> · ${formatConfidenceDisplay(prediction.confidence)}%</p>
+    <article class="top-pick-card ${rankTierClass(rank)}">
+      <div class="top-pick-rank" aria-label="Rank ${rank}">#${rank}</div>
+      <div class="top-pick-info">
+        <p class="top-pick-label">${escapeHtml(top.matchup || `${top.awayTeam} @ ${top.homeTeam}`)}</p>
+        <p class="top-pick-pick">Pick: <strong>${escapeHtml(prediction.outcomeLabel)}</strong></p>
         ${renderScoreboardProbBar(prediction)}
       </div>
-      <div class="featured-pick-side">
-        ${timeLabel}
-        <div class="featured-pick-confidence ${labelClass}">${prediction.confidenceLabel || ""}</div>
+      <div class="top-pick-confidence-ring">
+        <div class="confidence-ring-sm" style="--pct: ${confidence}" role="img" aria-label="Confidence ${confidence}%">
+          <div class="confidence-ring-inner">
+            <span class="confidence-ring-value">${confidence}</span>
+            <span class="confidence-ring-unit">%</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; margin-top: 8px;">
+          ${timeLabel}
+          <span class="featured-pick-confidence ${labelClass}">${prediction.confidenceLabel || ""}</span>
+        </div>
       </div>
     </article>
   `;
@@ -4658,6 +4668,23 @@ async function initDashboard() {
     }
     loadDashboard(true);
   });
+  
+  // Theme toggle
+  themeToggleBtn?.addEventListener("click", () => {
+    const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+  });
+  
+  // Load saved theme on init
+  (function initTheme() {
+    const savedTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const theme = savedTheme || (prefersDark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+  
   dateDisplayBtn?.addEventListener("click", openDatePicker);
   datePickerInput?.addEventListener("change", () => {
     const iso = datePickerInput.value;
