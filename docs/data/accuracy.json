@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-17T18:56:25.658887+00:00",
+  "updatedAt": "2026-07-17T20:02:01.848407+00:00",
   "summary": {
     "last7Days": {
-      "correct": 306,
-      "total": 511,
-      "pct": 59.9,
-      "units": 7.31,
-      "roiPct": 1.4,
+      "correct": 307,
+      "total": 512,
+      "pct": 60.0,
+      "units": 8.157,
+      "roiPct": 1.6,
       "pending": 50
     },
     "allTime": {
-      "correct": 306,
-      "total": 511,
-      "pct": 59.9,
-      "units": 7.31,
-      "roiPct": 1.4,
-      "pending": 131
+      "correct": 307,
+      "total": 512,
+      "pct": 60.0,
+      "units": 8.157,
+      "roiPct": 1.6,
+      "pending": 130
     },
     "byLeague": {
+      "mlb": {
+        "correct": 189,
+        "total": 338,
+        "pct": 55.9,
+        "units": -8.486,
+        "roiPct": -2.5,
+        "pending": 0
+      },
       "afl": {
         "correct": 22,
         "total": 30,
@@ -34,14 +42,6 @@
         "roiPct": 8.5,
         "pending": 0
       },
-      "mlb": {
-        "correct": 188,
-        "total": 337,
-        "pct": 55.8,
-        "units": -9.333,
-        "roiPct": -2.8,
-        "pending": 0
-      },
       "worldcup": {
         "correct": 48,
         "total": 73,
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 2,
+      "current": 1,
       "type": "loss",
       "bestWin": 11,
       "bestLoss": 6
     }
   },
   "recentResults": [
+    {
+      "eventId": "401872178",
+      "league": "mlb",
+      "scheduleDate": "2026-07-17",
+      "matchup": "Tampa Bay Rays @ Boston Red Sox",
+      "predicted": "Boston Red Sox",
+      "predictedSide": "home",
+      "outcomeLabel": "Boston Red Sox to win",
+      "confidence": 73.6,
+      "pickOdds": -118,
+      "status": "graded",
+      "actual": "Boston Red Sox",
+      "correct": true,
+      "units": 0.847,
+      "homeScore": "10",
+      "awayScore": "0",
+      "gradedAt": "2026-07-17T20:01:52.043105+00:00",
+      "date": "2026-07-17"
+    },
     {
       "eventId": "1133642",
       "league": "afl",
@@ -1938,25 +1957,6 @@
       "homeScore": "1",
       "awayScore": "13",
       "gradedAt": "2026-07-09T04:30:41.540019+00:00",
-      "date": "2026-07-08"
-    },
-    {
-      "eventId": "401816079",
-      "league": "mlb",
-      "scheduleDate": "2026-07-08",
-      "matchup": "Milwaukee Brewers @ St. Louis Cardinals",
-      "predicted": "Milwaukee Brewers",
-      "predictedSide": "away",
-      "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 68.4,
-      "pickOdds": -145,
-      "status": "graded",
-      "actual": "St. Louis Cardinals",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "5",
-      "awayScore": "1",
-      "gradedAt": "2026-07-09T04:30:41.540006+00:00",
       "date": "2026-07-08"
     }
   ],
@@ -12725,15 +12725,15 @@
       "predicted": "Boston Red Sox",
       "predictedSide": "home",
       "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 69.9,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 73.6,
+      "pickOdds": -118,
+      "status": "graded",
+      "actual": "Boston Red Sox",
+      "correct": true,
+      "units": 0.847,
+      "homeScore": "10",
+      "awayScore": "0",
+      "gradedAt": "2026-07-17T20:01:52.043105+00:00",
       "date": "2026-07-17"
     },
     "401816144": {
