@@ -3857,6 +3857,31 @@ function renderPrediction(game) {
   const probabilityCompare = renderTeamProbabilityTable(prediction, game);
   const pickResult = renderModelPickBlock(game);
 
+  // Totals and spreads sections
+  const totalSection = prediction.total ? `
+    <section class="total-panel">
+      <h4>Total (Over/Under)</h4>
+      <p class="total-line">Line: <strong>${prediction.total.line}</strong></p>
+      <div class="total-probs">
+        <span class="total-prob over">Over: <strong>${prediction.total.overPct}%</strong></span>
+        <span class="total-prob under">Under: <strong>${prediction.total.underPct}%</strong></span>
+      </div>
+      <p class="total-detail">${prediction.total.detail}</p>
+      <p class="total-confidence">Confidence: <strong>${prediction.total.confidence}%</strong></p>
+    </section>` : "";
+
+  const spreadSection = prediction.spread ? `
+    <section class="spread-panel">
+      <h4>Point Spread</h4>
+      <p class="spread-line">Market Line: <strong>${prediction.spread.line >= 0 ? "+" : ""}${prediction.spread.line}</strong> | Model: <strong>${prediction.spread.modelLine >= 0 ? "+" : ""}${prediction.spread.modelLine}</strong></p>
+      <div class="spread-probs">
+        <span class="spread-prob home">Home: <strong>${prediction.spread.homePct}%</strong></span>
+        <span class="spread-prob away">Away: <strong>${prediction.spread.awayPct}%</strong></span>
+      </div>
+      <p class="spread-detail">${prediction.spread.detail}</p>
+      <p class="spread-confidence">Confidence: <strong>${prediction.spread.confidence}%</strong></p>
+    </section>` : "";
+
   return `
     <section class="prediction-panel prediction-panel-compact">
       <div class="details-status-row">
@@ -3868,6 +3893,8 @@ function renderPrediction(game) {
       </div>
       <p class="prediction-detail-pick">${escapeHtml(prediction.outcomeLabel)} <span class="prediction-detail-pct">${formatConfidenceDisplay(prediction.confidence)}% model confidence</span></p>
       ${pickResult}
+      ${totalSection}
+      ${spreadSection}
       ${probabilityCompare}
       <div class="why-panel">
         <h4>Why ${prediction.predictedSide === "draw" ? "draw" : prediction.predictedWinner}?</h4>
@@ -3980,6 +4007,14 @@ function renderGames(games) {
                       <span class="confidence-ring-unit">%</span>
                     </span>
                   </span>
+                </span>` : ""}
+                ${prediction?.total ? `<span class="scoreboard-total" title="Total: ${prediction.total.line}">
+                  <span class="scoreboard-total-label">Total</span>
+                  <span class="scoreboard-total-value">${prediction.total.pick}</span>
+                </span>` : ""}
+                ${prediction?.spread ? `<span class="scoreboard-spread" title="Spread: ${prediction.spread.line}">
+                  <span class="scoreboard-spread-label">Spread</span>
+                  <span class="scoreboard-spread-value">${prediction.spread.pick}</span>
                 </span>` : ""}
                 <span class="scoreboard-pick-conf">
                   ${confLabel ? `<span class="confidence-label ${labelClass}">${confLabel}</span>` : ""}

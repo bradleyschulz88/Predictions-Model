@@ -20,6 +20,7 @@ from data_providers.league_metrics import (
 )
 from data_providers.mlb_pitcher import mlb_pitching_logit_adjustment
 from data_providers.schedule_advanced import schedule_flags_logit_adjustment
+from data_providers.enrich import enrich_games_with_providers
 from shared_utils import parse_record, win_pct_from_record, format_record, format_win_pct
 
 HOME_FIELD_LOGIT = {
@@ -419,6 +420,26 @@ def extract_total_line(lines: list[dict[str, Any]]) -> float | None:
                 return float(text.split()[0].replace("o", "").replace("u", ""))
             except ValueError:
                 continue
+    return None
+
+
+def extract_spread_line(lines: list[dict[str, Any]]) -> float | None:
+    """Extract point spread line from odds data. Returns home team spread (negative = home favorite)."""
+    for line in lines:
+        if "Spread" not in (line.get("viewType") or ""):
+            continue
+        current = line.get("currentLine") or line.get("openingLine")
+        if not isinstance(current, dict):
+            continue
+        # Spread is typically in the "home" field (negative = home favorite)
+        value = current.get("home") or current.get("away")
+        if not value:
+            continue
+        text = str(value).replace("+", "").replace("−", "-").replace("–", "-")
+        try:
+            return float(text.split()[0])
+        except ValueError:
+            continue
     return None
 
 
@@ -1484,10 +1505,89 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
+def predict_spread(game: dict[str, Any], lines: list[dict[str, Any]], enrichment: dict[str, Any]) -> dict[str, Any] | None:
+    """Predict point spread for sports that support spreads (NFL, NBA, NCAAF, etc.)."""
+    # Extract spread line from odds
+    spread_line = extract_spread_line(lines)
+    if spread_line is None:
+        return None
+
+    league = _league_id(game)
+    
+    # For now, use a simple model based on win probability
+    # In the future, this could be enhanced with more sophisticated spread modeling
+    probs = enrichment.get("probabilities") or {}
+    true_p = probs.get("true") or {}
+    home_prob = true_p.get("home", 0.5)
+    away_prob = true_p.get("away", 0.5)
+    
+    # Convert win probability to spread estimate
+    # A 55% win prob roughly equals a 1-point favorite in NFL
+    # A 52% win prob roughly equals a 1-point favorite in NBA
+    if league in {"nfl"}:
+        points_per_pct = 0.5  # 1% win prob ~ 0.5 points in NFL
+    elif league in {"nba", "ncaaf"}:
+        points_per_pct = 0.3  # 1% win prob ~ 0.3 points in NBA/NCAAF
+    else:
+        points_per_pct = 0.2  # Default for other sports
+    
+    # Calculate model spread from win probability
+    prob_diff = home_prob - away_prob
+    model_spread = -prob_diff / (points_per_pct / 100)  # Negative because spread is home - away
+    
+    # Compare model spread to market spread
+    edge = model_spread - spread_line
+    
+    # Determine pick
+    if abs(edge) < 0.5:
+        # Too close to call
+        pick_side = "push"
+        confidence = 50
+    elif edge > 0:
+        # Model favors home more than market
+        pick_side = "home"
+        confidence = min(50 + abs(edge) * 10, 85)
+    else:
+        # Model favors away more than market
+        pick_side = "away"
+        confidence = min(50 + abs(edge) * 10, 85)
+    
+    return {
+        "line": spread_line,
+        "modelLine": round(model_spread, 1),
+        "pick": f"{pick_side.capitalize()} {spread_line:+.1f}",
+        "pickSide": pick_side,
+        "homePct": round((1 + (spread_line / 100)) * 50, 1),  # Simplified
+        "awayPct": round((1 - (spread_line / 100)) * 50, 1),
+        "edgePct": round(edge, 1),
+        "confidence": confidence,
+        "detail": f"Model spread: {model_spread:+.1f}, Market: {spread_line:+.1f}, Edge: {edge:+.1f}",
+    }
+
+
 def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for game in games:
+        # First enrich the game
+        league = game.get("league", "mlb")
+        enriched = enrich_games_with_providers([game], league=league)
+        game = enriched[0] if enriched else game
+        
         prediction = predict_game(game)
         prediction["publishable"] = is_publishable_pick(prediction)
+        
+        # Add totals prediction if lines available
+        lines = game.get("lines", [])
+        enrichment = game.get("enrichment", {})
+        if lines:
+            total_pred = predict_total(game, lines, enrichment)
+            if total_pred:
+                prediction["total"] = total_pred
+            
+            # Add spread prediction for sports that support spreads
+            spread_pred = predict_spread(game, lines, enrichment)
+            if spread_pred:
+                prediction["spread"] = spread_pred
+        
         game["prediction"] = prediction
 
     publishable = [game for game in games if is_publishable_pick(game.get("prediction"))]
