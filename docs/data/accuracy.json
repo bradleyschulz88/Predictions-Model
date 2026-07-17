@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-17T10:32:37.202565+00:00",
+  "updatedAt": "2026-07-17T12:00:01.945185+00:00",
   "summary": {
     "last7Days": {
       "correct": 306,
@@ -15,7 +15,7 @@
       "pct": 60.0,
       "units": 7.31,
       "roiPct": 1.4,
-      "pending": 124
+      "pending": 126
     },
     "byLeague": {
       "wnba": {
@@ -2209,6 +2209,25 @@
       "date": "2026-07-24"
     },
     {
+      "eventId": "401816235",
+      "league": "mlb",
+      "scheduleDate": "2026-07-24",
+      "matchup": "Arizona Diamondbacks @ Washington Nationals",
+      "predicted": "Arizona Diamondbacks",
+      "predictedSide": "away",
+      "outcomeLabel": "Arizona Diamondbacks to win",
+      "confidence": 57.8,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-24"
+    },
+    {
       "eventId": "1133653",
       "league": "afl",
       "scheduleDate": "2026-07-24",
@@ -2882,25 +2901,6 @@
       "predictedSide": "away",
       "outcomeLabel": "Los Angeles Dodgers to win",
       "confidence": 63.0,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-21"
-    },
-    {
-      "eventId": "401816201",
-      "league": "mlb",
-      "scheduleDate": "2026-07-21",
-      "matchup": "Baltimore Orioles @ Boston Red Sox",
-      "predicted": "Boston Red Sox",
-      "predictedSide": "home",
-      "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 67.5,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -14949,6 +14949,44 @@
       "predictedSide": "home",
       "outcomeLabel": "San Francisco Giants to win",
       "confidence": 73.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-24"
+    },
+    "401816177": {
+      "eventId": "401816177",
+      "league": "mlb",
+      "scheduleDate": "2026-07-19",
+      "matchup": "Baltimore Orioles @ Houston Astros",
+      "predicted": "Houston Astros",
+      "predictedSide": "home",
+      "outcomeLabel": "Houston Astros to win",
+      "confidence": 57.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-19"
+    },
+    "401816235": {
+      "eventId": "401816235",
+      "league": "mlb",
+      "scheduleDate": "2026-07-24",
+      "matchup": "Arizona Diamondbacks @ Washington Nationals",
+      "predicted": "Arizona Diamondbacks",
+      "predictedSide": "away",
+      "outcomeLabel": "Arizona Diamondbacks to win",
+      "confidence": 57.8,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
