@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-17T20:57:19.319318+00:00",
+  "updatedAt": "2026-07-17T21:46:56.360591+00:00",
   "summary": {
     "last7Days": {
       "correct": 307,
@@ -15,7 +15,7 @@
       "pct": 60.0,
       "units": 8.157,
       "roiPct": 1.6,
-      "pending": 132
+      "pending": 133
     },
     "byLeague": {
       "mlb": {
@@ -2665,6 +2665,25 @@
       "date": "2026-07-22"
     },
     {
+      "eventId": "401816224",
+      "league": "mlb",
+      "scheduleDate": "2026-07-22",
+      "matchup": "Miami Marlins @ Houston Astros",
+      "predicted": "Miami Marlins",
+      "predictedSide": "away",
+      "outcomeLabel": "Miami Marlins to win",
+      "confidence": 58.5,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-22"
+    },
+    {
       "eventId": "401816223",
       "league": "mlb",
       "scheduleDate": "2026-07-22",
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Milwaukee Brewers to win",
       "confidence": 73.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-21"
-    },
-    {
-      "eventId": "401816208",
-      "league": "mlb",
-      "scheduleDate": "2026-07-21",
-      "matchup": "Detroit Tigers @ Chicago Cubs",
-      "predicted": "Chicago Cubs",
-      "predictedSide": "home",
-      "outcomeLabel": "Chicago Cubs to win",
-      "confidence": 63.1,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -15148,6 +15148,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-21"
+    },
+    "401816224": {
+      "eventId": "401816224",
+      "league": "mlb",
+      "scheduleDate": "2026-07-22",
+      "matchup": "Miami Marlins @ Houston Astros",
+      "predicted": "Miami Marlins",
+      "predictedSide": "away",
+      "outcomeLabel": "Miami Marlins to win",
+      "confidence": 58.5,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-22"
     }
   },
   "skippedDates": []
