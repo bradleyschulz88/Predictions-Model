@@ -4337,6 +4337,51 @@ button:active:not(:disabled) {
   color: var(--live);
 }
 
+/* Form sparkline */
+.form-sparkline-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--panel-border-soft);
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.form-sparkline {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--muted);
+  font-family: monospace;
+  font-size: 0.65rem;
+  line-height: 1;
+}
+
+.sparkline-chars {
+  display: inline-flex;
+  gap: 1px;
+}
+
+.sparkline-chars ▲ {
+  color: var(--accent);
+}
+
+.sparkline-chars ▼ {
+  color: var(--danger);
+}
+
+.sparkline-chars ● {
+  color: var(--muted);
+}
+
+/* Hover to show full record tooltip */
+.form-sparkline:hover .sparkline-chars {
+  color: var(--text);
+}
+
 .scoreboard-prob-bar {
   display: flex;
   height: 4px;

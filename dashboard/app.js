@@ -3239,7 +3239,29 @@ function renderScoreboardTeams(game) {
     const scoreClass = game.isLive ? "score-live" : "";
     return `<p class="scoreboard-teams ${scoreClass}" data-live-score="${game.eventId}">${away} <span class="tabular-nums">${game.awayScore}</span> @ ${home} <span class="tabular-nums">${game.homeScore}</span></p>`;
   }
+  
+  // Add form sparkline if enrichment data available
+  const homeForm = game.enrichment?.homeLastFive?.results || [];
+  const awayForm = game.enrichment?.awayLastFive?.results || [];
+  const hasForm = homeForm.length || awayForm.length;
+  
+  if (hasForm) {
+    const homeSpark = formSparkline(homeForm);
+    const awaySpark = formSparkline(awayForm);
+    return `<p class="scoreboard-teams">${away} @ ${home}</p>
+      <div class="form-sparkline-row">
+        <span class="form-sparkline" title="${game.awayTeam} form: ${awayForm.join(', ')}">${awaySpark}</span>
+        <span class="form-sparkline" title="${game.homeTeam} form: ${homeForm.join(', ')}">${homeSpark}</span>
+      </div>`;
+  }
+  
   return `<p class="scoreboard-teams">${away} @ ${home}</p>`;
+}
+
+function formSparkline(results) {
+  if (!results || !results.length) return "";
+  const chars = results.map(r => r === "W" ? "▲" : r === "L" ? "▼" : "●").join("");
+  return `<span class="sparkline-chars">${chars}</span>`;
 }
 
 function renderScoreboardProbBar(prediction) {
