@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-17T01:01:31.168840+00:00",
+  "updatedAt": "2026-07-17T02:16:09.810820+00:00",
   "summary": {
     "last7Days": {
       "correct": 306,
-      "total": 509,
-      "pct": 60.1,
+      "total": 510,
+      "pct": 60.0,
       "units": 7.31,
       "roiPct": 1.4,
       "pending": 50
     },
     "allTime": {
       "correct": 306,
-      "total": 509,
-      "pct": 60.1,
+      "total": 510,
+      "pct": 60.0,
       "units": 7.31,
       "roiPct": 1.4,
       "pending": 111
     },
     "byLeague": {
+      "wnba": {
+        "correct": 48,
+        "total": 71,
+        "pct": 67.6,
+        "units": 6.0,
+        "roiPct": 8.5,
+        "pending": 0
+      },
       "mlb": {
         "correct": 188,
         "total": 337,
@@ -34,14 +42,6 @@
         "roiPct": 17.2,
         "pending": 0
       },
-      "wnba": {
-        "correct": 48,
-        "total": 70,
-        "pct": 68.6,
-        "units": 6.0,
-        "roiPct": 8.6,
-        "pending": 0
-      },
       "worldcup": {
         "correct": 48,
         "total": 73,
@@ -53,12 +53,31 @@
     },
     "streak": {
       "current": 1,
-      "type": "loss",
+      "type": "win",
       "bestWin": 11,
       "bestLoss": 6
     }
   },
   "recentResults": [
+    {
+      "eventId": "401857071",
+      "league": "wnba",
+      "scheduleDate": "2026-07-16",
+      "matchup": "Portland Fire @ Washington Mystics",
+      "predicted": "Washington Mystics",
+      "predictedSide": "home",
+      "outcomeLabel": "Washington Mystics to win",
+      "confidence": 61.1,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Portland Fire",
+      "correct": false,
+      "units": null,
+      "homeScore": "56",
+      "awayScore": "75",
+      "gradedAt": "2026-07-17T02:16:06.359513+00:00",
+      "date": "2026-07-16"
+    },
     {
       "eventId": "401816143",
       "league": "mlb",
@@ -1939,25 +1958,6 @@
       "awayScore": "5",
       "gradedAt": "2026-07-09T04:30:41.539993+00:00",
       "date": "2026-07-08"
-    },
-    {
-      "eventId": "401816077",
-      "league": "mlb",
-      "scheduleDate": "2026-07-08",
-      "matchup": "Boston Red Sox @ Chicago White Sox",
-      "predicted": "Chicago White Sox",
-      "predictedSide": "home",
-      "outcomeLabel": "Chicago White Sox to win",
-      "confidence": 64.8,
-      "pickOdds": -108,
-      "status": "graded",
-      "actual": "Boston Red Sox",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "0",
-      "awayScore": "5",
-      "gradedAt": "2026-07-09T04:30:41.539986+00:00",
-      "date": "2026-07-08"
     }
   ],
   "pendingPicks": [
@@ -2122,6 +2122,25 @@
       "predictedSide": "home",
       "outcomeLabel": "Indiana Fever to win",
       "confidence": 72.5,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-22"
+    },
+    {
+      "eventId": "401857089",
+      "league": "wnba",
+      "scheduleDate": "2026-07-22",
+      "matchup": "Las Vegas Aces @ Washington Mystics",
+      "predicted": "Las Vegas Aces",
+      "predictedSide": "away",
+      "outcomeLabel": "Las Vegas Aces to win",
+      "confidence": 62.8,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "New York Yankees to win",
       "confidence": 64.0,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-20"
-    },
-    {
-      "eventId": "401816188",
-      "league": "mlb",
-      "scheduleDate": "2026-07-20",
-      "matchup": "Minnesota Twins @ Cleveland Guardians",
-      "predicted": "Cleveland Guardians",
-      "predictedSide": "home",
-      "outcomeLabel": "Cleveland Guardians to win",
-      "confidence": 66.5,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -12632,13 +12632,13 @@
       "outcomeLabel": "Washington Mystics to win",
       "confidence": 61.1,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Portland Fire",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "56",
+      "awayScore": "75",
+      "gradedAt": "2026-07-17T02:16:06.359513+00:00",
       "date": "2026-07-16"
     },
     "401857072": {
@@ -14692,6 +14692,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-19"
+    },
+    "401857089": {
+      "eventId": "401857089",
+      "league": "wnba",
+      "scheduleDate": "2026-07-22",
+      "matchup": "Las Vegas Aces @ Washington Mystics",
+      "predicted": "Las Vegas Aces",
+      "predictedSide": "away",
+      "outcomeLabel": "Las Vegas Aces to win",
+      "confidence": 62.8,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-22"
     }
   },
   "skippedDates": []
