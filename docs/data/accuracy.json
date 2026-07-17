@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-17T22:42:52.969813+00:00",
+  "updatedAt": "2026-07-17T23:46:32.711080+00:00",
   "summary": {
     "last7Days": {
       "correct": 307,
@@ -15,7 +15,7 @@
       "pct": 60.0,
       "units": 8.157,
       "roiPct": 1.6,
-      "pending": 136
+      "pending": 138
     },
     "byLeague": {
       "mlb": {
@@ -2703,6 +2703,25 @@
       "date": "2026-07-22"
     },
     {
+      "eventId": "401816222",
+      "league": "mlb",
+      "scheduleDate": "2026-07-22",
+      "matchup": "Chicago White Sox @ Texas Rangers",
+      "predicted": "Texas Rangers",
+      "predictedSide": "home",
+      "outcomeLabel": "Texas Rangers to win",
+      "confidence": 57.0,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-22"
+    },
+    {
       "eventId": "401816220",
       "league": "mlb",
       "scheduleDate": "2026-07-22",
@@ -2882,25 +2901,6 @@
       "predictedSide": "away",
       "outcomeLabel": "San Francisco Giants to win",
       "confidence": 66.5,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-21"
-    },
-    {
-      "eventId": "401816210",
-      "league": "mlb",
-      "scheduleDate": "2026-07-21",
-      "matchup": "New York Mets @ Milwaukee Brewers",
-      "predicted": "Milwaukee Brewers",
-      "predictedSide": "home",
-      "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 73.4,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -15224,6 +15224,44 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-19"
+    },
+    "401816159": {
+      "eventId": "401816159",
+      "league": "mlb",
+      "scheduleDate": "2026-07-18",
+      "matchup": "Pittsburgh Pirates @ Cleveland Guardians",
+      "predicted": "Cleveland Guardians",
+      "predictedSide": "home",
+      "outcomeLabel": "Cleveland Guardians to win",
+      "confidence": 65.3,
+      "pickOdds": 102,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-18"
+    },
+    "401816222": {
+      "eventId": "401816222",
+      "league": "mlb",
+      "scheduleDate": "2026-07-22",
+      "matchup": "Chicago White Sox @ Texas Rangers",
+      "predicted": "Texas Rangers",
+      "predictedSide": "home",
+      "outcomeLabel": "Texas Rangers to win",
+      "confidence": 57.0,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-22"
     }
   },
   "skippedDates": []
