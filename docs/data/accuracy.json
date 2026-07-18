@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-18T12:54:49.492299+00:00",
+  "updatedAt": "2026-07-18T14:21:41.971546+00:00",
   "summary": {
     "last7Days": {
-      "correct": 320,
-      "total": 531,
+      "correct": 321,
+      "total": 532,
       "pct": 60.3,
       "units": 7.939,
       "roiPct": 1.5,
       "pending": 50
     },
     "allTime": {
-      "correct": 320,
-      "total": 531,
+      "correct": 321,
+      "total": 532,
       "pct": 60.3,
       "units": 7.939,
       "roiPct": 1.5,
-      "pending": 136
+      "pending": 137
     },
     "byLeague": {
+      "wnba": {
+        "correct": 51,
+        "total": 75,
+        "pct": 68.0,
+        "units": 6.0,
+        "roiPct": 8.0,
+        "pending": 0
+      },
       "afl": {
         "correct": 26,
         "total": 34,
@@ -34,14 +42,6 @@
         "roiPct": -2.5,
         "pending": 0
       },
-      "wnba": {
-        "correct": 50,
-        "total": 74,
-        "pct": 67.6,
-        "units": 6.0,
-        "roiPct": 8.1,
-        "pending": 0
-      },
       "worldcup": {
         "correct": 48,
         "total": 73,
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 1,
-      "type": "loss",
+      "current": 11,
+      "type": "win",
       "bestWin": 11,
       "bestLoss": 6
     }
   },
   "recentResults": [
+    {
+      "eventId": "401857076",
+      "league": "wnba",
+      "scheduleDate": "2026-07-17",
+      "matchup": "Connecticut Sun @ Phoenix Mercury",
+      "predicted": "Connecticut Sun",
+      "predictedSide": "away",
+      "outcomeLabel": "Connecticut Sun to win",
+      "confidence": 62.1,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Connecticut Sun",
+      "correct": true,
+      "units": null,
+      "homeScore": "83",
+      "awayScore": "96",
+      "gradedAt": "2026-07-18T14:21:37.962185+00:00",
+      "date": "2026-07-17"
+    },
     {
       "eventId": "1133644",
       "league": "afl",
@@ -1939,28 +1958,28 @@
       "awayScore": "49",
       "gradedAt": "2026-07-16T02:06:55.119190+00:00",
       "date": "2026-07-11"
-    },
-    {
-      "eventId": "1133628",
-      "league": "afl",
-      "scheduleDate": "2026-07-11",
-      "matchup": "Hawthorn @ Carlton",
-      "predicted": "Carlton",
-      "predictedSide": "home",
-      "outcomeLabel": "Carlton to win",
-      "confidence": 65.8,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Hawthorn",
-      "correct": false,
-      "units": null,
-      "homeScore": "39",
-      "awayScore": "103",
-      "gradedAt": "2026-07-16T02:06:55.119179+00:00",
-      "date": "2026-07-11"
     }
   ],
   "pendingPicks": [
+    {
+      "eventId": "1133645",
+      "league": "afl",
+      "scheduleDate": "2026-07-26",
+      "matchup": "Port Adelaide @ Brisbane Lions",
+      "predicted": "Brisbane Lions",
+      "predictedSide": "home",
+      "outcomeLabel": "Brisbane Lions to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-26"
+    },
     {
       "eventId": "401816264",
       "league": "mlb",
@@ -2882,25 +2901,6 @@
       "predictedSide": "away",
       "outcomeLabel": "Washington Nationals to win",
       "confidence": 66.6,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-22"
-    },
-    {
-      "eventId": "401816226",
-      "league": "mlb",
-      "scheduleDate": "2026-07-22",
-      "matchup": "San Francisco Giants @ Kansas City Royals",
-      "predicted": "San Francisco Giants",
-      "predictedSide": "away",
-      "outcomeLabel": "San Francisco Giants to win",
-      "confidence": 65.0,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -15585,6 +15585,44 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-25"
+    },
+    "401857076": {
+      "eventId": "401857076",
+      "league": "wnba",
+      "scheduleDate": "2026-07-17",
+      "matchup": "Connecticut Sun @ Phoenix Mercury",
+      "predicted": "Connecticut Sun",
+      "predictedSide": "away",
+      "outcomeLabel": "Connecticut Sun to win",
+      "confidence": 62.1,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Connecticut Sun",
+      "correct": true,
+      "units": null,
+      "homeScore": "83",
+      "awayScore": "96",
+      "gradedAt": "2026-07-18T14:21:37.962185+00:00",
+      "date": "2026-07-17"
+    },
+    "1133645": {
+      "eventId": "1133645",
+      "league": "afl",
+      "scheduleDate": "2026-07-26",
+      "matchup": "Port Adelaide @ Brisbane Lions",
+      "predicted": "Brisbane Lions",
+      "predictedSide": "home",
+      "outcomeLabel": "Brisbane Lions to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-26"
     }
   },
   "skippedDates": []
