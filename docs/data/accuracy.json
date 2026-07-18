@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-07-18T11:49:46.522006+00:00",
+  "updatedAt": "2026-07-18T12:54:49.492299+00:00",
   "summary": {
     "last7Days": {
-      "correct": 318,
-      "total": 529,
-      "pct": 60.1,
+      "correct": 320,
+      "total": 531,
+      "pct": 60.3,
       "units": 7.939,
       "roiPct": 1.5,
       "pending": 50
     },
     "allTime": {
-      "correct": 318,
-      "total": 529,
-      "pct": 60.1,
+      "correct": 320,
+      "total": 531,
+      "pct": 60.3,
       "units": 7.939,
       "roiPct": 1.5,
-      "pending": 138
+      "pending": 136
     },
     "byLeague": {
       "afl": {
-        "correct": 24,
-        "total": 32,
-        "pct": 75.0,
+        "correct": 26,
+        "total": 34,
+        "pct": 76.5,
         "units": 5.0,
-        "roiPct": 15.6,
+        "roiPct": 14.7,
         "pending": 0
       },
       "mlb": {
@@ -52,13 +52,51 @@
       }
     },
     "streak": {
-      "current": 2,
-      "type": "win",
+      "current": 1,
+      "type": "loss",
       "bestWin": 11,
       "bestLoss": 6
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133644",
+      "league": "afl",
+      "scheduleDate": "2026-07-18",
+      "matchup": "Brisbane Lions @ West Coast Eagles",
+      "predicted": "Brisbane Lions",
+      "predictedSide": "away",
+      "outcomeLabel": "Brisbane Lions to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Brisbane Lions",
+      "correct": true,
+      "units": null,
+      "homeScore": "69",
+      "awayScore": "93",
+      "gradedAt": "2026-07-18T12:54:36.213427+00:00",
+      "date": "2026-07-18"
+    },
+    {
+      "eventId": "1133636",
+      "league": "afl",
+      "scheduleDate": "2026-07-18",
+      "matchup": "Carlton @ Collingwood",
+      "predicted": "Collingwood",
+      "predictedSide": "home",
+      "outcomeLabel": "Collingwood to win",
+      "confidence": 66.6,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Collingwood",
+      "correct": true,
+      "units": null,
+      "homeScore": "90",
+      "awayScore": "69",
+      "gradedAt": "2026-07-18T12:54:36.213405+00:00",
+      "date": "2026-07-18"
+    },
     {
       "eventId": "1133640",
       "league": "afl",
@@ -1920,44 +1958,6 @@
       "awayScore": "103",
       "gradedAt": "2026-07-16T02:06:55.119179+00:00",
       "date": "2026-07-11"
-    },
-    {
-      "eventId": "1133629",
-      "league": "afl",
-      "scheduleDate": "2026-07-10",
-      "matchup": "North Melbourne @ Collingwood",
-      "predicted": "Collingwood",
-      "predictedSide": "home",
-      "outcomeLabel": "Collingwood to win",
-      "confidence": 60.6,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Collingwood",
-      "correct": true,
-      "units": null,
-      "homeScore": "89",
-      "awayScore": "85",
-      "gradedAt": "2026-07-16T02:06:55.030356+00:00",
-      "date": "2026-07-10"
-    },
-    {
-      "eventId": "401857051",
-      "league": "wnba",
-      "scheduleDate": "2026-07-09",
-      "matchup": "Seattle Storm @ Atlanta Dream",
-      "predicted": "Atlanta Dream",
-      "predictedSide": "home",
-      "outcomeLabel": "Atlanta Dream to win",
-      "confidence": 70.8,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Atlanta Dream",
-      "correct": true,
-      "units": null,
-      "homeScore": "89",
-      "awayScore": "78",
-      "gradedAt": "2026-07-10T02:33:16.118356+00:00",
-      "date": "2026-07-09"
     }
   ],
   "pendingPicks": [
@@ -14340,15 +14340,15 @@
       "predicted": "Collingwood",
       "predictedSide": "home",
       "outcomeLabel": "Collingwood to win",
-      "confidence": 61.2,
+      "confidence": 66.6,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Collingwood",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "90",
+      "awayScore": "69",
+      "gradedAt": "2026-07-18T12:54:36.213405+00:00",
       "date": "2026-07-18"
     },
     "1133644": {
@@ -14361,13 +14361,13 @@
       "outcomeLabel": "Brisbane Lions to win",
       "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Brisbane Lions",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "69",
+      "awayScore": "93",
+      "gradedAt": "2026-07-18T12:54:36.213427+00:00",
       "date": "2026-07-18"
     },
     "1133641": {
