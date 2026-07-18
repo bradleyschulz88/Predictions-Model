@@ -318,6 +318,28 @@ def fetch_dashboard_data(
                     retry_delay=retry_delay,
                     verify_ssl=verify_ssl,
                 )
+            # Also load odds from fixture if available (for offline/testing)
+            if include_odds:
+                odds_fixture_path = fixture_path.parent / "odds_page.json"
+                if odds_fixture_path.exists():
+                    odds_data = load_fixture_data(odds_fixture_path)
+                    odds_rows = odds_data.get("props", {}).get("pageProps", {}).get("oddsTables", [{}])[0].get("oddsTableModel", {}).get("gameRows", [])
+                    if odds_rows:
+                        for row in odds_rows:
+                            lines = collect_odds_lines(row)
+                            if lines:
+                                matched = _find_sbr_odds_match(
+                                    row["gameView"]["awayTeam"]["fullName"],
+                                    row["gameView"]["homeTeam"]["fullName"],
+                                    {matchup_key(row["gameView"]["awayTeam"]["fullName"], row["gameView"]["homeTeam"]["fullName"]): lines},
+                                    {matchup_key(row["gameView"]["awayTeam"]["fullName"], row["gameView"]["homeTeam"]["fullName"]): []}
+                                )
+                                if matched:
+                                    for game in games:
+                                        if game.get("awayTeam") == row["gameView"]["awayTeam"]["fullName"] and game.get("homeTeam") == row["gameView"]["homeTeam"]["fullName"]:
+                                            game["lines"] = matched[0]
+                                            game["viewTypes"] = ["Spread", "MoneyLine", "Total"]
+                                            game["oddsSource"] = "fixture"
             ensure_espn_odds_on_games(games)
             payload = build_dashboard_payload_from_espn_games(
                 games,

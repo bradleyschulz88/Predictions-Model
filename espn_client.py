@@ -70,6 +70,29 @@ def _format_broadcasts(broadcasts: list[dict[str, Any]] | None) -> str | None:
     return ", ".join(names) if names else None
 
 
+def _extract_odds_from_competition(competition: dict[str, Any]) -> tuple[list[dict[str, Any]], list[str]]:
+    """Extract odds lines and view types from a competition's oddsViews."""
+    lines = []
+    view_types = []
+    for odds_view in competition.get("oddsViews", []):
+        vt = odds_view.get("viewType")
+        if not vt:
+            continue
+        current = odds_view.get("currentLine") or odds_view.get("openingLine")
+        if not isinstance(current, dict):
+            continue
+        # Normalize to the internal format
+        line = {
+            "sportsbook": odds_view.get("sportsbook"),
+            "viewType": vt,
+            "currentLine": current,
+            "openingLine": odds_view.get("openingLine"),
+        }
+        lines.append(line)
+        if vt and vt not in view_types:
+            view_types.append(vt)
+    return lines, view_types
+
 def _record_by_type(records: list[dict[str, Any]] | None, *type_names: str) -> str | None:
     for type_name in type_names:
         for record in records or []:
@@ -181,6 +204,12 @@ def parse_scoreboard(scoreboard: dict[str, Any], *, league: LeagueConfig | str) 
             "viewTypes": [],
             "lines": [],
         }
+
+        # Extract odds from ESPN competition
+        lines, view_types = _extract_odds_from_competition(competition)
+        if lines:
+            game["lines"] = lines
+            game["viewTypes"] = view_types
 
         if league_config.supports_pitchers:
             game["awayPitcher"] = _parse_probable(away)
