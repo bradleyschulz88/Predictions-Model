@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-07-18T08:21:38.856397+00:00",
+  "updatedAt": "2026-07-18T09:56:24.871483+00:00",
   "summary": {
     "last7Days": {
-      "correct": 317,
-      "total": 528,
-      "pct": 60.0,
+      "correct": 318,
+      "total": 529,
+      "pct": 60.1,
       "units": 7.939,
       "roiPct": 1.5,
       "pending": 50
     },
     "allTime": {
-      "correct": 317,
-      "total": 528,
-      "pct": 60.0,
+      "correct": 318,
+      "total": 529,
+      "pct": 60.1,
       "units": 7.939,
       "roiPct": 1.5,
-      "pending": 139
+      "pending": 138
     },
     "byLeague": {
+      "afl": {
+        "correct": 24,
+        "total": 32,
+        "pct": 75.0,
+        "units": 5.0,
+        "roiPct": 15.6,
+        "pending": 0
+      },
       "mlb": {
         "correct": 196,
         "total": 350,
         "pct": 56.0,
         "units": -8.704,
         "roiPct": -2.5,
-        "pending": 0
-      },
-      "afl": {
-        "correct": 23,
-        "total": 31,
-        "pct": 74.2,
-        "units": 5.0,
-        "roiPct": 16.1,
         "pending": 0
       },
       "wnba": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 3,
+      "current": 2,
       "type": "win",
       "bestWin": 11,
       "bestLoss": 6
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133640",
+      "league": "afl",
+      "scheduleDate": "2026-07-18",
+      "matchup": "Melbourne @ North Melbourne",
+      "predicted": "Melbourne",
+      "predictedSide": "away",
+      "outcomeLabel": "Melbourne to win",
+      "confidence": 76.0,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Melbourne",
+      "correct": true,
+      "units": null,
+      "homeScore": "76",
+      "awayScore": "92",
+      "gradedAt": "2026-07-18T09:56:11.145256+00:00",
+      "date": "2026-07-18"
+    },
     {
       "eventId": "401816153",
       "league": "mlb",
@@ -1938,25 +1957,6 @@
       "homeScore": "89",
       "awayScore": "78",
       "gradedAt": "2026-07-10T02:33:16.118356+00:00",
-      "date": "2026-07-09"
-    },
-    {
-      "eventId": "401816088",
-      "league": "mlb",
-      "scheduleDate": "2026-07-09",
-      "matchup": "Philadelphia Phillies @ Cincinnati Reds",
-      "predicted": "Philadelphia Phillies",
-      "predictedSide": "away",
-      "outcomeLabel": "Philadelphia Phillies to win",
-      "confidence": 65.1,
-      "pickOdds": -175,
-      "status": "graded",
-      "actual": "Philadelphia Phillies",
-      "correct": true,
-      "units": 0.571,
-      "homeScore": "0",
-      "awayScore": "1",
-      "gradedAt": "2026-07-10T02:33:07.791739+00:00",
       "date": "2026-07-09"
     }
   ],
@@ -14321,15 +14321,15 @@
       "predicted": "Melbourne",
       "predictedSide": "away",
       "outcomeLabel": "Melbourne to win",
-      "confidence": 73.6,
+      "confidence": 76.0,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Melbourne",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "76",
+      "awayScore": "92",
+      "gradedAt": "2026-07-18T09:56:11.145256+00:00",
       "date": "2026-07-18"
     },
     "1133636": {
