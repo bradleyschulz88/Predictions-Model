@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-18T18:30:38.433791+00:00",
+  "updatedAt": "2026-07-18T19:43:58.910185+00:00",
   "summary": {
     "last7Days": {
       "correct": 321,
-      "total": 532,
-      "pct": 60.3,
-      "units": 7.939,
-      "roiPct": 1.5,
+      "total": 533,
+      "pct": 60.2,
+      "units": 6.939,
+      "roiPct": 1.3,
       "pending": 50
     },
     "allTime": {
       "correct": 321,
-      "total": 532,
-      "pct": 60.3,
-      "units": 7.939,
-      "roiPct": 1.5,
-      "pending": 139
+      "total": 533,
+      "pct": 60.2,
+      "units": 6.939,
+      "roiPct": 1.3,
+      "pending": 138
     },
     "byLeague": {
+      "mlb": {
+        "correct": 196,
+        "total": 351,
+        "pct": 55.8,
+        "units": -9.704,
+        "roiPct": -2.8,
+        "pending": 0
+      },
       "wnba": {
         "correct": 51,
         "total": 75,
@@ -34,14 +42,6 @@
         "roiPct": 14.7,
         "pending": 0
       },
-      "mlb": {
-        "correct": 196,
-        "total": 350,
-        "pct": 56.0,
-        "units": -8.704,
-        "roiPct": -2.5,
-        "pending": 0
-      },
       "worldcup": {
         "correct": 48,
         "total": 73,
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 11,
+      "current": 10,
       "type": "win",
-      "bestWin": 11,
+      "bestWin": 10,
       "bestLoss": 6
     }
   },
   "recentResults": [
+    {
+      "eventId": "401896568",
+      "league": "mlb",
+      "scheduleDate": "2026-07-18",
+      "matchup": "Pittsburgh Pirates @ Cleveland Guardians",
+      "predicted": "Cleveland Guardians",
+      "predictedSide": "home",
+      "outcomeLabel": "Cleveland Guardians to win",
+      "confidence": 57.0,
+      "pickOdds": -111,
+      "status": "graded",
+      "actual": "Pittsburgh Pirates",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "7",
+      "gradedAt": "2026-07-18T19:43:49.436765+00:00",
+      "date": "2026-07-18"
+    },
     {
       "eventId": "401857076",
       "league": "wnba",
@@ -1939,25 +1958,6 @@
       "awayScore": "70",
       "gradedAt": "2026-07-16T02:06:55.198116+00:00",
       "date": "2026-07-12"
-    },
-    {
-      "eventId": "1133634",
-      "league": "afl",
-      "scheduleDate": "2026-07-11",
-      "matchup": "Gold Coast SUNS @ Adelaide Crows",
-      "predicted": "Adelaide Crows",
-      "predictedSide": "home",
-      "outcomeLabel": "Adelaide Crows to win",
-      "confidence": 82.4,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Adelaide Crows",
-      "correct": true,
-      "units": null,
-      "homeScore": "128",
-      "awayScore": "49",
-      "gradedAt": "2026-07-16T02:06:55.119190+00:00",
-      "date": "2026-07-11"
     }
   ],
   "pendingPicks": [
@@ -15176,15 +15176,15 @@
       "predicted": "Cleveland Guardians",
       "predictedSide": "home",
       "outcomeLabel": "Cleveland Guardians to win",
-      "confidence": 65.8,
-      "pickOdds": -108,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 57.0,
+      "pickOdds": -111,
+      "status": "graded",
+      "actual": "Pittsburgh Pirates",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "7",
+      "gradedAt": "2026-07-18T19:43:49.436765+00:00",
       "date": "2026-07-18"
     },
     "401816169": {
