@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-19T17:52:33.560602+00:00",
+  "updatedAt": "2026-07-19T18:56:10.765321+00:00",
   "summary": {
     "last7Days": {
       "correct": 331,
-      "total": 546,
-      "pct": 60.6,
+      "total": 547,
+      "pct": 60.5,
       "units": 8.916,
       "roiPct": 1.6,
       "pending": 50
     },
     "allTime": {
       "correct": 335,
-      "total": 555,
-      "pct": 60.4,
+      "total": 556,
+      "pct": 60.3,
       "units": 7.716,
       "roiPct": 1.4,
       "pending": 134
     },
     "byLeague": {
+      "mlb": {
+        "correct": 201,
+        "total": 359,
+        "pct": 56.0,
+        "units": -7.727,
+        "roiPct": -2.2,
+        "pending": 0
+      },
       "afl": {
         "correct": 28,
         "total": 37,
@@ -34,14 +42,6 @@
         "roiPct": 9.1,
         "pending": 0
       },
-      "mlb": {
-        "correct": 201,
-        "total": 358,
-        "pct": 56.1,
-        "units": -7.727,
-        "roiPct": -2.2,
-        "pending": 0
-      },
       "worldcup": {
         "correct": 48,
         "total": 74,
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 4,
+      "current": 3,
       "type": "win",
       "bestWin": 10,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816171",
+      "league": "mlb",
+      "scheduleDate": "2026-07-19",
+      "matchup": "Chicago White Sox @ Toronto Blue Jays",
+      "predicted": "Toronto Blue Jays",
+      "predictedSide": "home",
+      "outcomeLabel": "Toronto Blue Jays to win",
+      "confidence": 57.7,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Chicago White Sox",
+      "correct": false,
+      "units": null,
+      "homeScore": "0",
+      "awayScore": "3",
+      "gradedAt": "2026-07-19T18:55:58.246824+00:00",
+      "date": "2026-07-19"
+    },
     {
       "eventId": "1133637",
       "league": "afl",
@@ -1938,25 +1957,6 @@
       "homeScore": "2",
       "awayScore": "4",
       "gradedAt": "2026-07-16T02:07:02.091171+00:00",
-      "date": "2026-07-11"
-    },
-    {
-      "eventId": "401816120",
-      "league": "mlb",
-      "scheduleDate": "2026-07-11",
-      "matchup": "Athletics @ Chicago White Sox",
-      "predicted": "Chicago White Sox",
-      "predictedSide": "home",
-      "outcomeLabel": "Chicago White Sox to win",
-      "confidence": 69.5,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Chicago White Sox",
-      "correct": true,
-      "units": null,
-      "homeScore": "1",
-      "awayScore": "0",
-      "gradedAt": "2026-07-16T02:07:02.091163+00:00",
       "date": "2026-07-11"
     }
   ],
@@ -13067,15 +13067,15 @@
       "predicted": "Toronto Blue Jays",
       "predictedSide": "home",
       "outcomeLabel": "Toronto Blue Jays to win",
-      "confidence": 57.2,
+      "confidence": 57.7,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Chicago White Sox",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "0",
+      "awayScore": "3",
+      "gradedAt": "2026-07-19T18:55:58.246824+00:00",
       "date": "2026-07-19"
     },
     "401816173": {
@@ -16003,6 +16003,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-22"
+    },
+    "401816206": {
+      "eventId": "401816206",
+      "league": "mlb",
+      "scheduleDate": "2026-07-21",
+      "matchup": "Tampa Bay Rays @ Toronto Blue Jays",
+      "predicted": "Tampa Bay Rays",
+      "predictedSide": "away",
+      "outcomeLabel": "Tampa Bay Rays to win",
+      "confidence": 60.8,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-21"
     }
   },
   "skippedDates": []
