@@ -8,8 +8,9 @@ from __future__ import annotations
 
 import json
 import pickle
+from datetime import datetime
 from pathlib import Path
-from typing import Any
+
 import numpy as np
 import pandas as pd
 import xgboost as xgb
@@ -87,7 +88,6 @@ def load_data() -> pd.DataFrame:
             elif isinstance(v, (int, float, bool)) and v is not None:
                 row[k] = v
             elif isinstance(v, list):
-                # Convert boolean list to counts
                 if all(isinstance(x, bool) for x in v):
                     row[f"{k}_count"] = sum(v)
                 elif all(isinstance(x, (int, float)) for x in v):
@@ -249,8 +249,6 @@ def save_model(model: xgb.XGBClassifier, calibrator: CalibratedClassifierCV, met
     print(f"Calibrator saved to {CALIBRATOR_FILE}")
     print(f"Metadata saved to {METADATA_FILE}")
 
-
-from datetime import datetime
 
 def main():
     print("=" * 60)

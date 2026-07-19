@@ -6,32 +6,25 @@ This leverages the existing match simulation to create labeled games with featur
 
 from __future__ import annotations
 
-import json
-import pickle
 from pathlib import Path
-from typing import Any
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime
 
 # Add parent path for imports
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from matchEngine import (
-    simMatchEvents, teamRating, playerEffectiveMatchRating,
-    competitiveOppRating, aiClubRating, aiSquadRating
+    simMatchEvents, teamRating, competitiveOppRating
 )
-from playerGen import generateSquad, generatePlayer
+from playerGen import generateSquad
 from leagueEngine import PYRAMID, findClub, competitionClubsForCareer, generateFixtures
 from defaults import DEFAULT_FACILITIES, DEFAULT_TRAINING, generateStaff, defaultKits
 from finance.engine import makeStartingFinance
-from finance.sponsors import buildInitialSponsorOffers
 from difficulty import getDifficultyConfig
 from community import generateCommittee, generateJournalist
-from rng import rng, rand
 from lineupHelpers import LINEUP_CAP
-from constants import TIER_SCALE
 
 OUTPUT_DIR = Path(__file__).parent.parent / "data"
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -44,7 +37,7 @@ def create_synthetic_career(league_key: str = "AFL", club_id: str = "ade") -> di
     """Create a synthetic career object for simulation."""
     club = findClub(club_id)
     league = PYRAMID[league_key]
-    cfg = getDifficultyConfig("balanced")
+    _ = getDifficultyConfig("balanced")
     
     # Generate squads for all clubs in league
     comp_clubs = competitionClubsForCareer(
@@ -307,7 +300,7 @@ def main():
         try:
             features = generate_synthetic_game(home_club.id, away_club.id, career, league_key)
             all_features.append(features)
-        except Exception as e:
+        except Exception:
             continue
     
     # Convert to DataFrame
@@ -334,7 +327,7 @@ def main():
     numeric_cols = df.select_dtypes(include=[np.number]).columns
     if "home_win" in df.columns:
         corr = df[numeric_cols].corr()["home_win"].sort_values(ascending=False)
-        print(f"\nTop correlations with home_win:")
+        print("\nTop correlations with home_win:")
         print(corr.head(15))
 
 

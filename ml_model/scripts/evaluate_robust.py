@@ -8,9 +8,7 @@ from __future__ import annotations
 
 import json
 import pickle
-import sys
 from pathlib import Path
-from typing import Any
 import numpy as np
 import pandas as pd
 from sklearn.metrics import log_loss, brier_score_loss, roc_auc_score, accuracy_score
@@ -26,67 +24,6 @@ MODEL_FILE = MODEL_DIR / "xgboost_model.pkl"
 CALIBRATOR_FILE = MODEL_DIR / "calibrator.pkl"
 PREDICTIONS_LOG = ROOT / "docs" / "data" / "predictions_log.json"
 ACCURACY_FILE = ROOT / "docs" / "data" / "accuracy.json"
-
-
-def load_model():
-    with open(MODEL_FILE, "rb") as f:
-        model = pickle.load(f)
-    with open(CALIBRATOR_FILE, "rb") as f:
-        cal_data = pickle.load(f)
-    return model, cal_data["calibrator"]
-
-
-def load_data():
-    with open(PREDICTIONS_LOG, "r") as f:
-        log_data = json.load(f)
-    with open(ACCURACY_FILE, "r") as f:
-        acc_data = json.load(f)
-    
-    predictions = log_data.get("predictions", {})
-    picks_by_event = acc_data.get("picksByEventId", {})
-    
-    rows = []
-    for event_id, pred in predictions.items():
-        features = pred.get("features", {})
-        if not features:
-            continue
-        acc_record = picks_by_event.get(event_id, {})
-        if acc_record.get("status") != "graded":
-            continue
-        correct = acc_record.get("correct")
-        if correct is None:
-            continue
-        
-        row = {
-            "event_id": event_id,
-            "league": pred.get("league", "unknown"),
-            "schedule_date": pred.get("scheduleDate", ""),
-            "home_team": pred.get("homeTeam", ""),
-            "away_team": pred.get("awayTeam", ""),
-            "confidence": pred.get("confidence", 0),
-            "correct": int(correct),
-        }
-        
-        for k, v in features.items():
-            if isinstance(v, dict):
-                for sk, sv in v.items():
-                    if isinstance(sv, (int, float, bool)) and sv is not None:
-                        row[f"{k}_{sk}"] = float(sv) if isinstance(sv, (int, float)) else sv
-            elif isinstance(v, (int, float, bool)) and v is not None:
-                row[k] = float(v) if isinstance(v, (int, float)) else v
-            elif isinstance(v, list):
-                if all(isinstance(x, bool) for x in v):
-                    row[f"{k}_count"] = sum(v)
-                elif all(isinstance(x, (int, float)) for x in v):
-                    row[f"{k}_sum"] = sum(v)
-                    row[f"{k}_mean"] = np.mean(v) if v else 0
-                    row[f"{k}_len"] = len(v)
-        rows.append(row)
-    
-    df = pd.DataFrame(rows)
-    df["schedule_date"] = pd.to_datetime(df["schedule_date"], errors="coerce")
-    df = df.sort_values("schedule_date").reset_index(drop=True)
-    return df
 
 
 def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -234,7 +171,7 @@ def load_data():
                     row[f"{k}_sum"] = sum(v)
                     row[f"{k}_mean"] = np.mean(v) if v else 0
                     row[f"{k}_len"] = len(v)
-        rows.append(row)
+            rows.append(row)
     
     df = pd.DataFrame(rows)
     df["schedule_date"] = pd.to_datetime(df["schedule_date"], errors="coerce")
@@ -283,7 +220,6 @@ def main():
     xgb_pred = (xgb_proba >= 0.5).astype(int)
     
     # Metrics
-    from sklearn.metrics import log_loss, brier_score_loss, roc_auc_score, accuracy_score
     xgb_metrics = {
         "log_loss": log_loss(y_test, xgb_proba),
         "brier": brier_score_loss(y_test, xgb_proba),
@@ -315,7 +251,6 @@ def main():
             print(f"  {k}: {xgb_metrics[k]:.4f} (baseline: 0.5000)")
     
     # Calibration
-    from sklearn.calibration import calibration_curve
     prob_true, prob_pred = calibration_curve(y_test, xgb_proba, n_bins=15, strategy="quantile")
     print("\nQuantile Bins:")
     for i in range(len(prob_true)):
@@ -368,5 +303,16 @@ if __name__ == "__main__":
     import json
     from sklearn.metrics import log_loss, brier_score_loss, roc_auc_score, accuracy_score
     from sklearn.calibration import calibration_curve
+    import warnings
+    warnings.filterwarnings("ignore")
+    
+    ROOT = Path(__file__).parent.parent.parent
+    MODEL_DIR = Path(__file__).parent.parent / "models"
+    DATA_DIR = ROOT / "docs" / "data"
+    
+    MODEL_FILE = Path("ml_model/models/xgboost_model.pkl")
+    CALIBRATOR_FILE = Path("ml_model/models/calibrator.pkl")
+    PREDICTIONS_LOG = Path("docs/data/predictions_log.json")
+    ACCURACY_FILE = Path("docs/data/accuracy.json")
     
     main()

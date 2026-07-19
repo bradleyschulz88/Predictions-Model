@@ -9,10 +9,8 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, asdict
 from pathlib import Path
-from typing import Any
 import pandas as pd
 import numpy as np
-from datetime import datetime
 
 
 FIXTURE_DIR = Path(__file__).parent.parent.parent / "tests" / "fixtures"
@@ -322,9 +320,12 @@ def extract_odds(odds: dict) -> dict:
     # Normalize (remove vig)
     total = sum(p for p in [home_pct, away_pct, draw_pct] if p is not None)
     if total and total > 0:
-        if home_pct: home_pct = home_pct / total
-        if away_pct: away_pct = away_pct / total
-        if draw_pct: draw_pct = draw_pct / total
+        if home_pct:
+            home_pct = home_pct / total
+        if away_pct:
+            away_pct = away_pct / total
+        if draw_pct:
+            draw_pct = draw_pct / total
     
     return {
         "market_home_pct": home_pct,

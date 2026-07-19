@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import re
-from typing import Any
 
 
 def parse_record(summary: str | None) -> tuple[int, ...] | None:

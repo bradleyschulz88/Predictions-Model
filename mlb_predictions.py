@@ -21,7 +21,7 @@ from data_providers.league_metrics import (
 from data_providers.mlb_pitcher import mlb_pitching_logit_adjustment
 from data_providers.schedule_advanced import schedule_flags_logit_adjustment
 from data_providers.enrich import enrich_games_with_providers
-from shared_utils import parse_record, win_pct_from_record, format_record, format_win_pct
+from shared_utils import parse_record, win_pct_from_record, format_win_pct
 
 HOME_FIELD_LOGIT = {
     "mlb": 0.28,
@@ -1556,7 +1556,7 @@ def predict_spread(game: dict[str, Any], lines: list[dict[str, Any]], enrichment
     
     # Clear directional language
     if pick_side == "push":
-        pick_text = f"Push (no lean)"
+        pick_text = "Push (no lean)"
     elif pick_side == "home":
         pick_text = f"Home {spread_line:+.1f}"
     else:
