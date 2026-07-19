@@ -1,45 +1,45 @@
 {
-  "updatedAt": "2026-07-18T23:46:40.620751+00:00",
+  "updatedAt": "2026-07-19T01:48:22.425015+00:00",
   "summary": {
     "last7Days": {
-      "correct": 326,
-      "total": 544,
-      "pct": 59.9,
-      "units": 4.892,
-      "roiPct": 0.9,
+      "correct": 328,
+      "total": 546,
+      "pct": 60.1,
+      "units": 5.725,
+      "roiPct": 1.0,
       "pending": 50
     },
     "allTime": {
-      "correct": 326,
-      "total": 544,
-      "pct": 59.9,
-      "units": 4.892,
-      "roiPct": 0.9,
-      "pending": 128
+      "correct": 328,
+      "total": 546,
+      "pct": 60.1,
+      "units": 5.725,
+      "roiPct": 1.0,
+      "pending": 126
     },
     "byLeague": {
+      "wnba": {
+        "correct": 52,
+        "total": 76,
+        "pct": 68.4,
+        "units": 6.0,
+        "roiPct": 7.9,
+        "pending": 0
+      },
+      "mlb": {
+        "correct": 202,
+        "total": 362,
+        "pct": 55.8,
+        "units": -9.918,
+        "roiPct": -2.7,
+        "pending": 0
+      },
       "worldcup": {
         "correct": 48,
         "total": 74,
         "pct": 64.9,
         "units": 4.643,
         "roiPct": 6.3,
-        "pending": 0
-      },
-      "mlb": {
-        "correct": 201,
-        "total": 361,
-        "pct": 55.7,
-        "units": -10.751,
-        "roiPct": -3.0,
-        "pending": 0
-      },
-      "wnba": {
-        "correct": 51,
-        "total": 75,
-        "pct": 68.0,
-        "units": 6.0,
-        "roiPct": 8.0,
         "pending": 0
       },
       "afl": {
@@ -52,13 +52,51 @@
       }
     },
     "streak": {
-      "current": 1,
-      "type": "loss",
+      "current": 2,
+      "type": "win",
       "bestWin": 10,
       "bestLoss": 6
     }
   },
   "recentResults": [
+    {
+      "eventId": "401857078",
+      "league": "wnba",
+      "scheduleDate": "2026-07-18",
+      "matchup": "Portland Fire @ Minnesota Lynx",
+      "predicted": "Minnesota Lynx",
+      "predictedSide": "home",
+      "outcomeLabel": "Minnesota Lynx to win",
+      "confidence": 67.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Minnesota Lynx",
+      "correct": true,
+      "units": null,
+      "homeScore": "101",
+      "awayScore": "93",
+      "gradedAt": "2026-07-19T01:48:19.467242+00:00",
+      "date": "2026-07-18"
+    },
+    {
+      "eventId": "401816160",
+      "league": "mlb",
+      "scheduleDate": "2026-07-18",
+      "matchup": "Tampa Bay Rays @ Boston Red Sox",
+      "predicted": "Boston Red Sox",
+      "predictedSide": "home",
+      "outcomeLabel": "Boston Red Sox to win",
+      "confidence": 64.5,
+      "pickOdds": -120,
+      "status": "graded",
+      "actual": "Boston Red Sox",
+      "correct": true,
+      "units": 0.833,
+      "homeScore": "7",
+      "awayScore": "6",
+      "gradedAt": "2026-07-19T01:48:11.054347+00:00",
+      "date": "2026-07-18"
+    },
     {
       "eventId": "760516",
       "league": "worldcup",
@@ -1919,44 +1957,6 @@
       "homeScore": "14",
       "awayScore": "1",
       "gradedAt": "2026-07-16T02:07:02.022037+00:00",
-      "date": "2026-07-10"
-    },
-    {
-      "eventId": "401816103",
-      "league": "mlb",
-      "scheduleDate": "2026-07-10",
-      "matchup": "Seattle Mariners @ Tampa Bay Rays",
-      "predicted": "Tampa Bay Rays",
-      "predictedSide": "home",
-      "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 70.5,
-      "pickOdds": -116,
-      "status": "graded",
-      "actual": "Tampa Bay Rays",
-      "correct": true,
-      "units": 0.862,
-      "homeScore": "7",
-      "awayScore": "2",
-      "gradedAt": "2026-07-16T02:07:02.022031+00:00",
-      "date": "2026-07-10"
-    },
-    {
-      "eventId": "401816098",
-      "league": "mlb",
-      "scheduleDate": "2026-07-10",
-      "matchup": "Cleveland Guardians @ Miami Marlins",
-      "predicted": "Miami Marlins",
-      "predictedSide": "home",
-      "outcomeLabel": "Miami Marlins to win",
-      "confidence": 65.6,
-      "pickOdds": -116,
-      "status": "graded",
-      "actual": "Cleveland Guardians",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "2",
-      "awayScore": "3",
-      "gradedAt": "2026-07-16T02:07:02.022024+00:00",
       "date": "2026-07-10"
     }
   ],
@@ -14036,15 +14036,15 @@
       "predicted": "Minnesota Lynx",
       "predictedSide": "home",
       "outcomeLabel": "Minnesota Lynx to win",
-      "confidence": 71.8,
+      "confidence": 67.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Minnesota Lynx",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "101",
+      "awayScore": "93",
+      "gradedAt": "2026-07-19T01:48:19.467242+00:00",
       "date": "2026-07-18"
     },
     "401857079": {
@@ -14625,15 +14625,15 @@
       "predicted": "Boston Red Sox",
       "predictedSide": "home",
       "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 64.7,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 64.5,
+      "pickOdds": -120,
+      "status": "graded",
+      "actual": "Boston Red Sox",
+      "correct": true,
+      "units": 0.833,
+      "homeScore": "7",
+      "awayScore": "6",
+      "gradedAt": "2026-07-19T01:48:11.054347+00:00",
       "date": "2026-07-18"
     },
     "401816157": {
