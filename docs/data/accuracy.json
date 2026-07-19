@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-19T05:17:19.899121+00:00",
+  "updatedAt": "2026-07-19T07:41:18.563788+00:00",
   "summary": {
     "last7Days": {
-      "correct": 329,
-      "total": 543,
-      "pct": 60.6,
+      "correct": 330,
+      "total": 544,
+      "pct": 60.7,
       "units": 8.916,
       "roiPct": 1.6,
       "pending": 50
     },
     "allTime": {
-      "correct": 333,
-      "total": 552,
-      "pct": 60.3,
+      "correct": 334,
+      "total": 553,
+      "pct": 60.4,
       "units": 7.716,
       "roiPct": 1.4,
       "pending": 134
     },
     "byLeague": {
+      "afl": {
+        "correct": 27,
+        "total": 35,
+        "pct": 77.1,
+        "units": 5.0,
+        "roiPct": 14.3,
+        "pending": 0
+      },
       "wnba": {
         "correct": 54,
         "total": 77,
@@ -41,24 +49,35 @@
         "units": 4.643,
         "roiPct": 6.3,
         "pending": 0
-      },
-      "afl": {
-        "correct": 26,
-        "total": 34,
-        "pct": 76.5,
-        "units": 5.0,
-        "roiPct": 14.7,
-        "pending": 0
       }
     },
     "streak": {
-      "current": 2,
+      "current": 1,
       "type": "loss",
       "bestWin": 10,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133641",
+      "league": "afl",
+      "scheduleDate": "2026-07-19",
+      "matchup": "Hawthorn @ Richmond",
+      "predicted": "Hawthorn",
+      "predictedSide": "away",
+      "outcomeLabel": "Hawthorn to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Hawthorn",
+      "correct": true,
+      "units": null,
+      "homeScore": "52",
+      "awayScore": "122",
+      "gradedAt": "2026-07-19T07:41:04.254725+00:00",
+      "date": "2026-07-19"
+    },
     {
       "eventId": "401857079",
       "league": "wnba",
@@ -1939,25 +1958,6 @@
       "awayScore": "4",
       "gradedAt": "2026-07-16T02:07:02.022116+00:00",
       "date": "2026-07-10"
-    },
-    {
-      "eventId": "401816108",
-      "league": "mlb",
-      "scheduleDate": "2026-07-10",
-      "matchup": "Arizona Diamondbacks @ Los Angeles Dodgers",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "home",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 73.9,
-      "pickOdds": -263,
-      "status": "graded",
-      "actual": "Arizona Diamondbacks",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "3",
-      "awayScore": "9",
-      "gradedAt": "2026-07-16T02:07:02.022104+00:00",
-      "date": "2026-07-10"
     }
   ],
   "pendingPicks": [
@@ -2217,6 +2217,25 @@
       "predictedSide": "away",
       "outcomeLabel": "Arizona Diamondbacks to win",
       "confidence": 57.6,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-26"
+    },
+    {
+      "eventId": "1133649",
+      "league": "afl",
+      "scheduleDate": "2026-07-26",
+      "matchup": "St Kilda @ North Melbourne",
+      "predicted": "St Kilda",
+      "predictedSide": "away",
+      "outcomeLabel": "St Kilda to win",
+      "confidence": 61.8,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -2891,25 +2910,6 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-24"
-    },
-    {
-      "eventId": "401816234",
-      "league": "mlb",
-      "scheduleDate": "2026-07-23",
-      "matchup": "Tampa Bay Rays @ Toronto Blue Jays",
-      "predicted": "Tampa Bay Rays",
-      "predictedSide": "away",
-      "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 57.1,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-23"
     }
   ],
   "picksByEventId": {
@@ -14380,13 +14380,13 @@
       "outcomeLabel": "Hawthorn to win",
       "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Hawthorn",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "52",
+      "awayScore": "122",
+      "gradedAt": "2026-07-19T07:41:04.254725+00:00",
       "date": "2026-07-19"
     },
     "1133639": {
@@ -15937,6 +15937,25 @@
       "predictedSide": "away",
       "outcomeLabel": "New York Yankees to win",
       "confidence": 64.8,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-26"
+    },
+    "1133649": {
+      "eventId": "1133649",
+      "league": "afl",
+      "scheduleDate": "2026-07-26",
+      "matchup": "St Kilda @ North Melbourne",
+      "predicted": "St Kilda",
+      "predictedSide": "away",
+      "outcomeLabel": "St Kilda to win",
+      "confidence": 61.8,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
