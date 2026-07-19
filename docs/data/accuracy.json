@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-07-19T07:41:18.563788+00:00",
+  "updatedAt": "2026-07-19T09:47:26.776522+00:00",
   "summary": {
     "last7Days": {
-      "correct": 330,
-      "total": 544,
-      "pct": 60.7,
+      "correct": 331,
+      "total": 546,
+      "pct": 60.6,
       "units": 8.916,
       "roiPct": 1.6,
       "pending": 50
     },
     "allTime": {
-      "correct": 334,
-      "total": 553,
+      "correct": 335,
+      "total": 555,
       "pct": 60.4,
       "units": 7.716,
       "roiPct": 1.4,
-      "pending": 134
+      "pending": 132
     },
     "byLeague": {
       "afl": {
-        "correct": 27,
-        "total": 35,
-        "pct": 77.1,
+        "correct": 28,
+        "total": 37,
+        "pct": 75.7,
         "units": 5.0,
-        "roiPct": 14.3,
+        "roiPct": 13.5,
         "pending": 0
       },
       "wnba": {
@@ -52,13 +52,51 @@
       }
     },
     "streak": {
-      "current": 1,
-      "type": "loss",
+      "current": 4,
+      "type": "win",
       "bestWin": 10,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133637",
+      "league": "afl",
+      "scheduleDate": "2026-07-19",
+      "matchup": "GWS GIANTS @ Essendon",
+      "predicted": "GWS GIANTS",
+      "predictedSide": "away",
+      "outcomeLabel": "GWS GIANTS to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Essendon",
+      "correct": false,
+      "units": null,
+      "homeScore": "67",
+      "awayScore": "64",
+      "gradedAt": "2026-07-19T09:47:15.807933+00:00",
+      "date": "2026-07-19"
+    },
+    {
+      "eventId": "1133639",
+      "league": "afl",
+      "scheduleDate": "2026-07-19",
+      "matchup": "Western Bulldogs @ Gold Coast SUNS",
+      "predicted": "Western Bulldogs",
+      "predictedSide": "away",
+      "outcomeLabel": "Western Bulldogs to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Western Bulldogs",
+      "correct": true,
+      "units": null,
+      "homeScore": "68",
+      "awayScore": "77",
+      "gradedAt": "2026-07-19T09:47:15.807891+00:00",
+      "date": "2026-07-19"
+    },
     {
       "eventId": "1133641",
       "league": "afl",
@@ -1920,44 +1958,6 @@
       "awayScore": "0",
       "gradedAt": "2026-07-16T02:07:02.091163+00:00",
       "date": "2026-07-11"
-    },
-    {
-      "eventId": "401816119",
-      "league": "mlb",
-      "scheduleDate": "2026-07-11",
-      "matchup": "Los Angeles Angels @ Minnesota Twins",
-      "predicted": "Minnesota Twins",
-      "predictedSide": "home",
-      "outcomeLabel": "Minnesota Twins to win",
-      "confidence": 73.7,
-      "pickOdds": -228,
-      "status": "graded",
-      "actual": "Minnesota Twins",
-      "correct": true,
-      "units": 0.439,
-      "homeScore": "5",
-      "awayScore": "3",
-      "gradedAt": "2026-07-16T02:07:02.091154+00:00",
-      "date": "2026-07-11"
-    },
-    {
-      "eventId": "401816109",
-      "league": "mlb",
-      "scheduleDate": "2026-07-10",
-      "matchup": "Colorado Rockies @ San Francisco Giants",
-      "predicted": "San Francisco Giants",
-      "predictedSide": "home",
-      "outcomeLabel": "San Francisco Giants to win",
-      "confidence": 71.9,
-      "pickOdds": -161,
-      "status": "graded",
-      "actual": "Colorado Rockies",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "3",
-      "awayScore": "4",
-      "gradedAt": "2026-07-16T02:07:02.022116+00:00",
-      "date": "2026-07-10"
     }
   ],
   "pendingPicks": [
@@ -14399,13 +14399,13 @@
       "outcomeLabel": "Western Bulldogs to win",
       "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Western Bulldogs",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "68",
+      "awayScore": "77",
+      "gradedAt": "2026-07-19T09:47:15.807891+00:00",
       "date": "2026-07-19"
     },
     "1133637": {
@@ -14418,13 +14418,13 @@
       "outcomeLabel": "GWS GIANTS to win",
       "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Essendon",
+      "correct": false,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "67",
+      "awayScore": "64",
+      "gradedAt": "2026-07-19T09:47:15.807933+00:00",
       "date": "2026-07-19"
     },
     "1133652": {
