@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-19T16:48:24.370003+00:00",
+  "updatedAt": "2026-07-19T16:57:11.042321+00:00",
   "summary": {
     "last7Days": {
       "correct": 331,
@@ -15,7 +15,7 @@
       "pct": 60.4,
       "units": 7.716,
       "roiPct": 1.4,
-      "pending": 132
+      "pending": 133
     },
     "byLeague": {
       "afl": {
@@ -2171,6 +2171,25 @@
       "date": "2026-07-26"
     },
     {
+      "eventId": "401816268",
+      "league": "mlb",
+      "scheduleDate": "2026-07-26",
+      "matchup": "Cleveland Guardians @ Tampa Bay Rays",
+      "predicted": "Tampa Bay Rays",
+      "predictedSide": "home",
+      "outcomeLabel": "Tampa Bay Rays to win",
+      "confidence": 60.8,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-26"
+    },
+    {
       "eventId": "401816267",
       "league": "mlb",
       "scheduleDate": "2026-07-26",
@@ -2881,25 +2900,6 @@
       "predicted": "Fremantle",
       "predictedSide": "home",
       "outcomeLabel": "Fremantle to win",
-      "confidence": 82.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-24"
-    },
-    {
-      "eventId": "1133650",
-      "league": "afl",
-      "scheduleDate": "2026-07-24",
-      "matchup": "Geelong Cats @ Melbourne",
-      "predicted": "Melbourne",
-      "predictedSide": "home",
-      "outcomeLabel": "Melbourne to win",
       "confidence": 82.4,
       "pickOdds": null,
       "status": "pending",
@@ -15956,6 +15956,25 @@
       "predictedSide": "away",
       "outcomeLabel": "St Kilda to win",
       "confidence": 61.8,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-26"
+    },
+    "401816268": {
+      "eventId": "401816268",
+      "league": "mlb",
+      "scheduleDate": "2026-07-26",
+      "matchup": "Cleveland Guardians @ Tampa Bay Rays",
+      "predicted": "Tampa Bay Rays",
+      "predictedSide": "home",
+      "outcomeLabel": "Tampa Bay Rays to win",
+      "confidence": 60.8,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
