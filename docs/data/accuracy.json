@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-22T12:13:41.687613+00:00",
+  "updatedAt": "2026-07-22T14:35:06.783961+00:00",
   "summary": {
     "last7Days": {
       "correct": 318,
@@ -15,7 +15,7 @@
       "pct": 59.7,
       "units": 6.391,
       "roiPct": 1.1,
-      "pending": 133
+      "pending": 134
     },
     "byLeague": {
       "mlb": {
@@ -1962,6 +1962,25 @@
   ],
   "pendingPicks": [
     {
+      "eventId": "1133655",
+      "league": "afl",
+      "scheduleDate": "2026-07-30",
+      "matchup": "Geelong Cats @ Collingwood",
+      "predicted": "Collingwood",
+      "predictedSide": "home",
+      "outcomeLabel": "Collingwood to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-30"
+    },
+    {
       "eventId": "401857098",
       "league": "wnba",
       "scheduleDate": "2026-07-29",
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Miami Marlins to win",
       "confidence": 60.9,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-26"
-    },
-    {
-      "eventId": "401816271",
-      "league": "mlb",
-      "scheduleDate": "2026-07-26",
-      "matchup": "New York Yankees @ Philadelphia Phillies",
-      "predicted": "New York Yankees",
-      "predictedSide": "away",
-      "outcomeLabel": "New York Yankees to win",
-      "confidence": 64.8,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -16953,6 +16953,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29"
+    },
+    "1133655": {
+      "eventId": "1133655",
+      "league": "afl",
+      "scheduleDate": "2026-07-30",
+      "matchup": "Geelong Cats @ Collingwood",
+      "predicted": "Collingwood",
+      "predictedSide": "home",
+      "outcomeLabel": "Collingwood to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-30"
     }
   },
   "skippedDates": []
