@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-07-21T23:53:59.398059+00:00",
+  "updatedAt": "2026-07-22T01:49:00.552861+00:00",
   "summary": {
     "last7Days": {
-      "correct": 326,
-      "total": 540,
+      "correct": 327,
+      "total": 541,
       "pct": 60.4,
-      "units": 6.453,
-      "roiPct": 1.2,
+      "units": 7.059,
+      "roiPct": 1.3,
       "pending": 50
     },
     "allTime": {
-      "correct": 357,
-      "total": 593,
-      "pct": 60.2,
-      "units": 11.077,
-      "roiPct": 1.9,
+      "correct": 358,
+      "total": 594,
+      "pct": 60.3,
+      "units": 11.683,
+      "roiPct": 2.0,
       "pending": 130
     },
     "byLeague": {
+      "mlb": {
+        "correct": 207,
+        "total": 362,
+        "pct": 57.2,
+        "units": 1.776,
+        "roiPct": 0.5,
+        "pending": 0
+      },
       "wnba": {
         "correct": 53,
         "total": 78,
         "pct": 67.9,
         "units": 3.0,
         "roiPct": 3.8,
-        "pending": 0
-      },
-      "mlb": {
-        "correct": 206,
-        "total": 361,
-        "pct": 57.1,
-        "units": 1.17,
-        "roiPct": 0.3,
         "pending": 0
       },
       "afl": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 10,
+      "current": 9,
       "type": "win",
-      "bestWin": 10,
+      "bestWin": 9,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816203",
+      "league": "mlb",
+      "scheduleDate": "2026-07-21",
+      "matchup": "Minnesota Twins @ Cleveland Guardians",
+      "predicted": "Cleveland Guardians",
+      "predictedSide": "home",
+      "outcomeLabel": "Cleveland Guardians to win",
+      "confidence": 73.8,
+      "pickOdds": -165,
+      "status": "graded",
+      "actual": "Cleveland Guardians",
+      "correct": true,
+      "units": 0.606,
+      "homeScore": "5",
+      "awayScore": "2",
+      "gradedAt": "2026-07-22T01:48:43.783067+00:00",
+      "date": "2026-07-21"
+    },
     {
       "eventId": "401857085",
       "league": "wnba",
@@ -1939,25 +1958,6 @@
       "awayScore": "91",
       "gradedAt": "2026-07-16T02:07:09.001051+00:00",
       "date": "2026-07-12"
-    },
-    {
-      "eventId": "401857061",
-      "league": "wnba",
-      "scheduleDate": "2026-07-12",
-      "matchup": "Seattle Storm @ Washington Mystics",
-      "predicted": "Washington Mystics",
-      "predictedSide": "home",
-      "outcomeLabel": "Washington Mystics to win",
-      "confidence": 72.4,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Washington Mystics",
-      "correct": true,
-      "units": null,
-      "homeScore": "84",
-      "awayScore": "79",
-      "gradedAt": "2026-07-16T02:07:09.001045+00:00",
-      "date": "2026-07-12"
     }
   ],
   "pendingPicks": [
@@ -2122,6 +2122,25 @@
       "predictedSide": "away",
       "outcomeLabel": "Boston Red Sox to win",
       "confidence": 70.2,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-28"
+    },
+    {
+      "eventId": "401816300",
+      "league": "mlb",
+      "scheduleDate": "2026-07-28",
+      "matchup": "Kansas City Royals @ Minnesota Twins",
+      "predicted": "Kansas City Royals",
+      "predictedSide": "away",
+      "outcomeLabel": "Kansas City Royals to win",
+      "confidence": 57.9,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Minnesota Twins to win",
       "confidence": 72.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-25"
-    },
-    {
-      "eventId": "401816258",
-      "league": "mlb",
-      "scheduleDate": "2026-07-25",
-      "matchup": "Toronto Blue Jays @ Boston Red Sox",
-      "predicted": "Boston Red Sox",
-      "predictedSide": "home",
-      "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 69.2,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -13523,15 +13523,15 @@
       "predicted": "Cleveland Guardians",
       "predictedSide": "home",
       "outcomeLabel": "Cleveland Guardians to win",
-      "confidence": 66.0,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 73.8,
+      "pickOdds": -165,
+      "status": "graded",
+      "actual": "Cleveland Guardians",
+      "correct": true,
+      "units": 0.606,
+      "homeScore": "5",
+      "awayScore": "2",
+      "gradedAt": "2026-07-22T01:48:43.783067+00:00",
       "date": "2026-07-21"
     },
     "401816204": {
@@ -16649,6 +16649,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-22"
+    },
+    "401816300": {
+      "eventId": "401816300",
+      "league": "mlb",
+      "scheduleDate": "2026-07-28",
+      "matchup": "Kansas City Royals @ Minnesota Twins",
+      "predicted": "Kansas City Royals",
+      "predictedSide": "away",
+      "outcomeLabel": "Kansas City Royals to win",
+      "confidence": 57.9,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-28"
     }
   },
   "skippedDates": []
