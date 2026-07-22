@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-07-22T19:01:22.844083+00:00",
+  "updatedAt": "2026-07-22T20:13:50.582953+00:00",
   "summary": {
     "last7Days": {
-      "correct": 318,
-      "total": 529,
-      "pct": 60.1,
-      "units": 3.345,
-      "roiPct": 0.6,
+      "correct": 319,
+      "total": 530,
+      "pct": 60.2,
+      "units": 4.086,
+      "roiPct": 0.8,
       "pending": 50
     },
     "allTime": {
-      "correct": 362,
-      "total": 606,
-      "pct": 59.7,
-      "units": 6.391,
-      "roiPct": 1.1,
-      "pending": 134
+      "correct": 363,
+      "total": 607,
+      "pct": 59.8,
+      "units": 7.132,
+      "roiPct": 1.2,
+      "pending": 133
     },
     "byLeague": {
       "mlb": {
-        "correct": 204,
-        "total": 360,
-        "pct": 56.7,
-        "units": -1.758,
-        "roiPct": -0.5,
+        "correct": 205,
+        "total": 361,
+        "pct": 56.8,
+        "units": -1.017,
+        "roiPct": -0.3,
         "pending": 0
       },
       "wnba": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 1,
-      "type": "win",
+      "current": 4,
+      "type": "loss",
       "bestWin": 5,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "401898715",
+      "league": "mlb",
+      "scheduleDate": "2026-07-22",
+      "matchup": "Baltimore Orioles @ Boston Red Sox",
+      "predicted": "Boston Red Sox",
+      "predictedSide": "home",
+      "outcomeLabel": "Boston Red Sox to win",
+      "confidence": 63.8,
+      "pickOdds": -135,
+      "status": "graded",
+      "actual": "Boston Red Sox",
+      "correct": true,
+      "units": 0.741,
+      "homeScore": "6",
+      "awayScore": "3",
+      "gradedAt": "2026-07-22T20:13:36.794753+00:00",
+      "date": "2026-07-22"
+    },
     {
       "eventId": "401816214",
       "league": "mlb",
@@ -1939,25 +1958,6 @@
       "awayScore": "75",
       "gradedAt": "2026-07-16T13:03:26.405640+00:00",
       "date": "2026-07-16"
-    },
-    {
-      "eventId": "401857070",
-      "league": "wnba",
-      "scheduleDate": "2026-07-15",
-      "matchup": "Golden State Valkyries @ Indiana Fever",
-      "predicted": "Golden State Valkyries",
-      "predictedSide": "away",
-      "outcomeLabel": "Golden State Valkyries to win",
-      "confidence": 57.9,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Golden State Valkyries",
-      "correct": true,
-      "units": null,
-      "homeScore": "75",
-      "awayScore": "88",
-      "gradedAt": "2026-07-16T05:26:27.401872+00:00",
-      "date": "2026-07-15"
     }
   ],
   "pendingPicks": [
@@ -16639,15 +16639,15 @@
       "predicted": "Boston Red Sox",
       "predictedSide": "home",
       "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 64.8,
-      "pickOdds": -148,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 63.8,
+      "pickOdds": -135,
+      "status": "graded",
+      "actual": "Boston Red Sox",
+      "correct": true,
+      "units": 0.741,
+      "homeScore": "6",
+      "awayScore": "3",
+      "gradedAt": "2026-07-22T20:13:36.794753+00:00",
       "date": "2026-07-22"
     },
     "401816300": {
