@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-23T14:44:23.569235+00:00",
+  "updatedAt": "2026-07-23T16:23:10.772042+00:00",
   "summary": {
     "last7Days": {
       "correct": 318,
@@ -15,7 +15,7 @@
       "pct": 59.5,
       "units": 6.158,
       "roiPct": 1.0,
-      "pending": 123
+      "pending": 124
     },
     "byLeague": {
       "afl": {
@@ -2057,6 +2057,25 @@
       "date": "2026-07-30"
     },
     {
+      "eventId": "401816327",
+      "league": "mlb",
+      "scheduleDate": "2026-07-30",
+      "matchup": "Kansas City Royals @ Minnesota Twins",
+      "predicted": "Minnesota Twins",
+      "predictedSide": "home",
+      "outcomeLabel": "Minnesota Twins to win",
+      "confidence": 62.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-30"
+    },
+    {
       "eventId": "401816326",
       "league": "mlb",
       "scheduleDate": "2026-07-30",
@@ -2882,25 +2901,6 @@
       "predictedSide": "away",
       "outcomeLabel": "New York Yankees to win",
       "confidence": 58.7,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-27"
-    },
-    {
-      "eventId": "401816286",
-      "league": "mlb",
-      "scheduleDate": "2026-07-27",
-      "matchup": "Chicago Cubs @ St. Louis Cardinals",
-      "predicted": "St. Louis Cardinals",
-      "predictedSide": "home",
-      "outcomeLabel": "St. Louis Cardinals to win",
-      "confidence": 62.8,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -17219,6 +17219,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31"
+    },
+    "401816327": {
+      "eventId": "401816327",
+      "league": "mlb",
+      "scheduleDate": "2026-07-30",
+      "matchup": "Kansas City Royals @ Minnesota Twins",
+      "predicted": "Minnesota Twins",
+      "predictedSide": "home",
+      "outcomeLabel": "Minnesota Twins to win",
+      "confidence": 62.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-30"
     }
   },
   "skippedDates": []
