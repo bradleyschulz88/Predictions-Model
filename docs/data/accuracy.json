@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-22T22:59:26.240616+00:00",
+  "updatedAt": "2026-07-23T00:01:59.567384+00:00",
   "summary": {
     "last7Days": {
       "correct": 324,
@@ -15,7 +15,7 @@
       "pct": 59.7,
       "units": 8.77,
       "roiPct": 1.4,
-      "pending": 124
+      "pending": 125
     },
     "byLeague": {
       "mlb": {
@@ -2209,6 +2209,25 @@
       "date": "2026-07-29"
     },
     {
+      "eventId": "401816307",
+      "league": "mlb",
+      "scheduleDate": "2026-07-29",
+      "matchup": "Arizona Diamondbacks @ Pittsburgh Pirates",
+      "predicted": "Arizona Diamondbacks",
+      "predictedSide": "away",
+      "outcomeLabel": "Arizona Diamondbacks to win",
+      "confidence": 58.6,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-29"
+    },
+    {
       "eventId": "401857096",
       "league": "wnba",
       "scheduleDate": "2026-07-28",
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Boston Red Sox to win",
       "confidence": 69.9,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-26"
-    },
-    {
-      "eventId": "401816272",
-      "league": "mlb",
-      "scheduleDate": "2026-07-26",
-      "matchup": "San Diego Padres @ Miami Marlins",
-      "predicted": "Miami Marlins",
-      "predictedSide": "home",
-      "outcomeLabel": "Miami Marlins to win",
-      "confidence": 60.9,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -16972,6 +16972,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-30"
+    },
+    "401816307": {
+      "eventId": "401816307",
+      "league": "mlb",
+      "scheduleDate": "2026-07-29",
+      "matchup": "Arizona Diamondbacks @ Pittsburgh Pirates",
+      "predicted": "Arizona Diamondbacks",
+      "predictedSide": "away",
+      "outcomeLabel": "Arizona Diamondbacks to win",
+      "confidence": 58.6,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-29"
     }
   },
   "skippedDates": []
