@@ -1,23 +1,31 @@
 {
-  "updatedAt": "2026-07-23T17:58:20.494607+00:00",
+  "updatedAt": "2026-07-23T19:03:57.607143+00:00",
   "summary": {
     "last7Days": {
-      "correct": 318,
-      "total": 533,
+      "correct": 319,
+      "total": 534,
       "pct": 59.7,
-      "units": 0.355,
+      "units": 0.719,
       "roiPct": 0.1,
       "pending": 50
     },
     "allTime": {
-      "correct": 375,
-      "total": 630,
-      "pct": 59.5,
-      "units": 6.158,
+      "correct": 376,
+      "total": 631,
+      "pct": 59.6,
+      "units": 6.522,
       "roiPct": 1.0,
-      "pending": 124
+      "pending": 123
     },
     "byLeague": {
+      "mlb": {
+        "correct": 208,
+        "total": 366,
+        "pct": 56.8,
+        "units": 2.069,
+        "roiPct": 0.6,
+        "pending": 0
+      },
       "afl": {
         "correct": 24,
         "total": 33,
@@ -34,14 +42,6 @@
         "roiPct": 0.0,
         "pending": 0
       },
-      "mlb": {
-        "correct": 207,
-        "total": 365,
-        "pct": 56.7,
-        "units": 1.705,
-        "roiPct": 0.5,
-        "pending": 0
-      },
       "worldcup": {
         "correct": 35,
         "total": 58,
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 2,
+      "current": 1,
       "type": "win",
       "bestWin": 5,
       "bestLoss": 5
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816233",
+      "league": "mlb",
+      "scheduleDate": "2026-07-23",
+      "matchup": "San Diego Padres @ Atlanta Braves",
+      "predicted": "Atlanta Braves",
+      "predictedSide": "home",
+      "outcomeLabel": "Atlanta Braves to win",
+      "confidence": 76.8,
+      "pickOdds": -275,
+      "status": "graded",
+      "actual": "Atlanta Braves",
+      "correct": true,
+      "units": 0.364,
+      "homeScore": "6",
+      "awayScore": "5",
+      "gradedAt": "2026-07-23T19:03:35.477039+00:00",
+      "date": "2026-07-23"
+    },
     {
       "eventId": "1133652",
       "league": "afl",
@@ -1939,25 +1958,6 @@
       "awayScore": "96",
       "gradedAt": "2026-07-18T14:21:37.962185+00:00",
       "date": "2026-07-17"
-    },
-    {
-      "eventId": "1133644",
-      "league": "afl",
-      "scheduleDate": "2026-07-18",
-      "matchup": "Brisbane Lions @ West Coast Eagles",
-      "predicted": "Brisbane Lions",
-      "predictedSide": "away",
-      "outcomeLabel": "Brisbane Lions to win",
-      "confidence": 82.4,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Brisbane Lions",
-      "correct": true,
-      "units": null,
-      "homeScore": "69",
-      "awayScore": "93",
-      "gradedAt": "2026-07-18T12:54:36.213427+00:00",
-      "date": "2026-07-18"
     }
   ],
   "pendingPicks": [
@@ -14454,15 +14454,15 @@
       "predicted": "Atlanta Braves",
       "predictedSide": "home",
       "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 74.5,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 76.8,
+      "pickOdds": -275,
+      "status": "graded",
+      "actual": "Atlanta Braves",
+      "correct": true,
+      "units": 0.364,
+      "homeScore": "6",
+      "awayScore": "5",
+      "gradedAt": "2026-07-23T19:03:35.477039+00:00",
       "date": "2026-07-23"
     },
     "401816232": {
