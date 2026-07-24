@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-24T18:59:39.572705+00:00",
+  "updatedAt": "2026-07-24T20:14:06.109618+00:00",
   "summary": {
     "last7Days": {
       "correct": 308,
@@ -15,7 +15,7 @@
       "pct": 59.3,
       "units": 3.963,
       "roiPct": 0.6,
-      "pending": 135
+      "pending": 136
     },
     "byLeague": {
       "afl": {
@@ -2285,6 +2285,25 @@
       "date": "2026-07-31"
     },
     {
+      "eventId": "401816332",
+      "league": "mlb",
+      "scheduleDate": "2026-07-31",
+      "matchup": "Arizona Diamondbacks @ Cleveland Guardians",
+      "predicted": "Cleveland Guardians",
+      "predictedSide": "home",
+      "outcomeLabel": "Cleveland Guardians to win",
+      "confidence": 57.6,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-31"
+    },
+    {
       "eventId": "1133662",
       "league": "afl",
       "scheduleDate": "2026-07-31",
@@ -2882,25 +2901,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Washington Mystics to win",
       "confidence": 69.9,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-28"
-    },
-    {
-      "eventId": "401816306",
-      "league": "mlb",
-      "scheduleDate": "2026-07-28",
-      "matchup": "Seattle Mariners @ Los Angeles Dodgers",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "home",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 64.5,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -17580,6 +17580,25 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-01"
+    },
+    "401816332": {
+      "eventId": "401816332",
+      "league": "mlb",
+      "scheduleDate": "2026-07-31",
+      "matchup": "Arizona Diamondbacks @ Cleveland Guardians",
+      "predicted": "Cleveland Guardians",
+      "predictedSide": "home",
+      "outcomeLabel": "Cleveland Guardians to win",
+      "confidence": 57.6,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-31"
     }
   },
   "skippedDates": []
