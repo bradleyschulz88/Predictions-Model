@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-07-24T22:57:37.950001+00:00",
+  "updatedAt": "2026-07-24T23:59:35.502535+00:00",
   "summary": {
     "last7Days": {
       "correct": 308,
-      "total": 520,
-      "pct": 59.2,
-      "units": -3.333,
-      "roiPct": -0.6,
+      "total": 521,
+      "pct": 59.1,
+      "units": -4.333,
+      "roiPct": -0.8,
       "pending": 50
     },
     "allTime": {
       "correct": 378,
-      "total": 637,
-      "pct": 59.3,
-      "units": 3.963,
-      "roiPct": 0.6,
-      "pending": 136
+      "total": 638,
+      "pct": 59.2,
+      "units": 2.963,
+      "roiPct": 0.5,
+      "pending": 135
     },
     "byLeague": {
+      "mlb": {
+        "correct": 200,
+        "total": 356,
+        "pct": 56.2,
+        "units": -2.892,
+        "roiPct": -0.8,
+        "pending": 0
+      },
       "afl": {
         "correct": 25,
         "total": 35,
         "pct": 71.4,
         "units": 0.0,
         "roiPct": 0.0,
-        "pending": 0
-      },
-      "mlb": {
-        "correct": 200,
-        "total": 355,
-        "pct": 56.3,
-        "units": -1.892,
-        "roiPct": -0.5,
         "pending": 0
       },
       "wnba": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 2,
+      "current": 1,
       "type": "win",
       "bestWin": 5,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816246",
+      "league": "mlb",
+      "scheduleDate": "2026-07-24",
+      "matchup": "Colorado Rockies @ Milwaukee Brewers",
+      "predicted": "Milwaukee Brewers",
+      "predictedSide": "home",
+      "outcomeLabel": "Milwaukee Brewers to win",
+      "confidence": 76.8,
+      "pickOdds": -275,
+      "status": "graded",
+      "actual": "Colorado Rockies",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "2",
+      "awayScore": "5",
+      "gradedAt": "2026-07-24T23:59:25.234451+00:00",
+      "date": "2026-07-24"
+    },
     {
       "eventId": "1133653",
       "league": "afl",
@@ -1938,25 +1957,6 @@
       "homeScore": "6",
       "awayScore": "1",
       "gradedAt": "2026-07-18T23:46:29.436927+00:00",
-      "date": "2026-07-18"
-    },
-    {
-      "eventId": "401816165",
-      "league": "mlb",
-      "scheduleDate": "2026-07-18",
-      "matchup": "San Diego Padres @ Kansas City Royals",
-      "predicted": "Kansas City Royals",
-      "predictedSide": "home",
-      "outcomeLabel": "Kansas City Royals to win",
-      "confidence": 75.7,
-      "pickOdds": -110,
-      "status": "graded",
-      "actual": "Kansas City Royals",
-      "correct": true,
-      "units": 0.909,
-      "homeScore": "6",
-      "awayScore": "1",
-      "gradedAt": "2026-07-18T22:44:27.854408+00:00",
       "date": "2026-07-18"
     }
   ],
@@ -14720,15 +14720,15 @@
       "predicted": "Milwaukee Brewers",
       "predictedSide": "home",
       "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 75.5,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 76.8,
+      "pickOdds": -275,
+      "status": "graded",
+      "actual": "Colorado Rockies",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "2",
+      "awayScore": "5",
+      "gradedAt": "2026-07-24T23:59:25.234451+00:00",
       "date": "2026-07-24"
     },
     "401816237": {
