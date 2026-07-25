@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-07-25T07:18:25.852456+00:00",
+  "updatedAt": "2026-07-25T09:23:28.644648+00:00",
   "summary": {
     "last7Days": {
-      "correct": 302,
-      "total": 510,
-      "pct": 59.2,
+      "correct": 304,
+      "total": 512,
+      "pct": 59.4,
       "units": -6.359,
       "roiPct": -1.2,
       "pending": 50
     },
     "allTime": {
-      "correct": 388,
-      "total": 653,
-      "pct": 59.4,
+      "correct": 390,
+      "total": 655,
+      "pct": 59.5,
       "units": 7.207,
       "roiPct": 1.1,
-      "pending": 136
+      "pending": 134
     },
     "byLeague": {
+      "afl": {
+        "correct": 28,
+        "total": 38,
+        "pct": 73.7,
+        "units": 0.0,
+        "roiPct": 0.0,
+        "pending": 0
+      },
       "mlb": {
         "correct": 199,
         "total": 354,
         "pct": 56.2,
         "units": -2.465,
         "roiPct": -0.7,
-        "pending": 0
-      },
-      "afl": {
-        "correct": 26,
-        "total": 36,
-        "pct": 72.2,
-        "units": 0.0,
-        "roiPct": 0.0,
         "pending": 0
       },
       "wnba": {
@@ -53,12 +53,50 @@
     },
     "streak": {
       "current": 1,
-      "type": "win",
+      "type": "loss",
       "bestWin": 6,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133647",
+      "league": "afl",
+      "scheduleDate": "2026-07-25",
+      "matchup": "Sydney Swans @ GWS GIANTS",
+      "predicted": "Sydney Swans",
+      "predictedSide": "away",
+      "outcomeLabel": "Sydney Swans to win",
+      "confidence": 73.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Sydney Swans",
+      "correct": true,
+      "units": null,
+      "homeScore": "88",
+      "awayScore": "139",
+      "gradedAt": "2026-07-25T09:22:58.329209+00:00",
+      "date": "2026-07-25"
+    },
+    {
+      "eventId": "1133648",
+      "league": "afl",
+      "scheduleDate": "2026-07-25",
+      "matchup": "Essendon @ Hawthorn",
+      "predicted": "Hawthorn",
+      "predictedSide": "home",
+      "outcomeLabel": "Hawthorn to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Hawthorn",
+      "correct": true,
+      "units": null,
+      "homeScore": "132",
+      "awayScore": "39",
+      "gradedAt": "2026-07-25T09:22:58.329188+00:00",
+      "date": "2026-07-25"
+    },
     {
       "eventId": "401816249",
       "league": "mlb",
@@ -1919,44 +1957,6 @@
       "homeScore": "0",
       "awayScore": "3",
       "gradedAt": "2026-07-19T18:55:58.246824+00:00",
-      "date": "2026-07-19"
-    },
-    {
-      "eventId": "1133637",
-      "league": "afl",
-      "scheduleDate": "2026-07-19",
-      "matchup": "GWS GIANTS @ Essendon",
-      "predicted": "GWS GIANTS",
-      "predictedSide": "away",
-      "outcomeLabel": "GWS GIANTS to win",
-      "confidence": 82.4,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Essendon",
-      "correct": false,
-      "units": null,
-      "homeScore": "67",
-      "awayScore": "64",
-      "gradedAt": "2026-07-19T09:47:15.807933+00:00",
-      "date": "2026-07-19"
-    },
-    {
-      "eventId": "1133639",
-      "league": "afl",
-      "scheduleDate": "2026-07-19",
-      "matchup": "Western Bulldogs @ Gold Coast SUNS",
-      "predicted": "Western Bulldogs",
-      "predictedSide": "away",
-      "outcomeLabel": "Western Bulldogs to win",
-      "confidence": 82.4,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Western Bulldogs",
-      "correct": true,
-      "units": null,
-      "homeScore": "68",
-      "awayScore": "77",
-      "gradedAt": "2026-07-19T09:47:15.807891+00:00",
       "date": "2026-07-19"
     }
   ],
@@ -15026,13 +15026,13 @@
       "outcomeLabel": "Hawthorn to win",
       "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Hawthorn",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "132",
+      "awayScore": "39",
+      "gradedAt": "2026-07-25T09:22:58.329188+00:00",
       "date": "2026-07-25"
     },
     "1133647": {
@@ -15043,15 +15043,15 @@
       "predicted": "Sydney Swans",
       "predictedSide": "away",
       "outcomeLabel": "Sydney Swans to win",
-      "confidence": 78.5,
+      "confidence": 73.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Sydney Swans",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "88",
+      "awayScore": "139",
+      "gradedAt": "2026-07-25T09:22:58.329209+00:00",
       "date": "2026-07-25"
     },
     "1133651": {
