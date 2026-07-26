@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-07-26T22:34:01.395109+00:00",
+  "updatedAt": "2026-07-26T23:33:29.599182+00:00",
   "summary": {
     "last7Days": {
       "correct": 317,
-      "total": 525,
-      "pct": 60.4,
-      "units": -2.342,
-      "roiPct": -0.4,
+      "total": 526,
+      "pct": 60.3,
+      "units": -3.342,
+      "roiPct": -0.6,
       "pending": 50
     },
     "allTime": {
       "correct": 409,
-      "total": 686,
-      "pct": 59.6,
-      "units": 5.666,
-      "roiPct": 0.8,
-      "pending": 125
+      "total": 687,
+      "pct": 59.5,
+      "units": 4.666,
+      "roiPct": 0.7,
+      "pending": 124
     },
     "byLeague": {
       "mlb": {
         "correct": 212,
-        "total": 374,
-        "pct": 56.7,
-        "units": -2.123,
-        "roiPct": -0.6,
+        "total": 375,
+        "pct": 56.5,
+        "units": -3.123,
+        "roiPct": -0.8,
         "pending": 0
       },
       "afl": {
@@ -53,12 +53,31 @@
     },
     "streak": {
       "current": 1,
-      "type": "loss",
+      "type": "win",
       "bestWin": 6,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816279",
+      "league": "mlb",
+      "scheduleDate": "2026-07-26",
+      "matchup": "Los Angeles Angels @ San Francisco Giants",
+      "predicted": "San Francisco Giants",
+      "predictedSide": "home",
+      "outcomeLabel": "San Francisco Giants to win",
+      "confidence": 57.9,
+      "pickOdds": 105,
+      "status": "graded",
+      "actual": "Los Angeles Angels",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "3",
+      "awayScore": "4",
+      "gradedAt": "2026-07-26T23:33:11.867706+00:00",
+      "date": "2026-07-26"
+    },
     {
       "eventId": "401816278",
       "league": "mlb",
@@ -1938,25 +1957,6 @@
       "homeScore": "8",
       "awayScore": "0",
       "gradedAt": "2026-07-21T05:04:43.745217+00:00",
-      "date": "2026-07-20"
-    },
-    {
-      "eventId": "401816198",
-      "league": "mlb",
-      "scheduleDate": "2026-07-20",
-      "matchup": "Athletics @ Arizona Diamondbacks",
-      "predicted": "Arizona Diamondbacks",
-      "predictedSide": "home",
-      "outcomeLabel": "Arizona Diamondbacks to win",
-      "confidence": 59.0,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Athletics",
-      "correct": false,
-      "units": null,
-      "homeScore": "2",
-      "awayScore": "5",
-      "gradedAt": "2026-07-21T05:04:43.745210+00:00",
       "date": "2026-07-20"
     }
   ],
@@ -15917,15 +15917,15 @@
       "predicted": "San Francisco Giants",
       "predictedSide": "home",
       "outcomeLabel": "San Francisco Giants to win",
-      "confidence": 68.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 57.9,
+      "pickOdds": 105,
+      "status": "graded",
+      "actual": "Los Angeles Angels",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "3",
+      "awayScore": "4",
+      "gradedAt": "2026-07-26T23:33:11.867706+00:00",
       "date": "2026-07-26"
     },
     "401816271": {
