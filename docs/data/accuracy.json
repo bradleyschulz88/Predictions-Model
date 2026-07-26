@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-07-26T17:57:47.129752+00:00",
+  "updatedAt": "2026-07-26T19:02:33.504671+00:00",
   "summary": {
     "last7Days": {
-      "correct": 310,
-      "total": 512,
-      "pct": 60.5,
-      "units": -0.576,
-      "roiPct": -0.1,
+      "correct": 311,
+      "total": 513,
+      "pct": 60.6,
+      "units": 0.271,
+      "roiPct": 0.1,
       "pending": 50
     },
     "allTime": {
-      "correct": 402,
-      "total": 673,
-      "pct": 59.7,
-      "units": 7.432,
-      "roiPct": 1.1,
-      "pending": 136
+      "correct": 403,
+      "total": 674,
+      "pct": 59.8,
+      "units": 8.279,
+      "roiPct": 1.2,
+      "pending": 135
     },
     "byLeague": {
+      "mlb": {
+        "correct": 206,
+        "total": 362,
+        "pct": 56.9,
+        "units": 0.49,
+        "roiPct": 0.1,
+        "pending": 0
+      },
       "afl": {
         "correct": 31,
         "total": 40,
         "pct": 77.5,
         "units": 0.0,
         "roiPct": 0.0,
-        "pending": 0
-      },
-      "mlb": {
-        "correct": 205,
-        "total": 361,
-        "pct": 56.8,
-        "units": -0.357,
-        "roiPct": -0.1,
         "pending": 0
       },
       "wnba": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 5,
+      "current": 4,
       "type": "win",
       "bestWin": 6,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816268",
+      "league": "mlb",
+      "scheduleDate": "2026-07-26",
+      "matchup": "Cleveland Guardians @ Tampa Bay Rays",
+      "predicted": "Tampa Bay Rays",
+      "predictedSide": "home",
+      "outcomeLabel": "Tampa Bay Rays to win",
+      "confidence": 65.5,
+      "pickOdds": -118,
+      "status": "graded",
+      "actual": "Tampa Bay Rays",
+      "correct": true,
+      "units": 0.847,
+      "homeScore": "1",
+      "awayScore": "0",
+      "gradedAt": "2026-07-26T19:02:10.645628+00:00",
+      "date": "2026-07-26"
+    },
     {
       "eventId": "1133649",
       "league": "afl",
@@ -1939,25 +1958,6 @@
       "awayScore": "4",
       "gradedAt": "2026-07-21T01:49:12.346120+00:00",
       "date": "2026-07-20"
-    },
-    {
-      "eventId": "401816183",
-      "league": "mlb",
-      "scheduleDate": "2026-07-19",
-      "matchup": "San Francisco Giants @ Seattle Mariners",
-      "predicted": "Seattle Mariners",
-      "predictedSide": "home",
-      "outcomeLabel": "Seattle Mariners to win",
-      "confidence": 58.2,
-      "pickOdds": -200,
-      "status": "graded",
-      "actual": "Seattle Mariners",
-      "correct": true,
-      "units": 0.5,
-      "homeScore": "6",
-      "awayScore": "3",
-      "gradedAt": "2026-07-21T01:49:12.253354+00:00",
-      "date": "2026-07-19"
     }
   ],
   "pendingPicks": [
@@ -15974,15 +15974,15 @@
       "predicted": "Tampa Bay Rays",
       "predictedSide": "home",
       "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 60.8,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 65.5,
+      "pickOdds": -118,
+      "status": "graded",
+      "actual": "Tampa Bay Rays",
+      "correct": true,
+      "units": 0.847,
+      "homeScore": "1",
+      "awayScore": "0",
+      "gradedAt": "2026-07-26T19:02:10.645628+00:00",
       "date": "2026-07-26"
     },
     "401816221": {
