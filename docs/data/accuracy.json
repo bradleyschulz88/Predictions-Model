@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-07-26T04:54:47.148206+00:00",
+  "updatedAt": "2026-07-26T07:36:45.642485+00:00",
   "summary": {
     "last7Days": {
-      "correct": 308,
-      "total": 510,
-      "pct": 60.4,
+      "correct": 309,
+      "total": 511,
+      "pct": 60.5,
       "units": -0.576,
       "roiPct": -0.1,
       "pending": 50
     },
     "allTime": {
-      "correct": 400,
-      "total": 671,
-      "pct": 59.6,
+      "correct": 401,
+      "total": 672,
+      "pct": 59.7,
       "units": 7.432,
       "roiPct": 1.1,
-      "pending": 138
+      "pending": 137
     },
     "byLeague": {
+      "afl": {
+        "correct": 30,
+        "total": 39,
+        "pct": 76.9,
+        "units": 0.0,
+        "roiPct": 0.0,
+        "pending": 0
+      },
       "mlb": {
         "correct": 205,
         "total": 361,
         "pct": 56.8,
         "units": -0.357,
         "roiPct": -0.1,
-        "pending": 0
-      },
-      "afl": {
-        "correct": 29,
-        "total": 38,
-        "pct": 76.3,
-        "units": 0.0,
-        "roiPct": 0.0,
         "pending": 0
       },
       "wnba": {
@@ -52,13 +52,32 @@
       }
     },
     "streak": {
-      "current": 2,
+      "current": 1,
       "type": "loss",
       "bestWin": 6,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133645",
+      "league": "afl",
+      "scheduleDate": "2026-07-26",
+      "matchup": "Port Adelaide @ Brisbane Lions",
+      "predicted": "Brisbane Lions",
+      "predictedSide": "home",
+      "outcomeLabel": "Brisbane Lions to win",
+      "confidence": 82.4,
+      "pickOdds": null,
+      "status": "graded",
+      "actual": "Brisbane Lions",
+      "correct": true,
+      "units": null,
+      "homeScore": "126",
+      "awayScore": "67",
+      "gradedAt": "2026-07-26T07:36:22.865514+00:00",
+      "date": "2026-07-26"
+    },
     {
       "eventId": "401816263",
       "league": "mlb",
@@ -1938,25 +1957,6 @@
       "homeScore": "2",
       "awayScore": "1",
       "gradedAt": "2026-07-20T04:41:18.919844+00:00",
-      "date": "2026-07-19"
-    },
-    {
-      "eventId": "401857082",
-      "league": "wnba",
-      "scheduleDate": "2026-07-19",
-      "matchup": "Connecticut Sun @ Phoenix Mercury",
-      "predicted": "Connecticut Sun",
-      "predictedSide": "away",
-      "outcomeLabel": "Connecticut Sun to win",
-      "confidence": 62.2,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Phoenix Mercury",
-      "correct": false,
-      "units": null,
-      "homeScore": "72",
-      "awayScore": "63",
-      "gradedAt": "2026-07-20T01:05:15.166430+00:00",
       "date": "2026-07-19"
     }
   ],
@@ -15615,13 +15615,13 @@
       "outcomeLabel": "Brisbane Lions to win",
       "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "status": "graded",
+      "actual": "Brisbane Lions",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "126",
+      "awayScore": "67",
+      "gradedAt": "2026-07-26T07:36:22.865514+00:00",
       "date": "2026-07-26"
     },
     "401816194": {
