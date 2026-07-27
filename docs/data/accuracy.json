@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-07-27T20:17:01.814509+00:00",
+  "updatedAt": "2026-07-27T21:41:27.918673+00:00",
   "summary": {
     "last7Days": {
-      "correct": 304,
-      "total": 502,
+      "correct": 305,
+      "total": 503,
       "pct": 60.6,
-      "units": -0.555,
-      "roiPct": -0.1,
+      "units": 0.545,
+      "roiPct": 0.1,
       "pending": 50
     },
     "allTime": {
-      "correct": 409,
-      "total": 688,
-      "pct": 59.4,
-      "units": 3.666,
-      "roiPct": 0.5,
-      "pending": 134
+      "correct": 410,
+      "total": 689,
+      "pct": 59.5,
+      "units": 4.766,
+      "roiPct": 0.7,
+      "pending": 133
     },
     "byLeague": {
       "mlb": {
-        "correct": 205,
-        "total": 361,
-        "pct": 56.8,
-        "units": -0.908,
-        "roiPct": -0.3,
+        "correct": 206,
+        "total": 362,
+        "pct": 56.9,
+        "units": 0.192,
+        "roiPct": 0.1,
         "pending": 0
       },
       "afl": {
@@ -53,12 +53,31 @@
     },
     "streak": {
       "current": 1,
-      "type": "loss",
+      "type": "win",
       "bestWin": 6,
       "bestLoss": 4
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816288",
+      "league": "mlb",
+      "scheduleDate": "2026-07-27",
+      "matchup": "Seattle Mariners @ Texas Rangers",
+      "predicted": "Texas Rangers",
+      "predictedSide": "home",
+      "outcomeLabel": "Texas Rangers to win",
+      "confidence": 57.7,
+      "pickOdds": 110,
+      "status": "graded",
+      "actual": "Texas Rangers",
+      "correct": true,
+      "units": 1.1,
+      "homeScore": "7",
+      "awayScore": "3",
+      "gradedAt": "2026-07-27T21:41:05.966598+00:00",
+      "date": "2026-07-27"
+    },
     {
       "eventId": "401816271",
       "league": "mlb",
@@ -1938,25 +1957,6 @@
       "homeScore": "83",
       "awayScore": "109",
       "gradedAt": "2026-07-21T05:04:54.745282+00:00",
-      "date": "2026-07-20"
-    },
-    {
-      "eventId": "401816200",
-      "league": "mlb",
-      "scheduleDate": "2026-07-20",
-      "matchup": "St. Louis Cardinals @ Los Angeles Angels",
-      "predicted": "St. Louis Cardinals",
-      "predictedSide": "away",
-      "outcomeLabel": "St. Louis Cardinals to win",
-      "confidence": 57.3,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Los Angeles Angels",
-      "correct": false,
-      "units": null,
-      "homeScore": "3",
-      "awayScore": "2",
-      "gradedAt": "2026-07-21T05:04:43.745230+00:00",
       "date": "2026-07-20"
     }
   ],
@@ -16066,18 +16066,18 @@
       "league": "mlb",
       "scheduleDate": "2026-07-27",
       "matchup": "Seattle Mariners @ Texas Rangers",
-      "predicted": "Seattle Mariners",
-      "predictedSide": "away",
-      "outcomeLabel": "Seattle Mariners to win",
-      "confidence": 58.2,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "predicted": "Texas Rangers",
+      "predictedSide": "home",
+      "outcomeLabel": "Texas Rangers to win",
+      "confidence": 57.7,
+      "pickOdds": 110,
+      "status": "graded",
+      "actual": "Texas Rangers",
+      "correct": true,
+      "units": 1.1,
+      "homeScore": "7",
+      "awayScore": "3",
+      "gradedAt": "2026-07-27T21:41:05.966598+00:00",
       "date": "2026-07-27"
     },
     "401816280": {
