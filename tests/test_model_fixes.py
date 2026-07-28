@@ -152,5 +152,131 @@ class PublishableIdentityTests(unittest.TestCase):
         self.assertEqual(len([rank for rank in ranks if rank is not None]), sum(1 for flag in publishable if flag))
 
 
+
+class ScoringPaceTests(unittest.TestCase):
+    """Pace must be per game, to compare against a combined total line."""
+
+    def _form(self, scores):
+        return {"homeLastFive": {"games": [{"score": s} for s in scores]}, "awayLastFive": {}}
+
+    def test_pace_is_the_combined_score(self) -> None:
+        from mlb_predictions import _scoring_pace_from_form
+
+        # Two games totalling 8 and 6 -> 7.0, not 3.5 (the per-team average).
+        self.assertAlmostEqual(_scoring_pace_from_form(self._form(["5-3", "4-2"])), 7.0)
+
+    def test_over_is_reachable(self) -> None:
+        """The over branch was dead code while pace ran 2x low."""
+        from mlb_predictions import predict_total
+
+        lines = [{"viewType": "Total", "currentLine": {"over": 8.5, "under": 8.5}}]
+        hot = {"homeLastFive": {"games": [{"score": "9-7"}, {"score": "8-6"}]}, "awayLastFive": {}}
+        self.assertEqual(predict_total({"league": "mlb"}, lines, hot)["pickSide"], "over")
+
+    def test_under_still_reachable(self) -> None:
+        from mlb_predictions import predict_total
+
+        lines = [{"viewType": "Total", "currentLine": {"over": 8.5, "under": 8.5}}]
+        cold = {"homeLastFive": {"games": [{"score": "2-1"}, {"score": "3-2"}]}, "awayLastFive": {}}
+        self.assertEqual(predict_total({"league": "mlb"}, lines, cold)["pickSide"], "under")
+
+    def test_malformed_scores_are_skipped(self) -> None:
+        from mlb_predictions import _scoring_pace_from_form
+
+        self.assertIsNone(_scoring_pace_from_form(self._form(["", "postponed", "7"])))
+
+
+class SpreadModelTests(unittest.TestCase):
+    def _spread(self, home_prob, league="nba", line="-6.5"):
+        from mlb_predictions import predict_spread
+
+        lines = [{"viewType": "Spread", "currentLine": {"home": line}}]
+        prediction = {"probabilities": {"true": {"home": home_prob, "away": 1 - home_prob}}}
+        return predict_spread({"league": league}, lines, prediction)
+
+    def test_even_matchup_gives_a_pick_em_line(self) -> None:
+        self.assertAlmostEqual(self._spread(0.5)["modelLine"], 0.0, places=1)
+
+    def test_probability_actually_moves_the_line(self) -> None:
+        """The old version always produced exactly 0.0 regardless of input."""
+        self.assertLess(self._spread(0.8)["modelLine"], self._spread(0.6)["modelLine"])
+
+    def test_line_stays_realistic_at_the_extremes(self) -> None:
+        # A linear points-per-percent map produced -21 here; the correct
+        # answer for an 80% NBA favourite is around -10.
+        self.assertGreater(self._spread(0.8)["modelLine"], -12.0)
+        self.assertLess(self._spread(0.8)["modelLine"], -7.0)
+
+    def test_away_pick_uses_the_opposite_number(self) -> None:
+        result = self._spread(0.30, line="-6.5")
+        self.assertEqual(result["pickSide"], "away")
+        self.assertIn("+6.5", result["pick"])
+
+    def test_no_spread_for_fixed_line_leagues(self) -> None:
+        self.assertIsNone(self._spread(0.7, league="mlb"))
+        self.assertIsNone(self._spread(0.7, league="epl"))
+
+    def test_carries_no_invented_confidence(self) -> None:
+        result = self._spread(0.7)
+        self.assertIsNone(result["confidence"])
+        self.assertTrue(result["unvalidated"])
+
+    def test_missing_probabilities_yield_no_pick(self) -> None:
+        from mlb_predictions import predict_spread
+
+        lines = [{"viewType": "Spread", "currentLine": {"home": "-6.5"}}]
+        self.assertIsNone(predict_spread({"league": "nba"}, lines, {}))
+
+
+class EnrichmentPreservationTests(unittest.TestCase):
+    """apply_predictions must not clobber schedule-derived enrichment."""
+
+    def test_already_enriched_games_are_not_re_enriched(self) -> None:
+        import mlb_predictions
+
+        game = {
+            "league": "mlb",
+            "eventId": "1",
+            "homeTeam": "A",
+            "awayTeam": "B",
+            "homeRecord": "55-45",
+            "awayRecord": "45-55",
+            "enrichment": {
+                "sources": ["ESPN standings"],
+                "restDays": {"home": 1, "away": 3},
+                "homeScheduleFlags": {"backToBack": True},
+            },
+        }
+        with mock.patch.object(mlb_predictions, "enrich_games_with_providers") as enrich:
+            mlb_predictions.apply_predictions([game])
+        enrich.assert_not_called()
+        self.assertEqual(game["enrichment"]["restDays"], {"home": 1, "away": 3})
+        self.assertTrue(game["enrichment"]["homeScheduleFlags"]["backToBack"])
+
+    def test_unenriched_games_are_enriched_once_per_league(self) -> None:
+        import mlb_predictions
+
+        games = [
+            {"league": "mlb", "eventId": str(i), "homeTeam": "A", "awayTeam": "B", "enrichment": {}}
+            for i in range(5)
+        ]
+        with mock.patch.object(
+            mlb_predictions, "enrich_games_with_providers", side_effect=lambda g, **k: g
+        ) as enrich:
+            mlb_predictions.apply_predictions(games)
+        # Batched: one call for the slate, not one per game.
+        self.assertEqual(enrich.call_count, 1)
+        self.assertEqual(len(enrich.call_args[0][0]), 5)
+
+    def test_enrichment_failure_does_not_fail_predictions(self) -> None:
+        import mlb_predictions
+
+        game = {"league": "mlb", "eventId": "1", "homeTeam": "A", "awayTeam": "B", "enrichment": {}}
+        with mock.patch.object(
+            mlb_predictions, "enrich_games_with_providers", side_effect=RuntimeError("provider down")
+        ):
+            result = mlb_predictions.apply_predictions([game])
+        self.assertIsNotNone(result[0].get("prediction"))
+
 if __name__ == "__main__":
     unittest.main()

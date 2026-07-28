@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 import re
+from statistics import NormalDist
 from typing import Any
 
 from sports_config import get_league
@@ -765,19 +766,30 @@ def _head_to_head_logit_adjustment(enrichment: dict[str, Any]) -> float:
 
 
 def _scoring_pace_from_form(enrichment: dict[str, Any]) -> float | None:
-    scores: list[float] = []
+    """Average *combined* score of recent games, to compare against a total line.
+
+    This previously appended each team's score separately and averaged over all
+    of them, yielding runs per team (~4) while the caller compared it against a
+    combined total (~8.5). Being 2x low made `pace >= total + 0.8` unreachable
+    in every league, so the over branch was dead code and every total leaned
+    under.
+    """
+    combined: list[float] = []
     for side in ("homeLastFive", "awayLastFive"):
         for game in (enrichment.get(side) or {}).get("games") or []:
-            score_text = game.get("score") or ""
-            parts = str(score_text).replace("-", " ").split()
+            parts = str(game.get("score") or "").replace("-", " ").split()
+            values: list[float] = []
             for part in parts:
                 try:
-                    scores.append(float(part))
+                    values.append(float(part))
                 except ValueError:
                     continue
-    if not scores:
+            # Only a two-sided score tells us the combined total for that game.
+            if len(values) == 2:
+                combined.append(values[0] + values[1])
+    if not combined:
         return None
-    return sum(scores) / len(scores)
+    return sum(combined) / len(combined)
 
 
 def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment: dict[str, Any]) -> dict[str, Any] | None:
@@ -1622,93 +1634,131 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def predict_spread(game: dict[str, Any], lines: list[dict[str, Any]], enrichment: dict[str, Any]) -> dict[str, Any] | None:
-    """Predict point spread for sports that support spreads (NFL, NBA, NCAAF, etc.)."""
-    # Extract spread line from odds
+# Standard deviation of a game's final margin, in points. Converting a win
+# probability to a spread is spread = -InverseNormalCDF(p) * sigma, which is
+# the standard approach and, unlike a linear points-per-percent factor, stays
+# sane at the extremes: a linear map turned an 80% home side into a 21-point
+# favourite where the correct answer is about 9.
+#
+# Leagues absent from this map get no spread pick: baseball and hockey run a
+# fixed 1.5 line where this mapping does not apply, and soccer uses handicaps
+# that need their own treatment.
+MARGIN_STD_DEV = {
+    "nfl": 13.5,
+    "nba": 11.5,
+    "wnba": 10.0,
+    "afl": 36.0,
+}
+
+
+def predict_spread(
+    game: dict[str, Any],
+    lines: list[dict[str, Any]],
+    prediction: dict[str, Any],
+) -> dict[str, Any] | None:
+    """Convert the model's win probability to a point spread and compare to market.
+
+    Takes the prediction, not the enrichment. It previously read
+    ``enrichment["probabilities"]`` -- a key that only ever exists on the
+    prediction -- so both sides defaulted to 0.5. The model line was therefore
+    always exactly 0.0, the "edge" was always minus the market line, and
+    confidence was a function of the spread's size rather than of anything the
+    model knew.
+    """
+    league = _league_id(game)
+    margin_sd = MARGIN_STD_DEV.get(league)
+    if margin_sd is None:
+        return None
+
     spread_line = extract_spread_line(lines)
     if spread_line is None:
         return None
 
-    league = _league_id(game)
-    
-    # For now, use a simple model based on win probability
-    # In the future, this could be enhanced with more sophisticated spread modeling
-    probs = enrichment.get("probabilities") or {}
-    true_p = probs.get("true") or {}
-    home_prob = true_p.get("home", 0.5)
-    away_prob = true_p.get("away", 0.5)
-    
-    # Convert win probability to spread estimate
-    # A 55% win prob roughly equals a 1-point favorite in NFL
-    # A 52% win prob roughly equals a 1-point favorite in NBA
-    if league in {"nfl"}:
-        points_per_pct = 0.5  # 1% win prob ~ 0.5 points in NFL
-    elif league in {"nba", "ncaaf"}:
-        points_per_pct = 0.3  # 1% win prob ~ 0.3 points in NBA/NCAAF
-    else:
-        points_per_pct = 0.2  # Default for other sports
-    
-    # Calculate model spread from win probability
-    prob_diff = home_prob - away_prob
-    model_spread = -prob_diff / (points_per_pct / 100)  # Negative because spread is home - away
-    
-    # Compare model spread to market spread
+    true_probs = (prediction.get("probabilities") or {}).get("true") or {}
+    home_prob = true_probs.get("home")
+    away_prob = true_probs.get("away")
+    if home_prob is None or away_prob is None:
+        return None
+
+    # Renormalise across the two sides in case a draw probability was carved out,
+    # then map through the inverse normal CDF. A home favourite carries a
+    # negative line, hence the sign flip.
+    two_way = home_prob + away_prob
+    if two_way <= 0:
+        return None
+    p_home = min(0.99, max(0.01, home_prob / two_way))
+    model_spread = -NormalDist().inv_cdf(p_home) * margin_sd
     edge = model_spread - spread_line
-    
-    # Determine pick with clearer thresholds
-    if abs(edge) < 0.3:
-        # Too close to call - lean slightly but low confidence
-        pick_side = "push"
-        confidence = 50
-    elif edge > 0:
-        # Model favors home more than market
-        pick_side = "home"
-        # Higher confidence for larger edges
-        confidence = min(55 + abs(edge) * 20, 90)
+
+    if abs(edge) < 0.5:
+        pick_side, pick_text = "push", "No lean"
+    elif edge < 0:
+        # Model makes the home side stronger than the market does.
+        pick_side, pick_text = "home", f"Home {spread_line:+.1f}"
     else:
-        # Model favors away more than market
-        pick_side = "away"
-        confidence = min(55 + abs(edge) * 20, 90)
-    
-    # Clear directional language
-    if pick_side == "push":
-        pick_text = "Push (no lean)"
-    elif pick_side == "home":
-        pick_text = f"Home {spread_line:+.1f}"
-    else:
-        pick_text = f"Away {spread_line:+.1f}"
-    
+        # The away side takes the opposite number to the home line.
+        pick_side, pick_text = "away", f"Away {-spread_line:+.1f}"
+
     return {
         "line": spread_line,
         "modelLine": round(model_spread, 1),
         "pick": pick_text,
         "pickSide": pick_side,
-        "homePct": round((1 + (spread_line / 100)) * 50, 1),
-        "awayPct": round((1 - (spread_line / 100)) * 50, 1),
-        "edgePct": round(edge, 1),
-        "confidence": confidence,
-        "detail": f"Model: {model_spread:+.1f} | Market: {spread_line:+.1f} | Edge: {edge:+.1f} | {pick_text}",
+        "edgePoints": round(edge, 1),
+        # No confidence figure: spread picks have never been graded, so there is
+        # nothing to calibrate against and any number here would be invented.
+        "confidence": None,
+        "unvalidated": True,
+        "detail": (
+            f"Model line {model_spread:+.1f} vs market {spread_line:+.1f} "
+            f"({edge:+.1f} pts). Spread picks are not yet graded or calibrated."
+        ),
     }
-def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
+
+
+
+def _enrich_missing(games: list[dict[str, Any]]) -> None:
+    """Enrich only games that have not been enriched already, batched by league.
+
+    This used to run per game inside the prediction loop, which broke two
+    things. enrich_games_with_providers derives rest days and back-to-back
+    flags from the *other* games it is given, so calling it with a single game
+    left every team with no prior fixture -- rest came back None and
+    backToBack False on every game, overwriting the correct values
+    mlb_data.py had already computed from a 7-day window. It also refetched
+    standings and team stats once per game instead of once per slate.
+    """
+    by_league: dict[str, list[dict[str, Any]]] = {}
     for game in games:
-        # First enrich the game
-        league = game.get("league", "mlb")
-        enriched = enrich_games_with_providers([game], league=league)
-        game = enriched[0] if enriched else game
-        
+        # mlb_data.py enriches the whole slate with a schedule context before
+        # predictions run; `sources` marks that work as done.
+        if (game.get("enrichment") or {}).get("sources"):
+            continue
+        by_league.setdefault(game.get("league") or "mlb", []).append(game)
+
+    for league, subset in by_league.items():
+        try:
+            enrich_games_with_providers(subset, league=league)
+        except Exception:
+            # Enrichment is best-effort; predictions degrade rather than fail.
+            continue
+
+
+def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    _enrich_missing(games)
+
+    for game in games:
         prediction = predict_game(game)
         prediction["publishable"] = is_publishable_pick(prediction)
-        
-        # Add totals prediction if lines available
+
         lines = game.get("lines", [])
         enrichment = game.get("enrichment", {})
         if lines:
             total_pred = predict_total(game, lines, enrichment)
             if total_pred:
                 prediction["total"] = total_pred
-            
-            # Add spread prediction for sports that support spreads
-            spread_pred = predict_spread(game, lines, enrichment)
+
+            spread_pred = predict_spread(game, lines, prediction)
             if spread_pred:
                 prediction["spread"] = spread_pred
         
