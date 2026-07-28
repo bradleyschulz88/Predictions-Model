@@ -205,6 +205,43 @@ def build_overview(payloads: dict[str, dict]) -> dict:
     }
 
 
+def report_injury_scorer(payloads: dict[str, dict]) -> None:
+    """Say whether the LLM importance step actually ran.
+
+    The NVIDIA key is optional by design: without it team_injury_severity falls
+    back to a deterministic score and the build succeeds either way. That makes
+    a green run worthless as evidence the key works, and means an expired key or
+    an exhausted quota degrades in total silence. This prints the split so the
+    answer is in the log.
+    """
+    counts = {"llm": 0, "deterministic": 0, "none": 0}
+    for payload in payloads.values():
+        for game in payload.get("games") or []:
+            enrichment = game.get("enrichment") or {}
+            for side in ("home", "away"):
+                source = (enrichment.get(f"{side}InjurySeverity") or {}).get("source")
+                if source in counts:
+                    counts[source] += 1
+
+    scored = counts["llm"] + counts["deterministic"]
+    if not scored:
+        print("Injury scorer: no teams with injuries to score", flush=True)
+        return
+
+    if counts["llm"]:
+        print(
+            f"Injury scorer: LLM rated {counts['llm']}/{scored} teams "
+            f"({counts['deterministic']} fell back) -- NVIDIA_API_KEY is working",
+            flush=True,
+        )
+    else:
+        print(
+            f"Injury scorer: deterministic on all {scored} teams -- NVIDIA_API_KEY is "
+            f"absent, rejected or out of quota",
+            flush=True,
+        )
+
+
 def main() -> int:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     manifest: dict = {"builtAt": None, "leagues": []}
@@ -296,6 +333,8 @@ def main() -> int:
                 "error": primary_payload.get("error"),
             }
         )
+
+    report_injury_scorer(primary_payloads)
 
     record_predictions(OUTPUT_DIR, payloads_for_accuracy)
     accuracy = grade_predictions(OUTPUT_DIR)
