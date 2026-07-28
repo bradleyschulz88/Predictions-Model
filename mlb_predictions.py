@@ -21,6 +21,7 @@ from data_providers.league_metrics import (
 from data_providers.mlb_pitcher import mlb_pitching_logit_adjustment
 from data_providers.schedule_advanced import schedule_flags_logit_adjustment
 from data_providers.enrich import enrich_games_with_providers
+from model_core import resolve_probabilities
 from shared_utils import parse_record, win_pct_from_record, format_win_pct
 
 HOME_FIELD_LOGIT = {
@@ -394,10 +395,17 @@ def _team_by_side(game: dict[str, Any], side: str) -> str | None:
     return game.get("homeTeam") if side == "home" else game.get("awayTeam")
 
 
-def _last_five_pct(record: str | None) -> float | None:
-    if not record:
+def _last_five_pct(record: str | None, league: str | None = None) -> float | None:
+    """Win rate over the last five games, or None when it cannot be read.
+
+    The previous sentinel (-1.0) was indistinguishable from a real win rate once
+    it reached the logit, so an unreadable or 0-0 record now returns None and the
+    form term is skipped entirely.
+    """
+    if not record or not parse_record(record):
         return None
-    return win_pct_from_record(record, default=-1.0) if parse_record(record) else None
+    pct = win_pct_from_record(record, default=-1.0, league=league)
+    return None if pct < 0 else pct
 
 
 def _league_id(game: dict[str, Any]) -> str:
@@ -431,15 +439,19 @@ def extract_spread_line(lines: list[dict[str, Any]]) -> float | None:
         current = line.get("currentLine") or line.get("openingLine")
         if not isinstance(current, dict):
             continue
-        # Spread is typically in the "home" field (negative = home favorite)
-        value = current.get("home") or current.get("away")
-        if not value:
-            continue
-        text = str(value).replace("+", "").replace("−", "-").replace("–", "-")
-        try:
-            return float(text.split()[0])
-        except ValueError:
-            continue
+
+        # Read the home spread directly when present. Falling through to the away
+        # field (as this used to) returns the opposite side's number under the
+        # home sign convention, flipping the favourite.
+        for key, sign in (("home", 1.0), ("away", -1.0)):
+            value = current.get(key)
+            if not value:
+                continue
+            text = str(value).replace("+", "").replace("−", "-").replace("–", "-")
+            try:
+                return float(text.split()[0]) * sign
+            except ValueError:
+                continue
     return None
 
 
@@ -525,57 +537,77 @@ def _parse_batting_avg(stat_line: str | None) -> float | None:
         return None
 
 
+# Each lineup metric lives on its own scale, so a raw home-minus-away subtraction
+# is only meaningful when both sides were scored the same way. These centres and
+# spreads normalise each metric to roughly mean 0 / unit 1 before comparison.
+_LINEUP_METRIC_SCALE = {
+    # metric: (league-average value, spread of one "unit" of edge)
+    "battingAvg": (0.250, 0.020),
+    "opsProxy": (0.720, 0.050),
+    "pointsPerGame": (110.0, 8.0),
+}
+
+
 def _lineup_quality_score(
     game: dict[str, Any],
     side: str,
     league: str,
     enrichment: dict[str, Any],
-) -> float | None:
+) -> tuple[str, float] | None:
+    """Return (metric_name, normalised score) so callers can refuse to mix scales.
+
+    Previously this returned a bare float that could be a batting average (~0.25),
+    an OPS proxy (~0.72), points-per-game/100 (~1.1) or a roster-completeness
+    ratio (~1.0) depending purely on which data happened to be present. Comparing
+    home to away across two different metrics manufactured edges large enough to
+    saturate the clamp whenever data coverage was asymmetric.
+    """
     lineup = game.get(f"{side}Lineup") or {}
     batters = lineup.get("batters") or []
-    if not batters:
-        return None
-
-    confirmed = [batter for batter in batters if batter.get("order")] or batters
-    averages: list[float] = []
-    for batter in confirmed:
-        avg = batter.get("avg")
-        if avg is None and batter.get("statLine"):
-            avg = _parse_batting_avg(batter.get("statLine"))
-        if avg is not None:
-            try:
-                averages.append(float(avg))
-            except (TypeError, ValueError):
-                continue
-
-    if averages and league == "mlb":
-        avg_value = sum(averages) / len(averages)
-        return avg_value * 1.45
-
     advanced = enrichment.get("homeAdvanced" if side == "home" else "awayAdvanced") or {}
+
+    def normalise(metric: str, value: float) -> tuple[str, float]:
+        centre, spread = _LINEUP_METRIC_SCALE[metric]
+        return metric, (float(value) - centre) / spread
+
+    if batters and league == "mlb":
+        confirmed = [batter for batter in batters if batter.get("order")] or batters
+        averages: list[float] = []
+        for batter in confirmed:
+            avg = batter.get("avg")
+            if avg is None and batter.get("statLine"):
+                avg = _parse_batting_avg(batter.get("statLine"))
+            if avg is not None:
+                try:
+                    averages.append(float(avg))
+                except (TypeError, ValueError):
+                    continue
+        if averages:
+            return normalise("battingAvg", sum(averages) / len(averages))
+
     if league == "mlb":
         ops = advanced.get("opsProxy")
         if ops is not None:
-            confirm_ratio = len(confirmed) / max(1, len(batters))
-            return float(ops) * (0.75 + 0.25 * confirm_ratio)
+            return normalise("opsProxy", ops)
 
     if league in {"nba", "wnba", "nfl", "afl"}:
         scoring = advanced.get("pointsPerGame")
         if scoring is not None:
-            return float(scoring) / 100.0
+            return normalise("pointsPerGame", scoring)
 
-    return len(confirmed) / 9.0
+    return None
 
 
 def _lineup_logit_adjustment(game: dict[str, Any], league: str, enrichment: dict[str, Any]) -> float:
     home_score = _lineup_quality_score(game, "home", league, enrichment)
     away_score = _lineup_quality_score(game, "away", league, enrichment)
-    if home_score is None and away_score is None:
+    # Only compare like with like: if one side has confirmed batting averages and
+    # the other only a season OPS proxy, the difference is an artefact of data
+    # coverage rather than a real edge.
+    if home_score is None or away_score is None or home_score[0] != away_score[0]:
         return 0.0
-    home_value = home_score if home_score is not None else 0.5
-    away_value = away_score if away_score is not None else 0.5
-    multiplier = 2.5 if league == "mlb" else 1.5
-    return max(-0.35, min(0.35, (home_value - away_value) * multiplier))
+    multiplier = 0.10 if league == "mlb" else 0.08
+    return max(-0.35, min(0.35, (home_score[1] - away_score[1]) * multiplier))
 
 
 def _weather_win_logit_adjustment(game: dict[str, Any], enrichment: dict[str, Any], league: str) -> float:
@@ -588,14 +620,18 @@ def _weather_win_logit_adjustment(game: dict[str, Any], enrichment: dict[str, An
     return max(-0.12, min(0.12, run_env * 2.0))
 
 
-def extract_prediction_features(game: dict[str, Any], prediction: dict[str, Any]) -> dict[str, Any]:
+def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
+    """Features the probability model reads, computed before any prediction exists.
+
+    Split out of extract_prediction_features so the fitted model can be scored
+    on a game without a circular dependency on its own output.
+    """
     enrichment = game.get("enrichment") or {}
     league = _league_id(game)
     home_adv = enrichment.get("homeAdvanced") or {}
     away_adv = enrichment.get("awayAdvanced") or {}
     implied = compute_implied_probabilities(game.get("lines") or [])
     consensus = implied.get("consensus") or {} if implied.get("available") else {}
-    true_probs = (prediction.get("probabilities") or {}).get("true") or {}
     rest_days = enrichment.get("restDays") or {}
     home_flags = enrichment.get("homeScheduleFlags") or {}
     away_flags = enrichment.get("awayScheduleFlags") or {}
@@ -616,12 +652,13 @@ def extract_prediction_features(game: dict[str, Any], prediction: dict[str, Any]
     return {
         "league": league,
         "recordDiff": round(
-            win_pct_from_record(game.get("homeRecord")) - win_pct_from_record(game.get("awayRecord")),
+            win_pct_from_record(game.get("homeRecord"), league=league)
+            - win_pct_from_record(game.get("awayRecord"), league=league),
             4,
         ),
         "splitDiff": round(
-            win_pct_from_record(game.get("homeHomeRecord"), 0.5)
-            - win_pct_from_record(game.get("awayRoadRecord"), 0.5),
+            win_pct_from_record(game.get("homeHomeRecord"), 0.5, league=league)
+            - win_pct_from_record(game.get("awayRoadRecord"), 0.5, league=league),
             4,
         ),
         "homePower": home_adv.get("powerRating"),
@@ -634,15 +671,34 @@ def extract_prediction_features(game: dict[str, Any], prediction: dict[str, Any]
         "awayBackToBack": away_flags.get("backToBack"),
         "impliedHome": consensus.get("homePct"),
         "impliedAway": consensus.get("awayPct"),
-        "trueHome": true_probs.get("homePct"),
-        "trueAway": true_probs.get("awayPct"),
-        "confidence": prediction.get("confidence"),
-        "predictedSide": prediction.get("predictedSide"),
         "hasLineup": data_coverage["lineup"],
         "dataCoverage": data_coverage,
         "mlbPitching": enrichment.get("mlbPitching"),
         "leagueMetrics": enrichment.get("leagueMetrics"),
     }
+
+
+def extract_prediction_features(game: dict[str, Any], prediction: dict[str, Any]) -> dict[str, Any]:
+    """Model inputs plus the prediction's own output, for logging and grading."""
+    true_probs = (prediction.get("probabilities") or {}).get("true") or {}
+
+    features = extract_model_inputs(game)
+    features.update(
+        {
+            "trueHome": true_probs.get("homePct"),
+            "trueAway": true_probs.get("awayPct"),
+            "confidence": prediction.get("confidence"),
+            # Pre-calibration probability, logged so calibration can be fitted on
+            # raw output instead of on numbers a previous calibration already
+            # shrank -- that feedback loop drove the MLB shrink factors to their
+            # floor.
+            "rawConfidence": prediction.get("rawConfidence"),
+            "rawHomeWinPct": prediction.get("rawHomeWinPct"),
+            "predictedSide": prediction.get("predictedSide"),
+            "probabilityMethod": prediction.get("probabilityMethod"),
+        }
+    )
+    return features
 
 
 def _advanced_logit_adjustment(enrichment: dict[str, Any], league: str = "mlb") -> float:
@@ -671,6 +727,11 @@ def _advanced_logit_adjustment(enrichment: dict[str, Any], league: str = "mlb") 
     if home_gf is not None and away_gf is not None and home_ga is not None and away_ga is not None:
         adjustment += ((home_gf - away_gf) + (away_ga - home_ga)) * 0.45
 
+    # Deliberately skipped for MLB: compute_power_rating() already folds opsProxy
+    # and ERA into powerRating (0.10 each), which is applied above, so adding them
+    # again here would double-count. See tests/test_model_improvements.py
+    # DedupeLogitTests. For other leagues these fields are baseball-only and are
+    # normally absent, making this branch inert rather than harmful.
     if league != "mlb":
         home_ops = home.get("opsProxy")
         away_ops = away.get("opsProxy")
@@ -812,6 +873,47 @@ def _model_market_edge(
     }
 
 
+def _probability_components(
+    *,
+    resolved: dict[str, Any],
+    heuristic_home: float,
+    model_inputs: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Explain where the published probability came from.
+
+    Shows the market and the heuristic alongside the published number so a large
+    gap between them is visible rather than buried.
+    """
+    components: list[dict[str, Any]] = [
+        {
+            "source": "Fitted model" if resolved["method"] == "fitted" else "Heuristic fallback",
+            "detail": resolved["detail"],
+            "homePct": round(resolved["binaryHome"] * 100, 1),
+        }
+    ]
+
+    implied_home = model_inputs.get("impliedHome")
+    if implied_home is not None:
+        components.append(
+            {
+                "source": "Market (de-vigged)",
+                "detail": "Consensus moneyline with the vig removed",
+                "homePct": round(float(implied_home), 1),
+            }
+        )
+
+    if resolved["method"] == "fitted":
+        components.append(
+            {
+                "source": "Heuristic (reference only)",
+                "detail": "Legacy hand-tuned logit, not used for the published number",
+                "homePct": round(heuristic_home * 100, 1),
+            }
+        )
+
+    return components
+
+
 def _home_field_logit(game: dict[str, Any]) -> float:
     return HOME_FIELD_LOGIT.get(_league_id(game), 0.25)
 
@@ -839,6 +941,7 @@ def _build_reasons(
     enrichment: dict[str, Any],
 ) -> list[dict[str, Any]]:
     reasons: list[dict[str, Any]] = []
+    league = _league_id(game)
     winner = _team_by_side(game, predicted_side)
     loser_side = "away" if predicted_side == "home" else "home"
     loser = _team_by_side(game, loser_side)
@@ -915,8 +1018,8 @@ def _build_reasons(
 
     home_form = enrichment.get("homeLastFive") or {}
     away_form = enrichment.get("awayLastFive") or {}
-    home_form_pct = _last_five_pct(home_form.get("record"))
-    away_form_pct = _last_five_pct(away_form.get("record"))
+    home_form_pct = _last_five_pct(home_form.get("record"), league)
+    away_form_pct = _last_five_pct(away_form.get("record"), league)
     if home_form_pct is not None and away_form_pct is not None:
         form_side = _edge_label(home_form_pct, away_form_pct)
         if form_side == predicted_side:
@@ -1223,8 +1326,8 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
 
     home_form = enrichment.get("homeLastFive") or {}
     away_form = enrichment.get("awayLastFive") or {}
-    home_form_pct = _last_five_pct(home_form.get("record"))
-    away_form_pct = _last_five_pct(away_form.get("record"))
+    home_form_pct = _last_five_pct(home_form.get("record"), league_config.id)
+    away_form_pct = _last_five_pct(away_form.get("record"), league_config.id)
     if home_form_pct is not None and away_form_pct is not None:
         logit += (home_form_pct - away_form_pct) * 1.8
         factors.append(
@@ -1374,57 +1477,67 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
             }
         )
 
-    model_home = sigmoid(logit)
-    true_probs = compute_true_probabilities(
-        model_home=model_home,
+    # The accumulated `logit` above still drives the factor edge labels shown in
+    # the UI, but it is only used as the probability when no fitted weights are
+    # available -- it stacks correlated features and is badly overconfident.
+    heuristic_home = sigmoid(logit)
+    model_inputs = extract_model_inputs(game)
+    resolved = resolve_probabilities(
+        game=game,
+        model_inputs=model_inputs,
+        heuristic_home=heuristic_home,
         enrichment=enrichment,
         league_config=league_config,
         league=league_config.id,
-        lines=game.get("lines") or [],
+        legacy_calibrate=calibrate_probability,
     )
+
+    true_probs = {
+        "home": resolved["home"],
+        "away": resolved["away"],
+        "draw": resolved["draw"],
+        "homePct": round(resolved["home"] * 100, 1),
+        "awayPct": round(resolved["away"] * 100, 1),
+        "drawPct": round(resolved["draw"] * 100, 1) if resolved["draw"] is not None else None,
+        "method": resolved["method"],
+        "components": _probability_components(
+            resolved=resolved,
+            heuristic_home=heuristic_home,
+            model_inputs=model_inputs,
+        ),
+    }
 
     factors.append(
         {
             "label": "Model probability",
             "detail": (
-                f"Data-driven estimate {true_probs['homePct']}% home / {true_probs['awayPct']}% away"
+                f"{resolved['detail']}: {true_probs['homePct']}% home / {true_probs['awayPct']}% away"
                 + (f" / {true_probs['drawPct']}% draw" if true_probs.get("drawPct") is not None else "")
             ),
             "edge": _edge_label(true_probs["home"], true_probs["away"]),
         }
     )
 
-    raw_best = max(
-        true_probs["home"],
-        true_probs["away"],
-        true_probs.get("draw") or 0.0 if league_config.supports_draw else 0.0,
-    )
-    calibration_confidence = raw_best * 100.0
+    # resolve_probabilities already applied calibration (fallback path) or
+    # returned a fitted estimate that must not be shrunk again, and it split the
+    # three-way soccer outcome without pulling the draw toward 50%. The numbers
+    # are final here; they only need to sum to one.
+    home_prob = resolved["home"]
+    away_prob = resolved["away"]
+    draw_prob = resolved["draw"] or 0.0 if league_config.supports_draw else 0.0
 
-    home_prob = calibrate_probability(
-        clamp(true_probs["home"]),
-        league=league_config.id,
-        confidence_pct=calibration_confidence,
-    )
-    away_prob = calibrate_probability(
-        clamp(true_probs["away"]),
-        league=league_config.id,
-        confidence_pct=calibration_confidence,
-    )
-    draw_prob = (
-        calibrate_probability(
-            clamp(true_probs.get("draw") or 0.0),
-            league=league_config.id,
-            confidence_pct=calibration_confidence,
-        )
-        if league_config.supports_draw
-        else 0.0
-    )
     prob_total = home_prob + away_prob + draw_prob
     if prob_total > 0:
         home_prob /= prob_total
         away_prob /= prob_total
         draw_prob /= prob_total
+
+    # Pre-calibration probabilities, logged so the calibrator can be fitted on
+    # raw output rather than on its own previous corrections. rawHomeWinPct is
+    # the one calibration actually fits on -- home-probability space, so the
+    # curve is valid on both sides of 50%.
+    raw_home_pct = round(resolved["rawBinaryHome"] * 100, 1)
+    raw_confidence = round(max(resolved["rawBinaryHome"], 1.0 - resolved["rawBinaryHome"]) * 100, 1)
 
     outcomes = [
         ("home", home_prob, game.get("homeTeam")),
@@ -1491,7 +1604,10 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         "homeWinPct": home_pct,
         "awayWinPct": away_pct,
         "confidence": round(confidence, 1),
+        "rawConfidence": raw_confidence,
+        "rawHomeWinPct": raw_home_pct,
         "confidenceLabel": confidence_label(confidence),
+        "probabilityMethod": resolved["method"],
         "outcomeLabel": f"{predicted_winner} to win" if predicted_side != "draw" else "Draw",
         "whyTheyWin": why_they_win,
         "reasons": reasons,
@@ -1603,8 +1719,12 @@ def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for index, game in enumerate(publishable, start=1):
         game["predictionRank"] = index
 
+    # Track identity, not equality: `game in publishable` compared whole game
+    # dicts field by field, which is both quadratic and wrong for two games that
+    # happen to serialise identically.
+    published_ids = {id(game) for game in publishable}
     for game in games:
-        if game in publishable:
+        if id(game) in published_ids:
             continue
         game.pop("predictionRank", None)
         prediction = game.get("prediction") or {}

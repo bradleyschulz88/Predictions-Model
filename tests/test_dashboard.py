@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 import threading
 import unittest
+
+from offline import OfflineTestCase
 import urllib.request
 from pathlib import Path
 
@@ -24,7 +26,7 @@ FIXTURES = Path(__file__).resolve().parent / "fixtures"
 ESPN_FIXTURE = FIXTURES / "espn_scoreboard_20260616.json"
 
 
-class ESPNDataTests(unittest.TestCase):
+class ESPNDataTests(OfflineTestCase):
     def test_parse_scoreboard_fixture(self) -> None:
         with open(ESPN_FIXTURE, encoding="utf-8") as handle:
             scoreboard = json.load(handle)
@@ -80,7 +82,7 @@ class MultiSportTests(unittest.TestCase):
         self.assertRegex(default_game_date("worldcup"), r"^\d{4}-\d{2}-\d{2}$")
 
 
-class DashboardDataTests(unittest.TestCase):
+class DashboardDataTests(OfflineTestCase):
     def test_build_dashboard_payload_from_sbr_fixture(self) -> None:
         page_props = load_page_props_from_file(FIXTURES / "odds_page.json")
         payload = build_dashboard_payload_from_sbr(page_props, url="fixture:test")
@@ -97,7 +99,7 @@ class DashboardDataTests(unittest.TestCase):
         self.assertEqual(payload["source"], "espn")
 
 
-class DashboardServerTests(unittest.TestCase):
+class DashboardServerTests(OfflineTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         config = DashboardConfig(fixture=str(ESPN_FIXTURE), include_odds=False, source="espn")

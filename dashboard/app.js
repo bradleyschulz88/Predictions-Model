@@ -50,7 +50,10 @@ const modelTrackerViewEl = document.getElementById("model-tracker-view");
 const dateFieldEl = document.getElementById("date-field");
 const modelDayResultEl = document.getElementById("model-day-result");
 
-const MIN_PUBLISHABLE_CONFIDENCE = 57;
+// Must match MIN_PICK_CONFIDENCE in calibration_params.py. Lowered from 57 when
+// the model stopped inflating confidence: an honest 56% pick is a better pick
+// than a fake 68% one, and the old threshold would have emptied the board.
+const MIN_PUBLISHABLE_CONFIDENCE = 55;
 
 function isPublishablePrediction(prediction) {
   if (!prediction?.predictedWinner && !prediction?.outcomeLabel) return false;

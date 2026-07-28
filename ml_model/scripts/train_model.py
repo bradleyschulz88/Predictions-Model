@@ -19,7 +19,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 DATA_DIR = Path(__file__).parent.parent / "data"
-MODEL_DIR = Path(__file__).parent.parent / "models"
+MODEL_DIR = Path(__file__).parent.parent / "experimental"
 MODEL_DIR.mkdir(exist_ok=True)
 
 FEATURE_FILE = DATA_DIR / "training_features.parquet"

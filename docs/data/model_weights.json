@@ -1,0 +1,65 @@
+{
+  "anchored": {
+    "features": [
+      "strengthDiff",
+      "marketLogit"
+    ],
+    "weights": [
+      0.008233325587276314,
+      0.43187923369089676,
+      0.37105130307676276
+    ],
+    "means": {
+      "strengthDiff": 0.005674030143965948,
+      "marketLogit": 0.06979056168167809
+    },
+    "scales": {
+      "strengthDiff": 0.19071130443273485,
+      "marketLogit": 0.5628229754601328
+    },
+    "n": 472,
+    "l2": 3.0
+  },
+  "standalone": {
+    "features": [
+      "strengthDiff"
+    ],
+    "weights": [
+      0.07274572551073392,
+      0.7831441382713409
+    ],
+    "means": {
+      "strengthDiff": 0.00019791266469142195
+    },
+    "scales": {
+      "strengthDiff": 0.21000927744540013
+    },
+    "n": 675,
+    "l2": 3.0
+  },
+  "leagueIntercepts": {
+    "afl": 0.0992,
+    "mlb": -0.0259,
+    "wnba": 0.0831,
+    "worldcup": 0.2031
+  },
+  "splitDiffCentre": 0.0379,
+  "metadata": {
+    "nTotal": 675,
+    "nWithMarket": 472,
+    "l2": 3.0,
+    "leagues": [
+      "afl",
+      "mlb",
+      "wnba",
+      "worldcup"
+    ]
+  },
+  "walkForward": {
+    "folds": 5,
+    "n": 560,
+    "logLoss": 0.6416,
+    "brier": 0.2267,
+    "accuracy": 0.5982
+  }
+}

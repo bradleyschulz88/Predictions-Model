@@ -16,7 +16,7 @@ from sklearn.calibration import CalibratedClassifierCV
 import warnings
 warnings.filterwarnings("ignore")
 
-MODEL_DIR = Path(__file__).parent.parent / "models"
+MODEL_DIR = Path(__file__).parent.parent / "experimental"
 DATA_DIR = Path(__file__).parent.parent.parent / "docs" / "data"
 
 MODEL_FILE = MODEL_DIR / "xgboost_model.pkl"

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import unittest
+
+from offline import OfflineTestCase
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
@@ -20,7 +22,7 @@ def _load_status_scoreboard() -> dict:
         return json.load(handle)
 
 
-class GameStatusTests(unittest.TestCase):
+class GameStatusTests(OfflineTestCase):
     def test_postponed_is_not_final_or_live(self) -> None:
         flags = normalize_espn_status(
             {
@@ -115,7 +117,7 @@ class GameStatusTests(unittest.TestCase):
         self.assertTrue(flags["isVoided"])
         self.assertEqual(flags["gameStatusText"], "Washed out")
 
-    @patch("tests.test_game_status.fetch_scoreboard", return_value=_load_status_scoreboard())
+    @patch(f"{__name__}.fetch_scoreboard", return_value=_load_status_scoreboard())
     def test_chicago_white_sox_fixture_parses_from_espn(self, _mock_fetch) -> None:
         scoreboard = fetch_scoreboard("mlb", "2026-06-18", verify_ssl=False)
         games = parse_scoreboard(scoreboard, league="mlb")
@@ -141,7 +143,7 @@ class GameStatusTests(unittest.TestCase):
         )
         self.assertTrue(flags["isLive"])
 
-    @patch("tests.test_game_status.fetch_scoreboard", return_value=_load_status_scoreboard())
+    @patch(f"{__name__}.fetch_scoreboard", return_value=_load_status_scoreboard())
     def test_live_mlb_fixtures_from_espn(self, _mock_fetch) -> None:
         scoreboard = fetch_scoreboard("mlb", "2026-06-18", verify_ssl=False)
         games = parse_scoreboard(scoreboard, league="mlb")

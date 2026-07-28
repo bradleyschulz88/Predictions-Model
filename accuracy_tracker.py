@@ -9,7 +9,7 @@ from typing import Any
 
 from data_providers.utils import team_match_score
 from espn_client import fetch_scoreboard, parse_scoreboard
-from mlb_predictions import _line_odds_value
+from mlb_predictions import _line_odds_value, american_odds_to_implied
 from calibration_params import is_publishable_pick
 from schedule_dates import league_schedule_date
 from sports_config import list_league_ids
@@ -18,6 +18,10 @@ ACCURACY_FILE = "accuracy.json"
 LOG_FILE = "predictions_log.json"
 LOOKBACK_DAYS = 30
 DEFAULT_STAKE_UNITS = 1.0
+
+# The log is rewritten and committed every 30 minutes, so it grows without
+# bound. Keep enough history to fit on and evaluate against, and drop the rest.
+MAX_LOGGED_PREDICTIONS = 5000
 
 
 def american_odds_profit(odds: int | float, won: bool, stake: float = DEFAULT_STAKE_UNITS) -> float:
@@ -120,7 +124,13 @@ def _build_pick_record(
         "predictedSide": pending.get("predictedSide"),
         "outcomeLabel": pending.get("outcomeLabel"),
         "confidence": pending.get("confidence"),
+        "rawConfidence": pending.get("rawConfidence"),
+        "rawHomeWinPct": pending.get("rawHomeWinPct"),
+        "probabilityMethod": pending.get("probabilityMethod"),
         "pickOdds": pending.get("pickOdds"),
+        "openingOdds": pending.get("openingOdds"),
+        "openingSide": pending.get("openingSide"),
+        "clvPct": closing_line_value(pending),
         "status": status,
         "actual": actual,
         "correct": correct,
@@ -175,6 +185,19 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 continue
             if not is_publishable_pick(prediction):
                 continue
+
+            current_odds = extract_pick_american_odds(game, prediction.get("predictedSide"))
+            existing = (log.get("predictions") or {}).get(event_id) or {}
+            # Builds run every 30 minutes, so the first price seen for a game is
+            # effectively the opening line and the last one before it starts is
+            # the closing line. Keeping both is what makes closing line value
+            # measurable, and CLV predicts long-run profitability better than
+            # win rate does.
+            opening_odds = existing.get("openingOdds")
+            if opening_odds is None:
+                opening_odds = current_odds
+            opening_side = existing.get("openingSide") or prediction.get("predictedSide")
+
             log["predictions"][event_id] = {
                 "eventId": event_id,
                 "league": league,
@@ -186,12 +209,58 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 "predictedSide": prediction.get("predictedSide"),
                 "outcomeLabel": prediction.get("outcomeLabel"),
                 "confidence": prediction.get("confidence"),
-                "pickOdds": extract_pick_american_odds(game, prediction.get("predictedSide")),
+                # Pre-calibration confidence and the path that produced it.
+                # Calibration is fitted on these, never on the published
+                # confidence, which a previous calibration already adjusted.
+                "rawConfidence": prediction.get("rawConfidence"),
+                "rawHomeWinPct": prediction.get("rawHomeWinPct"),
+                "probabilityMethod": prediction.get("probabilityMethod"),
+                # pickOdds is the latest price seen; by grade time it is the
+                # closing line. openingOdds is pinned to the first one.
+                "pickOdds": current_odds,
+                "openingOdds": opening_odds,
+                "openingSide": opening_side,
                 "features": prediction.get("features"),
                 "recordedAt": payload.get("fetchedAt"),
             }
 
+    _prune_log(log)
     _save_json(log_path, log)
+
+
+def _prune_log(log: dict[str, Any]) -> None:
+    """Drop the oldest entries so the committed log stops growing forever."""
+    predictions = log.get("predictions") or {}
+    if len(predictions) <= MAX_LOGGED_PREDICTIONS:
+        return
+    ordered = sorted(
+        predictions.items(),
+        key=lambda item: (item[1].get("scheduleDate") or "", item[0]),
+        reverse=True,
+    )
+    log["predictions"] = dict(ordered[:MAX_LOGGED_PREDICTIONS])
+
+
+def closing_line_value(record: dict[str, Any]) -> float | None:
+    """Percentage points of edge captured against the closing line.
+
+    Positive means the pick was taken at a better price than the market settled
+    on. Over a few hundred bets this tracks long-run profitability more reliably
+    than win rate, because it measures the decision rather than the outcome.
+    """
+    opening, closing = record.get("openingOdds"), record.get("pickOdds")
+    if opening is None or closing is None:
+        return None
+    # Opening and closing must describe the same side to be comparable.
+    if record.get("openingSide") and record.get("openingSide") != record.get("predictedSide"):
+        return None
+    try:
+        open_implied = american_odds_to_implied(int(opening))
+        close_implied = american_odds_to_implied(int(closing))
+    except (TypeError, ValueError):
+        return None
+    # Beating the close means paying a lower implied probability than the market.
+    return round((close_implied - open_implied) * 100, 2)
 
 
 def _prediction_matches_actual(predicted: str | None, actual: str | None) -> bool:
@@ -335,13 +404,41 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
         if item.get("correct"):
             bucket["correct"] += 1
         bucket["units"] = round(bucket.get("units", 0.0) + float(item.get("units") or 0.0), 3)
+        if item.get("pickOdds") is not None:
+            bucket["priced"] = bucket.get("priced", 0) + 1
         if bucket["total"]:
             bucket["pct"] = round(bucket["correct"] / bucket["total"] * 100, 1)
             bucket["roiPct"] = round(bucket["units"] / bucket["total"] * 100, 1)
 
+    # A win rate with no price behind it is not comparable to one with a price.
+    # AFL and the World Cup have no odds source, so their ROI reads 0.0% and
+    # looks like break-even rather than "not measurable".
+    for bucket in by_league.values():
+        priced = bucket.get("priced", 0)
+        bucket["priced"] = priced
+        bucket["unpriced"] = bucket["total"] - priced
+        bucket["pricedPct"] = round(priced / bucket["total"] * 100, 1) if bucket["total"] else None
+        if not priced:
+            bucket["roiPct"] = None
+            bucket["roiNote"] = "No odds available for this league; ROI is not measurable."
+
     last7["pending"] = sum(
         1 for item in pending_picks if (item.get("scheduleDate") or "") >= earliest_cutoff
     )
+
+    clv_values = [
+        float(item["clvPct"]) for item in window if item.get("clvPct") is not None
+    ]
+    clv_summary = {
+        "picks": len(clv_values),
+        "avgPct": round(sum(clv_values) / len(clv_values), 2) if clv_values else None,
+        "beatCloseP": (
+            round(sum(1 for value in clv_values if value > 0) / len(clv_values) * 100, 1)
+            if clv_values
+            else None
+        ),
+        "note": "Closing line value predicts long-run profitability better than win rate.",
+    }
 
     streak = _compute_streak(recent_results)
 
@@ -352,6 +449,7 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
             "allTime": all_time,
             "byLeague": by_league,
             "streak": streak,
+            "closingLineValue": clv_summary,
         },
         "recentResults": recent_results,
         "pendingPicks": pending_picks,

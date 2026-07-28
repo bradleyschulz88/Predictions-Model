@@ -22,7 +22,7 @@ warnings.filterwarnings("ignore")
 
 ROOT = Path(__file__).parent.parent.parent
 DATA_DIR = ROOT / "docs" / "data"
-MODEL_DIR = Path(__file__).parent.parent / "models"
+MODEL_DIR = Path(__file__).parent.parent / "experimental"
 MODEL_DIR.mkdir(exist_ok=True)
 
 PREDICTIONS_LOG = DATA_DIR / "predictions_log.json"

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import unittest
+
+from offline import OfflineTestCase
 from pathlib import Path
 from unittest.mock import patch
 
@@ -64,7 +66,11 @@ class CalibrationParamsTests(unittest.TestCase):
         self.assertIn("default", params["buckets"])
 
     def test_publishable_pick_threshold(self) -> None:
-        self.assertFalse(is_publishable_pick({"predictedWinner": "Team A", "confidence": 56.9}))
+        # Relative to the threshold rather than a literal, so retuning the
+        # threshold does not require editing this test.
+        self.assertFalse(
+            is_publishable_pick({"predictedWinner": "Team A", "confidence": MIN_PICK_CONFIDENCE - 0.1})
+        )
         self.assertTrue(is_publishable_pick({"predictedWinner": "Team A", "confidence": MIN_PICK_CONFIDENCE}))
 
 
@@ -149,7 +155,7 @@ class MarketWeightTests(unittest.TestCase):
         self.assertNotEqual(mlb_probs["homePct"], nfl_probs["homePct"])
 
 
-class ApplyPredictionsTests(unittest.TestCase):
+class ApplyPredictionsTests(OfflineTestCase):
     def test_suppresses_coin_flip_picks(self) -> None:
         game = {
             "league": "mlb",

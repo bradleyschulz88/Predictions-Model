@@ -25,12 +25,16 @@ from data_providers.mlb_official import fetch_mlb_standings, lookup_mlb_official
 from shared_utils import parse_record, win_pct_from_record
 
 
-def _form_pct_from_enrichment(enrichment: dict[str, Any], side: str) -> float | None:
+def _form_pct_from_enrichment(
+    enrichment: dict[str, Any], side: str, league: str | None = None
+) -> float | None:
+    """Last-five win rate, or None. A 0-0 record must not leak -1.0 downstream."""
     form = enrichment.get(f"{side}LastFive") or {}
     record = form.get("record")
-    if not record:
+    if not record or not parse_record(record):
         return None
-    return win_pct_from_record(record, default=-1.0) if parse_record(record) else None
+    pct = win_pct_from_record(record, default=-1.0, league=league)
+    return None if pct < 0 else pct
 
 
 def enrich_games_with_providers(
@@ -93,8 +97,8 @@ def enrich_games_with_providers(
         home_team = game.get("homeTeam")
         away_team = game.get("awayTeam")
 
-        home_form = _form_pct_from_enrichment(enrichment, "home")
-        away_form = _form_pct_from_enrichment(enrichment, "away")
+        home_form = _form_pct_from_enrichment(enrichment, "home", league)
+        away_form = _form_pct_from_enrichment(enrichment, "away", league)
 
         home_profile = merge_team_profile(
             league=league,
@@ -139,7 +143,14 @@ def enrich_games_with_providers(
         )
 
         if league == "mlb":
-            enrichment["mlbPitching"] = enrich_mlb_pitching_context(game, verify_ssl=verify_ssl)
+            # Every other provider call here is guarded; this one was not, so a
+            # single MLB Stats API outage failed the whole build instead of the
+            # pitching enrichment alone. Downstream already treats an empty
+            # context as "no pitching data".
+            try:
+                enrichment["mlbPitching"] = enrich_mlb_pitching_context(game, verify_ssl=verify_ssl)
+            except Exception:
+                enrichment["mlbPitching"] = {}
 
         provider_sources = sorted(
             {

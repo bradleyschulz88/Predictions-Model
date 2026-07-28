@@ -15,10 +15,13 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from accuracy_tracker import ACCURACY_FILE, LOG_FILE  # noqa: E402
-from calibration_params import compute_calibration_params  # noqa: E402
+from calibration_params import compute_calibration_params, compute_platt_params  # noqa: E402
 from mlb_predictions import apply_predictions  # noqa: E402
+import model_fit  # noqa: E402
+from scripts import evaluation  # noqa: E402
 
 CALIBRATION_FILE = "calibration.json"
+EVALUATION_FILE = "evaluation.json"
 STRONG_THRESHOLD = 68
 LEAN_THRESHOLD = 57
 
@@ -187,6 +190,9 @@ def summarize_predictions(data_dir: Path) -> dict[str, Any]:
         "coverageBreakdown": _coverage_breakdown(graded),
     }
     report["calibrationParams"] = compute_calibration_params(report)
+    # Fitted on raw, pre-calibration confidence and keyed by probability method,
+    # so the curve never learns from its own previous corrections.
+    report["plattParams"] = compute_platt_params(graded)
     return report
 
 
@@ -195,6 +201,127 @@ def write_calibration_report(data_dir: Path) -> dict[str, Any]:
     output_path = data_dir / CALIBRATION_FILE
     output_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     return report
+
+
+def build_evaluation_report(data_dir: Path) -> dict[str, Any]:
+    """Score the model's probabilities against the baselines it must beat.
+
+    Win rate hides whether the probabilities mean anything, so this reports
+    log loss / Brier / AUC alongside naive forecasters and the market.
+    """
+    observations = evaluation.load_observations(data_dir)
+
+    by_league: dict[str, Any] = {}
+    for league in sorted({item.league for item in observations}):
+        pool = [item for item in observations if item.league == league]
+        by_league[league] = {
+            "overall": evaluation.compare_forecasters(pool),
+            "vsMarket": evaluation.compare_forecasters(pool, require_market=True),
+            "divergence": evaluation.divergence_report(pool),
+        }
+
+    published = [(item.published, item.home_won) for item in observations if item.published is not None]
+
+    return {
+        "builtAt": datetime.now(timezone.utc).isoformat(),
+        "n": len(observations),
+        "overall": evaluation.compare_forecasters(observations),
+        # Restricted to games with odds so every forecaster faces the same slate.
+        "vsMarket": evaluation.compare_forecasters(observations, require_market=True),
+        "divergence": evaluation.divergence_report(observations),
+        "homeBias": evaluation.home_bias_report(observations),
+        "reliability": evaluation.reliability_curve(published),
+        "byLeague": by_league,
+        "fittedWalkForward": _fitted_walk_forward(data_dir),
+    }
+
+
+def _fitted_walk_forward(data_dir: Path) -> dict[str, Any]:
+    """Out-of-sample score for the fitted model.
+
+    The published numbers above come from whatever model was live when each game
+    was predicted. This is the honest score for the model running now: trained
+    only on games that preceded each test fold, so it never sees its own answers.
+    """
+    try:
+        samples, _ = model_fit.samples_from_log(data_dir)
+    except Exception:  # pragma: no cover - defensive around malformed logs
+        return {}
+    if not samples:
+        return {}
+
+    # Score at the ridge strength the shipped weights were fitted with, so the
+    # reported number describes the model that is actually live.
+    shipped = model_fit.load_model(data_dir)
+    l2 = float((shipped.metadata.get("l2") if shipped else None) or 1.0)
+
+    scores = model_fit.walk_forward_scores(samples, l2=l2)
+    scores["features"] = list(model_fit.ANCHORED_FEATURES)
+    scores["l2"] = l2
+    return scores
+
+
+def write_evaluation_report(data_dir: Path) -> dict[str, Any]:
+    report = build_evaluation_report(data_dir)
+    (data_dir / EVALUATION_FILE).write_text(json.dumps(report, indent=2), encoding="utf-8")
+    return report
+
+
+def _print_forecaster_table(block: dict[str, Any]) -> None:
+    if not block.get("n"):
+        print("    (no observations)")
+        return
+    print(f"    n={block['n']}  home base rate {block['homeBaseRate'] * 100:.1f}%")
+    print(f"    {'forecaster':<42} {'logloss':>8} {'brier':>8} {'auc':>7} {'acc':>7}")
+    for row in block["forecasters"]:
+        def fmt(value: Any, width: int, digits: int = 4) -> str:
+            return f"{value:>{width}.{digits}f}" if value is not None else f"{'—':>{width}}"
+
+        flag = "" if row.get("reliable") else "  (small n)"
+        print(
+            f"    {row['name']:<42} {fmt(row['logLoss'], 8)} {fmt(row['brier'], 8)}"
+            f" {fmt(row['auc'], 7)} {fmt(row['accuracy'], 7)}{flag}"
+        )
+
+
+def print_evaluation(report: dict[str, Any]) -> None:
+    print("Model evaluation")
+    print(f"  Graded observations: {report['n']}\n")
+
+    print("  All graded games")
+    _print_forecaster_table(report["overall"])
+
+    print("\n  Games with market odds (same slate for every forecaster)")
+    _print_forecaster_table(report["vsMarket"])
+
+    divergence = report["divergence"]
+    if divergence.get("n"):
+        print("\n  Model vs market")
+        print(f"    median gap {divergence['medianGapPct']}pts · mean {divergence['meanGapPct']}pts"
+              f" · {divergence['shareOver15Pct']}% of games diverge >15pts")
+        agree = divergence["agreesWithMarket"]
+        fade = divergence["fadesMarket"]
+        print(f"    agrees with market: {agree['picks']} picks, {agree['winPct']}% win")
+        print(f"    fades market:       {fade['picks']} picks, {fade['winPct']}% win"
+              f" (break-even {fade['breakEvenPct']}%)")
+
+    fitted = report.get("fittedWalkForward") or {}
+    if fitted.get("n"):
+        print("\n  Fitted model, walk-forward (out-of-sample, model currently live)")
+        print(f"    features {'+'.join(fitted['features'])} · {fitted['folds']} folds · n={fitted['n']}")
+        print(f"    logloss {fitted['logLoss']} · brier {fitted['brier']} · acc {fitted['accuracy']}")
+
+    print("\n  Home bias (pick rate vs actual home win rate)")
+    for league, stats in sorted(report["homeBias"].items()):
+        print(f"    {league:<10} picks home {stats['pickHomePct']:>5}%"
+              f" · home wins {stats['actualHomeWinPct']:>5}%"
+              f" · bias {stats['biasPct']:+.1f}pts (n={stats['n']})")
+
+    print("\n  Reliability (confidence bucket vs actual)")
+    for row in report["reliability"]:
+        print(f"    {row['range']}%: predicted {row['avgPredictedPct']}%"
+              f" · actual {row['actualWinPct']}% ±{row['stdErrPct']}"
+              f" · miss {row['overconfidencePct']:+.1f}pts (n={row['picks']})")
 
 
 def _actual_winner_from_snapshot_game(game: dict[str, Any]) -> str | None:
@@ -278,7 +405,22 @@ def main() -> int:
     parser.add_argument("--replay", action="store_true", help="Replay a dated snapshot JSON through the model")
     parser.add_argument("--league", default="mlb", help="League id for snapshot replay")
     parser.add_argument("--date", dest="schedule_date", help="Schedule date (YYYY-MM-DD) for snapshot replay")
+    parser.add_argument(
+        "--evaluate",
+        action="store_true",
+        help="Score model probabilities (log loss/Brier/AUC) against baselines and the market",
+    )
     args = parser.parse_args()
+
+    if args.evaluate:
+        report = write_evaluation_report(args.data_dir) if args.write else build_evaluation_report(args.data_dir)
+        if args.json:
+            print(json.dumps(report, indent=2))
+        else:
+            print_evaluation(report)
+            if args.write:
+                print(f"\nWrote {args.data_dir / EVALUATION_FILE}")
+        return 0
 
     if args.replay:
         if not args.schedule_date:

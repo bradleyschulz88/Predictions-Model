@@ -50,16 +50,44 @@ jobs:
       - name: Run tests
         run: python -m unittest discover -s tests -q
 
+      # Refit before building so the slate is predicted with the newest weights.
+      # Fitting only ever reads already-graded games, so this cannot leak.
+      - name: Refit model and gate on quality
+        run: |
+          python model_fit.py
+          python scripts/backtest_model.py --evaluate --write
+          python scripts/check_regression.py
+
       - name: Build dashboard JSON
         run: python scripts/build_pages_data.py
 
-      - name: Commit accuracy log
+      # Re-score after grading so the published evaluation reflects today's
+      # results rather than yesterday's.
+      - name: Refresh evaluation report
+        run: python scripts/backtest_model.py --evaluate --write
+
+      - name: Commit model and accuracy data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/data/accuracy.json docs/data/predictions_log.json || true
-          git diff --staged --quiet || git commit -m "Update prediction accuracy [skip ci]"
-          git push || true
+          # model_weights.json and model_baseline.json must persist: without them
+          # the regression baseline resets every run and the gate is toothless.
+          git add docs/data/accuracy.json \
+                  docs/data/predictions_log.json \
+                  docs/data/calibration.json \
+                  docs/data/evaluation.json \
+                  docs/data/model_weights.json \
+                  docs/data/model_baseline.json || true
+          git diff --staged --quiet && exit 0
+          git commit -m "Update prediction accuracy [skip ci]"
+          # Concurrent runs are cancelled mid-flight, so the remote may have
+          # moved. Rebase and retry rather than dropping the run's data.
+          for attempt in 1 2 3 4; do
+            if git push; then exit 0; fi
+            sleep $((2 ** attempt))
+            git pull --rebase origin main || true
+          done
+          echo "::warning::Could not push updated model data after 4 attempts"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
