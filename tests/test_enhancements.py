@@ -213,3 +213,51 @@ class BuildPagesTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class OddsCoverageWarningTests(unittest.TestCase):
+    """A configured odds source that prices nothing is broken, not unpriced.
+
+    merge_sbr_odds_into_games swallows SBR errors on purpose, so a missing board
+    cannot destroy the schedule. The cost is that a permanently broken slug or
+    team-name match fails silently -- WNBA logged 115 picks without a single
+    price while carrying a valid sbr_odds_slug, and nothing said so.
+    """
+
+    def _summary(self, games: int, priced: int) -> dict:
+        return {
+            "gameCount": games,
+            "counts": {"espnPredictor": games, "impliedOdds": priced},
+            "pct": {"espnPredictor": 100.0 if games else 0.0},
+        }
+
+    def test_priced_league_with_no_prices_warns(self) -> None:
+        from data_coverage import coverage_warnings
+
+        warnings = coverage_warnings({"wnba": self._summary(5, 0)})
+        self.assertTrue(any("odds source configured" in w for w in warnings))
+
+    def test_unpriced_league_stays_silent(self) -> None:
+        """AFL has no odds slug; zero prices is the correct, expected state."""
+        from data_coverage import coverage_warnings
+
+        warnings = coverage_warnings({"afl": self._summary(4, 0)})
+        self.assertFalse(any("odds source configured" in w for w in warnings))
+
+    def test_working_league_stays_silent(self) -> None:
+        from data_coverage import coverage_warnings
+
+        warnings = coverage_warnings({"mlb": self._summary(15, 14)})
+        self.assertFalse(any("odds source configured" in w for w in warnings))
+
+    def test_empty_slate_stays_silent(self) -> None:
+        from data_coverage import coverage_warnings
+
+        warnings = coverage_warnings({"nba": self._summary(0, 0)})
+        self.assertFalse(any("odds source configured" in w for w in warnings))
+
+    def test_retired_league_carries_no_expectation(self) -> None:
+        from data_coverage import coverage_warnings
+
+        warnings = coverage_warnings({"worldcup": self._summary(3, 0)})
+        self.assertFalse(any("odds source configured" in w for w in warnings))

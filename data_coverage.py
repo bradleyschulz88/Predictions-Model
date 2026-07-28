@@ -88,14 +88,39 @@ def coverage_warnings(
         game_count = summary.get("gameCount") or 0
         if game_count <= 0:
             continue
+        date_note = f" on {schedule_date}" if schedule_date else ""
+
         predictor_pct = (summary.get("pct") or {}).get("espnPredictor", 0.0)
         if predictor_pct < threshold:
-            date_note = f" on {schedule_date}" if schedule_date else ""
             warnings.append(
                 f"{league}{date_note}: ESPN predictor coverage {predictor_pct}% "
                 f"({summary['counts']['espnPredictor']}/{game_count}) below {threshold}%"
             )
+
+        # A league configured with an odds source that lands zero prices is
+        # broken, not unpriced -- and it fails silently, because
+        # merge_sbr_odds_into_games swallows SBR errors so a missing board
+        # cannot destroy the schedule. Without this check the failure is
+        # invisible: WNBA logged 115 picks with no price on any of them while
+        # carrying a perfectly good sbr_odds_slug.
+        if _expects_odds(league) and not (summary.get("counts") or {}).get("impliedOdds"):
+            warnings.append(
+                f"{league}{date_note}: has an odds source configured but priced "
+                f"0/{game_count} games -- the slug or the team-name match is broken, "
+                f"not the market"
+            )
     return warnings
+
+
+def _expects_odds(league: str) -> bool:
+    """True when the league is configured to have a betting market."""
+    try:
+        from sports_config import get_league
+
+        return bool(get_league(league).supports_sbr_odds)
+    except (ImportError, ValueError):
+        # Retired or unknown leagues carry no expectation.
+        return False
 
 
 def emit_ci_warnings(warnings: list[str]) -> None:

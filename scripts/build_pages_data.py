@@ -212,6 +212,17 @@ def main() -> int:
     payloads_for_accuracy: list[dict] = []
     coverage_reports: dict[str, dict] = {}
 
+    # Elo has to exist BEFORE anything is predicted, because predict_game logs
+    # the pre-game rating gap as a feature. elo_ratings.json is a derivative and
+    # therefore gitignored, so a fresh CI checkout has no ratings file at all --
+    # which meant rating_edge returned None for every game and eloEdge was
+    # logged as null on every prediction ever made. The candidate could never
+    # accumulate the coverage needed to re-test it.
+    #
+    # No leakage: this replays only results already graded, and today's games
+    # are not among them.
+    build_elo_ratings(OUTPUT_DIR)
+
     for league in list_league_ids():
         league_config = get_league(league)
         default_date = default_game_date(league)
@@ -288,8 +299,9 @@ def main() -> int:
 
     record_predictions(OUTPUT_DIR, payloads_for_accuracy)
     accuracy = grade_predictions(OUTPUT_DIR)
-    # Rebuild ratings from the freshly graded history, so tomorrow's slate is
-    # scored against results that include today's.
+    # Rebuild again now that today's results have graded, so the published
+    # table is current. The pre-prediction build above is the one the feature
+    # reads; this one keeps the file itself up to date.
     build_elo_ratings(OUTPUT_DIR)
     write_calibration_report(OUTPUT_DIR)
     overview = build_overview(primary_payloads)

@@ -155,3 +155,33 @@ class RatingEdgeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class EloIsAvailableBeforePredictions(unittest.TestCase):
+    """elo_ratings.json is gitignored, so a fresh CI checkout has no ratings.
+
+    predict_game logs the pre-game rating gap as a feature, so if the table is
+    only built *after* predictions run, rating_edge returns None on every game
+    and eloEdge is logged as null forever -- which is exactly what happened:
+    841 logged predictions, zero with an elo edge.
+    """
+
+    def test_build_runs_before_any_league_is_predicted(self) -> None:
+        import inspect
+
+        from scripts import build_pages_data
+
+        source = inspect.getsource(build_pages_data.main)
+        first_build = source.find("build_elo_ratings(")
+        first_predict = source.find("build_league_payload_resilient(")
+        self.assertGreater(first_build, -1, "ratings are never built")
+        self.assertGreater(first_predict, -1, "nothing is predicted")
+        self.assertLess(
+            first_build,
+            first_predict,
+            "Elo ratings must be built before predictions, or eloEdge logs as null",
+        )
+
+    def test_edge_is_none_without_a_ratings_table(self) -> None:
+        """The failure mode this ordering avoids, pinned so it stays understood."""
+        self.assertIsNone(rating_edge({}, "mlb", "Yankees", "Tigers"))
