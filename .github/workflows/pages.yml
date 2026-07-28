@@ -64,6 +64,11 @@ jobs:
           python scripts/check_regression.py
 
       - name: Build dashboard JSON
+        env:
+          # Optional. When the secret is absent this is empty, injury severity
+          # falls back to its deterministic score, and the build is unaffected.
+          # Add it at Settings > Secrets and variables > Actions.
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
         run: python scripts/build_pages_data.py
 
       # Re-score after grading so the published evaluation reflects today's
