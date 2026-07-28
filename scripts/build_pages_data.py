@@ -164,6 +164,11 @@ def build_overview(payloads: dict[str, dict]) -> dict:
                 "pricedCount": len(priced),
                 "best": best,
                 "topPick": payload.get("topPick"),
+                # An empty slate and a failed build both render as zero games,
+                # which makes an out-of-season league look broken. Carry the
+                # reason so the dashboard can tell the two apart.
+                "error": payload.get("error"),
+                "degraded": payload.get("degraded"),
             }
         )
 
