@@ -39,13 +39,20 @@ WEIGHTS_FILE = "model_weights.json"
 # has already priced it, so once marketLogit is in the model, adding starter and
 # bullpen ERA on top is redundant rather than additive.
 #
-# restDiff and b2bDiff carry an ASTERISK. Between 2026-07-23 and 2026-07-28,
-# apply_predictions re-ran enrichment per game without a schedule context,
-# which overwrote every rest day and back-to-back flag with None/False. Roughly
-# the last 200 graded games therefore have no rest data at all, so the ablation
-# above scored those features on partly destroyed input and cannot be treated
-# as a fair verdict on them. Re-run it once a couple of weeks of post-fix games
-# have graded, and promote them here if the answer changes.
+# Three candidates carry an ASTERISK and are NOT fairly tested above:
+#
+#   restDiff, b2bDiff -- between 2026-07-23 and 2026-07-28 apply_predictions
+#     re-ran enrichment per game without a schedule context, overwriting every
+#     rest day and back-to-back flag with None/False. Roughly the last 200
+#     graded games have no rest data at all, so these were scored on partly
+#     destroyed input.
+#
+#   injurySeverityDiff -- added 2026-07-28 and present on zero graded games, so
+#     it is imputed to the mean throughout and contributes exactly nothing. The
+#     ablation showing it as neutral is measuring its absence, not the feature.
+#
+# All three need re-running once a couple of weeks of games have graded with
+# the data actually present. Promote them here if the answer changes.
 #
 # The enrichment pipeline still supplies all of them to the reasoning panel;
 # they are simply not allowed to move the probability until they can earn it.
@@ -53,7 +60,15 @@ ANCHORED_FEATURES = ("strengthDiff", "marketLogit")
 STANDALONE_FEATURES = ("strengthDiff",)
 
 # Every feature the collapser knows how to build, for ablation runs.
-CANDIDATE_FEATURES = ("strengthDiff", "marketLogit", "pitchingDiff", "restDiff", "injuryDiff", "b2bDiff")
+CANDIDATE_FEATURES = (
+    "strengthDiff",
+    "marketLogit",
+    "pitchingDiff",
+    "restDiff",
+    "injuryDiff",
+    "injurySeverityDiff",
+    "b2bDiff",
+)
 
 # Shrinkage constant for per-league intercepts: a league needs ~K graded games
 # before its own home-field estimate outweighs the pooled one.
@@ -226,6 +241,16 @@ def build_feature_dict(
     home_injury = _first_number(features.get("homeInjuryLoad")) or 0.0
     away_injury = _first_number(features.get("awayInjuryLoad")) or 0.0
 
+    # Severity-weighted alternative to the raw count. None until a game carries
+    # it, so older logged games contribute nothing rather than a false zero.
+    home_severity = _first_number(features.get("homeInjurySeverity"))
+    away_severity = _first_number(features.get("awayInjurySeverity"))
+    severity_diff = (
+        away_severity - home_severity
+        if home_severity is not None and away_severity is not None
+        else None
+    )
+
     home_b2b = 1.0 if features.get("homeBackToBack") else 0.0
     away_b2b = 1.0 if features.get("awayBackToBack") else 0.0
 
@@ -235,6 +260,7 @@ def build_feature_dict(
         "pitchingDiff": _pitching_diff(features),
         "restDiff": rest_diff,
         "injuryDiff": away_injury - home_injury,
+        "injurySeverityDiff": severity_diff,
         "b2bDiff": away_b2b - home_b2b,
     }
 

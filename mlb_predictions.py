@@ -666,6 +666,10 @@ def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
         "awayPower": away_adv.get("powerRating"),
         "homeInjuryLoad": round(_weighted_injury_score(enrichment.get("homeMajorInjuries") or [], league), 2),
         "awayInjuryLoad": round(_weighted_injury_score(enrichment.get("awayMajorInjuries") or [], league), 2),
+        # Availability x seriousness (x player importance when an LLM key is
+        # configured), as an alternative to counting absences.
+        "homeInjurySeverity": (enrichment.get("homeInjurySeverity") or {}).get("score"),
+        "awayInjurySeverity": (enrichment.get("awayInjurySeverity") or {}).get("score"),
         "homeRest": rest_days.get("home"),
         "awayRest": rest_days.get("away"),
         "homeBackToBack": home_flags.get("backToBack"),

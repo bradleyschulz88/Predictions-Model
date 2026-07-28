@@ -113,6 +113,29 @@ python scripts/backtest_model.py --evaluate
 python scripts/check_regression.py
 ```
 
+### Optional: LLM injury weighting
+
+`data_providers/injury_severity.py` scores how much an injury list costs a team
+from availability (`60-Day-IL` vs `Day-To-Day`) and seriousness (`Surgery` vs
+`Soreness`). The feed carries no position or role, so player importance is the
+one thing it cannot infer. Setting an API key adds that step:
+
+```bash
+export NVIDIA_API_KEY=nvapi-...          # https://build.nvidia.com (free tier)
+export NVIDIA_INJURY_MODEL=meta/llama-3.1-8b-instruct   # optional
+```
+
+It is off by default and degrades to the deterministic score on any failure, so
+a missing key, a timeout or an unparseable reply cannot break a build. Requests
+are cached per team and sent at temperature 0, so the same slate scores the same
+way across builds.
+
+**This is an open experiment, not a shipped feature.** `injurySeverityDiff` is a
+candidate in `CANDIDATE_FEATURES`; it does not move any probability unless
+`python model_fit.py --ablate` shows it beating its own absence out of sample.
+It cannot be judged until a few weeks of games have graded with the data
+present.
+
 Predictions fall back to a hand-tuned heuristic when no fitted weights exist;
 `prediction.probabilityMethod` records which path produced each number.
 
