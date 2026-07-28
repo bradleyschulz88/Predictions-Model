@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-28T16:43:04.600527+00:00",
+  "updatedAt": "2026-07-28T18:00:53.770243+00:00",
   "summary": {
     "last7Days": {
       "correct": 299,
@@ -15,7 +15,7 @@
       "pct": 59.5,
       "units": 5.761,
       "roiPct": 0.8,
-      "pending": 140
+      "pending": 141
     },
     "byLeague": {
       "mlb": {
@@ -19125,6 +19125,33 @@
       "openingOdds": -149,
       "openingSide": "away",
       "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-29"
+    },
+    "401902545": {
+      "eventId": "401902545",
+      "league": "mlb",
+      "scheduleDate": "2026-07-29",
+      "matchup": "Atlanta Braves @ New York Mets",
+      "predicted": "Atlanta Braves",
+      "predictedSide": "away",
+      "outcomeLabel": "Atlanta Braves to win",
+      "confidence": 64.5,
+      "rawConfidence": 64.5,
+      "rawHomeWinPct": 35.5,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
+      "clvPct": null,
       "status": "pending",
       "actual": null,
       "correct": null,
