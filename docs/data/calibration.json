@@ -1,29 +1,29 @@
 {
-  "builtAt": "2026-07-28T03:51:11.303170+00:00",
+  "builtAt": "2026-07-28T04:57:12.629940+00:00",
   "thresholds": {
     "strong": 68,
     "lean": 57
   },
   "summary": {
-    "graded": 695,
-    "correct": 413,
-    "winPct": 59.4,
-    "units": 4.976,
+    "graded": 698,
+    "correct": 415,
+    "winPct": 59.5,
+    "units": 4.809,
     "roiPct": 0.7,
-    "pending": 132,
+    "pending": 140,
     "featureCoverage": {
-      "withFeatures": 827,
-      "totalLogged": 827,
-      "withRestData": 567
+      "withFeatures": 838,
+      "totalLogged": 838,
+      "withRestData": 578
     },
     "avgOverconfidencePct": 16.6
   },
   "byLeague": {
     "mlb": {
-      "correct": 267,
-      "total": 484,
-      "units": -10.667,
-      "pending": 100,
+      "correct": 269,
+      "total": 487,
+      "units": -10.834,
+      "pending": 107,
       "winPct": 55.2,
       "roiPct": -2.2
     },
@@ -31,7 +31,7 @@
       "correct": 62,
       "total": 91,
       "units": 6.0,
-      "pending": 23,
+      "pending": 24,
       "winPct": 68.1,
       "roiPct": 6.6
     },
@@ -60,10 +60,10 @@
       "winPct": 66.7
     },
     "lean_57+": {
-      "correct": 153,
-      "total": 301,
-      "units": -18.762,
-      "winPct": 50.8
+      "correct": 155,
+      "total": 304,
+      "units": -18.929,
+      "winPct": 51.0
     },
     "coin_<57": {
       "correct": 8,
@@ -89,17 +89,17 @@
     },
     {
       "confidenceRange": "60-64",
-      "picks": 144,
+      "picks": 145,
       "avgPredictedPct": 59.8,
-      "actualWinPct": 45.8,
-      "overconfidencePct": 14.0
+      "actualWinPct": 46.2,
+      "overconfidencePct": 13.6
     },
     {
       "confidenceRange": "65-69",
-      "picks": 118,
+      "picks": 120,
       "avgPredictedPct": 64.9,
-      "actualWinPct": 57.6,
-      "overconfidencePct": 7.3
+      "actualWinPct": 57.5,
+      "overconfidencePct": 7.4
     },
     {
       "confidenceRange": "70-74",
@@ -155,17 +155,17 @@
       },
       {
         "confidenceRange": "60-64",
-        "picks": 99,
+        "picks": 100,
         "avgPredictedPct": 59.6,
-        "actualWinPct": 39.4,
-        "overconfidencePct": 20.2
+        "actualWinPct": 40.0,
+        "overconfidencePct": 19.6
       },
       {
         "confidenceRange": "65-69",
-        "picks": 87,
+        "picks": 89,
         "avgPredictedPct": 65.0,
-        "actualWinPct": 55.2,
-        "overconfidencePct": 9.8
+        "actualWinPct": 55.1,
+        "overconfidencePct": 9.9
       },
       {
         "confidenceRange": "70-74",
@@ -338,34 +338,34 @@
   },
   "coverageBreakdown": {
     "restData": {
-      "with": 487,
+      "with": 490,
       "without": 208,
-      "winsWith": 292,
+      "winsWith": 294,
       "winsWithout": 121
     },
     "scheduleFlags": {
-      "with": 695,
+      "with": 698,
       "without": 0,
-      "winsWith": 413,
+      "winsWith": 415,
       "winsWithout": 0
     },
     "impliedOdds": {
-      "with": 489,
-      "without": 206,
-      "winsWith": 278,
-      "winsWithout": 135
+      "with": 491,
+      "without": 207,
+      "winsWith": 279,
+      "winsWithout": 136
     },
     "lineup": {
-      "with": 695,
+      "with": 698,
       "without": 0,
-      "winsWith": 413,
+      "winsWith": 415,
       "winsWithout": 0
     },
     "espnPredictor": {
       "with": 92,
-      "without": 603,
+      "without": 606,
       "winsWith": 41,
-      "winsWithout": 372
+      "winsWithout": 374
     }
   },
   "calibrationParams": {
@@ -374,7 +374,7 @@
     "buckets": {
       "default": {
         "strong_68+": 0.6580022614941767,
-        "lean_57+": 0.50503355704698,
+        "lean_57+": 0.5016778523489931,
         "coin_<57": 0.69
       },
       "mlb": {
@@ -398,19 +398,19 @@
         "coin_<57": 0.95
       }
     },
-    "derivedFromGraded": 695
+    "derivedFromGraded": 698
   },
   "plattParams": {
     "fitted": {
       "mlb": {
         "a": 1.0,
         "b": 0.0,
-        "n": 26
+        "n": 29
       },
       "default": {
         "a": 1.0,
         "b": 0.0,
-        "n": 28
+        "n": 31
       },
       "afl": {
         "a": 1.0,
