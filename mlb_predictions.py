@@ -394,10 +394,17 @@ def _team_by_side(game: dict[str, Any], side: str) -> str | None:
     return game.get("homeTeam") if side == "home" else game.get("awayTeam")
 
 
-def _last_five_pct(record: str | None) -> float | None:
-    if not record:
+def _last_five_pct(record: str | None, league: str | None = None) -> float | None:
+    """Win rate over the last five games, or None when it cannot be read.
+
+    The previous sentinel (-1.0) was indistinguishable from a real win rate once
+    it reached the logit, so an unreadable or 0-0 record now returns None and the
+    form term is skipped entirely.
+    """
+    if not record or not parse_record(record):
         return None
-    return win_pct_from_record(record, default=-1.0) if parse_record(record) else None
+    pct = win_pct_from_record(record, default=-1.0, league=league)
+    return None if pct < 0 else pct
 
 
 def _league_id(game: dict[str, Any]) -> str:
@@ -431,15 +438,19 @@ def extract_spread_line(lines: list[dict[str, Any]]) -> float | None:
         current = line.get("currentLine") or line.get("openingLine")
         if not isinstance(current, dict):
             continue
-        # Spread is typically in the "home" field (negative = home favorite)
-        value = current.get("home") or current.get("away")
-        if not value:
-            continue
-        text = str(value).replace("+", "").replace("−", "-").replace("–", "-")
-        try:
-            return float(text.split()[0])
-        except ValueError:
-            continue
+
+        # Read the home spread directly when present. Falling through to the away
+        # field (as this used to) returns the opposite side's number under the
+        # home sign convention, flipping the favourite.
+        for key, sign in (("home", 1.0), ("away", -1.0)):
+            value = current.get(key)
+            if not value:
+                continue
+            text = str(value).replace("+", "").replace("−", "-").replace("–", "-")
+            try:
+                return float(text.split()[0]) * sign
+            except ValueError:
+                continue
     return None
 
 
@@ -525,57 +536,77 @@ def _parse_batting_avg(stat_line: str | None) -> float | None:
         return None
 
 
+# Each lineup metric lives on its own scale, so a raw home-minus-away subtraction
+# is only meaningful when both sides were scored the same way. These centres and
+# spreads normalise each metric to roughly mean 0 / unit 1 before comparison.
+_LINEUP_METRIC_SCALE = {
+    # metric: (league-average value, spread of one "unit" of edge)
+    "battingAvg": (0.250, 0.020),
+    "opsProxy": (0.720, 0.050),
+    "pointsPerGame": (110.0, 8.0),
+}
+
+
 def _lineup_quality_score(
     game: dict[str, Any],
     side: str,
     league: str,
     enrichment: dict[str, Any],
-) -> float | None:
+) -> tuple[str, float] | None:
+    """Return (metric_name, normalised score) so callers can refuse to mix scales.
+
+    Previously this returned a bare float that could be a batting average (~0.25),
+    an OPS proxy (~0.72), points-per-game/100 (~1.1) or a roster-completeness
+    ratio (~1.0) depending purely on which data happened to be present. Comparing
+    home to away across two different metrics manufactured edges large enough to
+    saturate the clamp whenever data coverage was asymmetric.
+    """
     lineup = game.get(f"{side}Lineup") or {}
     batters = lineup.get("batters") or []
-    if not batters:
-        return None
-
-    confirmed = [batter for batter in batters if batter.get("order")] or batters
-    averages: list[float] = []
-    for batter in confirmed:
-        avg = batter.get("avg")
-        if avg is None and batter.get("statLine"):
-            avg = _parse_batting_avg(batter.get("statLine"))
-        if avg is not None:
-            try:
-                averages.append(float(avg))
-            except (TypeError, ValueError):
-                continue
-
-    if averages and league == "mlb":
-        avg_value = sum(averages) / len(averages)
-        return avg_value * 1.45
-
     advanced = enrichment.get("homeAdvanced" if side == "home" else "awayAdvanced") or {}
+
+    def normalise(metric: str, value: float) -> tuple[str, float]:
+        centre, spread = _LINEUP_METRIC_SCALE[metric]
+        return metric, (float(value) - centre) / spread
+
+    if batters and league == "mlb":
+        confirmed = [batter for batter in batters if batter.get("order")] or batters
+        averages: list[float] = []
+        for batter in confirmed:
+            avg = batter.get("avg")
+            if avg is None and batter.get("statLine"):
+                avg = _parse_batting_avg(batter.get("statLine"))
+            if avg is not None:
+                try:
+                    averages.append(float(avg))
+                except (TypeError, ValueError):
+                    continue
+        if averages:
+            return normalise("battingAvg", sum(averages) / len(averages))
+
     if league == "mlb":
         ops = advanced.get("opsProxy")
         if ops is not None:
-            confirm_ratio = len(confirmed) / max(1, len(batters))
-            return float(ops) * (0.75 + 0.25 * confirm_ratio)
+            return normalise("opsProxy", ops)
 
     if league in {"nba", "wnba", "nfl", "afl"}:
         scoring = advanced.get("pointsPerGame")
         if scoring is not None:
-            return float(scoring) / 100.0
+            return normalise("pointsPerGame", scoring)
 
-    return len(confirmed) / 9.0
+    return None
 
 
 def _lineup_logit_adjustment(game: dict[str, Any], league: str, enrichment: dict[str, Any]) -> float:
     home_score = _lineup_quality_score(game, "home", league, enrichment)
     away_score = _lineup_quality_score(game, "away", league, enrichment)
-    if home_score is None and away_score is None:
+    # Only compare like with like: if one side has confirmed batting averages and
+    # the other only a season OPS proxy, the difference is an artefact of data
+    # coverage rather than a real edge.
+    if home_score is None or away_score is None or home_score[0] != away_score[0]:
         return 0.0
-    home_value = home_score if home_score is not None else 0.5
-    away_value = away_score if away_score is not None else 0.5
-    multiplier = 2.5 if league == "mlb" else 1.5
-    return max(-0.35, min(0.35, (home_value - away_value) * multiplier))
+    multiplier = 0.10 if league == "mlb" else 0.08
+    return max(-0.35, min(0.35, (home_score[1] - away_score[1]) * multiplier))
 
 
 def _weather_win_logit_adjustment(game: dict[str, Any], enrichment: dict[str, Any], league: str) -> float:
@@ -671,6 +702,11 @@ def _advanced_logit_adjustment(enrichment: dict[str, Any], league: str = "mlb") 
     if home_gf is not None and away_gf is not None and home_ga is not None and away_ga is not None:
         adjustment += ((home_gf - away_gf) + (away_ga - home_ga)) * 0.45
 
+    # Deliberately skipped for MLB: compute_power_rating() already folds opsProxy
+    # and ERA into powerRating (0.10 each), which is applied above, so adding them
+    # again here would double-count. See tests/test_model_improvements.py
+    # DedupeLogitTests. For other leagues these fields are baseball-only and are
+    # normally absent, making this branch inert rather than harmful.
     if league != "mlb":
         home_ops = home.get("opsProxy")
         away_ops = away.get("opsProxy")
@@ -839,6 +875,7 @@ def _build_reasons(
     enrichment: dict[str, Any],
 ) -> list[dict[str, Any]]:
     reasons: list[dict[str, Any]] = []
+    league = _league_id(game)
     winner = _team_by_side(game, predicted_side)
     loser_side = "away" if predicted_side == "home" else "home"
     loser = _team_by_side(game, loser_side)
@@ -915,8 +952,8 @@ def _build_reasons(
 
     home_form = enrichment.get("homeLastFive") or {}
     away_form = enrichment.get("awayLastFive") or {}
-    home_form_pct = _last_five_pct(home_form.get("record"))
-    away_form_pct = _last_five_pct(away_form.get("record"))
+    home_form_pct = _last_five_pct(home_form.get("record"), league)
+    away_form_pct = _last_five_pct(away_form.get("record"), league)
     if home_form_pct is not None and away_form_pct is not None:
         form_side = _edge_label(home_form_pct, away_form_pct)
         if form_side == predicted_side:
@@ -1223,8 +1260,8 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
 
     home_form = enrichment.get("homeLastFive") or {}
     away_form = enrichment.get("awayLastFive") or {}
-    home_form_pct = _last_five_pct(home_form.get("record"))
-    away_form_pct = _last_five_pct(away_form.get("record"))
+    home_form_pct = _last_five_pct(home_form.get("record"), league_config.id)
+    away_form_pct = _last_five_pct(away_form.get("record"), league_config.id)
     if home_form_pct is not None and away_form_pct is not None:
         logit += (home_form_pct - away_form_pct) * 1.8
         factors.append(
@@ -1603,8 +1640,12 @@ def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for index, game in enumerate(publishable, start=1):
         game["predictionRank"] = index
 
+    # Track identity, not equality: `game in publishable` compared whole game
+    # dicts field by field, which is both quadratic and wrong for two games that
+    # happen to serialise identically.
+    published_ids = {id(game) for game in publishable}
     for game in games:
-        if game in publishable:
+        if id(game) in published_ids:
             continue
         game.pop("predictionRank", None)
         prediction = game.get("prediction") or {}
