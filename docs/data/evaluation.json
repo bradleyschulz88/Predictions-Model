@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-07-28T01:53:35.268781+00:00",
+  "builtAt": "2026-07-28T02:17:39.923452+00:00",
   "n": 675,
   "overall": {
     "n": 675,
@@ -637,5 +637,16 @@
         }
       }
     }
+  },
+  "fittedWalkForward": {
+    "folds": 5,
+    "n": 560,
+    "logLoss": 0.6428,
+    "brier": 0.2272,
+    "accuracy": 0.6,
+    "features": [
+      "strengthDiff",
+      "marketLogit"
+    ]
   }
 }

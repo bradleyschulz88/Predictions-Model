@@ -1,14 +1,38 @@
-"""Load and apply data-driven calibration shrinkage from graded pick history."""
+"""Probability calibration fitted from graded pick history.
+
+Two mechanisms live here.
+
+**Platt scaling** (preferred) maps a raw probability through
+``sigmoid(a * logit(p) + b)`` with ``a`` and ``b`` fitted by maximum likelihood.
+It is the right tool at this sample size, and unlike the bucket shrinkage below
+it can express "this model is worse than a coin flip" as a negative slope
+instead of clamping and losing the information.
+
+**Bucket shrinkage** (legacy) pulls probabilities toward 50% by a per-tier
+multiplier. It is retained only for the heuristic fallback path.
+
+Both are fitted on *raw*, pre-calibration confidence. Fitting on published
+confidence -- which a previous calibration already shrank -- compounds every
+build, and it drove the MLB multipliers down to their 0.5 floor.
+"""
 
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any
 
+from model_fit import fit_logistic, logit, sigmoid
+
 STRONG_THRESHOLD = 68
 LEAN_THRESHOLD = 57
-MIN_PICK_CONFIDENCE = LEAN_THRESHOLD
+
+# Minimum published confidence for a pick. Retuned against the fitted model's
+# honest distribution -- see scripts/backtest_model.py --evaluate. Kept in sync
+# with MIN_PUBLISHABLE_CONFIDENCE in dashboard/app.js.
+MIN_PICK_CONFIDENCE = 55
+
 DEFAULT_SHRINK = 0.88
 
 DEFAULT_BUCKET_SHRINK = {
@@ -19,6 +43,13 @@ DEFAULT_BUCKET_SHRINK = {
 
 CALIBRATION_FILE = "calibration.json"
 
+# A calibration curve needs this many graded picks before it is trusted at all,
+# and this many again before it fully displaces the identity mapping.
+MIN_PLATT_SAMPLES = 40
+PLATT_SHRINK_PRIOR = 120.0
+
+IDENTITY_PLATT = {"a": 1.0, "b": 0.0, "n": 0}
+
 
 def confidence_bucket(confidence_pct: float | None) -> str:
     if confidence_pct is None:
@@ -28,6 +59,125 @@ def confidence_bucket(confidence_pct: float | None) -> str:
     if confidence_pct >= LEAN_THRESHOLD:
         return "lean_57+"
     return "coin_<57"
+
+
+# --------------------------------------------------------------------------
+# Platt scaling
+# --------------------------------------------------------------------------
+
+
+def fit_platt(pairs: list[tuple[float, int]]) -> dict[str, Any]:
+    """Fit sigmoid(a * logit(p) + b), shrunk toward identity on thin samples.
+
+    Platt rather than isotonic: with a few hundred picks spread across buckets
+    that can hold a single game, a two-parameter fit is the most the data
+    supports without chasing noise.
+    """
+    usable = [(prob, outcome) for prob, outcome in pairs if prob is not None]
+    if len(usable) < MIN_PLATT_SAMPLES:
+        return dict(IDENTITY_PLATT, n=len(usable))
+
+    rows = [[1.0, logit(prob)] for prob, _ in usable]
+    labels = [outcome for _, outcome in usable]
+    weights = fit_logistic(rows, labels, l2=1e-3)
+    if len(weights) < 2 or not all(math.isfinite(value) for value in weights):
+        return dict(IDENTITY_PLATT, n=len(usable))
+
+    intercept, slope = weights[0], weights[1]
+
+    # Shrink toward the identity mapping (a=1, b=0) so a short history nudges
+    # the curve rather than replacing it.
+    weight = len(usable) / (len(usable) + PLATT_SHRINK_PRIOR)
+    return {
+        "a": round(1.0 + (slope - 1.0) * weight, 4),
+        "b": round(intercept * weight, 4),
+        "n": len(usable),
+    }
+
+
+def apply_platt(prob: float, params: dict[str, Any] | None) -> float:
+    """Map a raw probability through a fitted calibration curve."""
+    if not params:
+        return prob
+    slope = float(params.get("a", 1.0))
+    intercept = float(params.get("b", 0.0))
+    return sigmoid(slope * logit(prob) + intercept)
+
+
+def platt_params_for(
+    calibration: dict[str, Any] | None,
+    *,
+    method: str,
+    league: str,
+) -> dict[str, Any]:
+    """Look up the curve for a league, falling back to pooled then identity.
+
+    Keyed by method so a curve fitted against the heuristic's errors is never
+    applied to the fitted model, which makes different mistakes.
+    """
+    by_method = ((calibration or {}).get("plattParams") or {}).get(method) or {}
+    for key in (league, "default"):
+        params = by_method.get(key)
+        if params and params.get("n", 0) >= MIN_PLATT_SAMPLES:
+            return params
+    return dict(IDENTITY_PLATT)
+
+
+def _home_outcome(record: dict[str, Any]) -> int | None:
+    """1 if the home side won, 0 if the away side did, None for draws."""
+    home_score, away_score = record.get("homeScore"), record.get("awayScore")
+    if home_score is None or away_score is None:
+        return None
+    try:
+        home, away = int(home_score), int(away_score)
+    except (TypeError, ValueError):
+        return None
+    if home == away:
+        return None
+    return 1 if home > away else 0
+
+
+def compute_platt_params(graded: list[dict[str, Any]]) -> dict[str, Any]:
+    """Fit one curve per (probability method, league), plus a pooled default.
+
+    Fitted in *home*-probability space rather than on folded pick-side
+    confidence: a curve learned only from values above 0.5 is not valid below
+    it, and applying one would bias every away pick.
+
+    Records without a raw home probability are skipped rather than falling back
+    to the published value -- that is exactly the feedback loop this replaces.
+    """
+    by_method: dict[str, dict[str, list[tuple[float, int]]]] = {}
+
+    for record in graded:
+        raw = record.get("rawHomeWinPct")
+        if raw is None:
+            raw = (record.get("features") or {}).get("rawHomeWinPct")
+        if raw is None:
+            continue
+        outcome = _home_outcome(record)
+        if outcome is None:
+            continue
+
+        method = (
+            record.get("probabilityMethod")
+            or (record.get("features") or {}).get("probabilityMethod")
+            or "heuristic"
+        )
+        league = record.get("league") or "unknown"
+        pair = (min(0.999, max(0.001, float(raw) / 100.0)), outcome)
+        by_method.setdefault(method, {}).setdefault(league, []).append(pair)
+        by_method[method].setdefault("default", []).append(pair)
+
+    return {
+        method: {league: fit_platt(pairs) for league, pairs in leagues.items()}
+        for method, leagues in by_method.items()
+    }
+
+
+# --------------------------------------------------------------------------
+# Legacy bucket shrinkage (heuristic fallback only)
+# --------------------------------------------------------------------------
 
 
 def _clamp_shrink(value: float) -> float:
@@ -102,14 +252,22 @@ def _load_json(path: Path, default: Any) -> Any:
         return default
 
 
-def load_calibration_params(data_dir: Path | None = None) -> dict[str, Any]:
+def _calibration_report(data_dir: Path | None = None) -> dict[str, Any]:
     if data_dir is None:
         data_dir = Path(__file__).resolve().parent / "docs" / "data"
-    report = _load_json(data_dir / CALIBRATION_FILE, {})
+    return _load_json(data_dir / CALIBRATION_FILE, {})
+
+
+def load_calibration_params(data_dir: Path | None = None) -> dict[str, Any]:
+    report = _calibration_report(data_dir)
     params = report.get("calibrationParams")
     if isinstance(params, dict) and params.get("buckets"):
         return params
     return compute_calibration_params(report)
+
+
+def load_platt_params(data_dir: Path | None = None) -> dict[str, Any]:
+    return _calibration_report(data_dir).get("plattParams") or {}
 
 
 def shrink_for_pick(

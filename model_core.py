@@ -20,11 +20,21 @@ from __future__ import annotations
 
 from typing import Any
 
+from calibration_params import apply_platt, load_platt_params, platt_params_for
 from data_providers.league_metrics import soccer_draw_probability
 from model_fit import MAX_PROB, MIN_PROB, LogisticModel, load_model
 
 _FITTED_MODEL: LogisticModel | None = None
 _FITTED_MODEL_LOADED = False
+_PLATT_PARAMS: dict[str, Any] | None = None
+
+
+def get_platt_params() -> dict[str, Any]:
+    """Load calibration curves once per process."""
+    global _PLATT_PARAMS
+    if _PLATT_PARAMS is None:
+        _PLATT_PARAMS = {"plattParams": load_platt_params()}
+    return _PLATT_PARAMS
 
 
 def get_fitted_model() -> LogisticModel | None:
@@ -37,9 +47,10 @@ def get_fitted_model() -> LogisticModel | None:
 
 
 def reset_fitted_model_cache() -> None:
-    """Test hook: force the next call to re-read the weights file."""
-    global _FITTED_MODEL, _FITTED_MODEL_LOADED
+    """Test hook: force the next call to re-read the weights and curves."""
+    global _FITTED_MODEL, _FITTED_MODEL_LOADED, _PLATT_PARAMS
     _FITTED_MODEL, _FITTED_MODEL_LOADED = None, False
+    _PLATT_PARAMS = None
 
 
 def clamp(value: float, low: float = MIN_PROB, high: float = MAX_PROB) -> float:
@@ -66,14 +77,24 @@ def resolve_probabilities(
     fitted_home = model.predict_proba(model_inputs, league) if model else None
 
     if fitted_home is not None:
-        binary_home = clamp(fitted_home)
+        raw_binary_home = clamp(fitted_home)
+        # A Platt curve fitted against *this* method's own graded history, in
+        # home-probability space so the mapping stays symmetric. It is the
+        # identity until enough fitted-path picks have been graded, so a curve
+        # learned from the heuristic's mistakes is never applied here.
+        curve = platt_params_for(get_platt_params(), method="fitted", league=league)
+        binary_home = clamp(apply_platt(raw_binary_home, curve))
         method = "fitted"
         detail = "Logistic model fitted on graded outcomes"
     else:
-        raw = clamp(heuristic_home)
+        raw_binary_home = clamp(heuristic_home)
         # The heuristic stacks correlated features, so it needs the shrinkage.
         binary_home = clamp(
-            legacy_calibrate(raw, league=league, confidence_pct=max(raw, 1.0 - raw) * 100.0)
+            legacy_calibrate(
+                raw_binary_home,
+                league=league,
+                confidence_pct=max(raw_binary_home, 1.0 - raw_binary_home) * 100.0,
+            )
         )
         method = "heuristic"
         detail = "Hand-tuned fallback (no fitted weights available)"
@@ -108,6 +129,9 @@ def resolve_probabilities(
         "away": away_prob,
         "draw": draw_prob if league_config.supports_draw else None,
         "binaryHome": binary_home,
+        # Pre-calibration home probability. Logged so the next calibration fit
+        # reads the model's raw output rather than its own previous corrections.
+        "rawBinaryHome": raw_binary_home,
         "method": method,
         "detail": detail,
         "fittedAvailable": fitted_home is not None,

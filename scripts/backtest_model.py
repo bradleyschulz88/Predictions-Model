@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from accuracy_tracker import ACCURACY_FILE, LOG_FILE  # noqa: E402
-from calibration_params import compute_calibration_params  # noqa: E402
+from calibration_params import compute_calibration_params, compute_platt_params  # noqa: E402
 from mlb_predictions import apply_predictions  # noqa: E402
 import model_fit  # noqa: E402
 from scripts import evaluation  # noqa: E402
@@ -190,6 +190,9 @@ def summarize_predictions(data_dir: Path) -> dict[str, Any]:
         "coverageBreakdown": _coverage_breakdown(graded),
     }
     report["calibrationParams"] = compute_calibration_params(report)
+    # Fitted on raw, pre-calibration confidence and keyed by probability method,
+    # so the curve never learns from its own previous corrections.
+    report["plattParams"] = compute_platt_params(graded)
     return report
 
 

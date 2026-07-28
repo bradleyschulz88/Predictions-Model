@@ -693,6 +693,7 @@ def extract_prediction_features(game: dict[str, Any], prediction: dict[str, Any]
             # shrank -- that feedback loop drove the MLB shrink factors to their
             # floor.
             "rawConfidence": prediction.get("rawConfidence"),
+            "rawHomeWinPct": prediction.get("rawHomeWinPct"),
             "predictedSide": prediction.get("predictedSide"),
             "probabilityMethod": prediction.get("probabilityMethod"),
         }
@@ -1531,9 +1532,12 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         away_prob /= prob_total
         draw_prob /= prob_total
 
-    # Confidence before calibration, logged so the calibrator can be fitted on
-    # raw output rather than on its own previous corrections.
-    raw_confidence = round(max(heuristic_home, 1.0 - heuristic_home) * 100, 1)
+    # Pre-calibration probabilities, logged so the calibrator can be fitted on
+    # raw output rather than on its own previous corrections. rawHomeWinPct is
+    # the one calibration actually fits on -- home-probability space, so the
+    # curve is valid on both sides of 50%.
+    raw_home_pct = round(resolved["rawBinaryHome"] * 100, 1)
+    raw_confidence = round(max(resolved["rawBinaryHome"], 1.0 - resolved["rawBinaryHome"]) * 100, 1)
 
     outcomes = [
         ("home", home_prob, game.get("homeTeam")),
@@ -1601,6 +1605,7 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         "awayWinPct": away_pct,
         "confidence": round(confidence, 1),
         "rawConfidence": raw_confidence,
+        "rawHomeWinPct": raw_home_pct,
         "confidenceLabel": confidence_label(confidence),
         "probabilityMethod": resolved["method"],
         "outcomeLabel": f"{predicted_winner} to win" if predicted_side != "draw" else "Draw",

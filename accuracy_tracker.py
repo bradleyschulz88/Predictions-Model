@@ -120,6 +120,9 @@ def _build_pick_record(
         "predictedSide": pending.get("predictedSide"),
         "outcomeLabel": pending.get("outcomeLabel"),
         "confidence": pending.get("confidence"),
+        "rawConfidence": pending.get("rawConfidence"),
+        "rawHomeWinPct": pending.get("rawHomeWinPct"),
+        "probabilityMethod": pending.get("probabilityMethod"),
         "pickOdds": pending.get("pickOdds"),
         "status": status,
         "actual": actual,
@@ -186,6 +189,12 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 "predictedSide": prediction.get("predictedSide"),
                 "outcomeLabel": prediction.get("outcomeLabel"),
                 "confidence": prediction.get("confidence"),
+                # Pre-calibration confidence and the path that produced it.
+                # Calibration is fitted on these, never on the published
+                # confidence, which a previous calibration already adjusted.
+                "rawConfidence": prediction.get("rawConfidence"),
+                "rawHomeWinPct": prediction.get("rawHomeWinPct"),
+                "probabilityMethod": prediction.get("probabilityMethod"),
                 "pickOdds": extract_pick_american_odds(game, prediction.get("predictedSide")),
                 "features": prediction.get("features"),
                 "recordedAt": payload.get("fetchedAt"),

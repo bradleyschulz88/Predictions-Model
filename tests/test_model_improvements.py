@@ -64,7 +64,11 @@ class CalibrationParamsTests(unittest.TestCase):
         self.assertIn("default", params["buckets"])
 
     def test_publishable_pick_threshold(self) -> None:
-        self.assertFalse(is_publishable_pick({"predictedWinner": "Team A", "confidence": 56.9}))
+        # Relative to the threshold rather than a literal, so retuning the
+        # threshold does not require editing this test.
+        self.assertFalse(
+            is_publishable_pick({"predictedWinner": "Team A", "confidence": MIN_PICK_CONFIDENCE - 0.1})
+        )
         self.assertTrue(is_publishable_pick({"predictedWinner": "Team A", "confidence": MIN_PICK_CONFIDENCE}))
 
 

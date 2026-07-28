@@ -1,126 +1,126 @@
 {
-  "builtAt": "2026-06-24T00:11:27.794696+00:00",
+  "builtAt": "2026-07-28T02:17:40.122040+00:00",
   "thresholds": {
     "strong": 68,
     "lean": 57
   },
   "summary": {
-    "graded": 83,
-    "correct": 47,
-    "winPct": 56.6,
-    "units": 1.573,
-    "roiPct": 1.9,
-    "pending": 184,
+    "graded": 689,
+    "correct": 410,
+    "winPct": 59.5,
+    "units": 4.766,
+    "roiPct": 0.7,
+    "pending": 133,
     "featureCoverage": {
-      "withFeatures": 267,
-      "totalLogged": 267,
-      "withRestData": 255
+      "withFeatures": 822,
+      "totalLogged": 822,
+      "withRestData": 467
     },
-    "avgOverconfidencePct": 14.6
+    "avgOverconfidencePct": 16.6
   },
   "byLeague": {
     "mlb": {
-      "correct": 24,
-      "total": 53,
-      "units": -10.494,
-      "pending": 122,
-      "winPct": 45.3,
-      "roiPct": -19.8
+      "correct": 264,
+      "total": 478,
+      "units": -10.877,
+      "pending": 101,
+      "winPct": 55.2,
+      "roiPct": -2.3
     },
     "wnba": {
-      "correct": 7,
-      "total": 11,
-      "units": 3.0,
-      "pending": 22,
-      "winPct": 63.6,
-      "roiPct": 27.3
+      "correct": 62,
+      "total": 91,
+      "units": 6.0,
+      "pending": 23,
+      "winPct": 68.1,
+      "roiPct": 6.6
     },
     "worldcup": {
-      "correct": 11,
-      "total": 14,
-      "units": 4.067,
-      "pending": 33,
-      "winPct": 78.6,
-      "roiPct": 29.1
+      "correct": 48,
+      "total": 74,
+      "units": 4.643,
+      "pending": 0,
+      "winPct": 64.9,
+      "roiPct": 6.3
     },
     "afl": {
-      "correct": 5,
-      "total": 5,
+      "correct": 36,
+      "total": 46,
       "units": 5.0,
-      "pending": 7,
-      "winPct": 100.0,
-      "roiPct": 100.0
+      "pending": 9,
+      "winPct": 78.3,
+      "roiPct": 10.9
     }
   },
   "byConfidence": {
     "strong_68+": {
-      "correct": 32,
-      "total": 54,
-      "units": -0.22,
-      "winPct": 59.3
+      "correct": 251,
+      "total": 376,
+      "units": 26.58,
+      "winPct": 66.8
     },
     "lean_57+": {
-      "correct": 10,
-      "total": 18,
-      "units": 3.505,
-      "winPct": 55.6
+      "correct": 151,
+      "total": 297,
+      "units": -19.102,
+      "winPct": 50.8
     },
     "coin_<57": {
-      "correct": 5,
-      "total": 11,
-      "units": -1.712,
-      "winPct": 45.5
+      "correct": 8,
+      "total": 16,
+      "units": -2.712,
+      "winPct": 50.0
     }
   },
   "calibration": [
     {
       "confidenceRange": "50-54",
-      "picks": 4,
-      "avgPredictedPct": 46.2,
-      "actualWinPct": 25.0,
-      "overconfidencePct": 21.2
+      "picks": 7,
+      "avgPredictedPct": 46.0,
+      "actualWinPct": 28.6,
+      "overconfidencePct": 17.4
     },
     {
       "confidenceRange": "55-59",
-      "picks": 7,
-      "avgPredictedPct": 55.2,
-      "actualWinPct": 57.1,
-      "overconfidencePct": -1.9
-    },
-    {
-      "confidenceRange": "60-64",
-      "picks": 9,
-      "avgPredictedPct": 60.5,
-      "actualWinPct": 55.6,
-      "overconfidencePct": 4.9
-    },
-    {
-      "confidenceRange": "65-69",
-      "picks": 9,
-      "avgPredictedPct": 64.9,
-      "actualWinPct": 55.6,
+      "picks": 38,
+      "avgPredictedPct": 56.7,
+      "actualWinPct": 47.4,
       "overconfidencePct": 9.3
     },
     {
+      "confidenceRange": "60-64",
+      "picks": 140,
+      "avgPredictedPct": 59.8,
+      "actualWinPct": 45.7,
+      "overconfidencePct": 14.1
+    },
+    {
+      "confidenceRange": "65-69",
+      "picks": 118,
+      "avgPredictedPct": 64.9,
+      "actualWinPct": 57.6,
+      "overconfidencePct": 7.3
+    },
+    {
       "confidenceRange": "70-74",
-      "picks": 14,
-      "avgPredictedPct": 69.9,
-      "actualWinPct": 50.0,
-      "overconfidencePct": 19.9
+      "picks": 134,
+      "avgPredictedPct": 70.3,
+      "actualWinPct": 63.4,
+      "overconfidencePct": 6.9
     },
     {
       "confidenceRange": "75-79",
-      "picks": 13,
-      "avgPredictedPct": 75.6,
-      "actualWinPct": 76.9,
-      "overconfidencePct": -1.3
+      "picks": 196,
+      "avgPredictedPct": 75.5,
+      "actualWinPct": 69.4,
+      "overconfidencePct": 6.1
     },
     {
       "confidenceRange": "80-84",
-      "picks": 7,
-      "avgPredictedPct": 80.7,
-      "actualWinPct": 85.7,
-      "overconfidencePct": -5.0
+      "picks": 36,
+      "avgPredictedPct": 81.7,
+      "actualWinPct": 77.8,
+      "overconfidencePct": 3.9
     },
     {
       "confidenceRange": "85-89",
@@ -141,45 +141,45 @@
     "mlb": [
       {
         "confidenceRange": "50-54",
-        "picks": 1,
-        "avgPredictedPct": 52.4,
-        "actualWinPct": 100.0,
-        "overconfidencePct": -47.6
+        "picks": 3,
+        "avgPredictedPct": 51.0,
+        "actualWinPct": 66.7,
+        "overconfidencePct": -15.7
       },
       {
         "confidenceRange": "55-59",
-        "picks": 6,
-        "avgPredictedPct": 55.3,
-        "actualWinPct": 50.0,
-        "overconfidencePct": 5.3
+        "picks": 36,
+        "avgPredictedPct": 56.8,
+        "actualWinPct": 44.4,
+        "overconfidencePct": 12.4
       },
       {
         "confidenceRange": "60-64",
-        "picks": 5,
-        "avgPredictedPct": 60.8,
-        "actualWinPct": 40.0,
-        "overconfidencePct": 20.8
+        "picks": 95,
+        "avgPredictedPct": 59.6,
+        "actualWinPct": 38.9,
+        "overconfidencePct": 20.7
       },
       {
         "confidenceRange": "65-69",
-        "picks": 7,
+        "picks": 87,
         "avgPredictedPct": 65.0,
-        "actualWinPct": 42.9,
-        "overconfidencePct": 22.1
+        "actualWinPct": 55.2,
+        "overconfidencePct": 9.8
       },
       {
         "confidenceRange": "70-74",
-        "picks": 4,
-        "avgPredictedPct": 70.5,
-        "actualWinPct": 0.0,
-        "overconfidencePct": 70.5
+        "picks": 88,
+        "avgPredictedPct": 70.2,
+        "actualWinPct": 58.0,
+        "overconfidencePct": 12.2
       },
       {
         "confidenceRange": "75-79",
-        "picks": 7,
-        "avgPredictedPct": 75.8,
-        "actualWinPct": 57.1,
-        "overconfidencePct": 18.7
+        "picks": 146,
+        "avgPredictedPct": 75.3,
+        "actualWinPct": 67.8,
+        "overconfidencePct": 7.5
       },
       {
         "confidenceRange": "80-84",
@@ -213,31 +213,31 @@
       },
       {
         "confidenceRange": "55-59",
-        "picks": 1,
-        "avgPredictedPct": 54.4,
+        "picks": 2,
+        "avgPredictedPct": 55.9,
         "actualWinPct": 100.0,
-        "overconfidencePct": -45.6
+        "overconfidencePct": -44.1
       },
       {
         "confidenceRange": "60-64",
-        "picks": 2,
-        "avgPredictedPct": 59.2,
-        "actualWinPct": 50.0,
-        "overconfidencePct": 9.2
+        "picks": 36,
+        "avgPredictedPct": 60.2,
+        "actualWinPct": 58.3,
+        "overconfidencePct": 1.9
       },
       {
         "confidenceRange": "65-69",
-        "picks": 1,
-        "avgPredictedPct": 64.0,
-        "actualWinPct": 100.0,
-        "overconfidencePct": -36.0
+        "picks": 22,
+        "avgPredictedPct": 64.7,
+        "actualWinPct": 63.6,
+        "overconfidencePct": 1.1
       },
       {
         "confidenceRange": "70-74",
-        "picks": 3,
-        "avgPredictedPct": 69.8,
-        "actualWinPct": 33.3,
-        "overconfidencePct": 36.5
+        "picks": 27,
+        "avgPredictedPct": 70.8,
+        "actualWinPct": 81.5,
+        "overconfidencePct": -10.7
       },
       {
         "confidenceRange": "75-79",
@@ -264,17 +264,17 @@
     "worldcup": [
       {
         "confidenceRange": "50-54",
-        "picks": 2,
-        "avgPredictedPct": 41.1,
+        "picks": 3,
+        "avgPredictedPct": 39.6,
         "actualWinPct": 0.0,
-        "overconfidencePct": 41.1
+        "overconfidencePct": 39.6
       },
       {
         "confidenceRange": "60-64",
-        "picks": 1,
-        "avgPredictedPct": 59.9,
-        "actualWinPct": 100.0,
-        "overconfidencePct": -40.1
+        "picks": 6,
+        "avgPredictedPct": 59.4,
+        "actualWinPct": 50.0,
+        "overconfidencePct": 9.4
       },
       {
         "confidenceRange": "65-69",
@@ -285,40 +285,47 @@
       },
       {
         "confidenceRange": "70-74",
-        "picks": 7,
-        "avgPredictedPct": 69.6,
-        "actualWinPct": 85.7,
-        "overconfidencePct": -16.1
+        "picks": 19,
+        "avgPredictedPct": 70.0,
+        "actualWinPct": 63.2,
+        "overconfidencePct": 6.8
       },
       {
         "confidenceRange": "75-79",
-        "picks": 3,
-        "avgPredictedPct": 76.3,
-        "actualWinPct": 100.0,
-        "overconfidencePct": -23.7
+        "picks": 45,
+        "avgPredictedPct": 76.1,
+        "actualWinPct": 71.1,
+        "overconfidencePct": 5.0
       }
     ],
     "afl": [
       {
         "confidenceRange": "60-64",
-        "picks": 1,
-        "avgPredictedPct": 62.4,
+        "picks": 3,
+        "avgPredictedPct": 60.6,
         "actualWinPct": 100.0,
-        "overconfidencePct": -37.6
+        "overconfidencePct": -39.4
+      },
+      {
+        "confidenceRange": "65-69",
+        "picks": 8,
+        "avgPredictedPct": 64.9,
+        "actualWinPct": 62.5,
+        "overconfidencePct": 2.4
       },
       {
         "confidenceRange": "75-79",
-        "picks": 2,
-        "avgPredictedPct": 74.2,
+        "picks": 4,
+        "avgPredictedPct": 74.5,
         "actualWinPct": 100.0,
-        "overconfidencePct": -25.8
+        "overconfidencePct": -25.5
       },
       {
         "confidenceRange": "80-84",
-        "picks": 1,
-        "avgPredictedPct": 80.4,
-        "actualWinPct": 100.0,
-        "overconfidencePct": -19.6
+        "picks": 30,
+        "avgPredictedPct": 81.9,
+        "actualWinPct": 76.7,
+        "overconfidencePct": 5.2
       },
       {
         "confidenceRange": "90-94",
@@ -331,66 +338,67 @@
   },
   "coverageBreakdown": {
     "restData": {
-      "with": 78,
-      "without": 5,
-      "winsWith": 42,
-      "winsWithout": 5
+      "with": 462,
+      "without": 227,
+      "winsWith": 275,
+      "winsWithout": 135
     },
     "scheduleFlags": {
-      "with": 83,
+      "with": 689,
       "without": 0,
-      "winsWith": 47,
+      "winsWith": 410,
       "winsWithout": 0
     },
     "impliedOdds": {
-      "with": 63,
-      "without": 20,
-      "winsWith": 32,
-      "winsWithout": 15
+      "with": 483,
+      "without": 206,
+      "winsWith": 275,
+      "winsWithout": 135
     },
     "lineup": {
-      "with": 83,
+      "with": 689,
       "without": 0,
-      "winsWith": 47,
+      "winsWith": 410,
       "winsWithout": 0
     },
     "espnPredictor": {
-      "with": 0,
-      "without": 83,
-      "winsWith": 0,
-      "winsWithout": 47
+      "with": 93,
+      "without": 596,
+      "winsWith": 42,
+      "winsWithout": 368
     }
   },
   "calibrationParams": {
     "defaultShrink": 0.88,
-    "minPickConfidence": 57,
+    "minPickConfidence": 55,
     "buckets": {
       "default": {
-        "strong_68+": 0.692,
-        "lean_57+": 0.5166666666666669,
-        "coin_<57": 0.9299999999999999
+        "strong_68+": 0.6595708889451571,
+        "lean_57+": 0.50503355704698,
+        "coin_<57": 0.69
       },
       "mlb": {
-        "strong_68+": 0.5954397394136808,
+        "strong_68+": 0.6361512018642737,
         "lean_57+": 0.5,
-        "coin_<57": 0.5
+        "coin_<57": 0.74
       },
       "wnba": {
-        "strong_68+": 0.5,
-        "lean_57+": 0.84,
+        "strong_68+": 0.98,
+        "lean_57+": 0.8694477791116445,
         "coin_<57": 0.95
       },
       "worldcup": {
-        "strong_68+": 0.98,
-        "lean_57+": 0.84,
-        "coin_<57": 0.95
+        "strong_68+": 0.7342145593869733,
+        "lean_57+": 0.5,
+        "coin_<57": 0.88
       },
       "afl": {
-        "strong_68+": 0.72,
-        "lean_57+": 0.84,
+        "strong_68+": 0.9084952978056426,
+        "lean_57+": 0.909463087248322,
         "coin_<57": 0.95
       }
     },
-    "derivedFromGraded": 83
-  }
+    "derivedFromGraded": 689
+  },
+  "plattParams": {}
 }
