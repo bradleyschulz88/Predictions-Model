@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT))
 from accuracy_tracker import ACCURACY_FILE, LOG_FILE  # noqa: E402
 from calibration_params import compute_calibration_params  # noqa: E402
 from mlb_predictions import apply_predictions  # noqa: E402
+import model_fit  # noqa: E402
 from scripts import evaluation  # noqa: E402
 
 CALIBRATION_FILE = "calibration.json"
@@ -228,7 +229,26 @@ def build_evaluation_report(data_dir: Path) -> dict[str, Any]:
         "homeBias": evaluation.home_bias_report(observations),
         "reliability": evaluation.reliability_curve(published),
         "byLeague": by_league,
+        "fittedWalkForward": _fitted_walk_forward(data_dir),
     }
+
+
+def _fitted_walk_forward(data_dir: Path) -> dict[str, Any]:
+    """Out-of-sample score for the fitted model.
+
+    The published numbers above come from whatever model was live when each game
+    was predicted. This is the honest score for the model running now: trained
+    only on games that preceded each test fold, so it never sees its own answers.
+    """
+    try:
+        samples, _ = model_fit.samples_from_log(data_dir)
+    except Exception:  # pragma: no cover - defensive around malformed logs
+        return {}
+    if not samples:
+        return {}
+    scores = model_fit.walk_forward_scores(samples)
+    scores["features"] = list(model_fit.ANCHORED_FEATURES)
+    return scores
 
 
 def write_evaluation_report(data_dir: Path) -> dict[str, Any]:
@@ -274,6 +294,12 @@ def print_evaluation(report: dict[str, Any]) -> None:
         print(f"    agrees with market: {agree['picks']} picks, {agree['winPct']}% win")
         print(f"    fades market:       {fade['picks']} picks, {fade['winPct']}% win"
               f" (break-even {fade['breakEvenPct']}%)")
+
+    fitted = report.get("fittedWalkForward") or {}
+    if fitted.get("n"):
+        print("\n  Fitted model, walk-forward (out-of-sample, model currently live)")
+        print(f"    features {'+'.join(fitted['features'])} · {fitted['folds']} folds · n={fitted['n']}")
+        print(f"    logloss {fitted['logLoss']} · brier {fitted['brier']} · acc {fitted['accuracy']}")
 
     print("\n  Home bias (pick rate vs actual home win rate)")
     for league, stats in sorted(report["homeBias"].items()):
