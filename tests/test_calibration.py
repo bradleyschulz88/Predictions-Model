@@ -189,10 +189,43 @@ class FeedbackLoopTests(unittest.TestCase):
 
 
 class PublishThresholdTests(unittest.TestCase):
-    def test_threshold_matches_the_dashboard(self) -> None:
-        app_js = (ROOT / "dashboard" / "app.js").read_text(encoding="utf-8")
+    def _app_js(self) -> str:
+        return (ROOT / "dashboard" / "app.js").read_text(encoding="utf-8")
+
+    def test_dashboard_fallback_matches_the_python_threshold(self) -> None:
+        """The fallback is what paints before calibration.json loads."""
         expected = f"const MIN_PUBLISHABLE_CONFIDENCE = {cal.MIN_PICK_CONFIDENCE};"
-        self.assertIn(expected, app_js)
+        self.assertIn(expected, self._app_js())
+
+    def test_dashboard_reads_the_live_threshold_from_data(self) -> None:
+        app_js = self._app_js()
+        self.assertIn("minPickConfidence", app_js)
+        self.assertIn("function minPublishableConfidence()", app_js)
+        # The publish check must consult the data, not the baked-in constant.
+        self.assertIn("return confidence >= minPublishableConfidence();", app_js)
+
+    def test_dashboard_reads_tier_thresholds_from_data(self) -> None:
+        """Tier boundaries were duplicated in JS and drifted from the model."""
+        app_js = self._app_js()
+        self.assertIn("function confidenceTiers()", app_js)
+        self.assertIn("calibrationData?.thresholds", app_js)
+        self.assertIn("value >= tiers.strong", app_js)
+        self.assertIn("value >= tiers.lean", app_js)
+
+    def test_no_bare_tier_literals_remain_in_the_label_logic(self) -> None:
+        app_js = self._app_js()
+        for literal in ("confidence >= 68", "confidence >= 57", "value >= 68", "value >= 57"):
+            self.assertNotIn(literal, app_js, msg=f"hardcoded tier threshold: {literal}")
+
+    def test_backtest_publishes_the_thresholds_the_dashboard_reads(self) -> None:
+        from scripts.backtest_model import LEAN_THRESHOLD, STRONG_THRESHOLD
+
+        report = {"summary": {"graded": 0}, "calibration": [], "calibrationByLeague": {}}
+        params = cal.compute_calibration_params(report)
+        self.assertEqual(params["minPickConfidence"], cal.MIN_PICK_CONFIDENCE)
+        # The tier boundaries the UI renders come from this same report.
+        self.assertEqual(STRONG_THRESHOLD, cal.STRONG_THRESHOLD)
+        self.assertEqual(LEAN_THRESHOLD, cal.LEAN_THRESHOLD)
 
     def test_pick_below_threshold_is_not_published(self) -> None:
         self.assertFalse(

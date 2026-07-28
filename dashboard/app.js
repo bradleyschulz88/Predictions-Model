@@ -50,9 +50,10 @@ const modelTrackerViewEl = document.getElementById("model-tracker-view");
 const dateFieldEl = document.getElementById("date-field");
 const modelDayResultEl = document.getElementById("model-day-result");
 
-// Must match MIN_PICK_CONFIDENCE in calibration_params.py. Lowered from 57 when
-// the model stopped inflating confidence: an honest 56% pick is a better pick
-// than a fake 68% one, and the old threshold would have emptied the board.
+// Fallback only. The live value is read from calibration.json via
+// minPublishableConfidence(), so retuning the threshold in
+// calibration_params.py takes effect without a matching edit here. Must match
+// MIN_PICK_CONFIDENCE for the first paint, before calibration.json loads.
 const MIN_PUBLISHABLE_CONFIDENCE = 55;
 
 function isPublishablePrediction(prediction) {
@@ -60,7 +61,7 @@ function isPublishablePrediction(prediction) {
   if (prediction.publishable === false) return false;
   const confidence = Number(prediction?.confidence);
   if (Number.isNaN(confidence)) return Boolean(prediction?.predictedWinner);
-  return confidence >= MIN_PUBLISHABLE_CONFIDENCE;
+  return confidence >= minPublishableConfidence();
 }
 
 function coverageFromGame(game) {
@@ -321,6 +322,7 @@ let loadingDashboard = false;
 let lastPayload = null;
 let accuracyData = null;
 let calibrationData = null;
+let evaluationData = null;
 let manifestData = null;
 let overviewData = null;
 let predictionsLogData = null;
@@ -1883,8 +1885,21 @@ function renderAccuracyView() {
         .join("")}</ul>`
     : `<p class="lineup-note">No recent graded picks for ${SPORT_LABELS[sport] || sport}.</p>`;
 
+  // A hit rate with no price behind it is not comparable to one with a price.
+  // AFL and the World Cup have no odds source, so saying "0.0% ROI" reads as
+  // break-even when the truth is that ROI cannot be measured at all.
+  const roiNote = leagueStats?.roiNote
+    ? `<span class="lineup-note">${escapeHtml(leagueStats.roiNote)}</span>`
+    : leagueStats?.roiPct != null
+      ? `<span class="lineup-note">${leagueStats.roiPct > 0 ? "+" : ""}${leagueStats.roiPct}% ROI${
+          leagueStats.pricedPct != null && leagueStats.pricedPct < 100
+            ? ` · ${leagueStats.priced}/${leagueStats.total} priced`
+            : ""
+        }</span>`
+      : "";
+
   const leagueBlock = leagueStats
-    ? `<div class="accuracy-metric"><span class="accuracy-metric-label">${SPORT_LABELS[sport]?.split(" ")[0] || sport}</span><span class="accuracy-metric-value">${formatAccuracyRecord(leagueStats)}</span><span class="lineup-note">${leagueStats.pct ?? "—"}% hit rate</span></div>`
+    ? `<div class="accuracy-metric"><span class="accuracy-metric-label">${SPORT_LABELS[sport]?.split(" ")[0] || sport}</span><span class="accuracy-metric-value">${formatAccuracyRecord(leagueStats)}</span><span class="lineup-note">${leagueStats.pct ?? "—"}% hit rate</span>${roiNote}</div>`
     : "";
 
   accuracyViewEl.innerHTML = `
@@ -1902,13 +1917,17 @@ function renderAccuracyView() {
           <span class="lineup-note">${formatAccuracyRecord(last7)} · ${last7.pending || 0} pending</span>
         </div>
         <div class="accuracy-metric">
-          <span class="accuracy-metric-label">Brier / overconf.</span>
-          <span class="accuracy-metric-value">${calSummary?.avgOverconfidencePct != null ? `${calSummary.avgOverconfidencePct}%` : "—"}</span>
-          <span class="lineup-note">${calSummary?.graded ?? 0} picks in calibration</span>
+          <!-- Labelled "Brier / overconf." but only ever showed overconfidence.
+               Brier now has a real home in the Model vs market table below. -->
+          <span class="accuracy-metric-label">Avg overconfidence</span>
+          <span class="accuracy-metric-value">${calSummary?.avgOverconfidencePct != null ? `${calSummary.avgOverconfidencePct > 0 ? "+" : ""}${calSummary.avgOverconfidencePct}%` : "—"}</span>
+          <span class="lineup-note">${calSummary?.graded ?? 0} picks in calibration · lower is better</span>
         </div>
         ${leagueBlock}
       </div>
     </section>
+    ${renderModelVsMarket()}
+    ${renderClosingLineValue(summary)}
     <section class="calibration-chart">
       <h3>Calibration (predicted vs actual)</h3>
       ${calBuckets.length ? renderCalibrationChart(calBuckets) : `<div class="accuracy-empty"><strong>Calibration pending</strong>Need more graded picks. Re-run the build to refresh calibration.json.</div>`}
@@ -1916,6 +1935,95 @@ function renderAccuracyView() {
     <section class="accuracy-hero">
       <h3 class="section-title">Recent results</h3>
       ${recentHtml}
+    </section>
+  `;
+}
+
+// Hit rate says nothing about whether the probabilities mean anything. These
+// two panels show the numbers that do: how the model scores against the market
+// and naive baselines, and whether it beats the closing line.
+function renderModelVsMarket() {
+  const fitted = evaluationData?.fittedWalkForward;
+  const forecasters = evaluationData?.vsMarket?.forecasters || [];
+  if (!fitted?.logLoss && !forecasters.length) return "";
+
+  const named = (needle) => forecasters.find((row) => row.name?.includes(needle));
+  const market = named("market");
+  const constant = named("constant");
+
+  const rows = [
+    fitted?.logLoss != null
+      ? { label: "Model (out-of-sample)", logLoss: fitted.logLoss, brier: fitted.brier, best: true }
+      : null,
+    market ? { label: "Betting market", logLoss: market.logLoss, brier: market.brier } : null,
+    constant ? { label: "Always the base rate", logLoss: constant.logLoss, brier: constant.brier } : null,
+  ].filter(Boolean);
+
+  if (!rows.length) return "";
+
+  const body = rows
+    .map(
+      (row) => `
+        <tr${row.best ? ' class="mvm-best"' : ""}>
+          <td>${escapeHtml(row.label)}</td>
+          <td>${row.logLoss != null ? row.logLoss.toFixed(4) : "—"}</td>
+          <td>${row.brier != null ? row.brier.toFixed(4) : "—"}</td>
+        </tr>`
+    )
+    .join("");
+
+  return `
+    <section class="accuracy-hero model-vs-market">
+      <h3 class="section-title">Model vs market</h3>
+      <p class="lineup-note">
+        Lower is better. The model is scored walk-forward — trained only on games
+        played before each one it predicts — so this is what it does on games it
+        has never seen. Beating the market column is the bar that matters.
+      </p>
+      <div class="mvm-scroll">
+        <table class="mvm-table">
+          <thead><tr><th>Forecaster</th><th>Log loss</th><th>Brier</th></tr></thead>
+          <tbody>${body}</tbody>
+        </table>
+      </div>
+      ${fitted?.features?.length ? `<p class="lineup-note">Features in use: ${fitted.features.map(escapeHtml).join(" + ")}.</p>` : ""}
+    </section>
+  `;
+}
+
+function renderClosingLineValue(summary) {
+  const clv = summary?.closingLineValue;
+  if (!clv?.picks) {
+    return `
+      <section class="accuracy-hero">
+        <h3 class="section-title">Closing line value</h3>
+        <p class="lineup-note">
+          Collecting. CLV compares the price when a pick was made against the
+          market's final price, and over a few hundred bets it predicts profit
+          more reliably than win rate does. Needs graded picks that had odds at
+          both ends.
+        </p>
+      </section>
+    `;
+  }
+
+  const avg = clv.avgPct;
+  const tone = avg > 0 ? "acc-correct" : avg < 0 ? "acc-wrong" : "";
+  return `
+    <section class="accuracy-hero">
+      <h3 class="section-title">Closing line value</h3>
+      <div class="accuracy-summary-grid">
+        <div class="accuracy-metric">
+          <span class="accuracy-metric-label">Average CLV</span>
+          <span class="accuracy-metric-value ${tone}">${avg != null ? `${avg > 0 ? "+" : ""}${avg}%` : "—"}</span>
+          <span class="lineup-note">${clv.picks} priced picks</span>
+        </div>
+        <div class="accuracy-metric">
+          <span class="accuracy-metric-label">Beat the close</span>
+          <span class="accuracy-metric-value">${clv.beatCloseP != null ? `${clv.beatCloseP}%` : "—"}</span>
+          <span class="lineup-note">of picks got a better price than the market settled on</span>
+        </div>
+      </div>
     </section>
   `;
 }
@@ -3210,11 +3318,12 @@ function summarizePickTiers(games) {
   let strong = 0;
   let lean = 0;
   let live = 0;
+  const tiers = confidenceTiers();
   for (const game of games || []) {
     const confidence = game.prediction?.confidence;
     if (confidence == null) continue;
-    if (confidence >= 68) strong += 1;
-    else if (confidence >= 57) lean += 1;
+    if (confidence >= tiers.strong) strong += 1;
+    else if (confidence >= tiers.lean) lean += 1;
     if (game.isLive) live += 1;
   }
   return { strong, lean, live, picks: (games || []).filter((g) => g.prediction?.outcomeLabel).length };
@@ -3400,11 +3509,32 @@ function gameDisplayRank(game) {
   return game?.predictionRank ?? "—";
 }
 
+// Tier boundaries are published by the model in calibration.json rather than
+// duplicated here. They were tuned to a confidence distribution the model no
+// longer produces -- when it stopped inflating confidence, "Strong pick" went
+// from half of all picks to a quarter -- so hardcoding them meant the labels
+// drifted away from what they describe.
+const FALLBACK_TIERS = { strong: 68, lean: 57 };
+
+function confidenceTiers() {
+  const thresholds = calibrationData?.thresholds;
+  return {
+    strong: Number(thresholds?.strong ?? FALLBACK_TIERS.strong),
+    lean: Number(thresholds?.lean ?? FALLBACK_TIERS.lean),
+  };
+}
+
+function minPublishableConfidence() {
+  const value = calibrationData?.calibrationParams?.minPickConfidence;
+  return Number.isFinite(Number(value)) ? Number(value) : MIN_PUBLISHABLE_CONFIDENCE;
+}
+
 function confidenceLabelFromConfidence(confidence) {
   const value = Number(confidence);
   if (Number.isNaN(value)) return "";
-  if (value >= 68) return "Strong pick";
-  if (value >= 57) return "Lean";
+  const tiers = confidenceTiers();
+  if (value >= tiers.strong) return "Strong pick";
+  if (value >= tiers.lean) return "Lean";
   return "Coin flip";
 }
 
@@ -4027,7 +4157,7 @@ function renderGames(games) {
               </div>
             </summary>
             <div class="scoreboard-details-body game-details-body">
-              ${hasPick ? renderPrediction(game) : `<section class="detail-panel"><p class="lineup-note">No official pick — model confidence is below ${MIN_PUBLISHABLE_CONFIDENCE}%.</p>${prediction?.confidence != null ? `<p class="lineup-note">Raw model lean: ${formatConfidenceDisplay(prediction.confidence)}%.</p>` : ""}</section>`}
+              ${hasPick ? renderPrediction(game) : `<section class="detail-panel"><p class="lineup-note">No official pick — model confidence is below ${minPublishableConfidence()}%.</p>${prediction?.confidence != null ? `<p class="lineup-note">Raw model lean: ${formatConfidenceDisplay(prediction.confidence)}%.</p>` : ""}</section>`}
               <div class="game-head game-head-compact">
                 <p class="meta">${metaParts.join(" · ")}</p>
                 <div class="game-actions">
@@ -4517,6 +4647,16 @@ async function fetchCalibration({ force = false } = {}) {
   }
 }
 
+async function fetchEvaluation({ force = false } = {}) {
+  try {
+    const response = await fetch(staticDataUrl("data/evaluation.json", force));
+    if (!response.ok) return null;
+    return response.json();
+  } catch {
+    return null;
+  }
+}
+
 async function fetchDashboardPayload(params, { force = false } = {}) {
   const league = params.get("league") || sportSelect.value;
 
@@ -4528,6 +4668,7 @@ async function fetchDashboardPayload(params, { force = false } = {}) {
     accuracyData = (await fetchAccuracy({ force: force || !accuracyData })) ?? accuracyData;
     predictionsLogData = (await fetchPredictionsLog({ force: force || !predictionsLogData })) ?? predictionsLogData;
     calibrationData = (await fetchCalibration({ force })) ?? calibrationData;
+    evaluationData = (await fetchEvaluation({ force })) ?? evaluationData;
 
     if (league === "overview") {
       overviewData = await fetchOverview({ force });
@@ -4590,6 +4731,7 @@ async function loadDashboard(force = false) {
     if (sportSelect.value !== "overview") {
       accuracyData = (await fetchAccuracy({ force })) ?? accuracyData;
       calibrationData = (await fetchCalibration({ force })) ?? calibrationData;
+      evaluationData = (await fetchEvaluation({ force })) ?? evaluationData;
     }
 
     if (sportSelect.value === "overview") {
