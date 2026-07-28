@@ -1,31 +1,31 @@
 {
-  "builtAt": "2026-07-28T02:17:40.122040+00:00",
+  "builtAt": "2026-07-28T02:43:36.938729+00:00",
   "thresholds": {
     "strong": 68,
     "lean": 57
   },
   "summary": {
-    "graded": 689,
-    "correct": 410,
-    "winPct": 59.5,
-    "units": 4.766,
-    "roiPct": 0.7,
+    "graded": 694,
+    "correct": 412,
+    "winPct": 59.4,
+    "units": 4.286,
+    "roiPct": 0.6,
     "pending": 133,
     "featureCoverage": {
-      "withFeatures": 822,
-      "totalLogged": 822,
+      "withFeatures": 827,
+      "totalLogged": 827,
       "withRestData": 467
     },
     "avgOverconfidencePct": 16.6
   },
   "byLeague": {
     "mlb": {
-      "correct": 264,
-      "total": 478,
-      "units": -10.877,
+      "correct": 266,
+      "total": 483,
+      "units": -11.357,
       "pending": 101,
-      "winPct": 55.2,
-      "roiPct": -2.3
+      "winPct": 55.1,
+      "roiPct": -2.4
     },
     "wnba": {
       "correct": 62,
@@ -54,16 +54,16 @@
   },
   "byConfidence": {
     "strong_68+": {
-      "correct": 251,
-      "total": 376,
-      "units": 26.58,
-      "winPct": 66.8
+      "correct": 252,
+      "total": 378,
+      "units": 26.45,
+      "winPct": 66.7
     },
     "lean_57+": {
-      "correct": 151,
-      "total": 297,
-      "units": -19.102,
-      "winPct": 50.8
+      "correct": 152,
+      "total": 300,
+      "units": -19.452,
+      "winPct": 50.7
     },
     "coin_<57": {
       "correct": 8,
@@ -89,10 +89,10 @@
     },
     {
       "confidenceRange": "60-64",
-      "picks": 140,
+      "picks": 143,
       "avgPredictedPct": 59.8,
-      "actualWinPct": 45.7,
-      "overconfidencePct": 14.1
+      "actualWinPct": 45.5,
+      "overconfidencePct": 14.3
     },
     {
       "confidenceRange": "65-69",
@@ -110,10 +110,10 @@
     },
     {
       "confidenceRange": "75-79",
-      "picks": 196,
+      "picks": 198,
       "avgPredictedPct": 75.5,
-      "actualWinPct": 69.4,
-      "overconfidencePct": 6.1
+      "actualWinPct": 69.2,
+      "overconfidencePct": 6.3
     },
     {
       "confidenceRange": "80-84",
@@ -155,10 +155,10 @@
       },
       {
         "confidenceRange": "60-64",
-        "picks": 95,
-        "avgPredictedPct": 59.6,
-        "actualWinPct": 38.9,
-        "overconfidencePct": 20.7
+        "picks": 98,
+        "avgPredictedPct": 59.7,
+        "actualWinPct": 38.8,
+        "overconfidencePct": 20.9
       },
       {
         "confidenceRange": "65-69",
@@ -176,10 +176,10 @@
       },
       {
         "confidenceRange": "75-79",
-        "picks": 146,
+        "picks": 148,
         "avgPredictedPct": 75.3,
-        "actualWinPct": 67.8,
-        "overconfidencePct": 7.5
+        "actualWinPct": 67.6,
+        "overconfidencePct": 7.7
       },
       {
         "confidenceRange": "80-84",
@@ -339,33 +339,33 @@
   "coverageBreakdown": {
     "restData": {
       "with": 462,
-      "without": 227,
+      "without": 232,
       "winsWith": 275,
-      "winsWithout": 135
+      "winsWithout": 137
     },
     "scheduleFlags": {
-      "with": 689,
+      "with": 694,
       "without": 0,
-      "winsWith": 410,
+      "winsWith": 412,
       "winsWithout": 0
     },
     "impliedOdds": {
-      "with": 483,
+      "with": 488,
       "without": 206,
-      "winsWith": 275,
+      "winsWith": 277,
       "winsWithout": 135
     },
     "lineup": {
-      "with": 689,
+      "with": 694,
       "without": 0,
-      "winsWith": 410,
+      "winsWith": 412,
       "winsWithout": 0
     },
     "espnPredictor": {
-      "with": 93,
-      "without": 596,
-      "winsWith": 42,
-      "winsWithout": 368
+      "with": 92,
+      "without": 602,
+      "winsWith": 41,
+      "winsWithout": 371
     }
   },
   "calibrationParams": {
@@ -373,12 +373,12 @@
     "minPickConfidence": 55,
     "buckets": {
       "default": {
-        "strong_68+": 0.6595708889451571,
+        "strong_68+": 0.6580022614941767,
         "lean_57+": 0.50503355704698,
         "coin_<57": 0.69
       },
       "mlb": {
-        "strong_68+": 0.6361512018642737,
+        "strong_68+": 0.6345701741962895,
         "lean_57+": 0.5,
         "coin_<57": 0.74
       },
@@ -398,7 +398,25 @@
         "coin_<57": 0.95
       }
     },
-    "derivedFromGraded": 689
+    "derivedFromGraded": 694
   },
-  "plattParams": {}
+  "plattParams": {
+    "fitted": {
+      "mlb": {
+        "a": 1.0,
+        "b": 0.0,
+        "n": 25
+      },
+      "default": {
+        "a": 1.0,
+        "b": 0.0,
+        "n": 27
+      },
+      "afl": {
+        "a": 1.0,
+        "b": 0.0,
+        "n": 2
+      }
+    }
+  }
 }
