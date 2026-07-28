@@ -206,14 +206,21 @@ class BacktestHarnessTests(unittest.TestCase):
         self.assertIn("calibrationParams", report)
 
     def test_replay_snapshot_structure(self) -> None:
-        data_dir = Path(__file__).resolve().parents[1] / "docs" / "data"
-        snapshots = sorted(data_dir.glob("mlb_*.json"))
-        if not snapshots:
-            self.skipTest("no snapshot fixtures")
-        schedule_date = snapshots[0].stem.split("_", 1)[1]
-        report = replay_snapshot(data_dir, league="mlb", schedule_date=schedule_date)
+        """Replays a checked-in fixture, not whatever build output happens to
+        be lying in docs/data -- those are regenerated every run and are not
+        committed, so globbing them made this test skip itself silently."""
+        import shutil
+        import tempfile
+
+        fixture = Path(__file__).resolve().parent / "fixtures" / "replay_mlb_2026-06-23.json"
+        with tempfile.TemporaryDirectory() as tmp:
+            data_dir = Path(tmp)
+            shutil.copy(fixture, data_dir / "mlb_2026-06-23.json")
+            report = replay_snapshot(data_dir, league="mlb", schedule_date="2026-06-23")
+
         self.assertEqual(report["league"], "mlb")
         self.assertIn("gamesReplayed", report)
+        self.assertEqual(report["gamesReplayed"], 15)
 
 
 class EspnClientPitcherTests(unittest.TestCase):
