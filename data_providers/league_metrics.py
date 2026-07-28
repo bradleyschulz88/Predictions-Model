@@ -6,7 +6,6 @@ from typing import Any
 
 LEAGUE_DRAW_BASE_RATES = {
     "epl": 0.25,
-    "worldcup": 0.22,
 }
 DEFAULT_DRAW_RATE = 0.26
 
@@ -40,7 +39,7 @@ def enrich_league_metrics(
             metrics["awayEfficiency"] = round(away_eff, 2)
             metrics["efficiencyEdge"] = round(home_eff - away_eff, 2)
 
-    if league in {"epl", "worldcup"}:
+    if league == "epl":
         home_gd = home_profile.get("goalDifference")
         away_gd = away_profile.get("goalDifference")
         if home_gd is not None and away_gd is not None:
@@ -78,7 +77,7 @@ def league_metrics_logit_adjustment(enrichment: dict[str, Any], league: str) -> 
         if edge is not None:
             adjustment += edge * 0.04
 
-    if league in {"epl", "worldcup"}:
+    if league == "epl":
         edge = metrics.get("goalDiffEdge")
         if edge is not None:
             adjustment += max(-0.4, min(0.4, edge * 0.01))

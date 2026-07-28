@@ -33,7 +33,6 @@ LEAGUE_K = {
     "nfl": 20.0,
     "afl": 18.0,
     "epl": 20.0,
-    "worldcup": 30.0,
 }
 DEFAULT_K = 15.0
 
@@ -47,7 +46,6 @@ LEAGUE_HOME_ADVANTAGE = {
     "nfl": 55.0,
     "afl": 45.0,
     "epl": 60.0,
-    "worldcup": 75.0,
 }
 DEFAULT_HOME_ADVANTAGE = 45.0
 

@@ -44,7 +44,7 @@ class OddsMatchingTests(unittest.TestCase):
 
     def test_merge_sbr_skips_leagues_without_slug(self) -> None:
         games = [{"awayTeam": "A", "homeTeam": "B", "lines": []}]
-        merge_sbr_odds_into_games(games, league="worldcup", date_value="2026-06-15")
+        merge_sbr_odds_into_games(games, league="afl", date_value="2026-06-15")
         self.assertEqual(games[0]["lines"], [])
 
 
@@ -91,13 +91,12 @@ class OddsFailureDoesNotDropSchedule(unittest.TestCase):
         self.assertEqual(len(games), 1)
 
     def test_unpriced_league_skips_sbr_entirely(self) -> None:
-        """AFL and the World Cup have no odds slug, so they must not call SBR."""
+        """AFL has no odds slug, so it must not call SBR."""
         from unittest.mock import patch
 
         games = self._games()
         with patch("mlb_data.get_page_props", side_effect=AssertionError("should not fetch")):
             merge_sbr_odds_into_games(games, league="afl", date_value="2026-07-25")
-            merge_sbr_odds_into_games(games, league="worldcup", date_value="2026-07-25")
 
         self.assertEqual(len(games), 1)
 

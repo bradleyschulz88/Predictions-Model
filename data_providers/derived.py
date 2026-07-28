@@ -114,7 +114,7 @@ def compute_power_rating(
             parts.append((max(0.0, min(1.0, (batting_ops_proxy - 0.650) / 0.150)), 0.10))
         if era is not None:
             parts.append((max(0.0, min(1.0, (5.5 - era) / 2.5)), 0.10))
-    elif league in {"epl", "worldcup"}:
+    elif league == "epl":
         if goals_for_per_game is not None and goals_against_per_game is not None:
             attack = max(0.0, min(1.0, goals_for_per_game / 3.0))
             defense = max(0.0, min(1.0, (3.0 - goals_against_per_game) / 2.0))

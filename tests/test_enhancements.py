@@ -79,7 +79,9 @@ class AccuracyTrackerTests(unittest.TestCase):
 class LeagueConfigTests(unittest.TestCase):
     def test_includes_new_leagues(self) -> None:
         leagues = set(list_league_ids())
-        self.assertTrue({"mlb", "nfl", "nba", "wnba", "worldcup", "epl", "afl"}.issubset(leagues))
+        self.assertTrue({"mlb", "nfl", "nba", "wnba", "epl", "afl"}.issubset(leagues))
+        # Retired after the 2026 tournament; the graded history is kept, the fetch is not.
+        self.assertNotIn("worldcup", leagues)
 
 
 class BuildPagesTests(unittest.TestCase):
