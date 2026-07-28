@@ -37,13 +37,18 @@ WEIGHTS_FILE = "model_weights.json"
 # That is a statement about these encodings at this sample size, not about the
 # real world. Starting pitching genuinely matters in baseball -- but the market
 # has already priced it, so once marketLogit is in the model, adding starter and
-# bullpen ERA on top is redundant rather than additive. Likewise a raw
-# keyword-weighted injury count carries no measurable signal, and there is no
-# power to detect a small rest effect in a few hundred games.
+# bullpen ERA on top is redundant rather than additive.
+#
+# restDiff and b2bDiff carry an ASTERISK. Between 2026-07-23 and 2026-07-28,
+# apply_predictions re-ran enrichment per game without a schedule context,
+# which overwrote every rest day and back-to-back flag with None/False. Roughly
+# the last 200 graded games therefore have no rest data at all, so the ablation
+# above scored those features on partly destroyed input and cannot be treated
+# as a fair verdict on them. Re-run it once a couple of weeks of post-fix games
+# have graded, and promote them here if the answer changes.
 #
 # The enrichment pipeline still supplies all of them to the reasoning panel;
 # they are simply not allowed to move the probability until they can earn it.
-# Re-run the ablation as the log grows and promote them here if that changes.
 ANCHORED_FEATURES = ("strengthDiff", "marketLogit")
 STANDALONE_FEATURES = ("strengthDiff",)
 
