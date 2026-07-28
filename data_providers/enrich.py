@@ -5,6 +5,7 @@ from __future__ import annotations
 import time
 from typing import Any
 
+from data_providers.injury_severity import team_injury_severity
 from data_providers.derived import (
     compute_rest_days,
     merge_team_profile,
@@ -132,6 +133,16 @@ def enrich_games_with_providers(
             "summary": (series or {}).get("summary"),
             "seriesScore": (series or {}).get("seriesScore"),
         }
+
+        # Weighted cost of who is unavailable, as an ablation candidate. The
+        # LLM importance step is off unless NVIDIA_API_KEY is set; without it
+        # this is still a better read than counting absences.
+        for side, team_name in (("home", home_team), ("away", away_team)):
+            enrichment[f"{side}InjurySeverity"] = team_injury_severity(
+                enrichment.get(f"{side}MajorInjuries"),
+                league=league,
+                team=team_name,
+            )
 
         enrichment["homeScheduleFlags"] = compute_schedule_flags(context_games, home_team, game.get("startDate"))
         enrichment["awayScheduleFlags"] = compute_schedule_flags(context_games, away_team, game.get("startDate"))

@@ -39,13 +39,20 @@ WEIGHTS_FILE = "model_weights.json"
 # has already priced it, so once marketLogit is in the model, adding starter and
 # bullpen ERA on top is redundant rather than additive.
 #
-# restDiff and b2bDiff carry an ASTERISK. Between 2026-07-23 and 2026-07-28,
-# apply_predictions re-ran enrichment per game without a schedule context,
-# which overwrote every rest day and back-to-back flag with None/False. Roughly
-# the last 200 graded games therefore have no rest data at all, so the ablation
-# above scored those features on partly destroyed input and cannot be treated
-# as a fair verdict on them. Re-run it once a couple of weeks of post-fix games
-# have graded, and promote them here if the answer changes.
+# Three candidates carry an ASTERISK and are NOT fairly tested above:
+#
+#   restDiff, b2bDiff -- between 2026-07-23 and 2026-07-28 apply_predictions
+#     re-ran enrichment per game without a schedule context, overwriting every
+#     rest day and back-to-back flag with None/False. Roughly the last 200
+#     graded games have no rest data at all, so these were scored on partly
+#     destroyed input.
+#
+#   injurySeverityDiff -- added 2026-07-28 and present on zero graded games, so
+#     it is imputed to the mean throughout and contributes exactly nothing. The
+#     ablation showing it as neutral is measuring its absence, not the feature.
+#
+# All three need re-running once a couple of weeks of games have graded with
+# the data actually present. Promote them here if the answer changes.
 #
 # The enrichment pipeline still supplies all of them to the reasoning panel;
 # they are simply not allowed to move the probability until they can earn it.
@@ -53,7 +60,15 @@ ANCHORED_FEATURES = ("strengthDiff", "marketLogit")
 STANDALONE_FEATURES = ("strengthDiff",)
 
 # Every feature the collapser knows how to build, for ablation runs.
-CANDIDATE_FEATURES = ("strengthDiff", "marketLogit", "pitchingDiff", "restDiff", "injuryDiff", "b2bDiff")
+CANDIDATE_FEATURES = (
+    "strengthDiff",
+    "marketLogit",
+    "pitchingDiff",
+    "restDiff",
+    "injuryDiff",
+    "injurySeverityDiff",
+    "b2bDiff",
+)
 
 # Shrinkage constant for per-league intercepts: a league needs ~K graded games
 # before its own home-field estimate outweighs the pooled one.
@@ -226,6 +241,16 @@ def build_feature_dict(
     home_injury = _first_number(features.get("homeInjuryLoad")) or 0.0
     away_injury = _first_number(features.get("awayInjuryLoad")) or 0.0
 
+    # Severity-weighted alternative to the raw count. None until a game carries
+    # it, so older logged games contribute nothing rather than a false zero.
+    home_severity = _first_number(features.get("homeInjurySeverity"))
+    away_severity = _first_number(features.get("awayInjurySeverity"))
+    severity_diff = (
+        away_severity - home_severity
+        if home_severity is not None and away_severity is not None
+        else None
+    )
+
     home_b2b = 1.0 if features.get("homeBackToBack") else 0.0
     away_b2b = 1.0 if features.get("awayBackToBack") else 0.0
 
@@ -235,6 +260,7 @@ def build_feature_dict(
         "pitchingDiff": _pitching_diff(features),
         "restDiff": rest_diff,
         "injuryDiff": away_injury - home_injury,
+        "injurySeverityDiff": severity_diff,
         "b2bDiff": away_b2b - home_b2b,
     }
 
@@ -372,21 +398,64 @@ class LogisticModel:
         values = build_feature_dict(features, split_diff_centre=self.split_diff_centre)
         return self.predict_from_values(values, league)
 
+    def _block_for(self, values: dict[str, float | None]) -> dict[str, Any] | None:
+        use_anchored = values.get("marketLogit") is not None and self._anchored.get("weights")
+        block = self._anchored if use_anchored else self._standalone
+        return block if block.get("weights") else None
+
     def predict_from_values(
         self, values: dict[str, float | None], league: str
     ) -> float | None:
         """Home win probability from an already-collapsed feature dict."""
-        use_anchored = values.get("marketLogit") is not None and self._anchored.get("weights")
-        block = self._anchored if use_anchored else self._standalone
-        weights = block.get("weights")
-        if not weights:
+        block = self._block_for(values)
+        if block is None:
             return None
 
         names = block.get("features") or []
         row = to_row(values, names, block.get("means") or {}, block.get("scales") or {})
-        score = sum(w * x for w, x in zip(weights, row))
+        score = sum(w * x for w, x in zip(block["weights"], row))
         score += float(self._league_intercepts.get(league, 0.0))
         return max(MIN_PROB, min(MAX_PROB, sigmoid(score)))
+
+    def explain(
+        self, values: dict[str, float | None], league: str
+    ) -> list[dict[str, Any]] | None:
+        """Per-feature logit contributions behind a prediction.
+
+        The published explanation used to describe whatever enrichment happened
+        to be available, which drifted away from what the model actually reads.
+        This returns the real decomposition so the two cannot disagree.
+        """
+        block = self._block_for(values)
+        if block is None:
+            return None
+
+        names = block.get("features") or []
+        weights = block["weights"]
+        row = to_row(values, names, block.get("means") or {}, block.get("scales") or {})
+
+        contributions: list[dict[str, Any]] = [
+            {
+                "feature": "homeField",
+                # Intercept plus the league's own correction: the baseline edge
+                # a home side gets before any team-specific information.
+                "contribution": round(weights[0] + float(self._league_intercepts.get(league, 0.0)), 4),
+                "value": None,
+                "available": True,
+            }
+        ]
+        for name, weight, standardised in zip(names, weights[1:], row[1:]):
+            contributions.append(
+                {
+                    "feature": name,
+                    "contribution": round(weight * standardised, 4),
+                    "value": values.get(name),
+                    # A feature imputed to the training mean contributes nothing
+                    # and should not be presented as a reason either way.
+                    "available": values.get(name) is not None,
+                }
+            )
+        return contributions
 
     def to_dict(self) -> dict[str, Any]:
         return self._payload
