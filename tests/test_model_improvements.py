@@ -88,8 +88,20 @@ class CoverageMetricsTests(unittest.TestCase):
         self.assertEqual(summary["pct"]["espnPredictor"], 50.0)
 
     def test_coverage_warning_when_predictor_low(self) -> None:
-        warnings = coverage_warnings({"mlb": {"gameCount": 10, "pct": {"espnPredictor": 5.0}, "counts": {"espnPredictor": 0}}})
+        # Assert which warning fired, not how many. Counting broke as soon as a
+        # second, unrelated check was added -- and the fixture (a priced league
+        # with 10 games and no prices) legitimately trips that one too.
+        warnings = coverage_warnings(
+            {
+                "mlb": {
+                    "gameCount": 10,
+                    "pct": {"espnPredictor": 5.0},
+                    "counts": {"espnPredictor": 0, "impliedOdds": 10},
+                }
+            }
+        )
         self.assertEqual(len(warnings), 1)
+        self.assertIn("ESPN predictor coverage", warnings[0])
 
 
 class DedupeLogitTests(unittest.TestCase):
