@@ -14,7 +14,17 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  # Let a deployment finish. Cancelling one mid-flight aborted a publish that
+  # was already partway through, and every cancelled run was recorded as a
+  # failed deployment -- so the deployments page filled with red crosses that
+  # looked like breakages but were just a newer run arriving.
+  #
+  # This does not let runs pile up: GitHub keeps at most one pending run per
+  # concurrency group, cancelling the previously-pending one when a newer run
+  # queues behind it. So the worst case is one running plus one waiting, and
+  # the newest commit still wins. At ~6 minutes a run against a 30-minute
+  # schedule there is no queueing pressure anyway.
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
@@ -89,8 +99,10 @@ jobs:
                   docs/data/model_baseline.json || true
           git diff --staged --quiet && exit 0
           git commit -m "Update prediction accuracy [skip ci]"
-          # Concurrent runs are cancelled mid-flight, so the remote may have
-          # moved. Rebase and retry rather than dropping the run's data.
+          # Still needed now that runs queue instead of cancelling: this job
+          # pushes to the same branch its own commit triggers builds from, and
+          # a scheduled run can land between this checkout and this push.
+          # Rebase and retry rather than dropping the run's data.
           for attempt in 1 2 3 4; do
             if git push; then exit 0; fi
             sleep $((2 ** attempt))
