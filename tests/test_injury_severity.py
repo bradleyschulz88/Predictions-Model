@@ -223,3 +223,59 @@ class RateLimitTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class InjuryScorerReportTests(unittest.TestCase):
+    """A green build is not evidence the NVIDIA key works.
+
+    The key is optional: without it team_injury_severity falls back to a
+    deterministic score and the build succeeds identically. So an expired key or
+    an exhausted quota degrades in complete silence unless something says which
+    path ran.
+    """
+
+    def _payload(self, *pairs: tuple[str, str]) -> dict:
+        return {
+            "games": [
+                {
+                    "enrichment": {
+                        "homeInjurySeverity": {"source": home},
+                        "awayInjurySeverity": {"source": away},
+                    }
+                }
+                for home, away in pairs
+            ]
+        }
+
+    def _report(self, payloads: dict) -> str:
+        import io
+        from contextlib import redirect_stdout
+
+        import sys
+
+        sys.path.insert(0, "scripts")
+        from build_pages_data import report_injury_scorer
+
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            report_injury_scorer(payloads)
+        return buffer.getvalue()
+
+    def test_reports_llm_when_the_key_works(self) -> None:
+        out = self._report({"mlb": self._payload(("llm", "llm"), ("llm", "deterministic"))})
+        self.assertIn("LLM rated 3/4", out)
+        self.assertIn("is working", out)
+
+    def test_reports_fallback_when_the_key_is_missing(self) -> None:
+        out = self._report({"mlb": self._payload(("deterministic", "deterministic"))})
+        self.assertIn("deterministic on all 2", out)
+        self.assertIn("absent, rejected or out of quota", out)
+
+    def test_no_injuries_is_not_reported_as_failure(self) -> None:
+        """"none" means nobody was hurt, which says nothing about the key."""
+        out = self._report({"mlb": self._payload(("none", "none"))})
+        self.assertIn("no teams with injuries", out)
+        self.assertNotIn("absent", out)
+
+    def test_empty_build_is_safe(self) -> None:
+        self.assertIn("no teams", self._report({}))
