@@ -1,136 +1,136 @@
 {
-  "builtAt": "2026-07-28T03:45:02.358091+00:00",
-  "n": 680,
+  "builtAt": "2026-07-28T03:46:20.749860+00:00",
+  "n": 681,
   "overall": {
-    "n": 680,
-    "homeBaseRate": 0.5176,
-    "marketCoverage": 0.7015,
+    "n": 681,
+    "homeBaseRate": 0.5169,
+    "marketCoverage": 0.7019,
     "forecasters": [
       {
         "name": "model (published)",
-        "n": 680,
-        "logLoss": 0.6709,
-        "brier": 0.2375,
-        "auc": 0.6618,
-        "accuracy": 0.6044,
+        "n": 681,
+        "logLoss": 0.6707,
+        "brier": 0.2374,
+        "auc": 0.662,
+        "accuracy": 0.605,
         "reliable": true
       },
       {
         "name": "model (pre-calibration)",
-        "n": 680,
-        "logLoss": 0.7604,
-        "brier": 0.2619,
+        "n": 681,
+        "logLoss": 0.7601,
+        "brier": 0.2617,
         "auc": 0.6685,
-        "accuracy": 0.6118,
+        "accuracy": 0.6123,
         "reliable": true
       },
       {
         "name": "market (de-vigged)",
-        "n": 477,
-        "logLoss": 0.6576,
-        "brier": 0.2342,
-        "auc": 0.6326,
-        "accuracy": 0.5702,
+        "n": 478,
+        "logLoss": 0.6574,
+        "brier": 0.2341,
+        "auc": 0.6338,
+        "accuracy": 0.5711,
         "reliable": true
       },
       {
         "name": "baseline: constant home base rate",
-        "n": 680,
-        "logLoss": 0.6925,
+        "n": 681,
+        "logLoss": 0.6926,
         "brier": 0.2497,
         "auc": 0.5,
-        "accuracy": 0.5176,
+        "accuracy": 0.5169,
         "reliable": true
       },
       {
         "name": "baseline: always 50%",
-        "n": 680,
+        "n": 681,
         "logLoss": 0.6931,
         "brier": 0.25,
         "auc": 0.5,
-        "accuracy": 0.5176,
+        "accuracy": 0.5169,
         "reliable": true
       },
       {
         "name": "baseline: always pick home (accuracy only)",
-        "n": 680,
+        "n": 681,
         "logLoss": null,
         "brier": null,
         "auc": null,
-        "accuracy": 0.5176,
+        "accuracy": 0.5169,
         "reliable": true
       }
     ]
   },
   "vsMarket": {
-    "n": 477,
-    "homeBaseRate": 0.5073,
+    "n": 478,
+    "homeBaseRate": 0.5063,
     "marketCoverage": 1.0,
     "forecasters": [
       {
         "name": "model (published)",
-        "n": 477,
-        "logLoss": 0.6967,
-        "brier": 0.2487,
-        "auc": 0.638,
-        "accuracy": 0.5786,
+        "n": 478,
+        "logLoss": 0.6964,
+        "brier": 0.2485,
+        "auc": 0.6382,
+        "accuracy": 0.5795,
         "reliable": true
       },
       {
         "name": "model (pre-calibration)",
-        "n": 477,
-        "logLoss": 0.8134,
-        "brier": 0.2807,
-        "auc": 0.6372,
-        "accuracy": 0.5849,
+        "n": 478,
+        "logLoss": 0.8128,
+        "brier": 0.2805,
+        "auc": 0.6374,
+        "accuracy": 0.5858,
         "reliable": true
       },
       {
         "name": "market (de-vigged)",
-        "n": 477,
-        "logLoss": 0.6576,
-        "brier": 0.2342,
-        "auc": 0.6326,
-        "accuracy": 0.5702,
+        "n": 478,
+        "logLoss": 0.6574,
+        "brier": 0.2341,
+        "auc": 0.6338,
+        "accuracy": 0.5711,
         "reliable": true
       },
       {
         "name": "baseline: constant home base rate",
-        "n": 477,
-        "logLoss": 0.693,
-        "brier": 0.2499,
+        "n": 478,
+        "logLoss": 0.6931,
+        "brier": 0.25,
         "auc": 0.5,
-        "accuracy": 0.5073,
+        "accuracy": 0.5063,
         "reliable": true
       },
       {
         "name": "baseline: always 50%",
-        "n": 477,
+        "n": 478,
         "logLoss": 0.6931,
         "brier": 0.25,
         "auc": 0.5,
-        "accuracy": 0.5073,
+        "accuracy": 0.5063,
         "reliable": true
       },
       {
         "name": "baseline: always pick home (accuracy only)",
-        "n": 477,
+        "n": 478,
         "logLoss": null,
         "brier": null,
         "auc": null,
-        "accuracy": 0.5073,
+        "accuracy": 0.5063,
         "reliable": true
       }
     ]
   },
   "divergence": {
-    "n": 477,
+    "n": 478,
     "medianGapPct": 24.1,
     "meanGapPct": 23.6,
-    "shareOver15Pct": 73.6,
+    "shareOver15Pct": 73.4,
     "agreesWithMarket": {
-      "picks": 376,
-      "winPct": 59.8
+      "picks": 377,
+      "winPct": 59.9
     },
     "fadesMarket": {
       "picks": 101,
@@ -140,9 +140,9 @@
   },
   "homeBias": {
     "ALL": {
-      "n": 680,
-      "pickHomePct": 57.2,
-      "actualHomeWinPct": 51.8,
+      "n": 681,
+      "pickHomePct": 57.1,
+      "actualHomeWinPct": 51.7,
       "biasPct": 5.4
     },
     "afl": {
@@ -152,10 +152,10 @@
       "biasPct": -4.3
     },
     "mlb": {
-      "n": 483,
-      "pickHomePct": 57.8,
-      "actualHomeWinPct": 50.3,
-      "biasPct": 7.5
+      "n": 484,
+      "pickHomePct": 57.6,
+      "actualHomeWinPct": 50.2,
+      "biasPct": 7.4
     },
     "wnba": {
       "n": 91,
@@ -181,10 +181,10 @@
     },
     {
       "range": "55-60",
-      "picks": 110,
+      "picks": 111,
       "avgPredictedPct": 58.0,
-      "actualWinPct": 43.6,
-      "overconfidencePct": 14.3,
+      "actualWinPct": 44.1,
+      "overconfidencePct": 13.8,
       "stdErrPct": 4.7
     },
     {
@@ -300,135 +300,135 @@
     },
     "mlb": {
       "overall": {
-        "n": 483,
-        "homeBaseRate": 0.5031,
-        "marketCoverage": 0.8903,
+        "n": 484,
+        "homeBaseRate": 0.5021,
+        "marketCoverage": 0.8905,
         "forecasters": [
           {
             "name": "model (published)",
-            "n": 483,
-            "logLoss": 0.7166,
-            "brier": 0.2581,
-            "auc": 0.6059,
-            "accuracy": 0.5487,
+            "n": 484,
+            "logLoss": 0.7163,
+            "brier": 0.258,
+            "auc": 0.6062,
+            "accuracy": 0.5496,
             "reliable": true
           },
           {
             "name": "model (pre-calibration)",
-            "n": 483,
-            "logLoss": 0.8353,
-            "brier": 0.2923,
-            "auc": 0.6115,
-            "accuracy": 0.5549,
+            "n": 484,
+            "logLoss": 0.8347,
+            "brier": 0.2921,
+            "auc": 0.6117,
+            "accuracy": 0.5558,
             "reliable": true
           },
           {
             "name": "market (de-vigged)",
-            "n": 430,
-            "logLoss": 0.6835,
-            "brier": 0.2452,
-            "auc": 0.5888,
-            "accuracy": 0.5419,
+            "n": 431,
+            "logLoss": 0.6833,
+            "brier": 0.2451,
+            "auc": 0.5903,
+            "accuracy": 0.5429,
             "reliable": true
           },
           {
             "name": "baseline: constant home base rate",
-            "n": 483,
+            "n": 484,
             "logLoss": 0.6931,
             "brier": 0.25,
             "auc": 0.5,
-            "accuracy": 0.5031,
+            "accuracy": 0.5021,
             "reliable": true
           },
           {
             "name": "baseline: always 50%",
-            "n": 483,
+            "n": 484,
             "logLoss": 0.6931,
             "brier": 0.25,
             "auc": 0.5,
-            "accuracy": 0.5031,
+            "accuracy": 0.5021,
             "reliable": true
           },
           {
             "name": "baseline: always pick home (accuracy only)",
-            "n": 483,
+            "n": 484,
             "logLoss": null,
             "brier": null,
             "auc": null,
-            "accuracy": 0.5031,
+            "accuracy": 0.5021,
             "reliable": true
           }
         ]
       },
       "vsMarket": {
-        "n": 430,
-        "homeBaseRate": 0.4953,
+        "n": 431,
+        "homeBaseRate": 0.4942,
         "marketCoverage": 1.0,
         "forecasters": [
           {
             "name": "model (published)",
-            "n": 430,
-            "logLoss": 0.7255,
-            "brier": 0.2618,
-            "auc": 0.6003,
-            "accuracy": 0.5465,
+            "n": 431,
+            "logLoss": 0.7251,
+            "brier": 0.2616,
+            "auc": 0.6006,
+            "accuracy": 0.5476,
             "reliable": true
           },
           {
             "name": "model (pre-calibration)",
-            "n": 430,
-            "logLoss": 0.8518,
-            "brier": 0.2973,
-            "auc": 0.6085,
-            "accuracy": 0.5535,
+            "n": 431,
+            "logLoss": 0.8511,
+            "brier": 0.2971,
+            "auc": 0.6087,
+            "accuracy": 0.5545,
             "reliable": true
           },
           {
             "name": "market (de-vigged)",
-            "n": 430,
-            "logLoss": 0.6835,
-            "brier": 0.2452,
-            "auc": 0.5888,
-            "accuracy": 0.5419,
+            "n": 431,
+            "logLoss": 0.6833,
+            "brier": 0.2451,
+            "auc": 0.5903,
+            "accuracy": 0.5429,
             "reliable": true
           },
           {
             "name": "baseline: constant home base rate",
-            "n": 430,
+            "n": 431,
             "logLoss": 0.6931,
             "brier": 0.25,
             "auc": 0.5,
-            "accuracy": 0.5047,
+            "accuracy": 0.5058,
             "reliable": true
           },
           {
             "name": "baseline: always 50%",
-            "n": 430,
+            "n": 431,
             "logLoss": 0.6931,
             "brier": 0.25,
             "auc": 0.5,
-            "accuracy": 0.4953,
+            "accuracy": 0.4942,
             "reliable": true
           },
           {
             "name": "baseline: always pick home (accuracy only)",
-            "n": 430,
+            "n": 431,
             "logLoss": null,
             "brier": null,
             "auc": null,
-            "accuracy": 0.4953,
+            "accuracy": 0.4942,
             "reliable": true
           }
         ]
       },
       "divergence": {
-        "n": 430,
-        "medianGapPct": 25.3,
-        "meanGapPct": 24.9,
-        "shareOver15Pct": 78.6,
+        "n": 431,
+        "medianGapPct": 25.1,
+        "meanGapPct": 24.8,
+        "shareOver15Pct": 78.4,
         "agreesWithMarket": {
-          "picks": 335,
-          "winPct": 56.1
+          "picks": 336,
+          "winPct": 56.2
         },
         "fadesMarket": {
           "picks": 95,
