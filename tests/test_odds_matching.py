@@ -150,3 +150,92 @@ class ProviderFailureDoesNotDropSchedule(unittest.TestCase):
             )
 
         self.assertNotIn("degraded", payload)
+
+
+class OddsMergeDiagnosisTests(unittest.TestCase):
+    """"No prices" has two causes that need opposite fixes and looked identical.
+
+    The guard that stops a missing odds board destroying a schedule also hides
+    why the board was missing. WNBA priced 0/115 picks for weeks with nothing
+    anywhere saying whether the slug was wrong or the names did not line up.
+    """
+
+    def _games(self, espn_odds: bool = False) -> list[dict]:
+        enrichment = {"espnOdds": [{"viewType": "MoneyLine"}]} if espn_odds else {}
+        return [
+            {"awayTeam": "New York Liberty", "homeTeam": "Las Vegas Aces",
+             "lines": [], "enrichment": dict(enrichment)},
+        ]
+
+    def test_fetch_failure_is_reported_as_such(self) -> None:
+        from unittest.mock import patch
+
+        from sbr_client import SBRParseError
+
+        with patch("mlb_data.get_page_props", return_value={}), patch(
+            "mlb_data.get_game_rows", side_effect=SBRParseError("no oddsTables")
+        ):
+            stats = merge_sbr_odds_into_games(self._games(), league="wnba", date_value="2026-07-28")
+
+        self.assertTrue(stats["configured"])
+        self.assertFalse(stats["fetched"])
+        self.assertEqual(stats["matched"], 0)
+
+    def test_name_mismatch_is_distinguishable_from_fetch_failure(self) -> None:
+        from unittest.mock import patch
+
+        row = {"gameView": {"awayTeam": {"fullName": "Somewhere Else"},
+                            "homeTeam": {"fullName": "Nowhere At All"}}, "oddsViews": []}
+        with patch("mlb_data.get_page_props", return_value={}), patch(
+            "mlb_data.get_game_rows", return_value=[row]
+        ):
+            stats = merge_sbr_odds_into_games(self._games(), league="wnba", date_value="2026-07-28")
+
+        # Fetched fine, rows present, nothing matched -- the opposite diagnosis.
+        self.assertTrue(stats["fetched"])
+        self.assertEqual(stats["rows"], 1)
+        self.assertEqual(stats["matched"], 0)
+        self.assertEqual(stats["unmatched"], ["New York Liberty @ Las Vegas Aces"])
+        self.assertEqual(stats["sbrNames"], ["Somewhere Else @ Nowhere At All"])
+
+    def test_successful_match_is_counted(self) -> None:
+        from unittest.mock import patch
+
+        row = {"gameView": {"awayTeam": {"fullName": "New York"},
+                            "homeTeam": {"fullName": "Las Vegas"}},
+               "oddsViews": [{"viewType": "MoneyLine", "sportsbook": "X",
+                              "currentLine": {"homeOdds": -140, "awayOdds": 120}}]}
+        with patch("mlb_data.get_page_props", return_value={}), patch(
+            "mlb_data.get_game_rows", return_value=[row]
+        ):
+            games = self._games()
+            stats = merge_sbr_odds_into_games(games, league="wnba", date_value="2026-07-28")
+
+        # City-only SBR names must still match full team names.
+        self.assertEqual(stats["matched"], 1)
+        self.assertEqual(stats["unmatched"], [])
+        self.assertTrue(games[0]["lines"])
+
+    def test_espn_fallback_availability_is_recorded(self) -> None:
+        """Whether the independent fallback has anything decides if the SBR
+        failure actually costs us prices."""
+        from unittest.mock import patch
+
+        from sbr_client import SBRParseError
+
+        with patch("mlb_data.get_page_props", return_value={}), patch(
+            "mlb_data.get_game_rows", side_effect=SBRParseError("no oddsTables")
+        ):
+            without = merge_sbr_odds_into_games(
+                self._games(espn_odds=False), league="wnba", date_value="2026-07-28"
+            )
+            with_espn = merge_sbr_odds_into_games(
+                self._games(espn_odds=True), league="wnba", date_value="2026-07-28"
+            )
+
+        self.assertEqual(without["espnOddsGames"], 0)
+        self.assertEqual(with_espn["espnOddsGames"], 1)
+
+    def test_unpriced_league_reports_not_configured(self) -> None:
+        stats = merge_sbr_odds_into_games(self._games(), league="afl", date_value="2026-07-28")
+        self.assertFalse(stats["configured"])

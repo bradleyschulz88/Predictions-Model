@@ -129,11 +129,39 @@ def merge_sbr_odds_into_games(
     retries: int = 3,
     retry_delay: float = 1.0,
     verify_ssl: bool = True,
-) -> None:
+) -> dict[str, Any]:
+    """Attach SBR lines to games. Returns what happened, for diagnosis.
+
+    The returned stats distinguish the two ways this silently produces nothing:
+    `fetched=False` means the page or its odds table never arrived (a bad slug,
+    a league SBR does not cover, or an outage), while `fetched=True` with
+    `rows > 0` and `matched == 0` means the odds arrived fine and the team
+    names did not line up. Those need opposite fixes and used to look identical
+    from outside, because the guard swallows both.
+    """
+    stats: dict[str, Any] = {
+        "league": league,
+        "date": date_value,
+        "configured": True,
+        "fetched": False,
+        "rows": 0,
+        "games": len(games),
+        "matched": 0,
+        "unmatched": [],
+        "sbrNames": [],
+        # Enrichment has already run by this point, so this says whether the
+        # independent ESPN fallback has anything either. When SBR and ESPN both
+        # come up empty for a league, the cause is upstream of team matching.
+        "espnOddsGames": sum(
+            1 for game in games if (game.get("enrichment") or {}).get("espnOdds")
+        ),
+    }
+
     league_config = get_league(league)
     odds_slug = league_config.sbr_odds_slug
     if not odds_slug:
-        return
+        stats["configured"] = False
+        return stats
 
     # Odds are a garnish on the schedule, never a precondition for it. Parsing
     # has to sit inside the guard alongside fetching: SBR serves a valid page
@@ -154,13 +182,17 @@ def merge_sbr_odds_into_games(
         )
         rows = get_game_rows(page_props)
     except SBRClientError:
-        return
+        return stats
+
+    stats["fetched"] = True
+    stats["rows"] = len(rows)
 
     for row in rows:
         summary = game_summary(row)
         key = matchup_key(summary.get("awayTeam"), summary.get("homeTeam"))
         odds_by_matchup[key] = collect_odds_lines(row, view_filter=view_filter)
         view_types_by_matchup[key] = collect_view_types(row)
+        stats["sbrNames"].append(f"{summary.get('awayTeam')} @ {summary.get('homeTeam')}")
 
     for game in games:
         matched = _find_sbr_odds_match(
@@ -171,6 +203,55 @@ def merge_sbr_odds_into_games(
         )
         if matched:
             _attach_sbr_lines(game, matched[0], matched[1])
+            stats["matched"] += 1
+        else:
+            stats["unmatched"].append(f"{game.get('awayTeam')} @ {game.get('homeTeam')}")
+
+    return stats
+
+
+def _report_odds_merge(stats: dict[str, Any]) -> None:
+    """Say something only when a league that should have prices did not get them.
+
+    A working league stays silent so the log does not fill with noise; the point
+    is to name the failure mode, since "no prices" has two very different causes
+    that look the same from outside.
+    """
+    if not stats.get("configured") or not stats.get("games"):
+        return
+    if stats.get("matched"):
+        return
+
+    where = f"{stats['league']} {stats['date']}"
+    espn = stats.get("espnOddsGames", 0)
+    espn_note = (
+        f" (ESPN has odds on {espn}/{stats['games']}, so the fallback should cover it)"
+        if espn
+        else f" (ESPN has no odds either, on any of {stats['games']})"
+    )
+
+    if not stats.get("fetched"):
+        print(
+            f"Odds: {where}: SBR returned no odds table -- check the slug "
+            f"({get_league(stats['league']).sbr_odds_slug!r}) or whether SBR covers "
+            f"this league{espn_note}",
+            flush=True,
+        )
+        return
+
+    if not stats.get("rows"):
+        print(f"Odds: {where}: SBR page listed no games{espn_note}", flush=True)
+        return
+
+    # The informative case: prices arrived, names did not line up. Printing both
+    # sides is what turns this from a mystery into a one-line mapping fix.
+    print(
+        f"Odds: {where}: SBR listed {stats['rows']} games but matched 0/{stats['games']} "
+        f"-- team names disagree",
+        flush=True,
+    )
+    print(f"  ours: {'; '.join(stats['unmatched'][:4])}", flush=True)
+    print(f"  SBR : {'; '.join(stats['sbrNames'][:4])}", flush=True)
 
 
 def load_fixture_data(fixture_path: str | Path) -> dict[str, Any]:
@@ -438,14 +519,16 @@ def fetch_dashboard_data(
     if include_odds and league_config.supports_sbr_odds:
         _optional(
             "SBR odds",
-            lambda: merge_sbr_odds_into_games(
-                games,
-                league=league,
-                date_value=date_value,
-                view_filter=view_filter,
-                retries=retries,
-                retry_delay=retry_delay,
-                verify_ssl=verify_ssl,
+            lambda: _report_odds_merge(
+                merge_sbr_odds_into_games(
+                    games,
+                    league=league,
+                    date_value=date_value,
+                    view_filter=view_filter,
+                    retries=retries,
+                    retry_delay=retry_delay,
+                    verify_ssl=verify_ssl,
+                )
             ),
         )
 
