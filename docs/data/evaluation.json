@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-07-28T02:43:38.223321+00:00",
+  "builtAt": "2026-07-28T03:16:00.067704+00:00",
   "n": 680,
   "overall": {
     "n": 680,
@@ -20,7 +20,7 @@
         "n": 680,
         "logLoss": 0.7604,
         "brier": 0.2619,
-        "auc": 0.6684,
+        "auc": 0.6685,
         "accuracy": 0.6118,
         "reliable": true
       },
@@ -81,7 +81,7 @@
         "n": 477,
         "logLoss": 0.8134,
         "brier": 0.2807,
-        "auc": 0.6371,
+        "auc": 0.6372,
         "accuracy": 0.5849,
         "reliable": true
       },
@@ -126,7 +126,7 @@
   "divergence": {
     "n": 477,
     "medianGapPct": 24.1,
-    "meanGapPct": 23.7,
+    "meanGapPct": 23.6,
     "shareOver15Pct": 73.6,
     "agreesWithMarket": {
       "picks": 376,
@@ -316,7 +316,7 @@
           {
             "name": "model (pre-calibration)",
             "n": 483,
-            "logLoss": 0.8354,
+            "logLoss": 0.8353,
             "brier": 0.2923,
             "auc": 0.6115,
             "accuracy": 0.5549,
@@ -378,8 +378,8 @@
             "name": "model (pre-calibration)",
             "n": 430,
             "logLoss": 0.8518,
-            "brier": 0.2974,
-            "auc": 0.6084,
+            "brier": 0.2973,
+            "auc": 0.6085,
             "accuracy": 0.5535,
             "reliable": true
           },

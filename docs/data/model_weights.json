@@ -5,19 +5,19 @@
       "marketLogit"
     ],
     "weights": [
-      0.006753491430573802,
-      0.4095383369210718,
-      0.3291251900164987
+      0.015756209240221853,
+      0.3984228887542774,
+      0.3332200182435631
     ],
     "means": {
-      "strengthDiff": 0.005703818924602387,
-      "marketLogit": 0.06868274496616343
+      "strengthDiff": 0.005509468929390661,
+      "marketLogit": 0.06857928610015056
     },
     "scales": {
-      "strengthDiff": 0.19009200278652275,
-      "marketLogit": 0.5618882849459796
+      "strengthDiff": 0.18982326651288486,
+      "marketLogit": 0.5607115911408587
     },
-    "n": 475,
+    "n": 477,
     "l2": 10.0
   },
   "standalone": {
@@ -25,28 +25,28 @@
       "strengthDiff"
     ],
     "weights": [
-      0.06883399107986923,
-      0.7286692900891842
+      0.07511146811964378,
+      0.72301546788077
     ],
     "means": {
-      "strengthDiff": 0.00025535321027666245
+      "strengthDiff": 0.00015965514710900296
     },
     "scales": {
-      "strengthDiff": 0.20953405424681404
+      "strengthDiff": 0.20930379463554505
     },
-    "n": 678,
+    "n": 680,
     "l2": 10.0
   },
   "leagueIntercepts": {
-    "afl": 0.0991,
-    "mlb": -0.026,
-    "wnba": 0.084,
-    "worldcup": 0.2032
+    "afl": 0.0966,
+    "mlb": -0.0263,
+    "wnba": 0.0801,
+    "worldcup": 0.2008
   },
-  "splitDiffCentre": 0.0378,
+  "splitDiffCentre": 0.0376,
   "metadata": {
-    "nTotal": 678,
-    "nWithMarket": 475,
+    "nTotal": 680,
+    "nWithMarket": 477,
     "l2": 10.0,
     "leagues": [
       "afl",
@@ -58,8 +58,8 @@
   "walkForward": {
     "folds": 5,
     "n": 565,
-    "logLoss": 0.6437,
-    "brier": 0.2275,
-    "accuracy": 0.5965
+    "logLoss": 0.6436,
+    "brier": 0.2274,
+    "accuracy": 0.5982
   }
 }
