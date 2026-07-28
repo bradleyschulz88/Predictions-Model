@@ -164,5 +164,62 @@ class LlmImportanceTests(unittest.TestCase):
         self.assertIn('"temperature": 0.0', captured["body"])
 
 
+
+class RateLimitTests(unittest.TestCase):
+    """A full build scores ~80 teams against a 40 requests/minute free tier."""
+
+    def setUp(self) -> None:
+        sev.reset_llm_budget()
+        self.addCleanup(sev.reset_llm_budget)
+
+    def test_calls_are_spaced_to_stay_under_the_limit(self) -> None:
+        slept = []
+        with mock.patch.object(sev.time, "sleep", slept.append), mock.patch(
+            "urllib.request.urlopen", side_effect=OSError("stop")
+        ):
+            sev._call_nvidia("a", "k")
+            sev._call_nvidia("b", "k")
+        # The second call waits; without the throttle both fire instantly.
+        self.assertTrue(any(value > 0 for value in slept))
+
+    def test_rate_limit_is_retried_once_then_gives_up(self) -> None:
+        import urllib.error
+
+        error = urllib.error.HTTPError("u", 429, "Too Many Requests", {}, None)
+        with mock.patch.object(sev.time, "sleep"), mock.patch(
+            "urllib.request.urlopen", side_effect=error
+        ) as call:
+            self.assertIsNone(sev._call_nvidia("a", "k"))
+        self.assertEqual(call.call_count, 2)
+
+    def test_other_http_errors_are_not_retried(self) -> None:
+        import urllib.error
+
+        error = urllib.error.HTTPError("u", 401, "Unauthorized", {}, None)
+        with mock.patch.object(sev.time, "sleep"), mock.patch(
+            "urllib.request.urlopen", side_effect=error
+        ) as call:
+            self.assertIsNone(sev._call_nvidia("a", "k"))
+        self.assertEqual(call.call_count, 1)
+
+    def test_per_run_budget_stops_a_runaway_slate(self) -> None:
+        sev._calls_made = sev.MAX_CALLS_PER_RUN
+        with mock.patch("urllib.request.urlopen") as call:
+            self.assertIsNone(sev._call_nvidia("a", "k"))
+        call.assert_not_called()
+
+    def test_a_blocked_network_degrades_to_deterministic(self) -> None:
+        """Exactly what happened against the real endpoint from a sandbox."""
+        import urllib.error
+
+        with mock.patch.dict("os.environ", {"NVIDIA_API_KEY": "k"}), mock.patch.object(
+            sev.time, "sleep"
+        ), mock.patch("urllib.request.urlopen", side_effect=urllib.error.URLError("Tunnel 403")):
+            result = sev.team_injury_severity(
+                [_injury(player="Aaron Judge")], league="mlb", team="NYY", today=TODAY
+            )
+        self.assertEqual(result["source"], "deterministic")
+        self.assertGreater(result["score"], 0.0)
+
 if __name__ == "__main__":
     unittest.main()

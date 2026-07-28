@@ -25,6 +25,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 import urllib.error
 import urllib.request
 from datetime import date, datetime
@@ -64,8 +65,29 @@ DEFAULT_SEVERITY = 1.0
 DEFAULT_IMPORTANCE = 1.0
 
 NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
+# A small instruct model is the right tool: the task is "rate this player 0-3",
+# not reasoning. A 550B reasoning model would be far slower, burn the free tier
+# in a fraction of the calls, and answer no better.
 NVIDIA_MODEL = os.environ.get("NVIDIA_INJURY_MODEL", "meta/llama-3.1-8b-instruct")
 LLM_TIMEOUT_SECONDS = 20
+
+# The free tier allows ~40 requests/minute across the whole key. A full build
+# scores ~80 teams, so unthrottled it would trip the limit immediately and every
+# team after the first 40 would silently fall back to the deterministic score.
+# 1.6s between calls keeps it just under, at a cost of roughly two minutes.
+MIN_SECONDS_BETWEEN_CALLS = 1.6
+
+# Hard ceiling per process, so an unusually large slate cannot stall a build.
+MAX_CALLS_PER_RUN = 200
+
+_last_call_at = 0.0
+_calls_made = 0
+
+
+def reset_llm_budget() -> None:
+    """Test hook: clear the throttle and per-run call budget."""
+    global _last_call_at, _calls_made
+    _last_call_at, _calls_made = 0.0, 0
 
 
 def _availability(status: str | None) -> float:
@@ -139,7 +161,20 @@ _PROMPT = (
 )
 
 
+def _throttle() -> None:
+    """Space calls so a build stays under the free tier's rate limit."""
+    global _last_call_at
+    wait = MIN_SECONDS_BETWEEN_CALLS - (time.monotonic() - _last_call_at)
+    if wait > 0:
+        time.sleep(wait)
+    _last_call_at = time.monotonic()
+
+
 def _call_nvidia(prompt: str, api_key: str) -> str | None:
+    global _calls_made
+    if _calls_made >= MAX_CALLS_PER_RUN:
+        return None
+
     payload = json.dumps(
         {
             "model": NVIDIA_MODEL,
@@ -151,25 +186,37 @@ def _call_nvidia(prompt: str, api_key: str) -> str | None:
         }
     ).encode("utf-8")
 
-    request = urllib.request.Request(
-        NVIDIA_BASE_URL,
-        data=payload,
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-        },
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=LLM_TIMEOUT_SECONDS) as response:
-            body = json.loads(response.read().decode("utf-8"))
-    except (urllib.error.URLError, urllib.error.HTTPError, ValueError, TimeoutError, OSError):
-        return None
+    for attempt in range(2):
+        _throttle()
+        _calls_made += 1
+        request = urllib.request.Request(
+            NVIDIA_BASE_URL,
+            data=payload,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=LLM_TIMEOUT_SECONDS) as response:
+                body = json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as error:
+            # Rate limiting is worth one backoff; anything else is not
+            # retryable and falls straight through to the deterministic score.
+            if error.code == 429 and attempt == 0:
+                time.sleep(4.0)
+                continue
+            return None
+        except (urllib.error.URLError, ValueError, TimeoutError, OSError):
+            return None
 
-    try:
-        return body["choices"][0]["message"]["content"]
-    except (KeyError, IndexError, TypeError):
-        return None
+        try:
+            return body["choices"][0]["message"]["content"]
+        except (KeyError, IndexError, TypeError):
+            return None
+
+    return None
 
 
 def _parse_importance(text: str | None) -> dict[str, float]:

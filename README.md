@@ -147,10 +147,24 @@ export NVIDIA_API_KEY=nvapi-...          # https://build.nvidia.com (free tier)
 export NVIDIA_INJURY_MODEL=meta/llama-3.1-8b-instruct   # optional
 ```
 
+In CI, add it at **Settings > Secrets and variables > Actions** as
+`NVIDIA_API_KEY`. The workflow passes it to the build step only. Never commit a
+key — put it in `.env` locally, which is gitignored.
+
 It is off by default and degrades to the deterministic score on any failure, so
-a missing key, a timeout or an unparseable reply cannot break a build. Requests
-are cached per team and sent at temperature 0, so the same slate scores the same
-way across builds.
+a missing key, a timeout, a 429 or an unparseable reply cannot break a build.
+Requests are cached per team and sent at temperature 0, so the same slate scores
+the same way across builds.
+
+**On model choice.** The default is a small instruct model on purpose. The task
+is "rate this player 0-3", not reasoning — a large reasoning model answers no
+better, takes far longer, and exhausts the free tier in a fraction of the calls.
+
+**On rate limits.** The free tier allows ~40 requests/minute across the key. A
+full seven-league build scores ~80 teams, so calls are spaced 1.6s apart to stay
+under it, adding roughly two minutes to the build. Without that throttle every
+team after the first 40 would quietly fall back to the deterministic score,
+which looks identical in the output.
 
 **This is an open experiment, not a shipped feature.** `injurySeverityDiff` is a
 candidate in `CANDIDATE_FEATURES`; it does not move any probability unless
