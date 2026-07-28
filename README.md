@@ -113,6 +113,44 @@ python scripts/backtest_model.py --evaluate
 python scripts/check_regression.py
 ```
 
+### YouTube team news (`youtube_intel.py`)
+
+Collects pre-game team news from the channels you subscribe to, extracts it into
+one number per team, and offers it to the ablation as `videoIntelDiff`. It is
+**not** in the live model and will not move a published probability unless it
+beats its own absence out of sample.
+
+**This runs on your machine, not in CI.** YouTube's official `captions.download`
+only works for videos you own, and the unofficial transcript endpoint blocks
+datacenter IP ranges — GitHub Actions runners are Azure, so in CI every
+transcript comes back empty. The script says so explicitly if that happens.
+
+```bash
+# One-off: put credentials in a gitignored .env, never in the repo
+export YOUTUBE_CLIENT_ID=...        # Google Cloud OAuth client (Desktop app)
+export YOUTUBE_CLIENT_SECRET=...
+export YOUTUBE_REFRESH_TOKEN=...    # one-time consent, scope youtube.readonly
+export NVIDIA_API_KEY=nvapi-...     # optional; without it no news is extracted
+
+python youtube_intel.py             # writes docs/data/video_intel.json
+git add docs/data/video_intel.json && git commit -m "Refresh video intel"
+```
+
+Quota is a non-issue: `subscriptions.list`, `channels.list` and
+`playlistItems.list` cost 1 unit each against a 10,000/day allowance, so a
+hundred channels costs a few hundred units. `search.list` costs 100 a call and
+is deliberately never used.
+
+**Leakage.** A recap video published after the final whistle knows who won.
+Every record stores the video's `publishedAt`, and `intel_edge()` refuses any
+video published at or after the game start — the same discipline as Elo's
+pre-game edge. That boundary is exclusive and has its own tests.
+
+**Expect it to fail the ablation for priced leagues.** The model anchors to
+`marketLogit`, and a de-vigged closing line already contains public information;
+a preview show is public. AFL is the case worth watching, because it has no odds
+source and so no market to anchor to.
+
 ### What is committed under `docs/data/`
 
 Split by whether it can be recomputed:
@@ -122,9 +160,11 @@ Split by whether it can be recomputed:
 | `predictions_log.json` | yes | every pick ever published — irreplaceable |
 | `accuracy.json` | yes | every graded result — irreplaceable |
 | `model_baseline.json` | yes | the regression ratchet; resets if lost |
+| `video_intel.json` | yes | CI cannot rebuild it — YouTube blocks datacenter IPs, so `youtube_intel.py` produces it locally |
 | `model_weights.json` | **no** | rebuilt by `model_fit.py` each run |
 | `evaluation.json` | **no** | rebuilt by `backtest_model.py --evaluate` |
 | `calibration.json` | **no** | rebuilt by `backtest_model.py --write` |
+| `elo_ratings.json` | **no** | replayed from `accuracy.json` by `elo.py` |
 
 The derivatives still reach the site — the Pages artifact uploads `docs/` from
 disk, which gitignore does not affect. They are not committed because CI

@@ -14,6 +14,9 @@ venv/
 #   predictions_log.json   every pick ever published
 #   accuracy.json          every graded result
 #   model_baseline.json    the regression ratchet
+#   video_intel.json       YouTube team news; CI cannot rebuild it, because
+#                          YouTube blocks datacenter IPs for transcripts, so it
+#                          is produced locally by youtube_intel.py and committed
 #
 # IGNORED (derivatives — CI rebuilds these from the state files every run):
 #   model_weights.json     from model_fit.py

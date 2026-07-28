@@ -24,6 +24,7 @@ from data_providers.schedule_advanced import schedule_flags_logit_adjustment
 from data_providers.enrich import enrich_games_with_providers
 from elo import load_ratings, rating_edge
 from market import assess_price, devig_power, devig_proportional
+from youtube_intel import intel_edge, load_intel
 from model_core import resolve_probabilities
 from shared_utils import parse_record, win_pct_from_record, format_win_pct
 
@@ -645,6 +646,21 @@ def _elo_ratings() -> dict[str, Any]:
     return _ELO_RATINGS
 
 
+_VIDEO_INTEL: dict[str, Any] | None = None
+
+
+def _video_intel() -> dict[str, Any]:
+    """Load the YouTube news file once per process.
+
+    Absent on every machine that has not run youtube_intel.py, which is the
+    normal case -- load_intel returns {} and the feature stays None.
+    """
+    global _VIDEO_INTEL
+    if _VIDEO_INTEL is None:
+        _VIDEO_INTEL = load_intel()
+    return _VIDEO_INTEL
+
+
 def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
     """Features the probability model reads, computed before any prediction exists.
 
@@ -698,6 +714,16 @@ def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
         # candidate; it does not move the probability (it loses on 685 games).
         "eloEdge": rating_edge(
             _elo_ratings(), league, game.get("homeTeam"), game.get("awayTeam")
+        ),
+        # Pre-game team news from subscribed YouTube channels. Also an ablation
+        # candidate only. intel_edge refuses any video published at or after
+        # this game's start, so a recap cannot leak the result into the feature.
+        "videoIntelEdge": intel_edge(
+            _video_intel(),
+            league,
+            game.get("homeTeam"),
+            game.get("awayTeam"),
+            game.get("startDate"),
         ),
         "homeRest": rest_days.get("home"),
         "awayRest": rest_days.get("away"),
