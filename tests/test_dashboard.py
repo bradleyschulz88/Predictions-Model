@@ -56,20 +56,10 @@ class ESPNDataTests(OfflineTestCase):
         self.assertRegex(default_game_date("afl"), r"^\d{4}-\d{2}-\d{2}$")
 
 
-WORLDCUP_FIXTURE = FIXTURES / "espn_worldcup_scoreboard_20260615.json"
 AFL_FIXTURE = FIXTURES / "espn_afl_scoreboard_20260614.json"
 
 
 class MultiSportTests(unittest.TestCase):
-    def test_parse_worldcup_scoreboard(self) -> None:
-        if not WORLDCUP_FIXTURE.is_file():
-            self.skipTest("World Cup fixture not downloaded")
-        with open(WORLDCUP_FIXTURE, encoding="utf-8") as handle:
-            games = parse_scoreboard(json.load(handle), league="worldcup")
-        self.assertGreater(len(games), 0)
-        self.assertEqual(games[0]["league"], "worldcup")
-        self.assertNotIn("awayPitcher", games[0])
-
     def test_parse_afl_scoreboard(self) -> None:
         if not AFL_FIXTURE.is_file():
             self.skipTest("AFL fixture not downloaded")
@@ -78,8 +68,14 @@ class MultiSportTests(unittest.TestCase):
         self.assertGreater(len(games), 0)
         self.assertEqual(games[0]["league"], "afl")
 
-    def test_default_game_date_worldcup_is_today(self) -> None:
-        self.assertRegex(default_game_date("worldcup"), r"^\d{4}-\d{2}-\d{2}$")
+    def test_default_game_date_epl_is_today(self) -> None:
+        self.assertRegex(default_game_date("epl"), r"^\d{4}-\d{2}-\d{2}$")
+
+    def test_retired_league_is_rejected(self) -> None:
+        """A league that is no longer configured must fail loudly, not silently
+        fetch an empty schedule under a default config."""
+        with self.assertRaises(ValueError):
+            default_game_date("worldcup")
 
 
 class DashboardDataTests(OfflineTestCase):

@@ -12,7 +12,6 @@ LEAGUE_TIMEZONES: dict[str, str] = {
     "nfl": "America/New_York",
     "nba": "America/New_York",
     "wnba": "America/New_York",
-    "worldcup": "America/New_York",
     "epl": "Europe/London",
     "afl": "Australia/Melbourne",
 }

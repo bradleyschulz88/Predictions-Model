@@ -24,7 +24,7 @@ def parse_record(summary: str | None) -> tuple[int, ...] | None:
 # table order) but NFL/AFL as W-L-T. Only the position of the half-credit column
 # differs -- the total is the same either way -- but reading "10-5-2" as W-D-L
 # gives .735 and as W-L-T gives .647, so the caller has to say which it is.
-WDL_LEAGUES = {"epl", "worldcup"}
+WDL_LEAGUES = {"epl"}
 
 
 def win_pct_from_record(

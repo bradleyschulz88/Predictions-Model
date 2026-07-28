@@ -416,7 +416,7 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
             bucket["roiPct"] = round(bucket["units"] / bucket["total"] * 100, 1)
 
     # A win rate with no price behind it is not comparable to one with a price.
-    # AFL and the World Cup have no odds source, so their ROI reads 0.0% and
+    # AFL has no odds source, so its ROI reads 0.0% and
     # looks like break-even rather than "not measurable".
     for bucket in by_league.values():
         priced = bucket.get("priced", 0)

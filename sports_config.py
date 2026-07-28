@@ -67,17 +67,6 @@ LEAGUES: dict[str, LeagueConfig] = {
         lineup_label="Key players",
         default_days_ahead=0,
     ),
-    "worldcup": LeagueConfig(
-        id="worldcup",
-        label="FIFA World Cup",
-        short_label="World Cup",
-        espn_path="soccer/fifa.world",
-        sbr_odds_slug=None,
-        supports_pitchers=False,
-        supports_draw=True,
-        lineup_label="Key players",
-        default_days_ahead=0,
-    ),
     "epl": LeagueConfig(
         id="epl",
         label="English Premier League",

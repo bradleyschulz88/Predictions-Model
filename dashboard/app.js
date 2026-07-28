@@ -283,7 +283,6 @@ const ESPN_PATHS = {
   nfl: "football/nfl",
   nba: "basketball/nba",
   wnba: "basketball/wnba",
-  worldcup: "soccer/fifa.world",
   epl: "soccer/eng.1",
   afl: "australian-football/afl",
 };
@@ -301,7 +300,6 @@ const LEAGUE_TIMEZONES = {
   nfl: "America/New_York",
   nba: "America/New_York",
   wnba: "America/New_York",
-  worldcup: "America/New_York",
   epl: "Europe/London",
   afl: "Australia/Melbourne",
 };
@@ -311,7 +309,6 @@ const SPORT_LABELS = {
   nfl: "NFL Football",
   nba: "NBA Basketball",
   wnba: "WNBA Basketball",
-  worldcup: "FIFA World Cup",
   epl: "Premier League",
   afl: "AFL",
 };
@@ -323,7 +320,6 @@ const SPORT_LABELS_SHORT = {
   nba: "NBA",
   nbasummer: "NBA Summer",
   wnba: "WNBA",
-  worldcup: "World Cup",
   epl: "EPL",
   afl: "AFL",
 };
@@ -1770,7 +1766,7 @@ function isBetLoggedForGame(eventId) {
 
 // The sport lives in the hash so a league is linkable and the browser back
 // button walks back to the landing page instead of leaving the site.
-const SPORT_HASHES = new Set(["overview", "mlb", "nfl", "nba", "nbasummer", "wnba", "worldcup", "epl", "afl"]);
+const SPORT_HASHES = new Set(["overview", "mlb", "nfl", "nba", "nbasummer", "wnba", "epl", "afl"]);
 
 function sportFromHash() {
   const value = window.location.hash.replace(/^#/, "");
@@ -1959,7 +1955,7 @@ function renderAccuracyView() {
     : `<p class="lineup-note">No recent graded picks for ${isOverview ? "any league" : SPORT_LABELS[sport] || sport}.</p>`;
 
   // A hit rate with no price behind it is not comparable to one with a price.
-  // AFL and the World Cup have no odds source, so saying "0.0% ROI" reads as
+  // AFL has no odds source, so saying "0.0% ROI" reads as
   // break-even when the truth is that ROI cannot be measured at all.
   const roiNote = leagueStats?.roiNote
     ? `<span class="lineup-note">${escapeHtml(leagueStats.roiNote)}</span>`

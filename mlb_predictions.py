@@ -32,7 +32,6 @@ HOME_FIELD_LOGIT = {
     "nfl": 0.32,
     "nba": 0.24,
     "wnba": 0.24,
-    "worldcup": 0.35,
     "epl": 0.30,
     "afl": 0.22,
 }
@@ -45,7 +44,6 @@ MARKET_BLEND_WEIGHT = {
     "nba": 0.15,
     "wnba": 0.12,
     "epl": 0.12,
-    "worldcup": 0.10,
     "afl": 0.06,
 }
 DEFAULT_MARKET_BLEND_WEIGHT = 0.10
@@ -994,7 +992,7 @@ def _home_field_logit(game: dict[str, Any]) -> float:
 def _home_field_detail(game: dict[str, Any]) -> str:
     league = _league_id(game)
     venue = game.get("venueName") or "home"
-    if league in {"worldcup", "epl"}:
+    if league == "epl":
         return f"{game.get('homeTeam')} play at {venue}, where home sides often perform better."
     if league == "afl":
         return f"{game.get('homeTeam')} have home-ground advantage at {venue}."
@@ -1280,7 +1278,7 @@ def _build_reasons(
                     }
                 )
 
-    if league_config and league_config.id in {"epl", "worldcup"} and home_adv.get("goalDifference") is not None and away_adv.get("goalDifference") is not None:
+    if league_config and league_config.id == "epl" and home_adv.get("goalDifference") is not None and away_adv.get("goalDifference") is not None:
         gd_side = _edge_label(home_adv["goalDifference"], away_adv["goalDifference"])
         if gd_side == predicted_side:
             reasons.append(
@@ -1362,14 +1360,10 @@ def _build_why_they_win(game: dict[str, Any], reasons: list[dict[str, Any]], pre
 
     top_reasons = [reason for reason in reasons if reason.get("favors") in {"home", "away"}][:4]
     if not top_reasons:
-        league = _league_id(game)
-        if league == "worldcup":
-            return (
-                f"{predicted_winner} are slightly favored in a close match based on form, "
-                f"records, and home-field factors."
-            )
+        # "match" for soccer, "game" for everything else.
+        noun = "match" if _league_id(game) == "epl" else "game"
         return (
-            f"{predicted_winner} are slightly favored in a close game based on combined team strength "
+            f"{predicted_winner} are slightly favored in a close {noun} based on combined team strength "
             f"and home-field factors."
         )
 

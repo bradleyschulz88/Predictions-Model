@@ -232,7 +232,7 @@ def run_dashboard(
         _log(f" League: {config.league.upper()}")
         _log(f" Schedule source: {config.source.upper()}")
         if config.include_odds:
-            _log(" Odds source: SBR (MLB) or ESPN (World Cup/AFL)")
+            _log(" Odds source: SBR (MLB) or ESPN (AFL)")
         if not config.verify_ssl:
             _log(" TLS verification: disabled (--insecure)")
 

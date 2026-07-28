@@ -1,6 +1,6 @@
 # Sports Predictions Dashboard
 
-Multi-sport win predictions for **MLB**, **NFL**, **NBA**, **World Cup**, **EPL**, and **AFL** using ESPN schedule data.
+Multi-sport win predictions for **MLB**, **NFL**, **NBA**, **WNBA**, **EPL**, and **AFL** using ESPN schedule data.
 
 Features include model vs market edge, totals picks, injury-adjusted predictions, accuracy tracking, mobile-friendly UI, and PWA support.
 
@@ -31,7 +31,7 @@ Tests are hermetic — they never reach the network and run in about a second.
 
 ## Dashboard
 
-The dashboard supports **MLB**, **World Cup**, and **AFL** with win predictions, reasoning, lineups, and odds.
+The dashboard supports **MLB**, **WNBA**, and **AFL** with win predictions, reasoning, lineups, and odds.
 
 ### GitHub Pages (phone / anywhere)
 
