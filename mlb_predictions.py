@@ -22,6 +22,7 @@ from data_providers.league_metrics import (
 from data_providers.mlb_pitcher import mlb_pitching_logit_adjustment
 from data_providers.schedule_advanced import schedule_flags_logit_adjustment
 from data_providers.enrich import enrich_games_with_providers
+from elo import load_ratings, rating_edge
 from market import assess_price, devig_power, devig_proportional
 from model_core import resolve_probabilities
 from shared_utils import parse_record, win_pct_from_record, format_win_pct
@@ -635,6 +636,17 @@ def _weather_win_logit_adjustment(game: dict[str, Any], enrichment: dict[str, An
     return max(-0.12, min(0.12, run_env * 2.0))
 
 
+_ELO_RATINGS: dict[str, Any] | None = None
+
+
+def _elo_ratings() -> dict[str, Any]:
+    """Load the rating table once per process."""
+    global _ELO_RATINGS
+    if _ELO_RATINGS is None:
+        _ELO_RATINGS = load_ratings()
+    return _ELO_RATINGS
+
+
 def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
     """Features the probability model reads, computed before any prediction exists.
 
@@ -684,6 +696,11 @@ def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
         # configured), as an alternative to counting absences.
         "homeInjurySeverity": (enrichment.get("homeInjurySeverity") or {}).get("score"),
         "awayInjurySeverity": (enrichment.get("awayInjurySeverity") or {}).get("score"),
+        # Strength-of-schedule aware rating gap. Logged as an ablation
+        # candidate; it does not move the probability (it loses on 685 games).
+        "eloEdge": rating_edge(
+            _elo_ratings(), league, game.get("homeTeam"), game.get("awayTeam")
+        ),
         "homeRest": rest_days.get("home"),
         "awayRest": rest_days.get("away"),
         "homeBackToBack": home_flags.get("backToBack"),

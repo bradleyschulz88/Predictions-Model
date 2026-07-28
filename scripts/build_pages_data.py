@@ -15,6 +15,7 @@ from accuracy_tracker import grade_predictions, record_predictions  # noqa: E402
 from data_coverage import coverage_warnings, emit_ci_warnings, summarize_coverage  # noqa: E402
 from mlb_data import fetch_dashboard_data, strip_betting_lines_for_display  # noqa: E402
 from calibration_params import is_publishable_pick  # noqa: E402
+from elo import build_and_write as build_elo_ratings  # noqa: E402
 from scripts.backtest_model import write_calibration_report  # noqa: E402
 from schedule_dates import default_game_date, get_schedule_timezone, schedule_dates_for_league  # noqa: E402
 from sports_config import get_league, list_league_ids  # noqa: E402
@@ -217,6 +218,9 @@ def main() -> int:
 
     record_predictions(OUTPUT_DIR, payloads_for_accuracy)
     accuracy = grade_predictions(OUTPUT_DIR)
+    # Rebuild ratings from the freshly graded history, so tomorrow's slate is
+    # scored against results that include today's.
+    build_elo_ratings(OUTPUT_DIR)
     write_calibration_report(OUTPUT_DIR)
     overview = build_overview(primary_payloads)
 

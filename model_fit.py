@@ -51,6 +51,20 @@ WEIGHTS_FILE = "model_weights.json"
 #     it is imputed to the mean throughout and contributes exactly nothing. The
 #     ablation showing it as neutral is measuring its absence, not the feature.
 #
+# eloDiff IS fairly tested and it loses. Unlike the others it can be computed
+# retroactively, so it was measured properly on all 685 games:
+#
+#   strength + market            logloss 0.6443   <- kept
+#   + eloDiff                    logloss 0.6478
+#   eloDiff instead of strength  logloss 0.6656
+#
+# Elo knows about strength of schedule, which season records do not, and that
+# should help. It does not yet, because ratings only start in mid-June: with 34
+# MLB games at K=4 the updates add more noise than the seed already contains.
+# Seeding from season record lifted its standalone correlation from +0.135 to
+# +0.232, still short of recordDiff at +0.305. Worth re-testing after a full
+# season, which is when Elo earns its reputation.
+#
 # All three need re-running once a couple of weeks of games have graded with
 # the data actually present. Promote them here if the answer changes.
 #
@@ -67,6 +81,7 @@ CANDIDATE_FEATURES = (
     "restDiff",
     "injuryDiff",
     "injurySeverityDiff",
+    "eloDiff",
     "b2bDiff",
 )
 
@@ -251,6 +266,10 @@ def build_feature_dict(
         else None
     )
 
+    # Pre-game Elo rating gap, in rating points scaled to a comparable range.
+    elo_edge = _first_number(features.get("eloEdge"))
+    elo_diff = elo_edge / 100.0 if elo_edge is not None else None
+
     home_b2b = 1.0 if features.get("homeBackToBack") else 0.0
     away_b2b = 1.0 if features.get("awayBackToBack") else 0.0
 
@@ -261,6 +280,7 @@ def build_feature_dict(
         "restDiff": rest_diff,
         "injuryDiff": away_injury - home_injury,
         "injurySeverityDiff": severity_diff,
+        "eloDiff": elo_diff,
         "b2bDiff": away_b2b - home_b2b,
     }
 

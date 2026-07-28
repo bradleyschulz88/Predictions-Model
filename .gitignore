@@ -19,6 +19,7 @@ venv/
 #   model_weights.json     from model_fit.py
 #   evaluation.json        from scripts/backtest_model.py --evaluate
 #   calibration.json       from scripts/backtest_model.py --write
+#   elo_ratings.json       from elo.py, replayed off accuracy.json
 #
 # Committing the derivatives meant every 30-minute CI run rewrote three files
 # that any branch also regenerates, so every rebase collided on generated
@@ -27,3 +28,4 @@ venv/
 docs/data/model_weights.json
 docs/data/evaluation.json
 docs/data/calibration.json
+docs/data/elo_ratings.json
