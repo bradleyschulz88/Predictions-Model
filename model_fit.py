@@ -39,7 +39,7 @@ WEIGHTS_FILE = "model_weights.json"
 # has already priced it, so once marketLogit is in the model, adding starter and
 # bullpen ERA on top is redundant rather than additive.
 #
-# Three candidates carry an ASTERISK and are NOT fairly tested above:
+# Four candidates carry an ASTERISK and are NOT fairly tested above:
 #
 #   restDiff, b2bDiff -- between 2026-07-23 and 2026-07-28 apply_predictions
 #     re-ran enrichment per game without a schedule context, overwriting every
@@ -50,6 +50,22 @@ WEIGHTS_FILE = "model_weights.json"
 #   injurySeverityDiff -- added 2026-07-28 and present on zero graded games, so
 #     it is imputed to the mean throughout and contributes exactly nothing. The
 #     ablation showing it as neutral is measuring its absence, not the feature.
+#
+#   videoIntelDiff -- pre-game team news extracted from subscribed YouTube
+#     channels (youtube_intel.py). Also present on zero graded games until the
+#     local ingest has run for a while, so the same caveat applies.
+#
+#     The honest prior is that it will NOT help the priced leagues, for a
+#     structural reason rather than a data-quality one: the model anchors to
+#     marketLogit, and a de-vigged closing line already contains public
+#     information. A preview show is public. By the time a pundit says it, it
+#     is captioned and this scrapes it, the line has moved -- and information
+#     already in the line contributes nothing by construction.
+#
+#     AFL is the case worth watching. It has no odds source, so STANDALONE_
+#     FEATURES there is a single feature with no market to anchor to, which is
+#     the one place extra signal has somewhere to go. n=46 is thin, so this
+#     needs a real stretch of games before the answer means anything.
 #
 # eloDiff IS fairly tested and it loses. Unlike the others it can be computed
 # retroactively, so it was measured properly on all 685 games:
@@ -65,7 +81,7 @@ WEIGHTS_FILE = "model_weights.json"
 # +0.232, still short of recordDiff at +0.305. Worth re-testing after a full
 # season, which is when Elo earns its reputation.
 #
-# All three need re-running once a couple of weeks of games have graded with
+# All four need re-running once a couple of weeks of games have graded with
 # the data actually present. Promote them here if the answer changes.
 #
 # The enrichment pipeline still supplies all of them to the reasoning panel;
@@ -83,6 +99,7 @@ CANDIDATE_FEATURES = (
     "injurySeverityDiff",
     "eloDiff",
     "b2bDiff",
+    "videoIntelDiff",
 )
 
 # Shrinkage constant for per-league intercepts: a league needs ~K graded games
@@ -270,6 +287,11 @@ def build_feature_dict(
     elo_edge = _first_number(features.get("eloEdge"))
     elo_diff = elo_edge / 100.0 if elo_edge is not None else None
 
+    # Pre-game team news scraped from subscribed YouTube channels, home minus
+    # away, already leakage-guarded on the video's publish time by
+    # youtube_intel.intel_edge. None whenever either side went uncovered.
+    video_intel = _first_number(features.get("videoIntelEdge"))
+
     home_b2b = 1.0 if features.get("homeBackToBack") else 0.0
     away_b2b = 1.0 if features.get("awayBackToBack") else 0.0
 
@@ -282,6 +304,7 @@ def build_feature_dict(
         "injurySeverityDiff": severity_diff,
         "eloDiff": elo_diff,
         "b2bDiff": away_b2b - home_b2b,
+        "videoIntelDiff": video_intel,
     }
 
 
