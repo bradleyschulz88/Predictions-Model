@@ -1042,7 +1042,9 @@ def _build_reasons(
                 {
                     "title": "Recent form trending up",
                     "detail": (
-                        f"{winner} are {winner_form.get('record')} in their last five ({streak}) while "
+                        f"{winner} are {winner_form.get('record')} in their last five"
+                        + (f" ({streak})" if streak else "")
+                        + " while "
                         f"{loser} are {loser_form.get('record')}."
                     ),
                     "impact": "medium",
@@ -1236,6 +1238,61 @@ def _build_reasons(
     impact_rank = {"high": 0, "medium": 1, "low": 2}
     reasons.sort(key=lambda reason: (0 if reason.get("favors") == predicted_side else 1, impact_rank.get(reason.get("impact", "low"), 9)))
     return reasons
+
+
+# How each fitted feature reads in prose. Keys match model_fit's feature names.
+DRIVER_LABELS = {
+    "homeField": ("home-field advantage", "playing at home"),
+    "strengthDiff": ("team strength", "the gap in team strength"),
+    "marketLogit": ("the betting market", "where the market has priced this game"),
+    "pitchingDiff": ("starting pitching", "the starting pitching matchup"),
+    "restDiff": ("rest", "the rest advantage"),
+    "injuryDiff": ("injuries", "the injury picture"),
+    "injurySeverityDiff": ("injuries", "the weight of who is unavailable"),
+    "b2bDiff": ("schedule", "the back-to-back schedule"),
+}
+
+
+def _why_from_drivers(
+    drivers: list[dict[str, Any]] | None,
+    predicted_winner: str | None,
+    predicted_side: str,
+) -> str | None:
+    """Explain the pick using the terms the model actually weighed.
+
+    The narrative used to be assembled from whatever enrichment was available --
+    ESPN's predictor, last-five form, head-to-head -- none of which the fitted
+    model reads. The explanation and the number had quietly come apart, so this
+    builds the sentence from the real logit decomposition instead.
+    """
+    if not drivers or not predicted_winner or predicted_side not in {"home", "away"}:
+        return None
+
+    # A positive contribution favours home, so flip the sign for an away pick.
+    sign = 1.0 if predicted_side == "home" else -1.0
+    supporting = [
+        item
+        for item in drivers
+        if item.get("available") and item.get("contribution") is not None
+        and item["contribution"] * sign > 0.01
+    ]
+    if not supporting:
+        return (
+            f"{predicted_winner} are a marginal pick — no single factor separates "
+            f"these teams by much."
+        )
+
+    supporting.sort(key=lambda item: abs(item["contribution"]), reverse=True)
+    phrases = [
+        DRIVER_LABELS.get(item["feature"], (item["feature"], item["feature"]))[1]
+        for item in supporting[:3]
+    ]
+
+    if len(phrases) == 1:
+        joined = phrases[0]
+    else:
+        joined = f"{', '.join(phrases[:-1])} and {phrases[-1]}"
+    return f"{predicted_winner} are favoured on {joined}."
 
 
 def _build_why_they_win(game: dict[str, Any], reasons: list[dict[str, Any]], predicted_winner: str | None) -> str:
@@ -1581,11 +1638,23 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
                 "source": "Model",
             },
         )
-    why_they_win = (
-        _build_why_they_win(game, reasons, predicted_winner)
-        if predicted_side != "draw"
-        else f"Draw is the most likely result ({round(draw_prob * 100, 1)}%) based on form and matchup data."
-    )
+    # Prefer the model's own decomposition. _build_why_they_win reads whichever
+    # enrichment happened to be present, which the fitted model does not use.
+    if predicted_side == "draw":
+        why_they_win = (
+            f"Draw is the most likely result ({round(draw_prob * 100, 1)}%) based on form and matchup data."
+        )
+    else:
+        why_they_win = _why_from_drivers(
+            resolved.get("drivers"), predicted_winner, predicted_side
+        ) or _build_why_they_win(game, reasons, predicted_winner)
+
+    # Everything gathered by the enrichment pipeline is still worth showing, but
+    # it is context around the pick rather than the cause of it. Flagging it
+    # stops the panel from implying the model weighed factors it never read.
+    driven_by_model = bool(resolved.get("drivers"))
+    for reason in reasons:
+        reason["usedInPick"] = not driven_by_model
 
     data_sources = ["ESPN scoreboard"]
     if enrichment:
@@ -1620,6 +1689,9 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         "rawHomeWinPct": raw_home_pct,
         "confidenceLabel": confidence_label(confidence),
         "probabilityMethod": resolved["method"],
+        # Per-feature logit contributions behind this number, so the displayed
+        # explanation and the probability cannot drift apart.
+        "drivers": resolved.get("drivers"),
         "outcomeLabel": f"{predicted_winner} to win" if predicted_side != "draw" else "Draw",
         "whyTheyWin": why_they_win,
         "reasons": reasons,

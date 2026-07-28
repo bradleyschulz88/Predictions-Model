@@ -372,21 +372,64 @@ class LogisticModel:
         values = build_feature_dict(features, split_diff_centre=self.split_diff_centre)
         return self.predict_from_values(values, league)
 
+    def _block_for(self, values: dict[str, float | None]) -> dict[str, Any] | None:
+        use_anchored = values.get("marketLogit") is not None and self._anchored.get("weights")
+        block = self._anchored if use_anchored else self._standalone
+        return block if block.get("weights") else None
+
     def predict_from_values(
         self, values: dict[str, float | None], league: str
     ) -> float | None:
         """Home win probability from an already-collapsed feature dict."""
-        use_anchored = values.get("marketLogit") is not None and self._anchored.get("weights")
-        block = self._anchored if use_anchored else self._standalone
-        weights = block.get("weights")
-        if not weights:
+        block = self._block_for(values)
+        if block is None:
             return None
 
         names = block.get("features") or []
         row = to_row(values, names, block.get("means") or {}, block.get("scales") or {})
-        score = sum(w * x for w, x in zip(weights, row))
+        score = sum(w * x for w, x in zip(block["weights"], row))
         score += float(self._league_intercepts.get(league, 0.0))
         return max(MIN_PROB, min(MAX_PROB, sigmoid(score)))
+
+    def explain(
+        self, values: dict[str, float | None], league: str
+    ) -> list[dict[str, Any]] | None:
+        """Per-feature logit contributions behind a prediction.
+
+        The published explanation used to describe whatever enrichment happened
+        to be available, which drifted away from what the model actually reads.
+        This returns the real decomposition so the two cannot disagree.
+        """
+        block = self._block_for(values)
+        if block is None:
+            return None
+
+        names = block.get("features") or []
+        weights = block["weights"]
+        row = to_row(values, names, block.get("means") or {}, block.get("scales") or {})
+
+        contributions: list[dict[str, Any]] = [
+            {
+                "feature": "homeField",
+                # Intercept plus the league's own correction: the baseline edge
+                # a home side gets before any team-specific information.
+                "contribution": round(weights[0] + float(self._league_intercepts.get(league, 0.0)), 4),
+                "value": None,
+                "available": True,
+            }
+        ]
+        for name, weight, standardised in zip(names, weights[1:], row[1:]):
+            contributions.append(
+                {
+                    "feature": name,
+                    "contribution": round(weight * standardised, 4),
+                    "value": values.get(name),
+                    # A feature imputed to the training mean contributes nothing
+                    # and should not be presented as a reason either way.
+                    "available": values.get(name) is not None,
+                }
+            )
+        return contributions
 
     def to_dict(self) -> dict[str, Any]:
         return self._payload

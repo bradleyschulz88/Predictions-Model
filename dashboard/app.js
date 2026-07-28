@@ -3881,7 +3881,7 @@ function renderTeamProbabilityTable(prediction, game) {
 
   const trueP = prediction.probabilities?.true || {};
   const componentRows = (trueP.components || [])
-    .map((item) => `<li><strong>${item.source}</strong> (${item.weightPct}% weight): ${item.homePct}% home — ${item.detail}</li>`)
+    .map((item) => `<li><strong>${escapeHtml(item.source)}</strong>${item.weightPct != null ? ` (${item.weightPct}% weight)` : ""}: ${item.homePct}% home — ${escapeHtml(item.detail || "")}</li>`)
     .join("");
 
   // Desktop table
@@ -3935,7 +3935,7 @@ function renderTeamProbabilityTable(prediction, game) {
       <!-- Mobile cards -->
       <div class="prob-cards-wrap">${cardsHtml}</div>
       ${componentRows ? `<ul class="prob-components">${componentRows}</ul>` : ""}
-      <p class="lineup-note">Model % uses records, form, injuries, lineups, and advanced stats.</p>
+      <p class="lineup-note">Model % comes from the fitted model — see "What drove this number" below for the factors it actually weighed.</p>
     </section>
   `;
 }
@@ -3957,7 +3957,7 @@ function renderProbabilityCompare(prediction, game) {
   const edgeAway = marketAway > 0 ? Math.round(modelAway - marketAway) : null;
 
   const componentRows = (trueP.components || [])
-    .map((item) => `<li><strong>${item.source}</strong> (${item.weightPct}% weight): ${item.homePct}% home — ${item.detail}</li>`)
+    .map((item) => `<li><strong>${escapeHtml(item.source)}</strong>${item.weightPct != null ? ` (${item.weightPct}% weight)` : ""}: ${item.homePct}% home — ${escapeHtml(item.detail || "")}</li>`)
     .join("");
 
   function edgeBadge(edge, teamName) {
@@ -4060,12 +4060,61 @@ function renderPrediction(game) {
       <div class="why-panel">
         <h4>Why ${prediction.predictedSide === "draw" ? "draw" : prediction.predictedWinner}?</h4>
         <p class="why-summary">${prediction.whyTheyWin || "Analysis pending."}</p>
-        ${reasons ? `<ul class="why-list">${reasons}</ul>` : ""}
+        ${renderDrivers(prediction)}
+        ${reasons ? `${renderContextHeading(prediction)}<ul class="why-list">${reasons}</ul>` : ""}
         ${sources ? `<div class="source-list">${sources}</div>` : ""}
       </div>
       ${factors ? `<div class="factor-list">${factors}</div>` : ""}
     </section>
   `;
+}
+
+const DRIVER_LABELS = {
+  homeField: "Home-field advantage",
+  strengthDiff: "Team strength",
+  marketLogit: "Betting market",
+  pitchingDiff: "Starting pitching",
+  restDiff: "Rest",
+  injuryDiff: "Injuries",
+  injurySeverityDiff: "Injuries",
+  b2bDiff: "Back-to-back",
+};
+
+// The factors that actually moved the probability, with the size of each pull.
+// Everything else the page shows is background, and is labelled as such.
+function renderDrivers(prediction) {
+  const drivers = (prediction?.drivers || []).filter(
+    (item) => item.available && item.contribution != null
+  );
+  if (!drivers.length) return "";
+
+  const largest = Math.max(...drivers.map((item) => Math.abs(item.contribution)));
+  if (!largest) return "";
+
+  const rows = drivers
+    .slice()
+    .sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution))
+    .map((item) => {
+      const label = DRIVER_LABELS[item.feature] || item.feature;
+      const favours = item.contribution > 0 ? "home" : "away";
+      const width = Math.round((Math.abs(item.contribution) / largest) * 100);
+      return `
+        <li class="driver-row">
+          <span class="driver-name">${escapeHtml(label)}</span>
+          <span class="driver-bar"><span class="driver-fill driver-${favours}" style="width:${width}%"></span></span>
+          <span class="driver-side">${favours === "home" ? "home" : "away"}</span>
+        </li>`;
+    })
+    .join("");
+
+  return `<div class="driver-panel"><h5>What drove this number</h5><ul class="driver-list">${rows}</ul></div>`;
+}
+
+function renderContextHeading(prediction) {
+  // reasons carry usedInPick=false once a fitted model produced the number.
+  const isContext = (prediction?.reasons || []).some((reason) => reason.usedInPick === false);
+  if (!isContext) return "";
+  return `<h5 class="why-context-heading">Match context <span class="why-context-note">— background, not used to set the probability</span></h5>`;
 }
 
 function renderGames(games) {

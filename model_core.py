@@ -75,6 +75,26 @@ def resolve_probabilities(
     """
     model = get_fitted_model()
     fitted_home = model.predict_proba(model_inputs, league) if model else None
+    # explain() is not part of the ProbabilityModel protocol -- a model that only
+    # implements predict_proba (a future gradient-boosted one, say) is still
+    # valid and simply publishes no decomposition.
+    drivers: list[dict[str, Any]] | None = None
+    explain = getattr(model, "explain", None)
+    if fitted_home is not None and callable(explain):
+        from model_fit import DEFAULT_SPLIT_DIFF_CENTRE, build_feature_dict
+
+        try:
+            drivers = explain(
+                build_feature_dict(
+                    model_inputs,
+                    split_diff_centre=getattr(
+                        model, "split_diff_centre", DEFAULT_SPLIT_DIFF_CENTRE
+                    ),
+                ),
+                league,
+            )
+        except Exception:
+            drivers = None
 
     if fitted_home is not None:
         raw_binary_home = clamp(fitted_home)
@@ -135,6 +155,9 @@ def resolve_probabilities(
         "method": method,
         "detail": detail,
         "fittedAvailable": fitted_home is not None,
+        # What actually moved the number, in logit units. None on the fallback
+        # path, where no fitted decomposition exists.
+        "drivers": drivers,
     }
 
 

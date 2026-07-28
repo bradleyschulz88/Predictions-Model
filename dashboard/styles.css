@@ -5201,3 +5201,74 @@ details[open] .scoreboard-summary-chips {
   list-style: none;
   padding-left: 0;
 }
+
+/* What drove the probability -------------------------------------------- */
+
+.driver-panel {
+  margin: var(--space-3) 0;
+}
+
+.driver-panel h5 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 0 0 var(--space-2);
+}
+
+.driver-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.driver-row {
+  display: grid;
+  /* Label, bar, side. The bar takes the slack so rows stay aligned. */
+  grid-template-columns: minmax(6.5rem, auto) 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.8125rem;
+}
+
+.driver-name { color: var(--text-secondary); }
+
+.driver-bar {
+  height: 6px;
+  background: var(--panel-border-soft);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.driver-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+}
+
+.driver-home { background: var(--accent); }
+.driver-away { background: var(--info); }
+
+.driver-side {
+  color: var(--muted);
+  font-size: 0.75rem;
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+.why-context-heading {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.why-context-note {
+  text-transform: none;
+  letter-spacing: normal;
+  opacity: 0.8;
+}

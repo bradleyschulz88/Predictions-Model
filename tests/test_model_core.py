@@ -24,12 +24,19 @@ class FakeLeague:
 class FakeModel:
     """Stand-in for a fitted LogisticModel with a fixed answer."""
 
-    def __init__(self, probability: float | None) -> None:
+    def __init__(self, probability: float | None, *, explains: bool = True) -> None:
         self.probability = probability
         self.metadata: dict = {}
+        self.split_diff_centre = 0.04
+        self._explains = explains
 
     def predict_proba(self, features, league):  # noqa: ANN001
         return self.probability
+
+    def explain(self, values, league):  # noqa: ANN001
+        if not self._explains:
+            raise AttributeError("explain")
+        return [{"feature": "strengthDiff", "contribution": 0.4, "value": 0.1, "available": True}]
 
 
 def _resolve(**overrides):
@@ -165,6 +172,45 @@ class MetadataTests(unittest.TestCase):
         with mock.patch.object(model_core, "load_model", return_value=None):
             self.assertEqual(model_core.model_metadata()["method"], "heuristic")
 
+
+
+class DriverExplanationTests(unittest.TestCase):
+    """Drivers must be optional: explain() is not in the ProbabilityModel protocol."""
+
+    def setUp(self) -> None:
+        model_core.reset_fitted_model_cache()
+
+    def tearDown(self) -> None:
+        model_core.reset_fitted_model_cache()
+
+    def test_drivers_are_returned_when_the_model_can_explain(self) -> None:
+        with mock.patch.object(model_core, "load_model", return_value=FakeModel(0.62)):
+            result = _resolve()
+        self.assertTrue(result["drivers"])
+        self.assertEqual(result["drivers"][0]["feature"], "strengthDiff")
+
+    def test_a_model_without_explain_still_predicts(self) -> None:
+        class PredictOnly:
+            def predict_proba(self, features, league):  # noqa: ANN001
+                return 0.62
+
+        with mock.patch.object(model_core, "load_model", return_value=PredictOnly()):
+            result = _resolve()
+        self.assertAlmostEqual(result["home"], 0.62)
+        self.assertIsNone(result["drivers"])
+
+    def test_a_failing_explain_does_not_break_the_prediction(self) -> None:
+        model = FakeModel(0.62)
+        model.explain = mock.Mock(side_effect=RuntimeError("boom"))
+        with mock.patch.object(model_core, "load_model", return_value=model):
+            result = _resolve()
+        self.assertAlmostEqual(result["home"], 0.62)
+        self.assertIsNone(result["drivers"])
+
+    def test_fallback_path_publishes_no_drivers(self) -> None:
+        with mock.patch.object(model_core, "load_model", return_value=None):
+            result = _resolve()
+        self.assertIsNone(result["drivers"])
 
 if __name__ == "__main__":
     unittest.main()
