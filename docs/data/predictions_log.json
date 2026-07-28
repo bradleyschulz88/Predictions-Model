@@ -37607,8 +37607,8 @@
         "awayPower": 0.3235148430685357,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": 70.6,
@@ -37619,7 +37619,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -37633,8 +37633,8 @@
           ],
           "homePitcherApiEra": 3.51,
           "homePitcherRecentEra": 5.0,
-          "homeTeamPitchingEra": 3.44,
-          "homeBullpenEra": 3.46,
+          "homeTeamPitchingEra": 3.43,
+          "homeBullpenEra": 3.45,
           "awayPitcherApiEra": 4.69,
           "awayPitcherRecentEra": 2.22,
           "awayTeamPitchingEra": 5.55,
@@ -37654,7 +37654,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:10:42.776487+00:00"
+      "recordedAt": "2026-07-28T03:32:33.012443+00:00"
     },
     "401816237": {
       "eventId": "401816237",
@@ -37747,10 +37747,10 @@
         "awayPower": 0.3543508191588785,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 2.3,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 70.0,
         "impliedAway": 30.0,
         "hasLineup": true,
@@ -37759,7 +37759,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -37794,7 +37794,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:10:42.776487+00:00"
+      "recordedAt": "2026-07-28T03:32:33.012443+00:00"
     },
     "401816241": {
       "eventId": "401816241",
@@ -37961,8 +37961,8 @@
         "awayPower": 0.7442784456603774,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": 46.6,
@@ -37973,7 +37973,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -38008,7 +38008,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:10:42.776487+00:00"
+      "recordedAt": "2026-07-28T03:32:33.012443+00:00"
     },
     "401816242": {
       "eventId": "401816242",
@@ -38150,9 +38150,9 @@
       "predictedWinner": "Chicago White Sox",
       "predictedSide": "home",
       "outcomeLabel": "Chicago White Sox to win",
-      "confidence": 56.4,
-      "rawConfidence": 56.4,
-      "rawHomeWinPct": 56.4,
+      "confidence": 56.3,
+      "rawConfidence": 56.3,
+      "rawHomeWinPct": 56.3,
       "probabilityMethod": "fitted",
       "pickOdds": -135,
       "openingOdds": -135,
@@ -38161,14 +38161,14 @@
         "league": "mlb",
         "recordDiff": 0.0437,
         "splitDiff": 0.1519,
-        "homePower": 0.5570858707692307,
+        "homePower": 0.5515770566666666,
         "awayPower": 0.43746693031152645,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 55.2,
         "impliedAway": 44.8,
         "hasLineup": true,
@@ -38177,7 +38177,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -38195,24 +38195,24 @@
           "homeBullpenEra": 4.17,
           "awayPitcherApiEra": 4.6,
           "awayPitcherRecentEra": 2.0,
-          "awayTeamPitchingEra": 4.75,
+          "awayTeamPitchingEra": 4.74,
           "awayBullpenEra": 4.79
         },
         "leagueMetrics": {
           "league": "mlb",
-          "runDiffEdge": 93.0,
+          "runDiffEdge": 89.0,
           "opsEdge": 0.0,
           "eraEdge": 0.64
         },
-        "trueHome": 56.4,
-        "trueAway": 43.6,
-        "confidence": 56.4,
-        "rawConfidence": 56.4,
-        "rawHomeWinPct": 56.4,
+        "trueHome": 56.3,
+        "trueAway": 43.7,
+        "confidence": 56.3,
+        "rawConfidence": 56.3,
+        "rawHomeWinPct": 56.3,
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:10:42.776487+00:00"
+      "recordedAt": "2026-07-28T03:32:33.012443+00:00"
     },
     "401816248": {
       "eventId": "401816248",
@@ -38305,8 +38305,8 @@
         "awayPower": 0.3178010142857142,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 1,
+        "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -38317,7 +38317,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -38335,8 +38335,8 @@
           "homeBullpenEra": 4.71,
           "awayPitcherApiEra": 6.12,
           "awayPitcherRecentEra": 7.56,
-          "awayTeamPitchingEra": 5.36,
-          "awayBullpenEra": 5.41
+          "awayTeamPitchingEra": 5.35,
+          "awayBullpenEra": 5.43
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -38352,7 +38352,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:10:42.776487+00:00"
+      "recordedAt": "2026-07-28T03:32:33.012443+00:00"
     },
     "401816245": {
       "eventId": "401816245",
@@ -38445,8 +38445,8 @@
         "awayPower": 0.37298479698113207,
         "homeInjuryLoad": 1.15,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": 58.9,
@@ -38457,7 +38457,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -38471,12 +38471,12 @@
           ],
           "homePitcherApiEra": 3.98,
           "homePitcherRecentEra": 5.0,
-          "homeTeamPitchingEra": 4.36,
-          "homeBullpenEra": 4.39,
+          "homeTeamPitchingEra": 4.35,
+          "homeBullpenEra": 4.38,
           "awayPitcherApiEra": 8.54,
           "awayPitcherRecentEra": 8.06,
-          "awayTeamPitchingEra": 4.55,
-          "awayBullpenEra": 4.6
+          "awayTeamPitchingEra": 4.54,
+          "awayBullpenEra": 4.59
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -38492,7 +38492,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:10:42.776487+00:00"
+      "recordedAt": "2026-07-28T03:32:33.012443+00:00"
     },
     "401816177": {
       "eventId": "401816177",
@@ -38585,10 +38585,10 @@
         "awayPower": 0.4875773855564995,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 2.3,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 1,
         "homeBackToBack": false,
-        "awayBackToBack": false,
+        "awayBackToBack": true,
         "impliedHome": 46.7,
         "impliedAway": 53.3,
         "hasLineup": true,
@@ -38597,7 +38597,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -38631,7 +38631,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:10:42.776487+00:00"
+      "recordedAt": "2026-07-28T03:32:33.012443+00:00"
     },
     "1133646": {
       "eventId": "1133646",
@@ -39641,10 +39641,10 @@
         "awayPower": 0.3543508191588785,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 2.3,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 60.5,
         "impliedAway": 39.5,
         "hasLineup": true,
@@ -39653,7 +39653,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -39688,7 +39688,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:03.093571+00:00"
+      "recordedAt": "2026-07-28T03:32:55.315506+00:00"
     },
     "401816250": {
       "eventId": "401816250",
@@ -39963,9 +39963,9 @@
       "predictedWinner": "New York Yankees",
       "predictedSide": "away",
       "outcomeLabel": "New York Yankees to win",
-      "confidence": 58.9,
-      "rawConfidence": 58.9,
-      "rawHomeWinPct": 41.1,
+      "confidence": 59.0,
+      "rawConfidence": 59.0,
+      "rawHomeWinPct": 41.0,
       "probabilityMethod": "fitted",
       "pickOdds": -125,
       "openingOdds": -125,
@@ -39975,13 +39975,13 @@
         "recordDiff": -0.034,
         "splitDiff": -0.1,
         "homePower": 0.4901704304205607,
-        "awayPower": 0.63655042,
+        "awayPower": 0.6407170866666667,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 46.8,
         "impliedAway": 53.2,
         "hasLineup": true,
@@ -39990,7 +39990,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -40013,19 +40013,19 @@
         },
         "leagueMetrics": {
           "league": "mlb",
-          "runDiffEdge": -96.0,
+          "runDiffEdge": -100.0,
           "opsEdge": -0.027,
           "eraEdge": -0.8
         },
-        "trueHome": 41.1,
-        "trueAway": 58.9,
-        "confidence": 58.9,
-        "rawConfidence": 58.9,
-        "rawHomeWinPct": 41.1,
+        "trueHome": 41.0,
+        "trueAway": 59.0,
+        "confidence": 59.0,
+        "rawConfidence": 59.0,
+        "rawHomeWinPct": 41.0,
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:03.093571+00:00"
+      "recordedAt": "2026-07-28T03:32:55.315506+00:00"
     },
     "401816251": {
       "eventId": "401816251",
@@ -40052,10 +40052,10 @@
         "awayPower": 0.6451708750628932,
         "homeInjuryLoad": 2.3,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 50.9,
         "impliedAway": 49.1,
         "hasLineup": true,
@@ -40064,7 +40064,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -40099,7 +40099,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:03.093571+00:00"
+      "recordedAt": "2026-07-28T03:32:55.315506+00:00"
     },
     "401816259": {
       "eventId": "401816259",
@@ -40126,10 +40126,10 @@
         "awayPower": 0.3178010142857142,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -40138,7 +40138,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -40156,8 +40156,8 @@
           "homeBullpenEra": 4.71,
           "awayPitcherApiEra": 5.06,
           "awayPitcherRecentEra": 12.0,
-          "awayTeamPitchingEra": 5.36,
-          "awayBullpenEra": 5.41
+          "awayTeamPitchingEra": 5.35,
+          "awayBullpenEra": 5.43
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -40173,7 +40173,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:03.093571+00:00"
+      "recordedAt": "2026-07-28T03:32:55.315506+00:00"
     },
     "401816261": {
       "eventId": "401816261",
@@ -40200,10 +40200,10 @@
         "awayPower": 0.3235148430685357,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 67.6,
         "impliedAway": 32.4,
         "hasLineup": true,
@@ -40212,7 +40212,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -40226,8 +40226,8 @@
           ],
           "homePitcherApiEra": 4.71,
           "homePitcherRecentEra": 4.81,
-          "homeTeamPitchingEra": 3.44,
-          "homeBullpenEra": 3.46,
+          "homeTeamPitchingEra": 3.43,
+          "homeBullpenEra": 3.45,
           "awayPitcherApiEra": 5.73,
           "awayPitcherRecentEra": 7.44,
           "awayTeamPitchingEra": 5.55,
@@ -40247,7 +40247,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:03.093571+00:00"
+      "recordedAt": "2026-07-28T03:32:55.315506+00:00"
     },
     "401816262": {
       "eventId": "401816262",
@@ -40340,10 +40340,10 @@
         "awayPower": 0.7442784456603774,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 41.4,
         "impliedAway": 58.6,
         "hasLineup": true,
@@ -40352,7 +40352,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -40387,7 +40387,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:03.093571+00:00"
+      "recordedAt": "2026-07-28T03:32:55.315506+00:00"
     },
     "401816260": {
       "eventId": "401816260",
@@ -40740,7 +40740,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:14:37.842250+00:00"
+      "recordedAt": "2026-07-28T03:36:16.034232+00:00"
     },
     "401816194": {
       "eventId": "401816194",
@@ -41030,10 +41030,10 @@
         "awayPower": 0.6451708750628932,
         "homeInjuryLoad": 2.3,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 48.9,
         "impliedAway": 51.1,
         "hasLineup": true,
@@ -41042,7 +41042,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -41077,7 +41077,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:25.456517+00:00"
+      "recordedAt": "2026-07-28T03:33:18.838050+00:00"
     },
     "401816267": {
       "eventId": "401816267",
@@ -41170,10 +41170,10 @@
         "awayPower": 0.40609904088785037,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 1.15,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 56.8,
         "impliedAway": 43.2,
         "hasLineup": true,
@@ -41182,7 +41182,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -41196,8 +41196,8 @@
           ],
           "homePitcherApiEra": 3.02,
           "homePitcherRecentEra": 5.11,
-          "homeTeamPitchingEra": 3.55,
-          "homeBullpenEra": 3.57,
+          "homeTeamPitchingEra": 3.56,
+          "homeBullpenEra": 3.58,
           "awayPitcherApiEra": 4.51,
           "awayPitcherRecentEra": 1.58,
           "awayTeamPitchingEra": 4.14,
@@ -41217,7 +41217,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:25.456517+00:00"
+      "recordedAt": "2026-07-28T03:33:18.838050+00:00"
     },
     "401816269": {
       "eventId": "401816269",
@@ -41244,10 +41244,10 @@
         "awayPower": 0.3543508191588785,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 2.3,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 63.0,
         "impliedAway": 37.0,
         "hasLineup": true,
@@ -41256,7 +41256,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -41291,7 +41291,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:25.456517+00:00"
+      "recordedAt": "2026-07-28T03:33:18.838050+00:00"
     },
     "401816270": {
       "eventId": "401816270",
@@ -41318,10 +41318,10 @@
         "awayPower": 0.7442784456603774,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 42.4,
         "impliedAway": 57.6,
         "hasLineup": true,
@@ -41330,7 +41330,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -41365,7 +41365,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:25.456517+00:00"
+      "recordedAt": "2026-07-28T03:33:18.838050+00:00"
     },
     "401816272": {
       "eventId": "401816272",
@@ -41458,10 +41458,10 @@
         "awayPower": 0.3178010142857142,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -41470,7 +41470,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -41488,8 +41488,8 @@
           "homeBullpenEra": 4.71,
           "awayPitcherApiEra": 6.23,
           "awayPitcherRecentEra": 1.49,
-          "awayTeamPitchingEra": 5.36,
-          "awayBullpenEra": 5.41
+          "awayTeamPitchingEra": 5.35,
+          "awayBullpenEra": 5.43
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -41505,7 +41505,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:25.456517+00:00"
+      "recordedAt": "2026-07-28T03:33:18.838050+00:00"
     },
     "401816276": {
       "eventId": "401816276",
@@ -41532,10 +41532,10 @@
         "awayPower": 0.3235148430685357,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 75.3,
         "impliedAway": 24.7,
         "hasLineup": true,
@@ -41544,7 +41544,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -41558,8 +41558,8 @@
           ],
           "homePitcherApiEra": 1.58,
           "homePitcherRecentEra": 3.35,
-          "homeTeamPitchingEra": 3.44,
-          "homeBullpenEra": 3.46,
+          "homeTeamPitchingEra": 3.43,
+          "homeBullpenEra": 3.45,
           "awayPitcherApiEra": 7.34,
           "awayPitcherRecentEra": 2.37,
           "awayTeamPitchingEra": 5.55,
@@ -41579,7 +41579,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:25.456517+00:00"
+      "recordedAt": "2026-07-28T03:33:18.838050+00:00"
     },
     "401816277": {
       "eventId": "401816277",
@@ -41966,7 +41966,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:14:37.842250+00:00"
+      "recordedAt": "2026-07-28T03:36:16.034232+00:00"
     },
     "401816268": {
       "eventId": "401816268",
@@ -41993,10 +41993,10 @@
         "awayPower": 0.47641893749221176,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 1.15,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 53.0,
         "impliedAway": 47.0,
         "hasLineup": true,
@@ -42005,7 +42005,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -42040,7 +42040,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:25.456517+00:00"
+      "recordedAt": "2026-07-28T03:33:18.838050+00:00"
     },
     "401816221": {
       "eventId": "401816221",
@@ -42527,10 +42527,10 @@
         "awayPower": 0.6451708750628932,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 50.9,
         "impliedAway": 49.1,
         "hasLineup": true,
@@ -42539,7 +42539,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -42574,7 +42574,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:42.221996+00:00"
+      "recordedAt": "2026-07-28T03:33:35.290558+00:00"
     },
     "401816283": {
       "eventId": "401816283",
@@ -42652,25 +42652,25 @@
       "predictedWinner": "New York Yankees",
       "predictedSide": "away",
       "outcomeLabel": "New York Yankees to win",
-      "confidence": 57.2,
-      "rawConfidence": 57.2,
-      "rawHomeWinPct": 42.8,
+      "confidence": 57.9,
+      "rawConfidence": 57.9,
+      "rawHomeWinPct": 42.1,
       "probabilityMethod": "fitted",
       "pickOdds": -145,
       "openingOdds": -145,
       "openingSide": "away",
       "features": {
         "league": "mlb",
-        "recordDiff": -0.0331,
-        "splitDiff": 0.0382,
-        "homePower": 0.5570858707692307,
-        "awayPower": 0.63655042,
+        "recordDiff": -0.0422,
+        "splitDiff": 0.0189,
+        "homePower": 0.5515770566666666,
+        "awayPower": 0.6407170866666667,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 43.7,
         "impliedAway": 56.3,
         "hasLineup": true,
@@ -42679,7 +42679,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -42702,19 +42702,19 @@
         },
         "leagueMetrics": {
           "league": "mlb",
-          "runDiffEdge": -38.0,
+          "runDiffEdge": -46.0,
           "opsEdge": -0.003,
           "eraEdge": -0.7
         },
-        "trueHome": 42.8,
-        "trueAway": 57.2,
-        "confidence": 57.2,
-        "rawConfidence": 57.2,
-        "rawHomeWinPct": 42.8,
+        "trueHome": 42.1,
+        "trueAway": 57.9,
+        "confidence": 57.9,
+        "rawConfidence": 57.9,
+        "rawHomeWinPct": 42.1,
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:42.221996+00:00"
+      "recordedAt": "2026-07-28T03:33:35.290558+00:00"
     },
     "401816286": {
       "eventId": "401816286",
@@ -42741,10 +42741,10 @@
         "awayPower": 0.607113884047619,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 47.2,
         "impliedAway": 52.8,
         "hasLineup": true,
@@ -42753,7 +42753,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -42768,11 +42768,11 @@
           "homePitcherApiEra": 5.26,
           "homePitcherRecentEra": 3.38,
           "homeTeamPitchingEra": 4.15,
-          "homeBullpenEra": 4.18,
-          "awayPitcherApiEra": 5.74,
+          "homeBullpenEra": 4.17,
+          "awayPitcherApiEra": 5.8,
           "awayPitcherRecentEra": 6.34,
-          "awayTeamPitchingEra": 4.22,
-          "awayBullpenEra": 4.25
+          "awayTeamPitchingEra": 4.24,
+          "awayBullpenEra": 4.27
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -42788,7 +42788,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:42.221996+00:00"
+      "recordedAt": "2026-07-28T03:33:35.290558+00:00"
     },
     "401816290": {
       "eventId": "401816290",
@@ -42815,8 +42815,8 @@
         "awayPower": 0.43746693031152645,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 1,
+        "awayRest": 1,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": 50.3,
@@ -42827,7 +42827,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -42839,13 +42839,13 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 2.76,
+          "homePitcherApiEra": 2.7,
           "homePitcherRecentEra": 2.5,
-          "homeTeamPitchingEra": 4.55,
-          "homeBullpenEra": 4.6,
+          "homeTeamPitchingEra": 4.54,
+          "homeBullpenEra": 4.59,
           "awayPitcherApiEra": 5.83,
           "awayPitcherRecentEra": 8.4,
-          "awayTeamPitchingEra": 4.75,
+          "awayTeamPitchingEra": 4.74,
           "awayBullpenEra": 4.79
         },
         "leagueMetrics": {
@@ -42862,7 +42862,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:42.221996+00:00"
+      "recordedAt": "2026-07-28T03:33:35.290558+00:00"
     },
     "401816289": {
       "eventId": "401816289",
@@ -42889,8 +42889,8 @@
         "awayPower": 0.5618293166666666,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 1,
+        "awayRest": 1,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -42901,7 +42901,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -42913,14 +42913,14 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 6.19,
+          "homePitcherApiEra": 6.45,
           "homePitcherRecentEra": 8.37,
-          "homeTeamPitchingEra": 5.36,
-          "homeBullpenEra": 5.41,
-          "awayPitcherApiEra": 3.23,
+          "homeTeamPitchingEra": 5.35,
+          "homeBullpenEra": 5.43,
+          "awayPitcherApiEra": 3.32,
           "awayPitcherRecentEra": 2.09,
-          "awayTeamPitchingEra": 3.55,
-          "awayBullpenEra": 3.57
+          "awayTeamPitchingEra": 3.56,
+          "awayBullpenEra": 3.58
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -42936,7 +42936,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:42.221996+00:00"
+      "recordedAt": "2026-07-28T03:33:35.290558+00:00"
     },
     "401816291": {
       "eventId": "401816291",
@@ -42963,8 +42963,8 @@
         "awayPower": 0.7152531885714286,
         "homeInjuryLoad": 1.15,
         "awayInjuryLoad": 5.75,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 1,
+        "awayRest": 1,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": 44.2,
@@ -42975,7 +42975,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -42987,14 +42987,14 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 5.01,
+          "homePitcherApiEra": 4.96,
           "homePitcherRecentEra": 4.44,
-          "homeTeamPitchingEra": 4.36,
-          "homeBullpenEra": 4.39,
-          "awayPitcherApiEra": 5.11,
+          "homeTeamPitchingEra": 4.35,
+          "homeBullpenEra": 4.38,
+          "awayPitcherApiEra": 5.05,
           "awayPitcherRecentEra": 11.49,
-          "awayTeamPitchingEra": 3.44,
-          "awayBullpenEra": 3.46
+          "awayTeamPitchingEra": 3.43,
+          "awayBullpenEra": 3.45
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -43010,7 +43010,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:42.221996+00:00"
+      "recordedAt": "2026-07-28T03:33:35.290558+00:00"
     },
     "401816238": {
       "eventId": "401816238",
@@ -43037,10 +43037,10 @@
         "awayPower": 0.47641893749221176,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 1.15,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 55.9,
         "impliedAway": 44.1,
         "hasLineup": true,
@@ -43049,7 +43049,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -43084,7 +43084,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:10:42.776487+00:00"
+      "recordedAt": "2026-07-28T03:32:33.012443+00:00"
     },
     "401816183": {
       "eventId": "401816183",
@@ -43506,10 +43506,10 @@
         "awayPower": 0.6361367000503145,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 41.0,
         "impliedAway": 59.0,
         "hasLineup": true,
@@ -43518,7 +43518,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -43553,7 +43553,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:01.630071+00:00"
+      "recordedAt": "2026-07-28T03:33:56.677800+00:00"
     },
     "401816295": {
       "eventId": "401816295",
@@ -43580,10 +43580,10 @@
         "awayPower": 0.3811351499937694,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 1.15,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 45.0,
         "impliedAway": 55.0,
         "hasLineup": true,
@@ -43592,7 +43592,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -43627,7 +43627,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:01.630071+00:00"
+      "recordedAt": "2026-07-28T03:33:56.677800+00:00"
     },
     "401816299": {
       "eventId": "401816299",
@@ -43639,9 +43639,9 @@
       "predictedWinner": "Chicago Cubs",
       "predictedSide": "away",
       "outcomeLabel": "Chicago Cubs to win",
-      "confidence": 57.2,
-      "rawConfidence": 57.2,
-      "rawHomeWinPct": 42.8,
+      "confidence": 57.3,
+      "rawConfidence": 57.3,
+      "rawHomeWinPct": 42.7,
       "probabilityMethod": "fitted",
       "pickOdds": -10000,
       "openingOdds": -10000,
@@ -43654,19 +43654,19 @@
         "awayPower": 0.6056911072380953,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
-        "impliedHome": 49.2,
-        "impliedAway": 50.8,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
+        "impliedHome": 49.1,
+        "impliedAway": 50.9,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -43681,11 +43681,11 @@
           "homePitcherApiEra": 3.07,
           "homePitcherRecentEra": 2.22,
           "homeTeamPitchingEra": 4.15,
-          "homeBullpenEra": 4.18,
+          "homeBullpenEra": 4.17,
           "awayPitcherApiEra": 4.85,
           "awayPitcherRecentEra": 3.24,
-          "awayTeamPitchingEra": 4.22,
-          "awayBullpenEra": 4.25
+          "awayTeamPitchingEra": 4.24,
+          "awayBullpenEra": 4.27
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -43693,15 +43693,15 @@
           "opsEdge": -0.055,
           "eraEdge": 0.11
         },
-        "trueHome": 42.8,
-        "trueAway": 57.2,
-        "confidence": 57.2,
-        "rawConfidence": 57.2,
-        "rawHomeWinPct": 42.8,
+        "trueHome": 42.7,
+        "trueAway": 57.3,
+        "confidence": 57.3,
+        "rawConfidence": 57.3,
+        "rawHomeWinPct": 42.7,
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:01.630071+00:00"
+      "recordedAt": "2026-07-28T03:33:56.677800+00:00"
     },
     "401816302": {
       "eventId": "401816302",
@@ -43728,10 +43728,10 @@
         "awayPower": 0.5694634533333334,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -43740,7 +43740,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -43754,12 +43754,12 @@
           ],
           "homePitcherApiEra": 4.42,
           "homePitcherRecentEra": 2.49,
-          "homeTeamPitchingEra": 5.36,
-          "homeBullpenEra": 5.41,
+          "homeTeamPitchingEra": 5.35,
+          "homeBullpenEra": 5.43,
           "awayPitcherApiEra": 2.58,
           "awayPitcherRecentEra": 5.36,
-          "awayTeamPitchingEra": 3.55,
-          "awayBullpenEra": 3.57
+          "awayTeamPitchingEra": 3.56,
+          "awayBullpenEra": 3.58
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -43775,7 +43775,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:01.630071+00:00"
+      "recordedAt": "2026-07-28T03:33:56.677800+00:00"
     },
     "401816303": {
       "eventId": "401816303",
@@ -43802,8 +43802,8 @@
         "awayPower": 0.33881187445482863,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": 62.4,
@@ -43814,7 +43814,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -43849,7 +43849,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:01.630071+00:00"
+      "recordedAt": "2026-07-28T03:33:56.677800+00:00"
     },
     "401816305": {
       "eventId": "401816305",
@@ -43861,9 +43861,9 @@
       "predictedWinner": "Milwaukee Brewers",
       "predictedSide": "away",
       "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 66.1,
-      "rawConfidence": 66.1,
-      "rawHomeWinPct": 33.9,
+      "confidence": 66.0,
+      "rawConfidence": 66.0,
+      "rawHomeWinPct": 34.0,
       "probabilityMethod": "fitted",
       "pickOdds": -145,
       "openingOdds": -145,
@@ -43876,19 +43876,19 @@
         "awayPower": 0.6922025508571429,
         "homeInjuryLoad": 1.15,
         "awayInjuryLoad": 5.75,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
-        "impliedHome": 43.9,
-        "impliedAway": 56.1,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
+        "impliedHome": 44.1,
+        "impliedAway": 55.9,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -43902,12 +43902,12 @@
           ],
           "homePitcherApiEra": 3.93,
           "homePitcherRecentEra": 3.33,
-          "homeTeamPitchingEra": 4.36,
-          "homeBullpenEra": 4.39,
+          "homeTeamPitchingEra": 4.35,
+          "homeBullpenEra": 4.38,
           "awayPitcherApiEra": 3.05,
           "awayPitcherRecentEra": 4.15,
-          "awayTeamPitchingEra": 3.44,
-          "awayBullpenEra": 3.46
+          "awayTeamPitchingEra": 3.43,
+          "awayBullpenEra": 3.45
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -43915,15 +43915,15 @@
           "opsEdge": -0.015,
           "eraEdge": -0.96
         },
-        "trueHome": 33.9,
-        "trueAway": 66.1,
-        "confidence": 66.1,
-        "rawConfidence": 66.1,
-        "rawHomeWinPct": 33.9,
+        "trueHome": 34.0,
+        "trueAway": 66.0,
+        "confidence": 66.0,
+        "rawConfidence": 66.0,
+        "rawHomeWinPct": 34.0,
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:01.630071+00:00"
+      "recordedAt": "2026-07-28T03:33:56.677800+00:00"
     },
     "401816306": {
       "eventId": "401816306",
@@ -43950,8 +43950,8 @@
         "awayPower": 0.43844350714018687,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 1,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": 62.5,
@@ -43962,7 +43962,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -43997,7 +43997,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:01.630071+00:00"
+      "recordedAt": "2026-07-28T03:33:56.677800+00:00"
     },
     "401857092": {
       "eventId": "401857092",
@@ -44024,8 +44024,8 @@
         "awayPower": 0.4000000000000001,
         "homeInjuryLoad": 0,
         "awayInjuryLoad": 1.61,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 6,
+        "awayRest": 5,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -44036,7 +44036,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -44054,7 +44054,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:47.235703+00:00"
+      "recordedAt": "2026-07-28T03:35:28.424697+00:00"
     },
     "401857093": {
       "eventId": "401857093",
@@ -44081,7 +44081,7 @@
         "awayPower": 0.20000000000000004,
         "homeInjuryLoad": 1.61,
         "awayInjuryLoad": 4.83,
-        "homeRest": null,
+        "homeRest": 6,
         "awayRest": null,
         "homeBackToBack": false,
         "awayBackToBack": false,
@@ -44111,7 +44111,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:47.235703+00:00"
+      "recordedAt": "2026-07-28T03:35:28.424697+00:00"
     },
     "401857094": {
       "eventId": "401857094",
@@ -44138,8 +44138,8 @@
         "awayPower": 0.8000000000000002,
         "homeInjuryLoad": 3.22,
         "awayInjuryLoad": 3.22,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 6,
+        "awayRest": 6,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -44150,7 +44150,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -44168,7 +44168,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:47.235703+00:00"
+      "recordedAt": "2026-07-28T03:35:28.424697+00:00"
     },
     "401857095": {
       "eventId": "401857095",
@@ -44195,8 +44195,8 @@
         "awayPower": 0.4000000000000001,
         "homeInjuryLoad": 4.83,
         "awayInjuryLoad": 3.22,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 6,
+        "awayRest": 6,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -44207,7 +44207,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -44225,7 +44225,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:47.235703+00:00"
+      "recordedAt": "2026-07-28T03:35:28.424697+00:00"
     },
     "401857096": {
       "eventId": "401857096",
@@ -44252,8 +44252,8 @@
         "awayPower": 0.4000000000000001,
         "homeInjuryLoad": 1.61,
         "awayInjuryLoad": 4.83,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 6,
+        "awayRest": 6,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -44264,7 +44264,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -44282,7 +44282,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:47.235703+00:00"
+      "recordedAt": "2026-07-28T03:35:28.424697+00:00"
     },
     "401898714": {
       "eventId": "401898714",
@@ -44430,7 +44430,7 @@
       "rawConfidence": 59.5,
       "rawHomeWinPct": 59.5,
       "probabilityMethod": "fitted",
-      "pickOdds": -165,
+      "pickOdds": -160,
       "openingOdds": -165,
       "openingSide": "home",
       "features": {
@@ -44441,19 +44441,19 @@
         "awayPower": 0.4034806553271028,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 2.3,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 59.1,
-        "impliedAway": 40.9,
+        "impliedHome": 59.0,
+        "impliedAway": 41.0,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -44488,7 +44488,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:01.630071+00:00"
+      "recordedAt": "2026-07-28T03:33:56.677800+00:00"
     },
     "401816253": {
       "eventId": "401816253",
@@ -44515,10 +44515,10 @@
         "awayPower": 0.47641893749221176,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 1.15,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 51.5,
         "impliedAway": 48.5,
         "hasLineup": true,
@@ -44527,7 +44527,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -44562,7 +44562,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:03.093571+00:00"
+      "recordedAt": "2026-07-28T03:32:55.315506+00:00"
     },
     "401816282": {
       "eventId": "401816282",
@@ -44640,25 +44640,25 @@
       "predictedWinner": "New York Yankees",
       "predictedSide": "away",
       "outcomeLabel": "New York Yankees to win",
-      "confidence": 56.7,
-      "rawConfidence": 56.7,
-      "rawHomeWinPct": 43.3,
+      "confidence": 58.0,
+      "rawConfidence": 58.0,
+      "rawHomeWinPct": 42.0,
       "probabilityMethod": "fitted",
       "pickOdds": -135,
       "openingOdds": -135,
       "openingSide": "away",
       "features": {
         "league": "mlb",
-        "recordDiff": -0.0331,
-        "splitDiff": 0.0382,
-        "homePower": 0.5256686966153846,
-        "awayPower": 0.629240336,
+        "recordDiff": -0.0422,
+        "splitDiff": 0.0189,
+        "homePower": 0.5212616453333333,
+        "awayPower": 0.6725736693333333,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 45.4,
         "impliedAway": 54.6,
         "hasLineup": true,
@@ -44667,7 +44667,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -44690,19 +44690,19 @@
         },
         "leagueMetrics": {
           "league": "mlb",
-          "runDiffEdge": -38.0,
+          "runDiffEdge": -46.0,
           "opsEdge": -0.003,
           "eraEdge": -0.7
         },
-        "trueHome": 43.3,
-        "trueAway": 56.7,
-        "confidence": 56.7,
-        "rawConfidence": 56.7,
-        "rawHomeWinPct": 43.3,
+        "trueHome": 42.0,
+        "trueAway": 58.0,
+        "confidence": 58.0,
+        "rawConfidence": 58.0,
+        "rawHomeWinPct": 42.0,
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:01.630071+00:00"
+      "recordedAt": "2026-07-28T03:33:56.677800+00:00"
     },
     "401816308": {
       "eventId": "401816308",
@@ -44729,10 +44729,10 @@
         "awayPower": 0.6361367000503145,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -44741,7 +44741,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -44776,7 +44776,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:13.398132+00:00"
+      "recordedAt": "2026-07-28T03:34:07.814590+00:00"
     },
     "401816309": {
       "eventId": "401816309",
@@ -44869,10 +44869,10 @@
         "awayPower": 0.6922025508571429,
         "homeInjuryLoad": 1.15,
         "awayInjuryLoad": 5.75,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -44881,7 +44881,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -44895,12 +44895,12 @@
           ],
           "homePitcherApiEra": 3.98,
           "homePitcherRecentEra": 5.0,
-          "homeTeamPitchingEra": 4.36,
-          "homeBullpenEra": 4.39,
+          "homeTeamPitchingEra": 4.35,
+          "homeBullpenEra": 4.38,
           "awayPitcherApiEra": 3.51,
           "awayPitcherRecentEra": 5.0,
-          "awayTeamPitchingEra": 3.44,
-          "awayBullpenEra": 3.46
+          "awayTeamPitchingEra": 3.43,
+          "awayBullpenEra": 3.45
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -44916,7 +44916,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:13.398132+00:00"
+      "recordedAt": "2026-07-28T03:34:07.814590+00:00"
     },
     "401816318": {
       "eventId": "401816318",
@@ -44943,10 +44943,10 @@
         "awayPower": 0.33881187445482863,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -44955,7 +44955,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -44990,7 +44990,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:13.398132+00:00"
+      "recordedAt": "2026-07-28T03:34:07.814590+00:00"
     },
     "401816312": {
       "eventId": "401816312",
@@ -45017,10 +45017,10 @@
         "awayPower": 0.508065564654088,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 2.3,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -45029,7 +45029,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -45064,7 +45064,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:13.398132+00:00"
+      "recordedAt": "2026-07-28T03:34:07.814590+00:00"
     },
     "401816310": {
       "eventId": "401816310",
@@ -45157,10 +45157,10 @@
         "awayPower": 0.6056911072380953,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -45169,7 +45169,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -45181,12 +45181,14 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
+          "homePitcherApiEra": 4.59,
+          "homePitcherRecentEra": 9.62,
           "homeTeamPitchingEra": 4.15,
-          "homeBullpenEra": 4.18,
+          "homeBullpenEra": 4.17,
           "awayPitcherApiEra": 3.81,
           "awayPitcherRecentEra": 6.43,
-          "awayTeamPitchingEra": 4.22,
-          "awayBullpenEra": 4.25
+          "awayTeamPitchingEra": 4.24,
+          "awayBullpenEra": 4.27
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -45202,7 +45204,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:13.398132+00:00"
+      "recordedAt": "2026-07-28T03:34:07.814590+00:00"
     },
     "401816319": {
       "eventId": "401816319",
@@ -45229,10 +45231,10 @@
         "awayPower": 0.5099735442492211,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -45241,7 +45243,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -45255,9 +45257,9 @@
           ],
           "homePitcherApiEra": 8.54,
           "homePitcherRecentEra": 8.06,
-          "homeTeamPitchingEra": 4.55,
-          "homeBullpenEra": 4.6,
-          "awayTeamPitchingEra": 4.75,
+          "homeTeamPitchingEra": 4.54,
+          "homeBullpenEra": 4.59,
+          "awayTeamPitchingEra": 4.74,
           "awayBullpenEra": 4.79
         },
         "leagueMetrics": {
@@ -45274,7 +45276,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:13.398132+00:00"
+      "recordedAt": "2026-07-28T03:34:07.814590+00:00"
     },
     "401816317": {
       "eventId": "401816317",
@@ -45301,10 +45303,10 @@
         "awayPower": 0.5694634533333334,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -45313,7 +45315,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -45327,12 +45329,12 @@
           ],
           "homePitcherApiEra": 6.12,
           "homePitcherRecentEra": 7.56,
-          "homeTeamPitchingEra": 5.36,
-          "homeBullpenEra": 5.41,
+          "homeTeamPitchingEra": 5.35,
+          "homeBullpenEra": 5.43,
           "awayPitcherApiEra": 3.21,
           "awayPitcherRecentEra": 3.38,
-          "awayTeamPitchingEra": 3.55,
-          "awayBullpenEra": 3.57
+          "awayTeamPitchingEra": 3.56,
+          "awayBullpenEra": 3.58
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -45348,7 +45350,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:13.398132+00:00"
+      "recordedAt": "2026-07-28T03:34:07.814590+00:00"
     },
     "401816321": {
       "eventId": "401816321",
@@ -45375,10 +45377,10 @@
         "awayPower": 0.43844350714018687,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -45387,7 +45389,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -45422,7 +45424,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:13.398132+00:00"
+      "recordedAt": "2026-07-28T03:34:07.814590+00:00"
     },
     "401857097": {
       "eventId": "401857097",
@@ -45449,7 +45451,7 @@
         "awayPower": 0.8000000000000002,
         "homeInjuryLoad": 4.83,
         "awayInjuryLoad": 3.22,
-        "homeRest": null,
+        "homeRest": 6,
         "awayRest": null,
         "homeBackToBack": false,
         "awayBackToBack": false,
@@ -45479,7 +45481,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:50.469122+00:00"
+      "recordedAt": "2026-07-28T03:35:30.998180+00:00"
     },
     "401857098": {
       "eventId": "401857098",
@@ -45506,7 +45508,7 @@
         "awayPower": 0.8000000000000002,
         "homeInjuryLoad": 4.83,
         "awayInjuryLoad": 1.61,
-        "homeRest": null,
+        "homeRest": 7,
         "awayRest": null,
         "homeBackToBack": false,
         "awayBackToBack": false,
@@ -45536,7 +45538,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:50.469122+00:00"
+      "recordedAt": "2026-07-28T03:35:30.998180+00:00"
     },
     "1133655": {
       "eventId": "1133655",
@@ -45563,8 +45565,8 @@
         "awayPower": 0.4000000000000001,
         "homeInjuryLoad": 0,
         "awayInjuryLoad": 0,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 7,
+        "awayRest": 5,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -45575,7 +45577,7 @@
           "injuries": false,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -45593,7 +45595,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:14:46.125774+00:00"
+      "recordedAt": "2026-07-28T03:36:22.590814+00:00"
     },
     "401816307": {
       "eventId": "401816307",
@@ -45670,9 +45672,9 @@
       "predictedWinner": "Houston Astros",
       "predictedSide": "away",
       "outcomeLabel": "Houston Astros to win",
-      "confidence": 56.5,
-      "rawConfidence": 56.5,
-      "rawHomeWinPct": 43.5,
+      "confidence": 56.4,
+      "rawConfidence": 56.4,
+      "rawHomeWinPct": 43.6,
       "probabilityMethod": "fitted",
       "pickOdds": -110,
       "openingOdds": -110,
@@ -45685,19 +45687,19 @@
         "awayPower": 0.5099735442492211,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
-        "impliedHome": 49.9,
-        "impliedAway": 50.1,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
+        "impliedHome": 50.0,
+        "impliedAway": 50.0,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -45711,11 +45713,11 @@
           ],
           "homePitcherApiEra": 4.05,
           "homePitcherRecentEra": 4.97,
-          "homeTeamPitchingEra": 4.55,
-          "homeBullpenEra": 4.6,
+          "homeTeamPitchingEra": 4.54,
+          "homeBullpenEra": 4.59,
           "awayPitcherApiEra": 3.03,
           "awayPitcherRecentEra": 3.58,
-          "awayTeamPitchingEra": 4.75,
+          "awayTeamPitchingEra": 4.74,
           "awayBullpenEra": 4.79
         },
         "leagueMetrics": {
@@ -45724,15 +45726,15 @@
           "opsEdge": -0.025,
           "eraEdge": 0.18
         },
-        "trueHome": 43.5,
-        "trueAway": 56.5,
-        "confidence": 56.5,
-        "rawConfidence": 56.5,
-        "rawHomeWinPct": 43.5,
+        "trueHome": 43.6,
+        "trueAway": 56.4,
+        "confidence": 56.4,
+        "rawConfidence": 56.4,
+        "rawHomeWinPct": 43.6,
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:01.630071+00:00"
+      "recordedAt": "2026-07-28T03:33:56.677800+00:00"
     },
     "401816316": {
       "eventId": "401816316",
@@ -45825,10 +45827,10 @@
         "awayPower": 0.508065564654088,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 2.3,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -45837,7 +45839,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -45872,7 +45874,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:20.381684+00:00"
+      "recordedAt": "2026-07-28T03:34:13.320442+00:00"
     },
     "401816326": {
       "eventId": "401816326",
@@ -45899,10 +45901,10 @@
         "awayPower": 0.6056911072380953,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -45911,7 +45913,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -45926,11 +45928,11 @@
           "homePitcherApiEra": 3.77,
           "homePitcherRecentEra": 4.8,
           "homeTeamPitchingEra": 4.15,
-          "homeBullpenEra": 4.18,
+          "homeBullpenEra": 4.17,
           "awayPitcherApiEra": 3.72,
           "awayPitcherRecentEra": 2.81,
-          "awayTeamPitchingEra": 4.22,
-          "awayBullpenEra": 4.25
+          "awayTeamPitchingEra": 4.24,
+          "awayBullpenEra": 4.27
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -45946,7 +45948,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:20.381684+00:00"
+      "recordedAt": "2026-07-28T03:34:13.320442+00:00"
     },
     "401816325": {
       "eventId": "401816325",
@@ -46171,10 +46173,10 @@
         "awayPower": 0.5694634533333334,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -46183,7 +46185,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -46195,12 +46197,12 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homeTeamPitchingEra": 5.36,
-          "homeBullpenEra": 5.41,
+          "homeTeamPitchingEra": 5.35,
+          "homeBullpenEra": 5.43,
           "awayPitcherApiEra": 2.78,
           "awayPitcherRecentEra": 2.8,
-          "awayTeamPitchingEra": 3.55,
-          "awayBullpenEra": 3.57
+          "awayTeamPitchingEra": 3.56,
+          "awayBullpenEra": 3.58
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -46216,7 +46218,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:20.381684+00:00"
+      "recordedAt": "2026-07-28T03:34:13.320442+00:00"
     },
     "401857099": {
       "eventId": "401857099",
@@ -46243,8 +46245,8 @@
         "awayPower": 1.0,
         "homeInjuryLoad": 4.83,
         "awayInjuryLoad": 1.61,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -46255,7 +46257,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -46273,7 +46275,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:53.721468+00:00"
+      "recordedAt": "2026-07-28T03:35:33.600731+00:00"
     },
     "401857100": {
       "eventId": "401857100",
@@ -46301,7 +46303,7 @@
         "homeInjuryLoad": 8.05,
         "awayInjuryLoad": 1.61,
         "homeRest": null,
-        "awayRest": null,
+        "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -46330,7 +46332,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:53.721468+00:00"
+      "recordedAt": "2026-07-28T03:35:33.600731+00:00"
     },
     "401857101": {
       "eventId": "401857101",
@@ -46357,8 +46359,8 @@
         "awayPower": 0.4000000000000001,
         "homeInjuryLoad": 4.83,
         "awayInjuryLoad": 4.83,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -46369,7 +46371,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -46387,7 +46389,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:53.721468+00:00"
+      "recordedAt": "2026-07-28T03:35:33.600731+00:00"
     },
     "1133662": {
       "eventId": "1133662",
@@ -46414,8 +46416,8 @@
         "awayPower": 0.8000000000000002,
         "homeInjuryLoad": 0,
         "awayInjuryLoad": 0,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 7,
+        "awayRest": 6,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -46426,7 +46428,7 @@
           "injuries": false,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -46444,7 +46446,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:14:51.038263+00:00"
+      "recordedAt": "2026-07-28T03:36:25.320717+00:00"
     },
     "401816327": {
       "eventId": "401816327",
@@ -46471,10 +46473,10 @@
         "awayPower": 0.4034806553271028,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 2.3,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -46483,7 +46485,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -46518,7 +46520,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:20.381684+00:00"
+      "recordedAt": "2026-07-28T03:34:13.320442+00:00"
     },
     "401816315": {
       "eventId": "401816315",
@@ -46545,10 +46547,10 @@
         "awayPower": 0.4034806553271028,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 2.3,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -46557,7 +46559,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -46592,7 +46594,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:13.398132+00:00"
+      "recordedAt": "2026-07-28T03:34:07.814590+00:00"
     },
     "401816339": {
       "eventId": "401816339",
@@ -46736,25 +46738,25 @@
       "predictedWinner": "Tampa Bay Rays",
       "predictedSide": "home",
       "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 63.1,
-      "rawConfidence": 63.1,
-      "rawHomeWinPct": 63.1,
+      "confidence": 63.4,
+      "rawConfidence": 63.4,
+      "rawHomeWinPct": 63.4,
       "probabilityMethod": "fitted",
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
       "features": {
         "league": "mlb",
-        "recordDiff": 0.0616,
+        "recordDiff": 0.0667,
         "splitDiff": 0.283,
         "homePower": 0.643819616,
-        "awayPower": 0.5256686966153846,
+        "awayPower": 0.5212616453333333,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 5.75,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -46763,7 +46765,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -46786,19 +46788,19 @@
         },
         "leagueMetrics": {
           "league": "mlb",
-          "runDiffEdge": -4.0,
+          "runDiffEdge": 0.0,
           "opsEdge": 0.008,
           "eraEdge": 0.35
         },
-        "trueHome": 63.1,
-        "trueAway": 36.9,
-        "confidence": 63.1,
-        "rawConfidence": 63.1,
-        "rawHomeWinPct": 63.1,
+        "trueHome": 63.4,
+        "trueAway": 36.6,
+        "confidence": 63.4,
+        "rawConfidence": 63.4,
+        "rawHomeWinPct": 63.4,
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:28.700396+00:00"
+      "recordedAt": "2026-07-28T03:34:20.445966+00:00"
     },
     "401816338": {
       "eventId": "401816338",
@@ -46957,8 +46959,8 @@
         "awayPower": 0.6922025508571429,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 5.75,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -46969,7 +46971,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -46983,12 +46985,12 @@
           ],
           "homePitcherApiEra": 7.34,
           "homePitcherRecentEra": 13.28,
-          "homeTeamPitchingEra": 4.55,
-          "homeBullpenEra": 4.6,
+          "homeTeamPitchingEra": 4.54,
+          "homeBullpenEra": 4.59,
           "awayPitcherApiEra": 4.71,
           "awayPitcherRecentEra": 4.81,
-          "awayTeamPitchingEra": 3.44,
-          "awayBullpenEra": 3.46
+          "awayTeamPitchingEra": 3.43,
+          "awayBullpenEra": 3.45
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -47004,7 +47006,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:28.700396+00:00"
+      "recordedAt": "2026-07-28T03:34:20.445966+00:00"
     },
     "401816343": {
       "eventId": "401816343",
@@ -47031,9 +47033,9 @@
         "awayPower": 0.49898745360747665,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 2,
+        "homeBackToBack": true,
         "awayBackToBack": false,
         "impliedHome": null,
         "impliedAway": null,
@@ -47043,7 +47045,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -47057,8 +47059,8 @@
           ],
           "homePitcherApiEra": 6.23,
           "homePitcherRecentEra": 1.49,
-          "homeTeamPitchingEra": 5.36,
-          "homeBullpenEra": 5.41,
+          "homeTeamPitchingEra": 5.35,
+          "homeBullpenEra": 5.43,
           "awayPitcherApiEra": 2.7,
           "awayPitcherRecentEra": 4.12,
           "awayTeamPitchingEra": 3.63,
@@ -47078,7 +47080,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:28.700396+00:00"
+      "recordedAt": "2026-07-28T03:34:20.445966+00:00"
     },
     "401816346": {
       "eventId": "401816346",
@@ -47105,10 +47107,10 @@
         "awayPower": 0.41220440857142865,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 1.15,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -47117,7 +47119,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -47135,8 +47137,8 @@
           "homeBullpenEra": 4.23,
           "awayPitcherApiEra": 4.6,
           "awayPitcherRecentEra": 4.74,
-          "awayTeamPitchingEra": 4.36,
-          "awayBullpenEra": 4.39
+          "awayTeamPitchingEra": 4.35,
+          "awayBullpenEra": 4.38
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -47152,7 +47154,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:28.700396+00:00"
+      "recordedAt": "2026-07-28T03:34:20.445966+00:00"
     },
     "401816342": {
       "eventId": "401816342",
@@ -47179,10 +47181,10 @@
         "awayPower": 0.5694634533333334,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -47191,7 +47193,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -47209,8 +47211,8 @@
           "homeBullpenEra": 3.61,
           "awayPitcherApiEra": 3.02,
           "awayPitcherRecentEra": 5.11,
-          "awayTeamPitchingEra": 3.55,
-          "awayBullpenEra": 3.57
+          "awayTeamPitchingEra": 3.56,
+          "awayBullpenEra": 3.58
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -47226,7 +47228,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:28.700396+00:00"
+      "recordedAt": "2026-07-28T03:34:20.445966+00:00"
     },
     "401816345": {
       "eventId": "401816345",
@@ -47319,9 +47321,9 @@
         "awayPower": 0.0,
         "homeInjuryLoad": 3.22,
         "awayInjuryLoad": 3.22,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 2,
+        "homeBackToBack": true,
         "awayBackToBack": false,
         "impliedHome": null,
         "impliedAway": null,
@@ -47331,7 +47333,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -47349,7 +47351,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:56.951604+00:00"
+      "recordedAt": "2026-07-28T03:35:35.905284+00:00"
     },
     "401857103": {
       "eventId": "401857103",
@@ -47376,10 +47378,10 @@
         "awayPower": 0.8000000000000002,
         "homeInjuryLoad": 0,
         "awayInjuryLoad": 4.83,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 3,
+        "awayRest": 1,
         "homeBackToBack": false,
-        "awayBackToBack": false,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -47388,7 +47390,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -47406,7 +47408,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:56.951604+00:00"
+      "recordedAt": "2026-07-28T03:35:35.905284+00:00"
     },
     "401857104": {
       "eventId": "401857104",
@@ -47433,8 +47435,8 @@
         "awayPower": 0.8000000000000002,
         "homeInjuryLoad": 3.22,
         "awayInjuryLoad": 3.22,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 3,
+        "awayRest": 3,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -47445,7 +47447,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -47463,7 +47465,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:56.951604+00:00"
+      "recordedAt": "2026-07-28T03:35:35.905284+00:00"
     },
     "1133660": {
       "eventId": "1133660",
@@ -47490,8 +47492,8 @@
         "awayPower": 0.4000000000000001,
         "homeInjuryLoad": 0,
         "awayInjuryLoad": 0,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 5,
+        "awayRest": 6,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -47502,7 +47504,7 @@
           "injuries": false,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -47520,7 +47522,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:15:05.588065+00:00"
+      "recordedAt": "2026-07-28T03:36:33.726171+00:00"
     },
     "1133658": {
       "eventId": "1133658",
@@ -47547,8 +47549,8 @@
         "awayPower": 0.20000000000000004,
         "homeInjuryLoad": 0,
         "awayInjuryLoad": 0,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 6,
+        "awayRest": 5,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -47559,7 +47561,7 @@
           "injuries": false,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -47577,7 +47579,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:15:05.588065+00:00"
+      "recordedAt": "2026-07-28T03:36:33.726171+00:00"
     },
     "1133661": {
       "eventId": "1133661",
@@ -47653,8 +47655,8 @@
         "awayPower": 1.0,
         "homeInjuryLoad": 0,
         "awayInjuryLoad": 0,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 7,
+        "awayRest": 6,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -47665,7 +47667,7 @@
           "injuries": false,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -47683,7 +47685,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:15:05.588065+00:00"
+      "recordedAt": "2026-07-28T03:36:33.726171+00:00"
     },
     "401816332": {
       "eventId": "401816332",
@@ -47905,10 +47907,10 @@
         "awayPower": 0.508065564654088,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 2.3,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 1,
         "homeBackToBack": false,
-        "awayBackToBack": false,
+        "awayBackToBack": true,
         "impliedHome": 61.7,
         "impliedAway": 38.3,
         "hasLineup": true,
@@ -47917,7 +47919,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -47952,7 +47954,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:01.630071+00:00"
+      "recordedAt": "2026-07-28T03:33:56.677800+00:00"
     },
     "401816330": {
       "eventId": "401816330",
@@ -47979,10 +47981,10 @@
         "awayPower": 0.43844350714018687,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -47991,7 +47993,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -48026,7 +48028,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:20.381684+00:00"
+      "recordedAt": "2026-07-28T03:34:13.320442+00:00"
     },
     "401816348": {
       "eventId": "401816348",
@@ -48038,25 +48040,25 @@
       "predictedWinner": "Tampa Bay Rays",
       "predictedSide": "home",
       "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 63.1,
-      "rawConfidence": 63.1,
-      "rawHomeWinPct": 63.1,
+      "confidence": 63.4,
+      "rawConfidence": 63.4,
+      "rawHomeWinPct": 63.4,
       "probabilityMethod": "fitted",
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
       "features": {
         "league": "mlb",
-        "recordDiff": 0.0616,
+        "recordDiff": 0.0667,
         "splitDiff": 0.283,
         "homePower": 0.643819616,
-        "awayPower": 0.5256686966153846,
+        "awayPower": 0.5212616453333333,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 5.75,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -48065,7 +48067,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -48088,19 +48090,19 @@
         },
         "leagueMetrics": {
           "league": "mlb",
-          "runDiffEdge": -4.0,
+          "runDiffEdge": 0.0,
           "opsEdge": 0.008,
           "eraEdge": 0.35
         },
-        "trueHome": 63.1,
-        "trueAway": 36.9,
-        "confidence": 63.1,
-        "rawConfidence": 63.1,
-        "rawHomeWinPct": 63.1,
+        "trueHome": 63.4,
+        "trueAway": 36.6,
+        "confidence": 63.4,
+        "rawConfidence": 63.4,
+        "rawHomeWinPct": 63.4,
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:37.361658+00:00"
+      "recordedAt": "2026-07-28T03:34:28.099411+00:00"
     },
     "401816360": {
       "eventId": "401816360",
@@ -48457,10 +48459,10 @@
         "awayPower": 0.41220440857142865,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 1.15,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -48469,7 +48471,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -48485,10 +48487,10 @@
           "homePitcherRecentEra": 5.16,
           "homeTeamPitchingEra": 4.19,
           "homeBullpenEra": 4.23,
-          "awayPitcherApiEra": 5.01,
+          "awayPitcherApiEra": 4.96,
           "awayPitcherRecentEra": 4.44,
-          "awayTeamPitchingEra": 4.36,
-          "awayBullpenEra": 4.39
+          "awayTeamPitchingEra": 4.35,
+          "awayBullpenEra": 4.38
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -48504,7 +48506,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:37.361658+00:00"
+      "recordedAt": "2026-07-28T03:34:28.099411+00:00"
     },
     "401816357": {
       "eventId": "401816357",
@@ -48531,10 +48533,10 @@
         "awayPower": 0.5694634533333334,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -48543,7 +48545,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -48559,10 +48561,10 @@
           "homePitcherRecentEra": 6.92,
           "homeTeamPitchingEra": 3.58,
           "homeBullpenEra": 3.61,
-          "awayPitcherApiEra": 3.23,
+          "awayPitcherApiEra": 3.32,
           "awayPitcherRecentEra": 2.09,
-          "awayTeamPitchingEra": 3.55,
-          "awayBullpenEra": 3.57
+          "awayTeamPitchingEra": 3.56,
+          "awayBullpenEra": 3.58
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -48578,7 +48580,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:37.361658+00:00"
+      "recordedAt": "2026-07-28T03:34:28.099411+00:00"
     },
     "401816359": {
       "eventId": "401816359",
@@ -48605,10 +48607,10 @@
         "awayPower": 0.6922025508571429,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 5.75,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -48617,7 +48619,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -48631,12 +48633,12 @@
           ],
           "homePitcherApiEra": 3.29,
           "homePitcherRecentEra": 0.45,
-          "homeTeamPitchingEra": 4.55,
-          "homeBullpenEra": 4.6,
+          "homeTeamPitchingEra": 4.54,
+          "homeBullpenEra": 4.59,
           "awayPitcherApiEra": 1.58,
           "awayPitcherRecentEra": 3.35,
-          "awayTeamPitchingEra": 3.44,
-          "awayBullpenEra": 3.46
+          "awayTeamPitchingEra": 3.43,
+          "awayBullpenEra": 3.45
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -48652,7 +48654,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:37.361658+00:00"
+      "recordedAt": "2026-07-28T03:34:28.099411+00:00"
     },
     "401816358": {
       "eventId": "401816358",
@@ -48679,10 +48681,10 @@
         "awayPower": 0.49898745360747665,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -48691,7 +48693,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -48703,10 +48705,10 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 6.19,
+          "homePitcherApiEra": 6.45,
           "homePitcherRecentEra": 8.37,
-          "homeTeamPitchingEra": 5.36,
-          "homeBullpenEra": 5.41,
+          "homeTeamPitchingEra": 5.35,
+          "homeBullpenEra": 5.43,
           "awayPitcherApiEra": 4.53,
           "awayPitcherRecentEra": 4.76,
           "awayTeamPitchingEra": 3.63,
@@ -48726,7 +48728,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:37.361658+00:00"
+      "recordedAt": "2026-07-28T03:34:28.099411+00:00"
     },
     "401857105": {
       "eventId": "401857105",
@@ -48753,10 +48755,10 @@
         "awayPower": 0.6,
         "homeInjuryLoad": 8.05,
         "awayInjuryLoad": 4.83,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -48765,7 +48767,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -48783,7 +48785,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:59.428043+00:00"
+      "recordedAt": "2026-07-28T03:35:37.944834+00:00"
     },
     "401857106": {
       "eventId": "401857106",
@@ -48810,10 +48812,10 @@
         "awayPower": 0.4000000000000001,
         "homeInjuryLoad": 4.83,
         "awayInjuryLoad": 4.83,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 1,
         "homeBackToBack": false,
-        "awayBackToBack": false,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -48822,7 +48824,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -48840,7 +48842,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:13:59.428043+00:00"
+      "recordedAt": "2026-07-28T03:35:37.944834+00:00"
     },
     "1133659": {
       "eventId": "1133659",
@@ -48946,7 +48948,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:15:17.113846+00:00"
+      "recordedAt": "2026-07-28T03:36:40.443921+00:00"
     },
     "1133656": {
       "eventId": "1133656",
@@ -49003,7 +49005,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:15:17.113846+00:00"
+      "recordedAt": "2026-07-28T03:36:40.443921+00:00"
     },
     "401816331": {
       "eventId": "401816331",
@@ -49030,8 +49032,8 @@
         "awayPower": 0.41220440857142865,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 1.15,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 1,
+        "awayRest": 1,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -49042,7 +49044,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -49060,8 +49062,8 @@
           "homeBullpenEra": 4.23,
           "awayPitcherApiEra": 3.16,
           "awayPitcherRecentEra": 2.2,
-          "awayTeamPitchingEra": 4.36,
-          "awayBullpenEra": 4.39
+          "awayTeamPitchingEra": 4.35,
+          "awayBullpenEra": 4.38
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -49077,7 +49079,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:20.381684+00:00"
+      "recordedAt": "2026-07-28T03:34:13.320442+00:00"
     },
     "401816337": {
       "eventId": "401816337",
@@ -49695,10 +49697,10 @@
         "awayPower": 0.49898745360747665,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -49707,7 +49709,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -49721,8 +49723,8 @@
           ],
           "homePitcherApiEra": 4.42,
           "homePitcherRecentEra": 2.49,
-          "homeTeamPitchingEra": 5.36,
-          "homeBullpenEra": 5.41,
+          "homeTeamPitchingEra": 5.35,
+          "homeBullpenEra": 5.43,
           "awayPitcherApiEra": 3.34,
           "awayPitcherRecentEra": 3.35,
           "awayTeamPitchingEra": 3.63,
@@ -49742,7 +49744,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:47.392151+00:00"
+      "recordedAt": "2026-07-28T03:34:35.144711+00:00"
     },
     "401816376": {
       "eventId": "401816376",
@@ -49769,10 +49771,10 @@
         "awayPower": 0.41220440857142865,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 1.15,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -49781,7 +49783,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -49799,8 +49801,8 @@
           "homeBullpenEra": 4.23,
           "awayPitcherApiEra": 3.93,
           "awayPitcherRecentEra": 3.33,
-          "awayTeamPitchingEra": 4.36,
-          "awayBullpenEra": 4.39
+          "awayTeamPitchingEra": 4.35,
+          "awayBullpenEra": 4.38
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -49816,7 +49818,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:47.392151+00:00"
+      "recordedAt": "2026-07-28T03:34:35.144711+00:00"
     },
     "401816372": {
       "eventId": "401816372",
@@ -49843,10 +49845,10 @@
         "awayPower": 0.5694634533333334,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -49855,7 +49857,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -49871,8 +49873,8 @@
           "homeBullpenEra": 3.61,
           "awayPitcherApiEra": 2.58,
           "awayPitcherRecentEra": 5.36,
-          "awayTeamPitchingEra": 3.55,
-          "awayBullpenEra": 3.57
+          "awayTeamPitchingEra": 3.56,
+          "awayBullpenEra": 3.58
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -49888,7 +49890,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:47.392151+00:00"
+      "recordedAt": "2026-07-28T03:34:35.144711+00:00"
     },
     "401857107": {
       "eventId": "401857107",
@@ -49915,10 +49917,10 @@
         "awayPower": 0.8000000000000002,
         "homeInjuryLoad": 1.61,
         "awayInjuryLoad": 3.22,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 1,
         "homeBackToBack": false,
-        "awayBackToBack": false,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -49927,7 +49929,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -49945,7 +49947,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:14:02.918335+00:00"
+      "recordedAt": "2026-07-28T03:35:40.589286+00:00"
     },
     "401857108": {
       "eventId": "401857108",
@@ -49972,9 +49974,9 @@
         "awayPower": 0.0,
         "homeInjuryLoad": 3.22,
         "awayInjuryLoad": 1.61,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 4,
+        "homeBackToBack": true,
         "awayBackToBack": false,
         "impliedHome": null,
         "impliedAway": null,
@@ -49984,7 +49986,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -50002,7 +50004,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:14:02.918335+00:00"
+      "recordedAt": "2026-07-28T03:35:40.589286+00:00"
     },
     "401857109": {
       "eventId": "401857109",
@@ -50029,8 +50031,8 @@
         "awayPower": 0.4000000000000001,
         "homeInjuryLoad": 4.83,
         "awayInjuryLoad": 1.61,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 1,
+        "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -50041,7 +50043,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -50059,7 +50061,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:14:02.918335+00:00"
+      "recordedAt": "2026-07-28T03:35:40.589286+00:00"
     },
     "401857110": {
       "eventId": "401857110",
@@ -50086,8 +50088,8 @@
         "awayPower": 0.20000000000000004,
         "homeInjuryLoad": 1.61,
         "awayInjuryLoad": 4.83,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 3,
+        "awayRest": 3,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -50098,7 +50100,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -50116,7 +50118,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:14:02.918335+00:00"
+      "recordedAt": "2026-07-28T03:35:40.589286+00:00"
     },
     "401816364": {
       "eventId": "401816364",
@@ -50341,10 +50343,10 @@
         "awayPower": 0.5513802863551402,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -50353,7 +50355,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -50388,7 +50390,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:53.124205+00:00"
+      "recordedAt": "2026-07-28T03:34:40.043745+00:00"
     },
     "401816377": {
       "eventId": "401816377",
@@ -50400,25 +50402,25 @@
       "predictedWinner": "New York Yankees",
       "predictedSide": "home",
       "outcomeLabel": "New York Yankees to win",
-      "confidence": 56.4,
-      "rawConfidence": 56.4,
-      "rawHomeWinPct": 56.4,
+      "confidence": 57.7,
+      "rawConfidence": 57.7,
+      "rawHomeWinPct": 57.7,
       "probabilityMethod": "fitted",
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
       "features": {
         "league": "mlb",
-        "recordDiff": 0.0571,
+        "recordDiff": 0.0613,
         "splitDiff": 0.0,
-        "homePower": 0.629240336,
+        "homePower": 0.6725736693333333,
         "awayPower": 0.4671115485714286,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -50427,7 +50429,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -50443,24 +50445,26 @@
           "homePitcherRecentEra": 1.67,
           "homeTeamPitchingEra": 3.41,
           "homeBullpenEra": 3.43,
+          "awayPitcherApiEra": 4.59,
+          "awayPitcherRecentEra": 9.62,
           "awayTeamPitchingEra": 4.15,
-          "awayBullpenEra": 4.18
+          "awayBullpenEra": 4.17
         },
         "leagueMetrics": {
           "league": "mlb",
-          "runDiffEdge": 85.0,
+          "runDiffEdge": 89.0,
           "opsEdge": 0.034,
           "eraEdge": 0.72
         },
-        "trueHome": 56.4,
-        "trueAway": 43.6,
-        "confidence": 56.4,
-        "rawConfidence": 56.4,
-        "rawHomeWinPct": 56.4,
+        "trueHome": 57.7,
+        "trueAway": 42.3,
+        "confidence": 57.7,
+        "rawConfidence": 57.7,
+        "rawHomeWinPct": 57.7,
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:53.124205+00:00"
+      "recordedAt": "2026-07-28T03:34:40.043745+00:00"
     },
     "401816380": {
       "eventId": "401816380",
@@ -50487,10 +50491,10 @@
         "awayPower": 0.5289591428535826,
         "homeInjuryLoad": 5.75,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 1,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -50499,7 +50503,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -50513,8 +50517,8 @@
           ],
           "homePitcherApiEra": 3.05,
           "homePitcherRecentEra": 4.15,
-          "homeTeamPitchingEra": 3.44,
-          "homeBullpenEra": 3.46,
+          "homeTeamPitchingEra": 3.43,
+          "homeBullpenEra": 3.45,
           "awayPitcherApiEra": 3.72,
           "awayPitcherRecentEra": 4.81,
           "awayTeamPitchingEra": 4.3,
@@ -50534,7 +50538,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:53.124205+00:00"
+      "recordedAt": "2026-07-28T03:34:40.043745+00:00"
     },
     "401816381": {
       "eventId": "401816381",
@@ -50561,8 +50565,8 @@
         "awayPower": 0.41220440857142865,
         "homeInjuryLoad": 2.3,
         "awayInjuryLoad": 1.15,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 1,
+        "awayRest": 1,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -50573,7 +50577,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -50591,8 +50595,8 @@
           "homeBullpenEra": 4.33,
           "awayPitcherApiEra": 3.98,
           "awayPitcherRecentEra": 5.0,
-          "awayTeamPitchingEra": 4.36,
-          "awayBullpenEra": 4.39
+          "awayTeamPitchingEra": 4.35,
+          "awayBullpenEra": 4.38
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -50608,7 +50612,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:53.124205+00:00"
+      "recordedAt": "2026-07-28T03:34:40.043745+00:00"
     },
     "401816382": {
       "eventId": "401816382",
@@ -50701,8 +50705,8 @@
         "awayPower": 0.643819616,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 1,
+        "awayRest": 1,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -50713,7 +50717,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -50748,7 +50752,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:53.124205+00:00"
+      "recordedAt": "2026-07-28T03:34:40.043745+00:00"
     },
     "401815079": {
       "eventId": "401815079",
@@ -50889,8 +50893,8 @@
         "awayPower": 0.0,
         "homeInjuryLoad": 4.83,
         "awayInjuryLoad": 3.22,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 2,
+        "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -50901,7 +50905,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": false,
           "leagueMetrics": false,
@@ -50919,7 +50923,7 @@
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:14:05.911921+00:00"
+      "recordedAt": "2026-07-28T03:35:43.904204+00:00"
     },
     "401857113": {
       "eventId": "401857113",
@@ -50995,10 +50999,10 @@
         "awayPower": 0.4901704304205607,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 3.45,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 1,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 35.5,
         "impliedAway": 64.5,
         "hasLineup": true,
@@ -51007,7 +51011,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -51042,7 +51046,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:11:42.221996+00:00"
+      "recordedAt": "2026-07-28T03:33:35.290558+00:00"
     },
     "401901849": {
       "eventId": "401901849",
@@ -51069,10 +51073,10 @@
         "awayPower": 0.3811351499937694,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 1.15,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": 45.0,
         "impliedAway": 55.0,
         "hasLineup": true,
@@ -51081,7 +51085,7 @@
           "injuries": true,
           "espnPredictor": false,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -51116,7 +51120,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:01.630071+00:00"
+      "recordedAt": "2026-07-28T03:33:56.677800+00:00"
     },
     "401816363": {
       "eventId": "401816363",
@@ -51128,25 +51132,25 @@
       "predictedWinner": "Tampa Bay Rays",
       "predictedSide": "home",
       "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 63.1,
-      "rawConfidence": 63.1,
-      "rawHomeWinPct": 63.1,
+      "confidence": 63.4,
+      "rawConfidence": 63.4,
+      "rawHomeWinPct": 63.4,
       "probabilityMethod": "fitted",
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
       "features": {
         "league": "mlb",
-        "recordDiff": 0.0616,
+        "recordDiff": 0.0667,
         "splitDiff": 0.283,
         "homePower": 0.643819616,
-        "awayPower": 0.5256686966153846,
+        "awayPower": 0.5212616453333333,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 5.75,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -51155,7 +51159,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -51178,19 +51182,19 @@
         },
         "leagueMetrics": {
           "league": "mlb",
-          "runDiffEdge": -4.0,
+          "runDiffEdge": 0.0,
           "opsEdge": 0.008,
           "eraEdge": 0.35
         },
-        "trueHome": 63.1,
-        "trueAway": 36.9,
-        "confidence": 63.1,
-        "rawConfidence": 63.1,
-        "rawHomeWinPct": 63.1,
+        "trueHome": 63.4,
+        "trueAway": 36.6,
+        "confidence": 63.4,
+        "rawConfidence": 63.4,
+        "rawHomeWinPct": 63.4,
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:47.392151+00:00"
+      "recordedAt": "2026-07-28T03:34:35.144711+00:00"
     },
     "401816374": {
       "eventId": "401816374",
@@ -51217,10 +51221,10 @@
         "awayPower": 0.6922025508571429,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 5.75,
-        "homeRest": null,
-        "awayRest": null,
-        "homeBackToBack": false,
-        "awayBackToBack": false,
+        "homeRest": 0,
+        "awayRest": 0,
+        "homeBackToBack": true,
+        "awayBackToBack": true,
         "impliedHome": null,
         "impliedAway": null,
         "hasLineup": true,
@@ -51229,7 +51233,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -51241,14 +51245,14 @@
             "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
-          "homePitcherApiEra": 2.76,
+          "homePitcherApiEra": 2.7,
           "homePitcherRecentEra": 2.5,
-          "homeTeamPitchingEra": 4.55,
-          "homeBullpenEra": 4.6,
-          "awayPitcherApiEra": 5.11,
+          "homeTeamPitchingEra": 4.54,
+          "homeBullpenEra": 4.59,
+          "awayPitcherApiEra": 5.05,
           "awayPitcherRecentEra": 11.49,
-          "awayTeamPitchingEra": 3.44,
-          "awayBullpenEra": 3.46
+          "awayTeamPitchingEra": 3.43,
+          "awayBullpenEra": 3.45
         },
         "leagueMetrics": {
           "league": "mlb",
@@ -51264,7 +51268,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:47.392151+00:00"
+      "recordedAt": "2026-07-28T03:34:35.144711+00:00"
     },
     "401816379": {
       "eventId": "401816379",
@@ -51291,8 +51295,8 @@
         "awayPower": 0.7554227565283019,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
-        "homeRest": null,
-        "awayRest": null,
+        "homeRest": 1,
+        "awayRest": 1,
         "homeBackToBack": false,
         "awayBackToBack": false,
         "impliedHome": null,
@@ -51303,7 +51307,7 @@
           "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
-          "restData": false,
+          "restData": true,
           "scheduleFlags": true,
           "mlbPitching": true,
           "leagueMetrics": true,
@@ -51317,8 +51321,8 @@
           ],
           "homePitcherApiEra": 3.81,
           "homePitcherRecentEra": 6.43,
-          "homeTeamPitchingEra": 4.22,
-          "homeBullpenEra": 4.25,
+          "homeTeamPitchingEra": 4.24,
+          "homeBullpenEra": 4.27,
           "awayPitcherApiEra": 4.83,
           "awayPitcherRecentEra": 8.11,
           "awayTeamPitchingEra": 3.58,
@@ -51338,7 +51342,7 @@
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
-      "recordedAt": "2026-07-28T03:12:53.124205+00:00"
+      "recordedAt": "2026-07-28T03:34:40.043745+00:00"
     }
   }
 }

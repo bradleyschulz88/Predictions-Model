@@ -1,31 +1,31 @@
 {
-  "builtAt": "2026-07-28T03:15:59.045382+00:00",
+  "builtAt": "2026-07-28T03:37:35.748185+00:00",
   "thresholds": {
     "strong": 68,
     "lean": 57
   },
   "summary": {
-    "graded": 694,
-    "correct": 412,
+    "graded": 695,
+    "correct": 413,
     "winPct": 59.4,
-    "units": 4.286,
-    "roiPct": 0.6,
-    "pending": 133,
+    "units": 4.976,
+    "roiPct": 0.7,
+    "pending": 132,
     "featureCoverage": {
       "withFeatures": 827,
       "totalLogged": 827,
-      "withRestData": 467
+      "withRestData": 565
     },
     "avgOverconfidencePct": 16.6
   },
   "byLeague": {
     "mlb": {
-      "correct": 266,
-      "total": 483,
-      "units": -11.357,
-      "pending": 101,
-      "winPct": 55.1,
-      "roiPct": -2.4
+      "correct": 267,
+      "total": 484,
+      "units": -10.667,
+      "pending": 100,
+      "winPct": 55.2,
+      "roiPct": -2.2
     },
     "wnba": {
       "correct": 62,
@@ -60,10 +60,10 @@
       "winPct": 66.7
     },
     "lean_57+": {
-      "correct": 152,
-      "total": 300,
-      "units": -19.452,
-      "winPct": 50.7
+      "correct": 153,
+      "total": 301,
+      "units": -18.762,
+      "winPct": 50.8
     },
     "coin_<57": {
       "correct": 8,
@@ -89,10 +89,10 @@
     },
     {
       "confidenceRange": "60-64",
-      "picks": 143,
+      "picks": 144,
       "avgPredictedPct": 59.8,
-      "actualWinPct": 45.5,
-      "overconfidencePct": 14.3
+      "actualWinPct": 45.8,
+      "overconfidencePct": 14.0
     },
     {
       "confidenceRange": "65-69",
@@ -155,10 +155,10 @@
       },
       {
         "confidenceRange": "60-64",
-        "picks": 98,
-        "avgPredictedPct": 59.7,
-        "actualWinPct": 38.8,
-        "overconfidencePct": 20.9
+        "picks": 99,
+        "avgPredictedPct": 59.6,
+        "actualWinPct": 39.4,
+        "overconfidencePct": 20.2
       },
       {
         "confidenceRange": "65-69",
@@ -338,34 +338,34 @@
   },
   "coverageBreakdown": {
     "restData": {
-      "with": 462,
-      "without": 232,
-      "winsWith": 275,
-      "winsWithout": 137
+      "with": 487,
+      "without": 208,
+      "winsWith": 292,
+      "winsWithout": 121
     },
     "scheduleFlags": {
-      "with": 694,
+      "with": 695,
       "without": 0,
-      "winsWith": 412,
+      "winsWith": 413,
       "winsWithout": 0
     },
     "impliedOdds": {
-      "with": 488,
+      "with": 489,
       "without": 206,
-      "winsWith": 277,
+      "winsWith": 278,
       "winsWithout": 135
     },
     "lineup": {
-      "with": 694,
+      "with": 695,
       "without": 0,
-      "winsWith": 412,
+      "winsWith": 413,
       "winsWithout": 0
     },
     "espnPredictor": {
       "with": 92,
-      "without": 602,
+      "without": 603,
       "winsWith": 41,
-      "winsWithout": 371
+      "winsWithout": 372
     }
   },
   "calibrationParams": {
@@ -398,19 +398,19 @@
         "coin_<57": 0.95
       }
     },
-    "derivedFromGraded": 694
+    "derivedFromGraded": 695
   },
   "plattParams": {
     "fitted": {
       "mlb": {
         "a": 1.0,
         "b": 0.0,
-        "n": 25
+        "n": 26
       },
       "default": {
         "a": 1.0,
         "b": 0.0,
-        "n": 27
+        "n": 28
       },
       "afl": {
         "a": 1.0,

@@ -1,33 +1,33 @@
 {
-  "updatedAt": "2026-07-28T03:15:59.007227+00:00",
+  "updatedAt": "2026-07-28T03:37:35.718618+00:00",
   "summary": {
     "last7Days": {
-      "correct": 307,
-      "total": 508,
-      "pct": 60.4,
-      "units": 0.065,
-      "roiPct": 0.0,
+      "correct": 308,
+      "total": 509,
+      "pct": 60.5,
+      "units": 0.755,
+      "roiPct": 0.1,
       "pending": 50
     },
     "allTime": {
-      "correct": 412,
-      "total": 694,
+      "correct": 413,
+      "total": 695,
       "pct": 59.4,
-      "units": 4.286,
-      "roiPct": 0.6,
-      "pending": 133
+      "units": 4.976,
+      "roiPct": 0.7,
+      "pending": 132
     },
     "byLeague": {
       "mlb": {
-        "correct": 208,
-        "total": 367,
-        "pct": 56.7,
-        "units": -0.288,
-        "roiPct": -0.1,
+        "correct": 209,
+        "total": 368,
+        "pct": 56.8,
+        "units": 0.402,
+        "roiPct": 0.1,
         "pending": 0,
-        "priced": 319,
+        "priced": 320,
         "unpriced": 48,
-        "pricedPct": 86.9
+        "pricedPct": 87.0
       },
       "afl": {
         "correct": 30,
@@ -66,19 +66,44 @@
       }
     },
     "streak": {
-      "current": 2,
+      "current": 1,
       "type": "win",
       "bestWin": 6,
       "bestLoss": 4
     },
     "closingLineValue": {
-      "picks": 1,
+      "picks": 2,
       "avgPct": 0.0,
       "beatCloseP": 0.0,
       "note": "Closing line value predicts long-run profitability better than win rate."
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816287",
+      "league": "mlb",
+      "scheduleDate": "2026-07-27",
+      "matchup": "New York Yankees @ Chicago White Sox",
+      "predicted": "New York Yankees",
+      "predictedSide": "away",
+      "outcomeLabel": "New York Yankees to win",
+      "confidence": 57.9,
+      "rawConfidence": 57.9,
+      "rawHomeWinPct": 42.1,
+      "probabilityMethod": "fitted",
+      "pickOdds": -145,
+      "openingOdds": -145,
+      "openingSide": "away",
+      "clvPct": 0.0,
+      "status": "graded",
+      "actual": "New York Yankees",
+      "correct": true,
+      "units": 0.69,
+      "homeScore": "5",
+      "awayScore": "9",
+      "gradedAt": "2026-07-28T03:37:06.227849+00:00",
+      "date": "2026-07-27"
+    },
     {
       "eventId": "401816281",
       "league": "mlb",
@@ -1970,25 +1995,6 @@
       "homeScore": "2",
       "awayScore": "12",
       "gradedAt": "2026-07-22T05:05:26.019720+00:00",
-      "date": "2026-07-21"
-    },
-    {
-      "eventId": "401816202",
-      "league": "mlb",
-      "scheduleDate": "2026-07-21",
-      "matchup": "Los Angeles Dodgers @ Philadelphia Phillies",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "away",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 72.2,
-      "pickOdds": -105,
-      "status": "graded",
-      "actual": "Los Angeles Dodgers",
-      "correct": true,
-      "units": 0.952,
-      "homeScore": "1",
-      "awayScore": "2",
-      "gradedAt": "2026-07-22T05:05:26.019701+00:00",
       "date": "2026-07-21"
     }
   ],
@@ -16226,15 +16232,21 @@
       "predicted": "New York Yankees",
       "predictedSide": "away",
       "outcomeLabel": "New York Yankees to win",
-      "confidence": 58.7,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "confidence": 57.9,
+      "rawConfidence": 57.9,
+      "rawHomeWinPct": 42.1,
+      "probabilityMethod": "fitted",
+      "pickOdds": -145,
+      "openingOdds": -145,
+      "openingSide": "away",
+      "clvPct": 0.0,
+      "status": "graded",
+      "actual": "New York Yankees",
+      "correct": true,
+      "units": 0.69,
+      "homeScore": "5",
+      "awayScore": "9",
+      "gradedAt": "2026-07-28T03:37:06.227849+00:00",
       "date": "2026-07-27"
     },
     "401816286": {
