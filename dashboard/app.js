@@ -3893,14 +3893,25 @@ function pluralise(count, word) {
 function renderLeagueTile(league) {
   const best = league.best;
   const ev = best?.evPct;
-  const line = league.pickCount
-    ? best
-      ? `${escapeHtml(best.pick || best.outcomeLabel || "Pick")}`
-      : "No pick"
-    : "No games";
+  // Headline follows the games, not the picks -- a league with 3 games and no
+  // publishable pick was saying "No games" directly under "3 games".
+  const line = league.pickCount && best
+    ? `${escapeHtml(best.pick || best.outcomeLabel || "Pick")}`
+    : league.gameCount
+      ? "No pick"
+      : "No games";
   const picks = pluralise(league.pickCount || 0, "pick");
+  // "No games" reads as a broken feed when a league is simply not playing.
+  // Say which it is: a failed build and an empty calendar are different facts.
+  const emptyReason = league.error
+    ? "data unavailable"
+    : league.degraded?.length
+      ? `partial data · ${league.degraded[0]} down`
+      : league.gameCount
+        ? "no publishable picks"
+        : "no fixtures scheduled";
   const meta = !league.pickCount
-    ? "no games today"
+    ? emptyReason
     : ev != null
       ? `${formatEv(ev)} EV · ${picks}`
       : `unpriced · ${picks}`;

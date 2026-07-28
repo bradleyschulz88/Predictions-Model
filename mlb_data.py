@@ -135,6 +135,16 @@ def merge_sbr_odds_into_games(
     if not odds_slug:
         return
 
+    # Odds are a garnish on the schedule, never a precondition for it. Parsing
+    # has to sit inside the guard alongside fetching: SBR serves a valid page
+    # with no `oddsTables` whenever a league has no priced slate, and
+    # get_game_rows raises on that. Escaping here aborted the whole payload and
+    # threw away a schedule that had already been fetched and parsed -- which is
+    # why NFL/NBA/WNBA/EPL published zero games on days SBR had no board, while
+    # MLB never noticed because SBR always prices MLB.
+    odds_by_matchup: dict[str, list[dict[str, Any]]] = {}
+    view_types_by_matchup: dict[str, list[str]] = {}
+
     try:
         page_props = get_page_props(
             build_odds_url(date_value, odds_slug=odds_slug),
@@ -142,13 +152,11 @@ def merge_sbr_odds_into_games(
             retry_delay=retry_delay,
             verify_ssl=verify_ssl,
         )
+        rows = get_game_rows(page_props)
     except SBRClientError:
         return
 
-    odds_by_matchup: dict[str, list[dict[str, Any]]] = {}
-    view_types_by_matchup: dict[str, list[str]] = {}
-
-    for row in get_game_rows(page_props):
+    for row in rows:
         summary = game_summary(row)
         key = matchup_key(summary.get("awayTeam"), summary.get("homeTeam"))
         odds_by_matchup[key] = collect_odds_lines(row, view_filter=view_filter)
@@ -379,46 +387,73 @@ def fetch_dashboard_data(
     )
     games = parse_scoreboard(scoreboard, league=league)
 
+    # Once the scoreboard has parsed, the schedule is the product and every step
+    # below only decorates it. A provider that is down must cost us its own
+    # contribution and nothing else -- an exception escaping any of these used to
+    # discard the whole slate and publish "0 games" for a league that had a full
+    # card. Failures are recorded on the payload so a silent degradation still
+    # shows up in the coverage report rather than looking like an empty day.
+    degraded: list[str] = []
+
+    def _optional(step: str, run) -> None:
+        try:
+            run()
+        except Exception as exc:  # noqa: BLE001 - deliberately broad; see above
+            print(f"Warning: {league} {date_value}: {step} unavailable: {exc}", flush=True)
+            degraded.append(step)
+
     if include_enrichment:
-        schedule_context = fetch_rolling_schedule_games(
-            league,
-            date_value,
-            lookback_days=7,
-            current_games=games,
-            retries=retries,
-            retry_delay=retry_delay,
-            verify_ssl=verify_ssl,
+        schedule_context: list[dict[str, Any]] = []
+
+        def _schedule_context() -> None:
+            nonlocal schedule_context
+            schedule_context = fetch_rolling_schedule_games(
+                league,
+                date_value,
+                lookback_days=7,
+                current_games=games,
+                retries=retries,
+                retry_delay=retry_delay,
+                verify_ssl=verify_ssl,
+            )
+
+        _optional("schedule context", _schedule_context)
+        _optional(
+            "ESPN enrichment",
+            lambda: enrich_games(games, retries=retries, retry_delay=retry_delay, verify_ssl=verify_ssl),
         )
-        enrich_games(
-            games,
-            retries=retries,
-            retry_delay=retry_delay,
-            verify_ssl=verify_ssl,
-        )
-        enrich_games_with_providers(
-            games,
-            league=league,
-            schedule_context_games=schedule_context,
-            retries=retries,
-            retry_delay=retry_delay,
-            verify_ssl=verify_ssl,
+        _optional(
+            "provider enrichment",
+            lambda: enrich_games_with_providers(
+                games,
+                league=league,
+                schedule_context_games=schedule_context,
+                retries=retries,
+                retry_delay=retry_delay,
+                verify_ssl=verify_ssl,
+            ),
         )
         clear_rolling_schedule_cache()
 
     if include_odds and league_config.supports_sbr_odds:
-        merge_sbr_odds_into_games(
-            games,
-            league=league,
-            date_value=date_value,
-            view_filter=view_filter,
-            retries=retries,
-            retry_delay=retry_delay,
-            verify_ssl=verify_ssl,
+        _optional(
+            "SBR odds",
+            lambda: merge_sbr_odds_into_games(
+                games,
+                league=league,
+                date_value=date_value,
+                view_filter=view_filter,
+                retries=retries,
+                retry_delay=retry_delay,
+                verify_ssl=verify_ssl,
+            ),
         )
 
-    ensure_espn_odds_on_games(games)
+    _optional("ESPN odds", lambda: ensure_espn_odds_on_games(games))
 
     payload = build_dashboard_payload_from_espn_games(games, url=url, league=league)
+    if degraded:
+        payload["degraded"] = degraded
     payload["scheduleDate"] = date_value
     payload["scheduleTimezone"] = get_schedule_timezone(league)
     payload["defaultScheduleDate"] = default_game_date(league)
