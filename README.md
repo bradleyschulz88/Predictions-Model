@@ -24,9 +24,10 @@ Data is refreshed **hourly** by GitHub Actions. To rebuild immediately:
 ## Setup
 
 ```bash
-cd MLB
-python -m unittest discover -s tests -v
+python -m unittest discover -s tests -q
 ```
+
+Tests are hermetic — they never reach the network and run in about a second.
 
 ## Dashboard
 
@@ -64,14 +65,56 @@ python mlb_sbr.py dashboard --source espn --no-odds --insecure
 
 The dashboard defaults to **tomorrow's date** and lists all scheduled MLB games with time, venue, broadcast, and records. Each game includes a **win prediction** ranked from most likely to least likely.
 
-Predictions combine:
-- Season and home/road records (ESPN)
-- Probable starting pitchers and ERA (ESPN)
-- ESPN Matchup Predictor, last-five form, head-to-head series, injuries, and weather (ESPN summary API)
-- Home-field advantage
-- Moneyline odds when available (SportsBookReview)
-
 Each game shows a **Why they win** section with bullet-point reasoning and data sources.
+
+## The model
+
+Win probabilities come from a logistic model whose coefficients are **fitted from
+graded outcomes**, not hand-tuned. Two inputs survive walk-forward feature
+selection:
+
+| feature | what it is |
+|---|---|
+| `strengthDiff` | one team-quality score collapsed from season record, home/road splits and power rating |
+| `marketLogit` | de-vigged consensus moneyline, when odds exist |
+
+Out-of-sample walk-forward on 675 graded games:
+
+| forecaster | log loss | Brier |
+|---|---|---|
+| **fitted model** | **0.6428** | **0.2272** |
+| market (de-vigged) | 0.6563 | 0.2336 |
+| constant home base rate | 0.6931 | 0.2500 |
+
+Everything else the pipeline gathers — starting pitching, bullpen ERA, rest,
+injuries, back-to-back, schedule fatigue, weather, head-to-head — is still shown
+as reasoning but is **not allowed to move the probability**, because none of it
+improved out-of-sample accuracy at this sample size. Starting pitching matters in
+baseball, but the market has already priced it. Re-run the ablation as the log
+grows; a feature ships when it beats its own absence, not before.
+
+Raw accuracy is ~60%, and that is close to the ceiling: published MLB
+binary-prediction accuracy tops out around 55-60%. The value is in probabilities
+that mean what they say, not in a higher hit rate.
+
+### Model commands
+
+```bash
+# Fit coefficients from graded outcomes and write docs/data/model_weights.json
+python model_fit.py
+
+# Walk-forward score of each nested feature set
+python model_fit.py --ablate
+
+# Score the model against market and naive baselines
+python scripts/backtest_model.py --evaluate
+
+# Fail if the model regressed against docs/data/model_baseline.json
+python scripts/check_regression.py
+```
+
+Predictions fall back to a hand-tuned heuristic when no fitted weights exist;
+`prediction.probabilityMethod` records which path produced each number.
 
 ## CLI
 
