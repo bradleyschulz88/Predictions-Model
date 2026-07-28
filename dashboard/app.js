@@ -316,6 +316,18 @@ const SPORT_LABELS = {
   afl: "AFL",
 };
 
+// Tile heads are narrow; these have to survive next to a game count on one line.
+const SPORT_LABELS_SHORT = {
+  mlb: "MLB",
+  nfl: "NFL",
+  nba: "NBA",
+  nbasummer: "NBA Summer",
+  wnba: "WNBA",
+  worldcup: "World Cup",
+  epl: "EPL",
+  afl: "AFL",
+};
+
 let refreshTimer = null;
 let liveScoresTimer = null;
 let loadingDashboard = false;
@@ -1756,6 +1768,25 @@ function isBetLoggedForGame(eventId) {
   );
 }
 
+// The sport lives in the hash so a league is linkable and the browser back
+// button walks back to the landing page instead of leaving the site.
+const SPORT_HASHES = new Set(["overview", "mlb", "nfl", "nba", "nbasummer", "wnba", "worldcup", "epl", "afl"]);
+
+function sportFromHash() {
+  const value = window.location.hash.replace(/^#/, "");
+  return SPORT_HASHES.has(value) ? value : null;
+}
+
+function updateSportHash(sport) {
+  if (window.location.hash.startsWith("#game-")) return;
+  const view = viewFromHash();
+  if (view && view !== "predictions") return; // a view hash owns the URL
+  const next = `#${sport}`;
+  if (window.location.hash !== next) {
+    history.replaceState(null, "", `${window.location.pathname}${window.location.search}${next}`);
+  }
+}
+
 function viewFromHash() {
   const hash = window.location.hash;
   if (hash === "#my-bets") return "my-bets";
@@ -1768,12 +1799,13 @@ function viewFromHash() {
 function updateViewHash(view) {
   if (window.location.hash.startsWith("#game-")) return;
   const hashMap = {
-    predictions: "#predictions",
     accuracy: "#accuracy",
     "my-bets": "#my-bets",
     "model-tracker": "#model-tracker",
   };
-  const next = hashMap[view] || "#predictions";
+  // Predictions is the sport's own view, so it keeps the sport in the URL --
+  // otherwise coming back from Accuracy would forget which league you were on.
+  const next = hashMap[view] || `#${sportSelect?.value || "overview"}`;
   const nextUrl = `${window.location.pathname}${window.location.search}${next}`;
   const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
   if (currentUrl !== nextUrl) {
@@ -1848,20 +1880,61 @@ function renderCalibrationChart(buckets) {
   `;
 }
 
+// Per-league record on the all-sports view. ROI is deliberately blank rather
+// than 0.0% where a league has no odds source -- "cannot be measured" and
+// "broke even" are different answers.
+function renderLeagueAccuracyTable(summary) {
+  const byLeague = summary?.byLeague || {};
+  const rows = Object.entries(byLeague)
+    .filter(([, stats]) => (stats?.total || 0) > 0)
+    .sort((a, b) => (b[1].total || 0) - (a[1].total || 0));
+  if (!rows.length) return "";
+
+  const body = rows
+    .map(([league, stats]) => {
+      const roi =
+        stats.roiNote || stats.roiPct == null
+          ? `<span class="lineup-note">${escapeHtml(stats.roiNote || "no price")}</span>`
+          : `<span class="${stats.roiPct > 0 ? "ev-positive" : stats.roiPct < 0 ? "ev-negative" : ""}">${
+              stats.roiPct > 0 ? "+" : ""
+            }${stats.roiPct}%</span>`;
+      return `
+        <tr>
+          <td class="l">${escapeHtml(SPORT_LABELS[league] || league)}</td>
+          <td>${escapeHtml(formatAccuracyRecord(stats))}</td>
+          <td>${stats.pct ?? "—"}%</td>
+          <td>${roi}</td>
+        </tr>`;
+    })
+    .join("");
+
+  return `
+    <div class="today-scroll">
+      <table class="today-table">
+        <thead><tr><th class="l">League</th><th>Record</th><th>Hit rate</th><th>ROI</th></tr></thead>
+        <tbody>${body}</tbody>
+      </table>
+    </div>`;
+}
+
 function renderAccuracyView() {
   if (!accuracyViewEl) return;
 
+  // Today is the default landing state, so "pick a league first" would have made
+  // the Accuracy tab a dead end on arrival. Everything on this page except the
+  // per-league block and the recent list is already cross-sport, so the
+  // all-sports case is the same page with a league breakdown in place of one
+  // league's card.
   const sport = sportSelect.value;
-  if (sport === "overview") {
-    accuracyViewEl.innerHTML = `<div class="accuracy-empty"><strong>Pick a league</strong>Select a sport to view model accuracy and calibration.</div>`;
-    return;
-  }
+  const isOverview = sport === "overview";
 
   const summary = accuracyData?.summary;
-  const leagueStats = summary?.byLeague?.[sport];
+  const leagueStats = isOverview ? null : summary?.byLeague?.[sport];
   const last7 = summary?.last7Days || {};
   const allTime = summary?.allTime || {};
-  const recent = (accuracyData?.recentResults || []).filter((item) => item.league === sport).slice(0, 10);
+  const recent = (accuracyData?.recentResults || [])
+    .filter((item) => isOverview || item.league === sport)
+    .slice(0, 10);
   const calSummary = calibrationData?.summary;
   const calBuckets = (calibrationData?.calibration || []).filter((row) => row.picks >= 3);
 
@@ -1883,7 +1956,7 @@ function renderAccuracyView() {
           return `<li><span class="${resultClass}">${resultLabel}</span> ${item.matchup || item.outcomeLabel || "Pick"} · ${item.confidence ?? "—"}% · ${item.scheduleDate || item.date || ""}</li>`;
         })
         .join("")}</ul>`
-    : `<p class="lineup-note">No recent graded picks for ${SPORT_LABELS[sport] || sport}.</p>`;
+    : `<p class="lineup-note">No recent graded picks for ${isOverview ? "any league" : SPORT_LABELS[sport] || sport}.</p>`;
 
   // A hit rate with no price behind it is not comparable to one with a price.
   // AFL and the World Cup have no odds source, so saying "0.0% ROI" reads as
@@ -1904,7 +1977,7 @@ function renderAccuracyView() {
 
   accuracyViewEl.innerHTML = `
     <section class="accuracy-hero">
-      <h2 class="section-title">Model accuracy · ${escapeHtml(SPORT_LABELS[sport] || sport)}</h2>
+      <h2 class="section-title">Model accuracy · ${escapeHtml(isOverview ? "All sports" : SPORT_LABELS[sport] || sport)}</h2>
       <div class="accuracy-summary-grid">
         <div class="accuracy-metric">
           <span class="accuracy-metric-label">Hit rate (all time)</span>
@@ -1925,6 +1998,7 @@ function renderAccuracyView() {
         </div>
         ${leagueBlock}
       </div>
+      ${isOverview ? renderLeagueAccuracyTable(summary) : ""}
     </section>
     ${renderModelVsMarket()}
     ${renderClosingLineValue(summary)}
@@ -3038,6 +3112,11 @@ function updateDateDisplayCount(count) {
 function syncDatePickerUI() {
   const league = sportSelect.value;
   if (league === "overview") {
+    // Today is one board across every league on its own schedule, so a date
+    // stepper and a per-game confidence filter have nothing to act on. Hide
+    // them rather than leave dead controls on the front door.
+    dateFieldEl?.classList.add("hidden");
+    filterPanelDesktopEl?.classList.add("hidden");
     if (dateDisplayBtn) {
       dateDisplayBtn.disabled = true;
       dateDisplayBtn.textContent = "All sports view";
@@ -3048,6 +3127,9 @@ function syncDatePickerUI() {
     updateDateNavButtons();
     return;
   }
+
+  dateFieldEl?.classList.remove("hidden");
+  filterPanelDesktopEl?.classList.remove("hidden");
 
   const iso = activeScheduleDate || getSelectedDate() || defaultDateForSport(league);
   const dates = availableDatesForLeague(league);
@@ -3376,13 +3458,62 @@ function formSparkline(results) {
   return `<span class="sparkline-chars">${chars}</span>`;
 }
 
+// The market's own view of the same game, when odds exist.
+function marketSplit(prediction) {
+  const consensus = prediction?.probabilities?.implied?.consensus;
+  if (!consensus) return null;
+  const home = Number(consensus.homePct);
+  const away = Number(consensus.awayPct);
+  if (!Number.isFinite(home) || !Number.isFinite(away)) return null;
+  const draw = Number.isFinite(Number(consensus.drawPct)) ? Number(consensus.drawPct) : 0;
+  return { home, away, draw };
+}
+
+// Model on top, market directly beneath on the same scale. The offset between
+// the two boundaries is the edge -- the only thing on the card worth acting on.
+// An overlaid tick was tried first and read as a third segment, which is
+// exactly the wrong reading.
 function renderScoreboardProbBar(prediction) {
   const homePct = Number(prediction?.homeWinPct ?? 50);
   const awayPct = Number(prediction?.awayWinPct ?? 50);
-  const total = homePct + awayPct || 100;
-  const homeWidth = Math.round((homePct / total) * 100);
-  const awayWidth = 100 - homeWidth;
-  return `<div class="scoreboard-prob-bar" aria-hidden="true"><span class="scoreboard-prob-away" style="width:${awayWidth}%"></span><span class="scoreboard-prob-home" style="width:${homeWidth}%"></span></div>`;
+  const drawPct = Number(prediction?.drawWinPct ?? 0) || 0;
+  const total = homePct + awayPct + drawPct || 100;
+
+  const seg = (pct, cls) =>
+    pct > 0 ? `<span class="${cls}" style="width:${(pct / total) * 100}%"></span>` : "";
+
+  const model = `<div class="prob-rail" aria-hidden="true">
+      ${seg(homePct, "prob-seg prob-home")}${seg(drawPct, "prob-seg prob-draw")}${seg(awayPct, "prob-seg prob-away")}
+    </div>`;
+
+  // A bar with no numbers is decoration. The label is what a screen reader
+  // hears and what a hover reveals, so the split is never colour-only.
+  const split = (label, home, draw, away) =>
+    `${label} home ${round1(home)}%${draw ? `, draw ${round1(draw)}%` : ""}, away ${round1(away)}%`;
+
+  const market = marketSplit(prediction);
+  if (!market) {
+    const label = split("Model", homePct, drawPct, awayPct);
+    return `<div class="prob-rails" role="img" aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}">${model}</div>`;
+  }
+
+  const marketTotal = market.home + market.away + market.draw || 100;
+  const marketSeg = (pct, cls) =>
+    pct > 0 ? `<span class="${cls}" style="width:${(pct / marketTotal) * 100}%"></span>` : "";
+
+  const label = `${split("Model", homePct, drawPct, awayPct)}. ${split("Market", market.home, market.draw, market.away)}.`;
+
+  return `<div class="prob-rails" role="img" aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}">
+      ${model}
+      <div class="prob-rail prob-rail-market" aria-hidden="true">
+        ${marketSeg(market.home, "prob-seg prob-mkt")}${marketSeg(market.draw, "prob-seg prob-mkt-mid")}${marketSeg(market.away, "prob-seg prob-mkt-away")}
+      </div>
+    </div>`;
+}
+
+function round1(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? Math.round(number * 10) / 10 : 0;
 }
 
 function renderCoverageChips(game) {
@@ -3678,56 +3809,189 @@ function renderStats(payload, visibleGames, { topPick, gameCount } = {}) {
   });
 }
 
+// The landing page. One question: is there anything worth backing right now?
+// Ranked by expected value, not confidence -- an 89% pick at a price that
+// already assumes 89% is not a bet, and the same three points of edge pays
+// +4.0% per unit at -300 and +10.5% at +250.
+// The model publishes American odds; formatOddsDisplay works in decimal, so
+// convert before handing over rather than printing a raw number and ignoring
+// the user's chosen odds format.
+function formatAmericanOdds(american) {
+  const value = Number(american);
+  if (!Number.isFinite(value) || value === 0) return "—";
+  const decimal = value < 0 ? 1 + 100 / Math.abs(value) : 1 + value / 100;
+  return formatOddsDisplay(decimal);
+}
+
+function evClass(evPct) {
+  if (evPct == null) return "";
+  return evPct > 0 ? "ev-positive" : evPct < 0 ? "ev-negative" : "";
+}
+
+function formatEv(evPct) {
+  if (evPct == null) return "&mdash;";
+  return `${evPct > 0 ? "+" : ""}${evPct.toFixed(1)}%`;
+}
+
+function renderPlayRail(play) {
+  const home = Number(play.homeWinPct ?? 50);
+  const away = Number(play.awayWinPct ?? 50);
+  const draw = Number(play.drawWinPct ?? 0) || 0;
+  const total = home + away + draw || 100;
+  const seg = (pct, cls) =>
+    pct > 0 ? `<span class="${cls}" style="width:${(pct / total) * 100}%"></span>` : "";
+  return `<div class="prob-rail" aria-hidden="true">${seg(home, "prob-seg prob-home")}${seg(draw, "prob-seg prob-draw")}${seg(away, "prob-seg prob-away")}</div>`;
+}
+
+function renderPlayRow(play) {
+  const value = play.value || {};
+  const price = value.odds != null ? formatAmericanOdds(value.odds) : "no price";
+  const detail = [
+    play.confidence != null ? `model ${play.confidence}%` : null,
+    play.marketPct != null ? `market ${play.marketPct}%` : null,
+    value.odds != null ? `best ${price}` : null,
+    value.breakEvenPct != null ? `break-even ${value.breakEvenPct}%` : null,
+    value.kellyPct ? `stake ${value.kellyPct}%` : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  return `
+    <article class="play-row" data-league="${escapeHtml(play.league)}">
+      <div class="play-body">
+        <div class="play-head">
+          <span class="play-league">${escapeHtml(play.leagueLabel || play.league)}</span>
+          <span class="play-pick">${escapeHtml(play.pick || play.outcomeLabel || "Pick")}</span>
+          <span class="play-match">${escapeHtml(play.matchup || "")}</span>
+        </div>
+        ${renderPlayRail(play)}
+        <span class="play-detail">${escapeHtml(detail)}</span>
+      </div>
+      <div class="play-value">
+        <span class="play-ev ${evClass(play.evPct)}">${formatEv(play.evPct)}</span>
+        <span class="play-ev-key">EV per unit</span>
+      </div>
+    </article>`;
+}
+
+// Out-of-season leagues would otherwise sit at the top of the grid on their
+// fixed order, pushing the leagues that actually have a board below the fold.
+function sortedLeagueTiles(leagues) {
+  return [...(leagues || [])].sort((a, b) => {
+    const rank = (league) =>
+      league.best?.evPct != null ? 0 : league.pickCount ? 1 : league.gameCount ? 2 : 3;
+    const byRank = rank(a) - rank(b);
+    if (byRank) return byRank;
+    return (b.best?.evPct ?? b.gameCount ?? 0) - (a.best?.evPct ?? a.gameCount ?? 0);
+  });
+}
+
+function pluralise(count, word) {
+  return `${count} ${word}${count === 1 ? "" : "s"}`;
+}
+
+function renderLeagueTile(league) {
+  const best = league.best;
+  const ev = best?.evPct;
+  const line = league.pickCount
+    ? best
+      ? `${escapeHtml(best.pick || best.outcomeLabel || "Pick")}`
+      : "No pick"
+    : "No games";
+  const picks = pluralise(league.pickCount || 0, "pick");
+  const meta = !league.pickCount
+    ? "no games today"
+    : ev != null
+      ? `${formatEv(ev)} EV · ${picks}`
+      : `unpriced · ${picks}`;
+
+  // The short name keeps the tile head on one line -- "English Premier League"
+  // wrapped and pushed the game count onto its own row.
+  const name = SPORT_LABELS_SHORT[league.id] || league.label || league.id;
+
+  return `
+    <button type="button" class="league-tile overview-jump${league.pickCount ? "" : " is-empty"}" data-league="${escapeHtml(league.id)}">
+      <span class="tile-head">
+        <span class="tile-league">${escapeHtml(name)}</span>
+        <span class="tile-games">${pluralise(league.gameCount || 0, "game")}</span>
+      </span>
+      ${best ? renderPlayRail(best) : `<span class="prob-rail" aria-hidden="true"></span>`}
+      <span class="tile-pick">${line}</span>
+      <span class="tile-meta ${evClass(ev)}">${meta}</span>
+    </button>`;
+}
+
 function renderOverview() {
   if (!overviewData) {
     gamesEl.innerHTML = `<div class="empty-state">Overview not loaded yet.</div>`;
     return;
   }
 
+  const summary = overviewData.summary || {};
   const totalGames = (overviewData.leagues || []).reduce((sum, league) => sum + (league.gameCount || 0), 0);
+
+  const worth = overviewData.worthBacking || [];
+  const passed = overviewData.passedOn || [];
+  const unpriced = overviewData.unpriced || [];
+  const allPlays = worth.concat(passed, unpriced);
+
+  // The strip counts picks, so give it every pick on the board rather than an
+  // empty list -- otherwise "20 games, 0 picks" reads as a broken build.
   renderStats(
-    {
-      gameCount: totalGames,
-      topPick: overviewData.topPicksOverall?.[0]?.pick,
-      fetchedAt: overviewData.builtAt,
-      leagueLabel: "All sports",
-    },
-    [],
-    { gameCount: totalGames }
+    { gameCount: totalGames, fetchedAt: overviewData.builtAt, leagueLabel: "All sports" },
+    allPlays.map((play) => ({ prediction: { confidence: play.confidence, outcomeLabel: play.outcomeLabel } })),
+    { gameCount: totalGames, topPick: worth[0]?.outcomeLabel || allPlays[0]?.outcomeLabel }
   );
 
-  const leagueCards = (overviewData.leagues || [])
-    .map(
-      (league) => `
-      <article class="overview-card">
-        <h3>${league.label}</h3>
-        <p>${league.gameCount} games · ${league.scheduleDate || "—"}</p>
-        <p class="overview-pick">${league.topPick || "No pick yet"}${league.topConfidence ? ` · ${league.topConfidence}%` : ""}</p>
-        <button type="button" class="share-btn overview-jump" data-league="${league.id}">View league</button>
-      </article>
-    `
-    )
-    .join("");
+  // Most days this list is short and some days it is empty. Saying so is more
+  // useful than padding it with picks the price does not justify.
+  const worthHtml = worth.length
+    ? `<div class="plays">${worth.map(renderPlayRow).join("")}</div>`
+    : `<p class="lineup-note play-empty">Nothing clears the bar today. Every priced pick sits at or below what the market already implies, so there is no edge to take.</p>`;
 
-  const topOverall = (overviewData.topPicksOverall || [])
-    .map(
-      (pick) => `
-      <article class="top-pick-card">
-        <span class="rank-badge">${pick.leagueLabel}</span>
-        <strong>${pick.pick || pick.matchup}</strong>
-        <span class="top-pick-meta">${pick.confidence}% · ${pick.confidenceLabel || ""}</span>
-      </article>
-    `
-    )
-    .join("");
+  const playRow = (play) => `
+      <tr>
+        <td class="l">${escapeHtml(play.leagueLabel || play.league)} · ${escapeHtml(play.matchup || "")}</td>
+        <td>${play.confidence != null ? `${play.confidence}%` : "&mdash;"}</td>
+        <td class="c-market">${play.marketPct != null ? `${play.marketPct}%` : "&mdash;"}</td>
+        <td class="c-price">${play.value?.odds != null ? formatAmericanOdds(play.value.odds) : "&mdash;"}</td>
+        <td class="${evClass(play.evPct)}">${play.evPct != null ? formatEv(play.evPct) : "&mdash;"}</td>
+      </tr>`;
 
-  topPicksEl.classList.remove("hidden");
-  topPicksEl.innerHTML = `<h2 class="top-picks-title">Best picks across all sports</h2><div class="top-picks-grid">${topOverall || "<p>No picks yet.</p>"}</div>`;
+  const playTable = (rows) => `
+      <div class="today-scroll">
+        <table class="today-table">
+          <thead><tr><th class="l">Pick</th><th>Model</th><th class="c-market">Market</th><th class="c-price">Price</th><th>EV</th></tr></thead>
+          <tbody>${rows.map(playRow).join("")}</tbody>
+        </table>
+      </div>`;
+
+  topPicksEl.classList.add("hidden");
 
   gamesEl.innerHTML = `
-    <section class="overview-section">
-      <h2>Leagues at a glance</h2>
-      <div class="overview-grid">${leagueCards}</div>
+    <section class="today">
+      <div class="today-strip">
+        <div class="today-stat"><span class="today-k">Worth backing</span><span class="today-v ${summary.positiveEv ? "ev-positive" : ""}">${summary.positiveEv ?? 0}</span><span class="today-n">of ${summary.priced ?? 0} priced picks</span></div>
+        <div class="today-stat"><span class="today-k">Best EV</span><span class="today-v ${evClass(summary.bestEvPct)}">${formatEv(summary.bestEvPct)}</span><span class="today-n">per unit staked</span></div>
+        <div class="today-stat"><span class="today-k">Suggested</span><span class="today-v">${(summary.suggestedUnits ?? 0).toFixed(2)}u</span><span class="today-n">quarter Kelly total</span></div>
+        <div class="today-stat"><span class="today-k">Unpriced</span><span class="today-v">${summary.unpriced ?? 0}</span><span class="today-n">no EV available</span></div>
+      </div>
+
+      <h2 class="today-h">Worth backing</h2>
+      ${worthHtml}
+
+      ${passed.length ? `
+      <h2 class="today-h">Passed on</h2>
+      <p class="lineup-note">The model has a pick; the price does not justify it.</p>
+      ${playTable(passed)}` : ""}
+
+      ${unpriced.length ? `
+      <h2 class="today-h">No price yet</h2>
+      <p class="lineup-note">The model has a pick but no book is quoting it, so there is no edge to measure. Confidence alone is not a bet.</p>
+      ${playTable(unpriced)}` : ""}
+
+      <h2 class="today-h">Jump to a sport</h2>
+      <div class="league-tiles">${sortedLeagueTiles(overviewData.leagues).map(renderLeagueTile).join("")}</div>
     </section>
   `;
 
@@ -4253,6 +4517,18 @@ function renderGames(games) {
     })
     .join("");
 
+  // Name the two rails once, at the top, rather than repeating a key on every
+  // card -- the bars are meaningless until you know which is which.
+  if (visible.some((game) => marketSplit(game.prediction))) {
+    gamesEl.insertAdjacentHTML(
+      "afterbegin",
+      `<p class="prob-legend">
+        <span class="prob-legend-key"><span class="prob-legend-swatch is-model" aria-hidden="true"></span>Model — home / away</span>
+        <span class="prob-legend-key"><span class="prob-legend-swatch is-market" aria-hidden="true"></span>Market — the de-vigged betting line</span>
+      </p>`
+    );
+  }
+
   gamesEl.querySelectorAll(".track-btn[data-event-id]").forEach((button) => {
     button.addEventListener("click", (event) => {
       event.preventDefault();
@@ -4392,16 +4668,30 @@ function parseEspnScoreboard(data, league) {
   return games;
 }
 
+async function fetchEspnJson(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return null;
+    return await response.json();
+  } catch {
+    return null;
+  }
+}
+
 async function fetchEspnSchedule(league, dateValue) {
   const espnPath = leagueMeta(league)?.espnPath || ESPN_PATHS[league];
   if (!espnPath || !dateValue) return null;
 
   const dates = dateValue.replace(/-/g, "");
   const url = `https://site.api.espn.com/apis/site/v2/sports/${espnPath}/scoreboard?dates=${dates}`;
-  const response = await fetch(url);
-  if (!response.ok) return null;
 
-  const data = await response.json();
+  // The live schedule garnishes the published snapshot; it is not a dependency
+  // of it. An unreachable ESPN used to throw out of here and abort the whole
+  // load, so a network blip showed "Failed to fetch" and an empty board even
+  // though the snapshot on disk was perfectly good.
+  const data = await fetchEspnJson(url);
+  if (!data) return null;
+
   const games = filterGamesForScheduleDate(parseEspnScoreboard(data, league), dateValue, league);
   return {
     league,
@@ -4537,10 +4827,9 @@ async function fetchLiveScoresFromEspn(league, dateValue) {
 
   const dates = dateValue.replace(/-/g, "");
   const url = `https://site.api.espn.com/apis/site/v2/sports/${espnPath}/scoreboard?dates=${dates}`;
-  const response = await fetch(url);
-  if (!response.ok) return null;
+  const data = await fetchEspnJson(url);
+  if (!data) return null;
 
-  const data = await response.json();
   const scores = {};
   for (const event of data.events || []) {
     const competition = event.competitions?.[0];
@@ -4805,17 +5094,21 @@ async function loadDashboard(force = false) {
 
   try {
     const payload = stripBettingLinesFromPayload(await fetchDashboardPayload(params, { force }));
-    if (sportSelect.value !== "overview") {
-      accuracyData = (await fetchAccuracy({ force })) ?? accuracyData;
-      calibrationData = (await fetchCalibration({ force })) ?? calibrationData;
-      evaluationData = (await fetchEvaluation({ force })) ?? evaluationData;
-    }
+    // Accuracy now has an all-sports view, so these are needed on every league
+    // including "overview" -- skipping them left the tab showing "not loaded".
+    accuracyData = (await fetchAccuracy({ force })) ?? accuracyData;
+    calibrationData = (await fetchCalibration({ force })) ?? calibrationData;
+    evaluationData = (await fetchEvaluation({ force })) ?? evaluationData;
 
     if (sportSelect.value === "overview") {
       lastPayload = payload;
       updateFreshnessNote();
       hideBanner();
-      renderOverview();
+      if (activeView === "accuracy") {
+        renderAccuracyView();
+      } else {
+        renderOverview();
+      }
     } else {
       const displayDate = requestedDate;
       const league = sportSelect.value;
@@ -4922,6 +5215,7 @@ function resetAutoRefresh() {
 }
 
 function onSportChange() {
+  updateSportHash(sportSelect.value);
   if (sportSelect.value === "overview") {
     syncDatePicker("overview");
   } else {
@@ -4970,6 +5264,19 @@ async function initDashboard() {
     const hashView = viewFromHash();
     if (hashView && hashView !== activeView) {
       switchView(hashView, { skipHashUpdate: true });
+      return;
+    }
+    // Back button out of a league returns to Today rather than off the site.
+    const hashSport = sportFromHash();
+    if (hashSport && hashSport !== sportSelect.value) {
+      sportSelect.value = hashSport;
+      if (sportSelect.value === "overview") {
+        syncDatePicker("overview");
+      } else {
+        activeScheduleDate = defaultDateForSport(sportSelect.value);
+        syncDatePicker(sportSelect.value, activeScheduleDate);
+      }
+      loadDashboard(true);
     }
   });
   oddsFormatSelect?.addEventListener("change", () => {
@@ -5038,6 +5345,11 @@ async function initDashboard() {
   dateNextBtn?.addEventListener("click", () => onDateNav(1));
   autoRefresh?.addEventListener("change", resetAutoRefresh);
   liveScoresToggle?.addEventListener("change", resetLiveScorePolling);
+
+  // "Today" is the front door. A sport only wins on load if the URL names one,
+  // so the default entry point is always the cross-sport EV board.
+  const initialSport = sportFromHash();
+  if (initialSport) sportSelect.value = initialSport;
 
   syncDatePicker(sportSelect.value, defaultDateForSport(sportSelect.value));
 

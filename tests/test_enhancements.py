@@ -111,6 +111,72 @@ class BuildPagesTests(unittest.TestCase):
         self.assertEqual(len(overview["leagues"]), 2)
         self.assertGreaterEqual(overview["topPicksOverall"][0]["confidence"], overview["topPicksOverall"][1]["confidence"])
 
+    def test_build_overview_ranks_by_ev_not_confidence(self) -> None:
+        """The whole point of the landing page: price decides, not confidence.
+
+        The MLB pick is more confident but priced at what the model already
+        thinks, so it must rank below the less confident NBA pick that is
+        priced generously.
+        """
+        from scripts.build_pages_data import build_overview
+
+        def game(event_id, winner, side, confidence, odds, market_pct):
+            prediction = {
+                "predictedWinner": winner,
+                "predictedSide": side,
+                "outcomeLabel": f"{winner} to win",
+                "confidence": confidence,
+                "confidenceLabel": "Strong pick",
+                "homeWinPct": confidence if side == "home" else 100 - confidence,
+                "awayWinPct": confidence if side == "away" else 100 - confidence,
+            }
+            if odds is not None:
+                prediction["value"] = {"evPct": None, "odds": odds, "kellyPct": 1.0}
+                # evPct is what ranks; assert on the value the builder copies up.
+                prediction["value"]["evPct"] = {"-500": -3.0, "200": 12.0}[str(odds)]
+            if market_pct is not None:
+                prediction["probabilities"] = {"implied": {"consensus": {f"{side}Pct": market_pct}}}
+            return {"matchup": f"X @ {winner}", "eventId": event_id, "prediction": prediction}
+
+        overview = build_overview(
+            {
+                "mlb": {"leagueLabel": "MLB", "gameCount": 1, "games": [game("1", "Yankees", "home", 88, -500, 84.0)]},
+                "nba": {"leagueLabel": "NBA", "gameCount": 1, "games": [game("2", "Celtics", "away", 61, 200, 33.0)]},
+                "afl": {"leagueLabel": "AFL", "gameCount": 1, "games": [game("3", "Blues", "home", 77, None, None)]},
+            }
+        )
+
+        self.assertEqual([play["pick"] for play in overview["worthBacking"]], ["Celtics"])
+        self.assertEqual([play["pick"] for play in overview["passedOn"]], ["Yankees"])
+        self.assertEqual([play["pick"] for play in overview["unpriced"]], ["Blues"])
+
+        # A pick with no price is never counted as priced, however confident.
+        summary = overview["summary"]
+        self.assertEqual(summary["picks"], 3)
+        self.assertEqual(summary["priced"], 2)
+        self.assertEqual(summary["positiveEv"], 1)
+        self.assertEqual(summary["unpriced"], 1)
+        self.assertEqual(summary["bestEvPct"], 12.0)
+
+        # Each league leads with its best-priced play; unpriced leagues fall
+        # back to confidence rather than showing nothing.
+        best = {league["id"]: league["best"] for league in overview["leagues"]}
+        self.assertEqual(best["nba"]["evPct"], 12.0)
+        self.assertEqual(best["mlb"]["evPct"], -3.0)
+        self.assertIsNone(best["afl"]["evPct"])
+        self.assertEqual(best["afl"]["confidence"], 77)
+
+        # The market side the pick is on, not the home side by default.
+        self.assertEqual(best["nba"]["marketPct"], 33.0)
+
+    def test_build_overview_survives_empty_input(self) -> None:
+        from scripts.build_pages_data import build_overview
+
+        overview = build_overview({})
+        self.assertEqual(overview["worthBacking"], [])
+        self.assertIsNone(overview["summary"]["bestEvPct"])
+        self.assertEqual(overview["summary"]["suggestedUnits"], 0.0)
+
     def test_include_enrichment_for_all_dates(self) -> None:
         from scripts.build_pages_data import include_enrichment_for_date
 

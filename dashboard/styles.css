@@ -1,4 +1,13 @@
 :root {
+  /* Series hues. Identity only -- never status.
+     Validated for colour-vision deficiency in both themes: worst adjacent pair
+     dE 22.3 normal / 22.6 protan, against a floor of 8. Green is deliberately
+     absent: it is reserved for win/loss, and a colour cannot carry identity and
+     status at the same time. Green against orange also failed CVD at dE 6.5. */
+  --series-home: #2784D5;
+  --series-away: #C56C21;
+  --series-market: #926ABE;
+  --series-draw: #A28700;
   /* ─── Dark theme (default) ─── */
   --bg: #0b0d14;
   --bg-elevated: #0f141c;
@@ -1494,12 +1503,12 @@ button:active:not(:disabled) {
   box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.2);
 }
 
+/* One label per tab. The generic `.view-tab-label` rule used to sit after this
+   one at equal specificity, so `display: inline` won and both the full and the
+   short label rendered together ("Predictions Picks"). Spans are inline
+   already, so the generic rule is gone rather than reordered. */
 .view-tab-label-short {
   display: none;
-}
-
-.view-tab-label {
-  display: inline;
 }
 
 .my-bets-view {
@@ -3193,6 +3202,43 @@ button:active:not(:disabled) {
     min-height: 46px;
   }
 
+  /* In the header row those two 100% widths fight each other, and the sport
+     select lost -- it collapsed to 60px and clipped its own label to "o" while
+     Refresh held 170px. The select is how you navigate the site, so it gets the
+     floor and Refresh gives up the slack. */
+  /* `.header-actions { flex-shrink: 0 }` is declared later in the sheet, so
+     this needs the extra specificity to let the row shrink to the viewport. */
+  .header .header-actions {
+    min-width: 0;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+  }
+
+  .header-actions .field-inline {
+    flex: 1 1 auto;
+    min-width: 104px;
+  }
+
+  .header-actions #sport-select {
+    width: 100%;
+    min-width: 104px;
+  }
+
+  .header-actions #refresh-btn {
+    width: auto;
+    flex: 0 0 auto;
+    min-width: 84px;
+    padding: 8px 12px;
+  }
+
+  /* Below this width the four controls need the whole row. The brand is the
+     one thing that carries no information the sport select does not already
+     give, so it is what goes -- leaving it in overflowed the row and the
+     select slid out underneath the logo. */
+  .header .header-brand-compact {
+    display: none;
+  }
+
   .filter-summary-long {
     display: none;
   }
@@ -4391,24 +4437,6 @@ button:active:not(:disabled) {
   color: var(--text);
 }
 
-.scoreboard-prob-bar {
-  display: flex;
-  height: 4px;
-  border-radius: 2px;
-  overflow: hidden;
-  background: var(--bg-elevated);
-}
-
-.scoreboard-prob-away {
-  background: rgba(154, 168, 190, 0.45);
-  transition: width var(--transition);
-}
-
-.scoreboard-prob-home {
-  background: var(--accent);
-  transition: width var(--transition);
-}
-
 .scoreboard-pick-block {
   text-align: right;
   flex-shrink: 0;
@@ -5249,8 +5277,11 @@ details[open] .scoreboard-summary-chips {
   border-radius: var(--radius-pill);
 }
 
-.driver-home { background: var(--accent); }
-.driver-away { background: var(--info); }
+/* Home/away is identity, so it wears the series colours -- the same blue and
+   orange as the probability rail. Green is reserved for won/positive-EV, and a
+   green "favours the home side" bar read as "this pick is good". */
+.driver-home { background: var(--series-home); }
+.driver-away { background: var(--series-away); }
 
 .driver-side {
   color: var(--muted);
@@ -5271,4 +5302,167 @@ details[open] .scoreboard-summary-chips {
   text-transform: none;
   letter-spacing: normal;
   opacity: 0.8;
+}
+
+/* Model vs market rail ---------------------------------------------------
+   Two bars on one scale: the model on top, the market beneath. Where the
+   boundaries line up the model agrees and there is nothing to do; where they
+   separate, that offset is the edge. */
+
+.prob-rails { display: grid; gap: 2px; }
+
+.prob-rail {
+  display: flex;
+  height: 6px;
+  gap: 2px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  background: var(--panel-border-soft);
+}
+
+.prob-rail-market { height: 3px; opacity: 0.9; }
+
+.prob-seg { display: block; min-width: 0; }
+.prob-home { background: var(--series-home); }
+.prob-away { background: var(--series-away); }
+.prob-draw { background: var(--series-draw); }
+
+/* The market is deliberately recessive: it is a reference line, not a third
+   contender, so it must not compete with the two sides above it. The away step
+   still has to read as a filled segment though -- at 0.34 it disappeared into
+   the track and the bar looked like it stopped early. */
+.prob-mkt { background: var(--series-market); }
+.prob-mkt-mid { background: var(--series-market); opacity: 0.72; }
+.prob-mkt-away { background: var(--series-market); opacity: 0.5; }
+
+/* Identity is never colour alone: the rail carries the numbers in its label,
+   and the list header names which bar is which. */
+.prob-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  align-items: center;
+  margin: 0 0 var(--space-2);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+.prob-legend-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.prob-legend-swatch {
+  width: 16px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  flex: none;
+}
+
+.prob-legend-swatch.is-model {
+  background: linear-gradient(to right, var(--series-home) 0 50%, var(--series-away) 50% 100%);
+}
+
+.prob-legend-swatch.is-market {
+  height: 3px;
+  background: var(--series-market);
+}
+
+/* Today (landing page) ---------------------------------------------------
+   EV is the ranking key, so it carries the largest type on a play row and
+   everything else exists to justify it. */
+
+.today { display: grid; gap: var(--space-4); }
+
+.today-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  background: var(--panel-border);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.today-stat { background: var(--panel); padding: var(--space-3) var(--space-4); display: grid; gap: 2px; }
+.today-k { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.today-v { font-size: 1.5rem; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.today-n { font-size: 0.72rem; color: var(--muted); }
+
+.today-h {
+  font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); margin: var(--space-3) 0 0; font-weight: 600;
+}
+
+.plays {
+  display: grid; gap: 1px; background: var(--panel-border);
+  border: 1px solid var(--panel-border); border-radius: var(--radius-md); overflow: hidden;
+}
+.play-row {
+  background: var(--panel); padding: var(--space-4);
+  display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); align-items: center;
+}
+.play-body { display: grid; gap: 6px; min-width: 0; }
+.play-head { display: flex; align-items: baseline; gap: var(--space-2); flex-wrap: wrap; }
+.play-league {
+  font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  border: 1px solid var(--panel-border); border-radius: var(--radius-sm); padding: 1px 6px;
+}
+.play-pick { font-size: 1rem; font-weight: 650; letter-spacing: -0.01em; }
+.play-match { font-size: 0.8rem; color: var(--muted); }
+.play-detail { font-size: 0.74rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.play-row .prob-rail { max-width: 340px; }
+
+.play-value { text-align: right; display: grid; gap: 1px; }
+.play-ev { font-size: 1.6rem; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; line-height: 1.1; }
+.play-ev-key { font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.play-empty { margin: 0; padding: var(--space-4); border: 1px dashed var(--panel-border); border-radius: var(--radius-md); }
+
+/* Semantic, and deliberately not the series hues: this is status, not identity. */
+.ev-positive { color: var(--accent); }
+.ev-negative { color: var(--danger); }
+
+.today-scroll { overflow-x: auto; }
+.today-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; min-width: 480px; }
+.today-table th, .today-table td {
+  padding: 8px var(--space-3); text-align: right;
+  border-bottom: 1px solid var(--panel-border-soft); white-space: nowrap; font-size: 0.82rem;
+}
+.today-table th.l, .today-table td.l { text-align: left; white-space: normal; }
+.today-table th {
+  font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600;
+}
+.today-table tbody tr:last-child td { border-bottom: 0; }
+
+/* On a phone the 480px floor pushed EV -- the only column that answers the
+   question -- off the right edge behind a scroll. Drop the two supporting
+   columns instead and let Pick / Model / EV fit the screen. */
+@media (max-width: 560px) {
+  .today-table { min-width: 0; }
+  .today-table .c-market,
+  .today-table .c-price { display: none; }
+}
+
+.league-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: var(--space-2); }
+.league-tile {
+  display: grid; gap: 6px; padding: var(--space-3); text-align: left; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md); font: inherit; color: inherit;
+}
+.league-tile:hover { border-color: var(--muted); }
+/* An out-of-season league is still reachable, just not competing for the eye. */
+.league-tile.is-empty { opacity: 0.55; }
+.league-tile.is-empty:hover { opacity: 1; }
+.league-tile:focus-visible { outline: 2px solid var(--series-home); outline-offset: 2px; }
+.tile-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
+.tile-league { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.tile-games { font-size: 0.68rem; color: var(--muted); }
+.tile-pick { font-size: 0.86rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile-meta { font-size: 0.72rem; font-variant-numeric: tabular-nums; color: var(--muted); }
+
+@media (max-width: 560px) {
+  .play-row { grid-template-columns: 1fr; gap: var(--space-2); }
+  .play-value { text-align: left; }
 }

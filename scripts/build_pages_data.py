@@ -86,52 +86,117 @@ def build_league_payload_resilient(
         )
 
 
+def _play_from_game(league_id: str, label: str, game: dict) -> dict:
+    """Flatten a game into what the landing page ranks and renders."""
+    prediction = game.get("prediction") or {}
+    value = prediction.get("value") or {}
+    probabilities = prediction.get("probabilities") or {}
+    consensus = ((probabilities.get("implied") or {}).get("consensus")) or {}
+    side = prediction.get("predictedSide")
+
+    market_pct = None
+    if side == "home":
+        market_pct = consensus.get("homePct")
+    elif side == "away":
+        market_pct = consensus.get("awayPct")
+    elif side == "draw":
+        market_pct = consensus.get("drawPct")
+
+    return {
+        "league": league_id,
+        "leagueLabel": label,
+        "eventId": game.get("eventId"),
+        "matchup": game.get("matchup"),
+        "homeTeam": game.get("homeTeam"),
+        "awayTeam": game.get("awayTeam"),
+        "startDate": game.get("startDate"),
+        "pick": prediction.get("predictedWinner"),
+        "pickSide": side,
+        "outcomeLabel": prediction.get("outcomeLabel"),
+        "confidence": prediction.get("confidence"),
+        "homeWinPct": prediction.get("homeWinPct"),
+        "awayWinPct": prediction.get("awayWinPct"),
+        "drawWinPct": prediction.get("drawWinPct"),
+        "marketPct": market_pct,
+        # None when the game is unpriced; there is no EV without a price.
+        "value": value or None,
+        "evPct": value.get("evPct"),
+        "kellyPct": value.get("kellyPct"),
+        "odds": value.get("odds"),
+        "breakEvenPct": value.get("breakEvenPct"),
+    }
+
+
 def build_overview(payloads: dict[str, dict]) -> dict:
+    """Rank every published pick across every league by expected value.
+
+    Confidence is the wrong ranking key: an 89% pick at a price that already
+    assumes 89% is not a bet, and the same three points of edge pays +4.0% per
+    unit at -300 and +10.5% at +250. EV is what decides.
+    """
     league_summaries: list[dict] = []
-    top_picks: list[dict] = []
+    plays: list[dict] = []
 
     for league_id, payload in payloads.items():
+        label = payload.get("leagueLabel", league_id)
         games = payload.get("games") or []
-        publishable = sorted(
-            [
-                game
-                for game in games
-                if is_publishable_pick(game.get("prediction"))
-            ],
-            key=lambda game: (game.get("prediction") or {}).get("confidence") or 0,
-            reverse=True,
-        )
-        top_game = publishable[0] if publishable else None
-        top_prediction = (top_game or {}).get("prediction") or {}
+        publishable = [game for game in games if is_publishable_pick(game.get("prediction"))]
+        league_plays = [_play_from_game(league_id, label, game) for game in publishable]
+        plays.extend(league_plays)
+
+        priced = [play for play in league_plays if play.get("evPct") is not None]
+        # Lead each league with its best-priced play, or its most confident pick
+        # when nothing in that league has odds at all.
+        if priced:
+            best = max(priced, key=lambda play: play["evPct"])
+        elif league_plays:
+            best = max(league_plays, key=lambda play: play.get("confidence") or 0)
+        else:
+            best = None
+
         league_summaries.append(
             {
                 "id": league_id,
-                "label": payload.get("leagueLabel", league_id),
+                "label": label,
                 "scheduleDate": payload.get("scheduleDate"),
                 "gameCount": payload.get("gameCount", 0),
+                "pickCount": len(league_plays),
+                "pricedCount": len(priced),
+                "best": best,
                 "topPick": payload.get("topPick"),
-                "topConfidence": top_prediction.get("confidence"),
             }
         )
-        for game in publishable[:3]:
-            prediction = game.get("prediction") or {}
-            top_picks.append(
-                {
-                    "league": league_id,
-                    "leagueLabel": payload.get("leagueLabel", league_id),
-                    "matchup": game.get("matchup"),
-                    "pick": prediction.get("outcomeLabel"),
-                    "confidence": prediction.get("confidence"),
-                    "confidenceLabel": prediction.get("confidenceLabel"),
-                    "eventId": game.get("eventId"),
-                }
-            )
 
-    top_picks.sort(key=lambda item: item.get("confidence") or 0, reverse=True)
+    worth_backing = sorted(
+        [play for play in plays if (play.get("evPct") or 0) > 0],
+        key=lambda play: play["evPct"],
+        reverse=True,
+    )
+    passed_on = sorted(
+        [play for play in plays if play.get("evPct") is not None and play["evPct"] <= 0],
+        key=lambda play: play["evPct"],
+        reverse=True,
+    )
+    unpriced = [play for play in plays if play.get("evPct") is None]
+
     return {
         "builtAt": datetime.now(timezone.utc).isoformat(),
         "leagues": league_summaries,
-        "topPicksOverall": top_picks[:8],
+        "worthBacking": worth_backing,
+        "passedOn": passed_on[:10],
+        "unpriced": sorted(unpriced, key=lambda play: play.get("confidence") or 0, reverse=True)[:10],
+        "summary": {
+            "picks": len(plays),
+            "priced": len(plays) - len(unpriced),
+            "positiveEv": len(worth_backing),
+            "bestEvPct": worth_backing[0]["evPct"] if worth_backing else None,
+            "suggestedUnits": round(sum(play.get("kellyPct") or 0 for play in worth_backing) / 100.0, 2),
+            "unpriced": len(unpriced),
+        },
+        # Kept so anything still reading the old shape does not break.
+        "topPicksOverall": sorted(
+            plays, key=lambda play: play.get("confidence") or 0, reverse=True
+        )[:8],
     }
 
 
