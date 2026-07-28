@@ -1917,9 +1917,11 @@ function renderAccuracyView() {
           <span class="lineup-note">${formatAccuracyRecord(last7)} · ${last7.pending || 0} pending</span>
         </div>
         <div class="accuracy-metric">
-          <span class="accuracy-metric-label">Brier / overconf.</span>
-          <span class="accuracy-metric-value">${calSummary?.avgOverconfidencePct != null ? `${calSummary.avgOverconfidencePct}%` : "—"}</span>
-          <span class="lineup-note">${calSummary?.graded ?? 0} picks in calibration</span>
+          <!-- Labelled "Brier / overconf." but only ever showed overconfidence.
+               Brier now has a real home in the Model vs market table below. -->
+          <span class="accuracy-metric-label">Avg overconfidence</span>
+          <span class="accuracy-metric-value">${calSummary?.avgOverconfidencePct != null ? `${calSummary.avgOverconfidencePct > 0 ? "+" : ""}${calSummary.avgOverconfidencePct}%` : "—"}</span>
+          <span class="lineup-note">${calSummary?.graded ?? 0} picks in calibration · lower is better</span>
         </div>
         ${leagueBlock}
       </div>

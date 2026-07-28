@@ -1,71 +1,80 @@
 :root {
   /* ─── Dark theme (default) ─── */
-  --bg: #0a0e14;
+  --bg: #0b0d14;
   --bg-elevated: #0f141c;
   --panel: #121820;
   --panel-solid: #121820;
   --panel-hover: #1a2332;
-  --panel-border: rgba(148, 163, 184, 0.18);
-  --panel-border-soft: rgba(148, 163, 184, 0.1);
+  --panel-border: rgba(148, 163, 184, 0.12);
+  --panel-border-soft: rgba(148, 163, 184, 0.06);
   --glass: #161d28;
-  --text: #eef2f8;
+  --text: #f0f2f5;
   --text-secondary: #cbd5e1;
   --muted: #94a3b8;
-  --accent: #2dd673;
-  --accent-bright: #3ee089;
-  --accent-soft: rgba(45, 214, 115, 0.12);
-  --accent-glow: rgba(45, 214, 115, 0.06);
-  --live: #f5a623;
-  --live-soft: rgba(245, 166, 35, 0.15);
-  --gold: #f5c451;
-  --silver: #b8c4d9;
-  --bronze: #d4956a;
-  --danger: #ff6b6b;
-  --info: #5eb8ff;
-  --shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
-  --shadow-glow: none;
+  --accent: #30d158;
+  --accent-bright: #4ade80;
+  --accent-soft: rgba(48, 209, 88, 0.1);
+  --accent-glow: rgba(48, 209, 88, 0.08);
+  --live: #ff9f0a;
+  --live-soft: rgba(255, 159, 10, 0.12);
+  --gold: #ffd60a;
+  --silver: #c0c8d8;
+  --bronze: #cd7f32;
+  --danger: #ff453a;
+  --info: #0a84ff;
+  --shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 32px rgba(48, 209, 88, 0.15);
   --radius-sm: 8px;
-  --radius-md: 10px;
-  --radius-lg: 12px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --radius-pill: 999px;
-  --transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --font-display: "IBM Plex Sans", "Segoe UI", sans-serif;
-  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --transition: 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --font-display: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-body: "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
-  --space-5: 24px;
+  --space-5: 20px;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.2);
+  --radius-xl: 20px;
+  --transition-slow: 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+
 }
 
 /* ─── Light theme ─── */
 [data-theme="light"] {
-  --bg: #f8fafc;
+  --bg: #fbfbfd;
   --bg-elevated: #ffffff;
   --panel: #ffffff;
   --panel-solid: #ffffff;
-  --panel-hover: #f1f5f9;
-  --panel-border: rgba(15, 23, 42, 0.12);
-  --panel-border-soft: rgba(15, 23, 42, 0.06);
-  --glass: #f8fafc;
-  --text: #0f172a;
-  --text-secondary: #334155;
-  --muted: #64748b;
-  --accent: #16a34a;
-  --accent-bright: #22c55e;
-  --accent-soft: rgba(22, 163, 74, 0.12);
-  --accent-glow: rgba(22, 163, 74, 0.08);
-  --live: #ea950b;
-  --live-soft: rgba(234, 149, 11, 0.15);
-  --gold: #d9a61e;
-  --silver: #94a3b8;
-  --bronze: #c17a4a;
-  --danger: #dc2626;
-  --info: #0284c7;
-  --shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
-  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
-  --shadow-glow: 0 0 24px rgba(22, 163, 74, 0.15);
+  --panel-hover: #f5f5f7;
+  --panel-border: rgba(60, 60, 67, 0.08);
+  --panel-border-soft: rgba(60, 60, 67, 0.04);
+  --glass: #f5f5f7;
+  --text: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --muted: #86868b;
+  --accent: #30d158;
+  --accent-bright: #32d74b;
+  --accent-soft: rgba(48, 209, 88, 0.1);
+  --accent-glow: rgba(48, 209, 88, 0.1);
+  --live: #ff9f0a;
+  --live-soft: rgba(255, 159, 10, 0.12);
+  --gold: #ffcc00;
+  --silver: #c7c7cc;
+  --bronze: #d4a574;
+  --danger: #ff3b30;
+  --info: #007aff;
+  --shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-glow: 0 0 32px rgba(48, 209, 88, 0.15);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.05);
+
 }
 
 * {
@@ -4798,6 +4807,15 @@ details[open] .scoreboard-summary-chips {
   background: var(--bg-elevated);
   border-radius: var(--radius-sm);
   border: 1px solid var(--panel-border-soft);
+  /* Stack the value and its notes. Inline spans ran together once a second
+     note (ROI / priced coverage) was added alongside the hit rate. */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.accuracy-metric .lineup-note {
+  display: block;
 }
 
 .accuracy-metric-label {
@@ -5120,4 +5138,60 @@ details[open] .scoreboard-summary-chips {
   color: var(--accent-positive, #2e9e5b);
   font-size: 0.7em;
   vertical-align: middle;
+}
+
+/* ── Redesign layer (ported from styles-new.css) ────────────────────────────
+   The design tokens above were updated in place, so the palette refresh
+   reaches every component the dashboard already styles — the accuracy view,
+   bet tracker and calibration chart included — rather than only the handful
+   the unfinished redesign had got to.
+
+   What follows is the part that is not expressible as a token: the ambient
+   backdrop and the motion vocabulary. Keyframes are prefixed `amb-` because
+   the redesign defined `pulse` and `shimmer` with different curves to the ones
+   already driving the live indicator and the loading skeletons; reusing those
+   names would silently retime existing components. */
+
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -20%, var(--accent-glow), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(0, 122, 255, 0.04), transparent 50%),
+    linear-gradient(180deg, #0a0c12 0%, var(--bg) 100%);
+  transition: background var(--transition-slow);
+}
+
+[data-theme="light"] .ambient-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -20%, var(--accent-glow), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(0, 122, 255, 0.03), transparent 50%),
+    linear-gradient(180deg, #f5f5f7 0%, var(--bg) 100%);
+}
+
+@keyframes amb-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes amb-slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes amb-scale-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in { animation: amb-fade-in var(--transition) both; }
+.animate-slide-up { animation: amb-slide-up var(--transition-slow) both; }
+.animate-scale-in { animation: amb-scale-in var(--transition) both; }
+
+/* Decorative motion is never worth a headache. */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-bg { transition: none; }
+  [class*="animate-"] { animation: none !important; }
 }
