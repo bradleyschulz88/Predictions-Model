@@ -1,4 +1,7 @@
-const CACHE = "predictions-dashboard-v50";
+// Bump on any app-shell change. `activate` deletes every cache that is not this
+// one, so a bump is what evicts a previous build's index.html/app.js/styles.css
+// from a browser that already has them.
+const CACHE = "predictions-dashboard-v51";
 const ASSETS = ["./", "./index.html", "./app.js", "./styles.css", "./manifest.json"];
 
 self.addEventListener("install", (event) => {
@@ -36,8 +39,12 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
 
   if (isDataJson(url) || isAppShell(url)) {
+    // Network-first is only actually first if it reaches the network. A plain
+    // fetch() still goes through the browser's HTTP cache, so a shell asset
+    // GitHub Pages served with max-age could be replayed from disk and a new
+    // deploy would keep showing the old dashboard. Revalidate instead.
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: "no-cache" })
         .then((response) => {
           if (response.ok) {
             const clone = response.clone();
