@@ -55,6 +55,11 @@ jobs:
       - name: Refit model and gate on quality
         run: |
           python model_fit.py
+          # The weights are no longer committed, so a silent failure here would
+          # publish heuristic-fallback picks that look identical in the output.
+          # Fail the build instead.
+          test -s docs/data/model_weights.json \
+            || { echo "::error::model_fit.py produced no weights"; exit 1; }
           python scripts/backtest_model.py --evaluate --write
           python scripts/check_regression.py
 
@@ -70,13 +75,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # model_weights.json and model_baseline.json must persist: without them
-          # the regression baseline resets every run and the gate is toothless.
+          # Only state that cannot be recomputed. model_weights, evaluation and
+          # calibration are rebuilt from these three every run, so committing
+          # them just created merge conflicts on generated output. They still
+          # reach the site: the Pages artifact uploads docs/ from disk.
           git add docs/data/accuracy.json \
                   docs/data/predictions_log.json \
-                  docs/data/calibration.json \
-                  docs/data/evaluation.json \
-                  docs/data/model_weights.json \
                   docs/data/model_baseline.json || true
           git diff --staged --quiet && exit 0
           git commit -m "Update prediction accuracy [skip ci]"
