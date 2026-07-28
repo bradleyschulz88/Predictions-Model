@@ -165,6 +165,8 @@ Split by whether it can be recomputed:
 | `evaluation.json` | **no** | rebuilt by `backtest_model.py --evaluate` |
 | `calibration.json` | **no** | rebuilt by `backtest_model.py --write` |
 | `elo_ratings.json` | **no** | replayed from `accuracy.json` by `elo.py` |
+| `manifest.json` | **no** | rebuilt by `build_pages_data.py` each run |
+| `{league}_{date}.json` | **no** | per-day snapshots, rebuilt for the current window |
 
 The derivatives still reach the site — the Pages artifact uploads `docs/` from
 disk, which gitignore does not affect. They are not committed because CI
