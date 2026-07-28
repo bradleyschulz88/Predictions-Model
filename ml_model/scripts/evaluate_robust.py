@@ -17,7 +17,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 ROOT = Path(__file__).parent.parent.parent
-MODEL_DIR = Path(__file__).parent.parent / "models"
+MODEL_DIR = Path(__file__).parent.parent / "experimental"
 DATA_DIR = ROOT / "docs" / "data"
 
 MODEL_FILE = MODEL_DIR / "xgboost_model.pkl"
@@ -119,9 +119,9 @@ def prepare_features(df: pd.DataFrame, feature_columns: list) -> pd.DataFrame:
 
 
 def load_model():
-    with open("ml_model/models/xgboost_model.pkl", "rb") as f:
+    with open("ml_model/experimental/xgboost_model.pkl", "rb") as f:
         model = pickle.load(f)
-    with open("ml_model/models/calibrator.pkl", "rb") as f:
+    with open("ml_model/experimental/calibrator.pkl", "rb") as f:
         cal_data = pickle.load(f)
     return model, cal_data["calibrator"]
 
@@ -187,7 +187,7 @@ def main():
     model, calibrator = load_model()
     
     # Load feature columns from metadata
-    with open("ml_model/models/model_metadata.json", "r") as f:
+    with open("ml_model/experimental/model_metadata.json", "r") as f:
         metadata = json.load(f)
     feature_columns = metadata["feature_columns"]
     
@@ -307,11 +307,11 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     
     ROOT = Path(__file__).parent.parent.parent
-    MODEL_DIR = Path(__file__).parent.parent / "models"
+    MODEL_DIR = Path(__file__).parent.parent / "experimental"
     DATA_DIR = ROOT / "docs" / "data"
     
-    MODEL_FILE = Path("ml_model/models/xgboost_model.pkl")
-    CALIBRATOR_FILE = Path("ml_model/models/calibrator.pkl")
+    MODEL_FILE = Path("ml_model/experimental/xgboost_model.pkl")
+    CALIBRATOR_FILE = Path("ml_model/experimental/calibrator.pkl")
     PREDICTIONS_LOG = Path("docs/data/predictions_log.json")
     ACCURACY_FILE = Path("docs/data/accuracy.json")
     

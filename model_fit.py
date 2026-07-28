@@ -27,23 +27,28 @@ WEIGHTS_FILE = "model_weights.json"
 # Every additional feature measured worse out of sample on the 675 graded games
 # available:
 #
-#   strength only      logloss 0.6443
-#   strength + market  logloss 0.6416   <- selected
-#   + restDiff         logloss 0.6490
-#   + injuryDiff       logloss 0.6528
-#   + b2bDiff          logloss 0.6525
+#   strengthDiff                    logloss 0.6443
+#   + marketLogit                   logloss 0.6416   <- selected
+#   + pitchingDiff                  logloss 0.6447
+#   + restDiff                      logloss 0.6522
+#   + injuryDiff                    logloss 0.6557
+#   + b2bDiff                       logloss 0.6552
 #
 # That is a statement about these encodings at this sample size, not about the
-# real world: a raw keyword-weighted injury count carries no measurable signal,
-# and there is no power to detect a small rest effect in a few hundred games.
-# The enrichment pipeline still supplies them to the reasoning panel; they are
-# simply not allowed to move the probability until they can earn it. Re-run the
-# ablation as the log grows and promote them here if that changes.
+# real world. Starting pitching genuinely matters in baseball -- but the market
+# has already priced it, so once marketLogit is in the model, adding starter and
+# bullpen ERA on top is redundant rather than additive. Likewise a raw
+# keyword-weighted injury count carries no measurable signal, and there is no
+# power to detect a small rest effect in a few hundred games.
+#
+# The enrichment pipeline still supplies all of them to the reasoning panel;
+# they are simply not allowed to move the probability until they can earn it.
+# Re-run the ablation as the log grows and promote them here if that changes.
 ANCHORED_FEATURES = ("strengthDiff", "marketLogit")
 STANDALONE_FEATURES = ("strengthDiff",)
 
 # Every feature the collapser knows how to build, for ablation runs.
-CANDIDATE_FEATURES = ("strengthDiff", "marketLogit", "restDiff", "injuryDiff", "b2bDiff")
+CANDIDATE_FEATURES = ("strengthDiff", "marketLogit", "pitchingDiff", "restDiff", "injuryDiff", "b2bDiff")
 
 # Shrinkage constant for per-league intercepts: a league needs ~K graded games
 # before its own home-field estimate outweighs the pooled one.
@@ -222,10 +227,51 @@ def build_feature_dict(
     return {
         "strengthDiff": strength,
         "marketLogit": market_logit,
+        "pitchingDiff": _pitching_diff(features),
         "restDiff": rest_diff,
         "injuryDiff": away_injury - home_injury,
         "b2bDiff": away_b2b - home_b2b,
     }
+
+
+# The starter throws roughly two thirds of a game and the bullpen the rest, so
+# the run-prevention edge is weighted accordingly. Sign convention matches the
+# rest: positive favours the home side.
+STARTER_WEIGHT = 0.65
+BULLPEN_WEIGHT = 0.35
+
+
+def _pitching_diff(features: dict[str, Any]) -> float | None:
+    """Run-prevention edge in ERA units, home minus away.
+
+    MLB-only, and None elsewhere so it contributes nothing to other leagues.
+    Uses ERA rather than FIP because FIP is absent from the logged history while
+    starter and bullpen ERA are present on 97-100% of games.
+    """
+    pitching = features.get("mlbPitching")
+    if not isinstance(pitching, dict):
+        return None
+
+    parts: list[tuple[float, float]] = []
+
+    home_starter = _first_number(
+        pitching.get("homePitcherRecentEra"), pitching.get("homePitcherApiEra")
+    )
+    away_starter = _first_number(
+        pitching.get("awayPitcherRecentEra"), pitching.get("awayPitcherApiEra")
+    )
+    if home_starter is not None and away_starter is not None:
+        parts.append((away_starter - home_starter, STARTER_WEIGHT))
+
+    home_bullpen = _first_number(pitching.get("homeBullpenEra"))
+    away_bullpen = _first_number(pitching.get("awayBullpenEra"))
+    if home_bullpen is not None and away_bullpen is not None:
+        parts.append((away_bullpen - home_bullpen, BULLPEN_WEIGHT))
+
+    if not parts:
+        return None
+    weight_total = sum(weight for _, weight in parts)
+    return sum(value * weight for value, weight in parts) / weight_total
 
 
 def measure_split_diff_centre(features_list: Sequence[dict[str, Any]]) -> float:
