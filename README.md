@@ -113,6 +113,28 @@ python scripts/backtest_model.py --evaluate
 python scripts/check_regression.py
 ```
 
+### What is committed under `docs/data/`
+
+Split by whether it can be recomputed:
+
+| file | committed | why |
+|---|---|---|
+| `predictions_log.json` | yes | every pick ever published — irreplaceable |
+| `accuracy.json` | yes | every graded result — irreplaceable |
+| `model_baseline.json` | yes | the regression ratchet; resets if lost |
+| `model_weights.json` | **no** | rebuilt by `model_fit.py` each run |
+| `evaluation.json` | **no** | rebuilt by `backtest_model.py --evaluate` |
+| `calibration.json` | **no** | rebuilt by `backtest_model.py --write` |
+
+The derivatives still reach the site — the Pages artifact uploads `docs/` from
+disk, which gitignore does not affect. They are not committed because CI
+rewrites them every 30 minutes, so any branch that also regenerates them
+collided on generated output at every rebase.
+
+A fresh clone has no weights and will fall back to the heuristic until you run
+`python model_fit.py`. CI runs it before predicting and fails the build if it
+produces nothing.
+
 ### Optional: LLM injury weighting
 
 `data_providers/injury_severity.py` scores how much an injury list costs a team

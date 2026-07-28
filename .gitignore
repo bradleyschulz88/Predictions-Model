@@ -7,3 +7,23 @@ venv/
 *.log
 .DS_Store
 .fly/
+
+# Build outputs under docs/data/ are split by whether they can be recomputed.
+#
+# COMMITTED (state — irreplaceable, accumulates across runs):
+#   predictions_log.json   every pick ever published
+#   accuracy.json          every graded result
+#   model_baseline.json    the regression ratchet
+#
+# IGNORED (derivatives — CI rebuilds these from the state files every run):
+#   model_weights.json     from model_fit.py
+#   evaluation.json        from scripts/backtest_model.py --evaluate
+#   calibration.json       from scripts/backtest_model.py --write
+#
+# Committing the derivatives meant every 30-minute CI run rewrote three files
+# that any branch also regenerates, so every rebase collided on generated
+# output. They still ship: the Pages artifact uploads the docs/ directory from
+# disk, which gitignore does not affect.
+docs/data/model_weights.json
+docs/data/evaluation.json
+docs/data/calibration.json
