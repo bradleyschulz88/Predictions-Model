@@ -5068,3 +5068,56 @@ details[open] .scoreboard-summary-chips {
 #refresh-btn {
   margin-left: 0;
 }
+
+/* Model vs market table -------------------------------------------------- */
+
+.model-vs-market .mvm-scroll {
+  /* Wide content scrolls inside its own container so the page body never
+     scrolls sideways on a phone. */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mvm-table {
+  width: 100%;
+  min-width: 22rem;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.mvm-table th,
+.mvm-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: right;
+  border-bottom: 1px solid var(--border, rgba(128, 128, 128, 0.25));
+  white-space: nowrap;
+}
+
+.mvm-table th:first-child,
+.mvm-table td:first-child {
+  text-align: left;
+  white-space: normal;
+}
+
+.mvm-table th {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+}
+
+.mvm-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.mvm-table .mvm-best td {
+  font-weight: 650;
+}
+
+.mvm-table .mvm-best td:first-child::after {
+  content: " ●";
+  color: var(--accent-positive, #2e9e5b);
+  font-size: 0.7em;
+  vertical-align: middle;
+}
