@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import unittest
+
+from offline import OfflineTestCase
 from pathlib import Path
 
 from espn_client import parse_scoreboard
@@ -19,7 +21,7 @@ FIXTURES = Path(__file__).resolve().parent / "fixtures"
 ESPN_FIXTURE = FIXTURES / "espn_scoreboard_20260616.json"
 
 
-class PredictionModelTests(unittest.TestCase):
+class PredictionModelTests(OfflineTestCase):
     def test_predict_game_returns_percentages(self) -> None:
         with open(ESPN_FIXTURE, encoding="utf-8") as handle:
             games = parse_scoreboard(json.load(handle), league="mlb")

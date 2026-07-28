@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import unittest
+
+from offline import OfflineTestCase
 from pathlib import Path
 from unittest.mock import patch
 
@@ -153,7 +155,7 @@ class MarketWeightTests(unittest.TestCase):
         self.assertNotEqual(mlb_probs["homePct"], nfl_probs["homePct"])
 
 
-class ApplyPredictionsTests(unittest.TestCase):
+class ApplyPredictionsTests(OfflineTestCase):
     def test_suppresses_coin_flip_picks(self) -> None:
         game = {
             "league": "mlb",

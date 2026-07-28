@@ -143,7 +143,14 @@ def enrich_games_with_providers(
         )
 
         if league == "mlb":
-            enrichment["mlbPitching"] = enrich_mlb_pitching_context(game, verify_ssl=verify_ssl)
+            # Every other provider call here is guarded; this one was not, so a
+            # single MLB Stats API outage failed the whole build instead of the
+            # pitching enrichment alone. Downstream already treats an empty
+            # context as "no pitching data".
+            try:
+                enrichment["mlbPitching"] = enrich_mlb_pitching_context(game, verify_ssl=verify_ssl)
+            except Exception:
+                enrichment["mlbPitching"] = {}
 
         provider_sources = sorted(
             {
