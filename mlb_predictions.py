@@ -22,6 +22,7 @@ from data_providers.league_metrics import (
 from data_providers.mlb_pitcher import mlb_pitching_logit_adjustment
 from data_providers.schedule_advanced import schedule_flags_logit_adjustment
 from data_providers.enrich import enrich_games_with_providers
+from market import assess_price, devig_power, devig_proportional
 from model_core import resolve_probabilities
 from shared_utils import parse_record, win_pct_from_record, format_win_pct
 
@@ -95,6 +96,17 @@ def _moneyline_from_line(line: dict[str, Any]) -> dict[str, Any] | None:
     raw_total = raw_home + raw_away + raw_draw
     if raw_total <= 0:
         return None
+
+    # Books load more of their margin onto the longshot, so dividing the
+    # overround out evenly leaves the favourite understated. The power method
+    # solves for the exponent that makes the prices sum to one, which corrects
+    # that skew -- worth about a point on a lopsided market and nothing at all
+    # on a pick'em. The proportional figure is kept alongside so the change can
+    # be measured rather than assumed.
+    sides = [raw_home, raw_away] + ([raw_draw] if raw_draw else [])
+    fair = devig_power(sides)
+    proportional = devig_proportional(sides)
+
     return {
         "sportsbook": line.get("sportsbook") or "Unknown",
         "homeOdds": home_ml,
@@ -107,10 +119,12 @@ def _moneyline_from_line(line: dict[str, Any]) -> dict[str, Any] | None:
             "vigPct": round(max(0.0, raw_total - 1.0) * 100, 2),
         },
         "devigged": {
-            "home": raw_home / raw_total,
-            "away": raw_away / raw_total,
-            "draw": (raw_draw / raw_total) if raw_draw else None,
+            "home": fair[0],
+            "away": fair[1],
+            "draw": fair[2] if raw_draw else None,
+            "method": "power",
         },
+        "devigProportional": {"home": proportional[0], "away": proportional[1]},
     }
 
 
@@ -930,6 +944,32 @@ def _probability_components(
     return components
 
 
+def _best_price_for_side(lines: list[dict[str, Any]], side: str) -> int | None:
+    """Best available American price for one side, across every book quoted.
+
+    Best means the largest payout, which is the highest decimal odds -- not the
+    highest American number, since -110 beats -150 but +120 beats both.
+    """
+    key = {"home": ("home", "homeOdds"), "away": ("away", "awayOdds"), "draw": ("draw", "drawOdds")}.get(side)
+    if not key:
+        return None
+    best: int | None = None
+    best_decimal = 0.0
+    for line in lines or []:
+        if "MoneyLine" not in (line.get("viewType") or ""):
+            continue
+        current = line.get("currentLine") or line.get("openingLine")
+        if not isinstance(current, dict):
+            continue
+        odds = _line_odds_value(current, *key)
+        if odds is None:
+            continue
+        decimal = 1.0 + (100.0 / abs(float(odds)) if float(odds) < 0 else float(odds) / 100.0)
+        if decimal > best_decimal:
+            best, best_decimal = int(odds), decimal
+    return best
+
+
 def _home_field_logit(game: dict[str, Any]) -> float:
     return HOME_FIELD_LOGIT.get(_league_id(game), 0.25)
 
@@ -1683,6 +1723,12 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         blended=pick_pct,
     )
 
+    # Expected value on the picked side at the best price on offer. Percentage
+    # points of edge do not tell you whether to bet: the same 3-point edge is
+    # worth +4.0% per unit at -300 and +10.5% at +250. This does.
+    best_odds = _best_price_for_side(game.get("lines") or [], predicted_side)
+    value = assess_price(best_prob, best_odds)
+
     result: dict[str, Any] = {
         "predictedWinner": predicted_winner,
         "predictedSide": predicted_side,
@@ -1693,6 +1739,8 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
         "rawHomeWinPct": raw_home_pct,
         "confidenceLabel": confidence_label(confidence),
         "probabilityMethod": resolved["method"],
+        # None when the game is unpriced -- there is no EV without a price.
+        "value": value,
         # Per-feature logit contributions behind this number, so the displayed
         # explanation and the probability cannot drift apart.
         "drivers": resolved.get("drivers"),

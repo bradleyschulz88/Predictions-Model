@@ -127,6 +127,8 @@ def _build_pick_record(
         "rawConfidence": pending.get("rawConfidence"),
         "rawHomeWinPct": pending.get("rawHomeWinPct"),
         "probabilityMethod": pending.get("probabilityMethod"),
+        "evPct": pending.get("evPct"),
+        "kellyPct": pending.get("kellyPct"),
         "pickOdds": pending.get("pickOdds"),
         "openingOdds": pending.get("openingOdds"),
         "openingSide": pending.get("openingSide"),
@@ -215,6 +217,9 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 "rawConfidence": prediction.get("rawConfidence"),
                 "rawHomeWinPct": prediction.get("rawHomeWinPct"),
                 "probabilityMethod": prediction.get("probabilityMethod"),
+                # Expected value at pick time, for grading the claim later.
+                "evPct": (prediction.get("value") or {}).get("evPct"),
+                "kellyPct": (prediction.get("value") or {}).get("kellyPct"),
                 # pickOdds is the latest price seen; by grade time it is the
                 # closing line. openingOdds is pinned to the first one.
                 "pickOdds": current_odds,
