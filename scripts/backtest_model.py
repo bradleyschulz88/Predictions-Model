@@ -249,8 +249,15 @@ def _fitted_walk_forward(data_dir: Path) -> dict[str, Any]:
         return {}
     if not samples:
         return {}
-    scores = model_fit.walk_forward_scores(samples)
+
+    # Score at the ridge strength the shipped weights were fitted with, so the
+    # reported number describes the model that is actually live.
+    shipped = model_fit.load_model(data_dir)
+    l2 = float((shipped.metadata.get("l2") if shipped else None) or 1.0)
+
+    scores = model_fit.walk_forward_scores(samples, l2=l2)
     scores["features"] = list(model_fit.ANCHORED_FEATURES)
+    scores["l2"] = l2
     return scores
 
 
