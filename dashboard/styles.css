@@ -5195,3 +5195,9 @@ details[open] .scoreboard-summary-chips {
   .ambient-bg { transition: none; }
   [class*="animate-"] { animation: none !important; }
 }
+
+/* Team stat leaders are not a batting order, so they carry no rank numbers. */
+.lineup-list-leaders {
+  list-style: none;
+  padding-left: 0;
+}

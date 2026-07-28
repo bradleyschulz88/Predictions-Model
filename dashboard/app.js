@@ -3572,7 +3572,21 @@ function hydrateGamePredictions(games, { league, scheduleDate } = {}) {
     if (scheduleDate && record.scheduleDate && record.scheduleDate !== scheduleDate) return game;
     const prediction = recordToPrediction(record);
     if (!prediction || !isPublishablePrediction(prediction)) return game;
-    return { ...game, prediction };
+
+    // Merge rather than replace. The logged record carries the pick and its
+    // confidence but none of the narrative -- whyTheyWin, reasons, factors,
+    // probabilities -- so replacing outright showed "Analysis pending." on
+    // games whose payload had a full explanation all along.
+    //
+    // Only carry the narrative across when both agree on who wins; otherwise
+    // the page would show the logged pick beside reasoning for the other team.
+    const existing = game.prediction || {};
+    const samePick =
+      existing.predictedWinner &&
+      prediction.predictedWinner &&
+      existing.predictedWinner === prediction.predictedWinner;
+
+    return { ...game, prediction: samePick ? { ...existing, ...prediction } : prediction };
   });
 }
 
@@ -3794,14 +3808,28 @@ function renderLineupColumn(teamName, lineup) {
   if (!lineup || !lineup.batters?.length) {
     return `<div class="lineup-column"><h5>${teamName || "Team"}</h5><p class="lineup-note">${lineup?.note || "Not available yet."}</p></div>`;
   }
+
+  // Two different things arrive in `batters`. A confirmed batting order has
+  // `order` set. When the lineup is not posted yet, ESPN gives team stat
+  // leaders instead, where `position` is the stat category ("Earned Run
+  // Average") and `statLine` is its value ("2.46").
+  const isBattingOrder = lineup.batters.some((batter) => batter.order);
+
   const rows = lineup.batters
-    .map((batter) =>
-      batter.order
-        ? `<li><span class="lineup-order">${batter.order}</span> ${batter.name} <span class="lineup-pos">${batter.position || ""}</span></li>`
-        : `<li>${batter.name} <span class="lineup-pos">${batter.statLine || batter.position || ""}</span></li>`
-    )
+    .map((batter) => {
+      if (batter.order) {
+        return `<li><span class="lineup-order">${batter.order}</span> ${escapeHtml(batter.name || "")} <span class="lineup-pos">${escapeHtml(batter.position || "")}</span></li>`;
+      }
+      // Show the stat category, not just a bare number. Rendering "Dylan Cease
+      // 2.46" without it reads as a batting average for a pitcher.
+      const stat = [batter.position, batter.statLine].filter(Boolean).map(escapeHtml).join(" ");
+      return `<li>${escapeHtml(batter.name || "")}${stat ? ` <span class="lineup-pos">${stat}</span>` : ""}</li>`;
+    })
     .join("");
-  return `<div class="lineup-column"><h5>${teamName || "Team"}</h5><p class="lineup-note">${lineup.note || ""}</p><ol class="lineup-list">${rows}</ol></div>`;
+
+  // Stat leaders are not ranked 1..N, so they must not render in an <ol>.
+  const listTag = isBattingOrder ? "ol" : "ul";
+  return `<div class="lineup-column"><h5>${teamName || "Team"}</h5><p class="lineup-note">${lineup.note || ""}</p><${listTag} class="lineup-list${isBattingOrder ? "" : " lineup-list-leaders"}">${rows}</${listTag}></div>`;
 }
 
 function renderLineups(game, lineupLabel) {
