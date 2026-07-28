@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-28T20:43:13.430948+00:00",
+  "updatedAt": "2026-07-28T21:59:31.758117+00:00",
   "summary": {
     "last7Days": {
       "correct": 300,
@@ -15,7 +15,7 @@
       "pct": 59.6,
       "units": 6.451,
       "roiPct": 0.9,
-      "pending": 140
+      "pending": 141
     },
     "byLeague": {
       "mlb": {
@@ -2232,6 +2232,33 @@
       "date": "2026-08-04"
     },
     {
+      "eventId": "401816388",
+      "league": "mlb",
+      "scheduleDate": "2026-08-04",
+      "matchup": "New York Mets @ Cleveland Guardians",
+      "predicted": "Cleveland Guardians",
+      "predictedSide": "home",
+      "outcomeLabel": "Cleveland Guardians to win",
+      "confidence": 55.9,
+      "rawConfidence": 55.9,
+      "rawHomeWinPct": 55.9,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "home",
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-04"
+    },
+    {
       "eventId": "401816387",
       "league": "mlb",
       "scheduleDate": "2026-08-04",
@@ -3036,25 +3063,6 @@
       "predictedSide": "away",
       "outcomeLabel": "Texas Rangers to win",
       "confidence": 63.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-01"
-    },
-    {
-      "eventId": "401816354",
-      "league": "mlb",
-      "scheduleDate": "2026-08-01",
-      "matchup": "New York Yankees @ Chicago Cubs",
-      "predicted": "New York Yankees",
-      "predictedSide": "away",
-      "outcomeLabel": "New York Yankees to win",
-      "confidence": 67.5,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -19176,6 +19184,33 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29"
+    },
+    "401816388": {
+      "eventId": "401816388",
+      "league": "mlb",
+      "scheduleDate": "2026-08-04",
+      "matchup": "New York Mets @ Cleveland Guardians",
+      "predicted": "Cleveland Guardians",
+      "predictedSide": "home",
+      "outcomeLabel": "Cleveland Guardians to win",
+      "confidence": 55.9,
+      "rawConfidence": 55.9,
+      "rawHomeWinPct": 55.9,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "home",
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-04"
     }
   },
   "skippedDates": []
