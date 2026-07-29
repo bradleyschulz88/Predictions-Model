@@ -453,7 +453,14 @@ screens candidates against the *standalone* model: read the rows without
 alone on thousands of games will not earn a place beside the market anchor on
 seven hundred.
 
-The output is gitignored and rebuilt on demand — derived data, not a record.
+Run it from **Actions → Backfill season history** rather than locally: it walks
+one day at a time, so a season is ~180 requests and several minutes. The output
+*is* committed, unlike the other derived files — those rebuild every 30 minutes,
+this one is expensive and describes games that will never change again.
+
+The workflow also checks the resulting home win rate lands in a plausible band.
+A backfill that leaked the result would sit far outside it, which is a cheap
+sanity check on top of the per-row guard.
 
 **The sample size is the binding constraint.** There are ~700 graded games, and
 roughly 10-20 games per predictor is the honest limit, so this list is a queue
