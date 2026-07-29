@@ -97,6 +97,34 @@ Raw accuracy is ~60%, and that is close to the ceiling: published MLB
 binary-prediction accuracy tops out around 55-60%. The value is in probabilities
 that mean what they say, not in a higher hit rate.
 
+### Dates are league-local, everywhere
+
+A slate is filed under the **league's own calendar day**, which is how ESPN and
+the leagues label it. `schedule_dates.py` holds the timezone per league and the
+dashboard mirrors it exactly, including the rule that a US slate before 10am
+local still shows the previous day's games.
+
+This matters more than it sounds, because **roughly half a normal MLB night
+starts after midnight UTC** — a 10:10pm game in New York is 02:10 the next day
+in UTC. Filing by UTC would scatter one night's slate across two dates.
+
+Game times are therefore **rendered in the league's timezone**, with the
+viewer's own time appended when it differs:
+
+```
+Tue, 16 June, 10:10 pm EDT · Wed 12:10 pm your time
+```
+
+Rendering only in the viewer's timezone — which the dashboard used to do,
+weekday and day-of-month included — made every card contradict the header above
+it. A viewer in Australia opening the "Today · Tue 16 June" slate saw all
+fifteen cards stamped "Wed, Jun 17". Nothing was mis-scheduled; the times were
+being quoted in a calendar the page never used.
+
+Tests assert both halves: that every game in the MLB and AFL fixtures lands on
+its filed date when read in league-local time, and that the MLB fixture really
+does straddle UTC midnight — otherwise the first assertion would be vacuous.
+
 ### Doubleheaders are two games, not a duplicate
 
 MLB doubleheaders appear on the board twice, and that is correct: ESPN issues
