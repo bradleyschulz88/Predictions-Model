@@ -190,3 +190,84 @@ class EndToEndTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RetroactiveGradingTests(unittest.TestCase):
+    """An already-graded record is never rebuilt, so it needs reconciling.
+
+    Eight games sat graded with a total in the log and no result against it,
+    because they graded before side-market scoring shipped. Without this the
+    totals record would have started from whatever graded next and silently
+    discarded every earlier pick -- the same failure the `published` flag had.
+    """
+
+    def _run(self, *, stored: dict, log_extras: dict) -> dict:
+        from unittest.mock import patch
+
+        with tempfile.TemporaryDirectory() as tmp:
+            data_dir = Path(tmp)
+            (data_dir / "accuracy.json").write_text(
+                json.dumps({"picksByEventId": {"42": stored}}), encoding="utf-8"
+            )
+            entry = {
+                "eventId": "42", "league": "mlb", "scheduleDate": "2026-07-26",
+                "predictedWinner": "Home", "confidence": 70.0, "published": True,
+            }
+            entry.update(log_extras)
+            (data_dir / "predictions_log.json").write_text(
+                json.dumps({"predictions": {"42": entry}}), encoding="utf-8"
+            )
+            with patch.object(
+                accuracy_tracker, "fetch_scoreboard", side_effect=RuntimeError("offline")
+            ):
+                return accuracy_tracker.grade_predictions(data_dir)
+
+    def _graded(self, **extra) -> dict:
+        row = {
+            "eventId": "42", "league": "mlb", "scheduleDate": "2026-07-26",
+            "predicted": "Home", "confidence": 70.0, "status": "graded",
+            "correct": True, "homeScore": 11, "awayScore": 8, "gradedAt": "2026-07-27",
+        }
+        row.update(extra)
+        return row
+
+    def test_a_pre_existing_graded_row_gets_its_total_scored(self) -> None:
+        accuracy = self._run(
+            stored=self._graded(),
+            log_extras={"total": {"line": 10.0, "pickSide": "over"}},
+        )
+        result = accuracy["picksByEventId"]["42"]["totalResult"]
+        self.assertIsNotNone(result, "an old graded row must be reconciled")
+        self.assertEqual(result["outcome"], "win", "19 runs clears 10.0")
+        self.assertEqual(accuracy["summary"]["totals"]["wins"], 1)
+
+    def test_a_pre_existing_graded_row_gets_its_spread_scored(self) -> None:
+        accuracy = self._run(
+            stored=self._graded(),
+            log_extras={"spread": {"line": -1.5, "pickSide": "away", "market": "runline"}},
+        )
+        result = accuracy["picksByEventId"]["42"]["spreadResult"]
+        self.assertEqual(result["outcome"], "loss", "home won by 3, so away +1.5 loses")
+
+    def test_an_existing_result_is_not_recomputed(self) -> None:
+        """Reconciliation must fill gaps, not overwrite settled history."""
+        settled = {"line": 10.0, "pickSide": "over", "actual": 19, "outcome": "win"}
+        accuracy = self._run(
+            stored=self._graded(totalResult=settled),
+            log_extras={"total": {"line": 99.0, "pickSide": "under"}},
+        )
+        self.assertEqual(accuracy["picksByEventId"]["42"]["totalResult"], settled)
+
+    def test_a_row_without_scores_is_left_alone(self) -> None:
+        accuracy = self._run(
+            stored=self._graded(homeScore=None, awayScore=None),
+            log_extras={"total": {"line": 10.0, "pickSide": "over"}},
+        )
+        self.assertIsNone(accuracy["picksByEventId"]["42"].get("totalResult"))
+
+    def test_a_pending_row_is_not_graded_early(self) -> None:
+        pending = self._graded(status="pending", correct=None)
+        accuracy = self._run(
+            stored=pending, log_extras={"total": {"line": 10.0, "pickSide": "over"}}
+        )
+        self.assertIsNone(accuracy["picksByEventId"]["42"].get("totalResult"))
