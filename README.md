@@ -122,18 +122,26 @@ the previous one left unpriced:
 |---|---|---|---|
 | 1 | SportsBookReview | MLB, NFL, NBA, EPL | full board where it has one |
 | 2 | ESPN game summary | opportunistic | already part of enrichment |
-| 3 | **ESPN core API** (`espn_odds.py`) | **everything, incl. WNBA and AFL** | keyless, no quota |
+| 3 | **ESPN core API** (`espn_odds.py`) | **WNBA** (not AFL) | keyless, no quota |
 
 The third exists because the first two leave a third of the model unpriced.
 SBR returns WNBA games with spread and total but **never a moneyline**, which
 the model cannot use -- `marketLogit` is built from moneyline alone. AFL has no
-SBR board at all. Both ran with no market to anchor to, so their EV and ROI
-read "not measurable".
+SBR board at all.
 
-ESPN's core API carries moneylines for both, needs no key and publishes no
-quota, and -- the part that matters most -- is the same origin as the schedule,
-so team names and event ids match by construction. None of the fuzzy matching
-SBR needs applies.
+Measured on the live build of 2026-07-29:
+
+- **WNBA is fixed.** 8 games priced via DraftKings that had never had a price.
+  Coverage grows as games approach, because books post lines a day or two out --
+  a game four days away legitimately has no market yet.
+- **AFL is not.** ESPN returns no moneyline for any AFL game, so it stays
+  unpriced and honestly reports "ROI is not measurable". A circuit breaker
+  stops us re-asking after three consecutive empties, which self-heals if ESPN
+  ever adds coverage.
+
+ESPN needs no key and publishes no quota, and -- the part that matters most --
+is the same origin as the schedule, so team names and event ids match by
+construction. None of the fuzzy matching SBR needs applies.
 
 It is called **only for games still lacking a moneyline**, so a normal MLB day
 makes zero extra requests. Prediction sites (Consensus, TeamRankings,

@@ -12,7 +12,10 @@ it returns the games but only spread and total markets, never a moneyline --
 which the model cannot use, since `marketLogit` is built from moneyline alone.
 For AFL it has no board at all.
 
-ESPN's core API does carry moneylines and covers both:
+ESPN's core API carries moneylines for WNBA. Measured on the live build of
+2026-07-29: 8 WNBA games priced via DraftKings that had never had a price.
+It does NOT carry them for AFL -- every AFL game came back empty -- so AFL
+stays unpriced and the circuit breaker below stops us asking forever.
 
     https://sports.core.api.espn.com/v2/sports/{sport}/leagues/{league}
         /events/{event}/competitions/{event}/odds
@@ -26,8 +29,9 @@ Cost control
 ------------
 This is a per-event endpoint, so it is called ONLY for games still lacking a
 moneyline after SBR and the ESPN summary have both had a go. On a normal day
-that is zero calls for MLB and a handful for WNBA and AFL, rather than one per
-game per build.
+that is zero calls for MLB and a handful for WNBA. A league ESPN does not
+cover gives up after a few consecutive empties rather than retrying every
+game on every build.
 
 Shape
 -----
@@ -225,6 +229,14 @@ def fetch_event_odds(
     return parse_core_odds(payload)
 
 
+# Stop asking a league that has just told us it has nothing. ESPN carries
+# moneylines for WNBA but not for AFL, and without this every AFL game is
+# retried on every build forever -- roughly 400 pointless requests a day.
+# Per call, not cached across builds, so the moment ESPN starts covering a
+# league it is picked up on the next run with no code change.
+CONSECUTIVE_EMPTY_BEFORE_GIVING_UP = 3
+
+
 def fill_missing_moneylines(
     games: list[dict[str, Any]],
     *,
@@ -239,6 +251,10 @@ def fill_missing_moneylines(
     Deliberately last in the chain: SBR and the ESPN summary get first refusal,
     so on a normal MLB day this makes no requests at all. The cap is a seatbelt
     against an unexpectedly huge slate, not an expected limit.
+
+    Gives up on a league after a few consecutive empties: a slate where nothing
+    is priced yet is the normal case for games days out, and hammering the
+    endpoint for each one buys nothing.
     """
     from mlb_predictions import has_moneyline_lines
 
@@ -248,7 +264,9 @@ def fill_missing_moneylines(
         "fetched": 0,
         "priced": 0,
         "books": [],
+        "gaveUp": False,
     }
+    consecutive_empty = 0
 
     for game in games:
         if has_moneyline_lines(game.get("lines") or []):
@@ -258,7 +276,7 @@ def fill_missing_moneylines(
             continue
 
         stats["considered"] += 1
-        if stats["fetched"] >= max_events:
+        if stats["fetched"] >= max_events or stats["gaveUp"]:
             continue
 
         stats["fetched"] += 1
@@ -266,8 +284,12 @@ def fill_missing_moneylines(
             league, event_id, retries=retries, retry_delay=retry_delay, verify_ssl=verify_ssl
         )
         if not lines:
+            consecutive_empty += 1
+            if consecutive_empty >= CONSECUTIVE_EMPTY_BEFORE_GIVING_UP:
+                stats["gaveUp"] = True
             continue
 
+        consecutive_empty = 0
         existing = game.get("lines") or []
         game["lines"] = existing + lines
         game["oddsSource"] = game.get("oddsSource") or "espn-core"
