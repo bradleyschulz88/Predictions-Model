@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-29T16:20:42.488284+00:00",
+  "updatedAt": "2026-07-29T17:48:51.833808+00:00",
   "summary": {
     "last7Days": {
       "correct": 294,
@@ -16,8 +16,8 @@
       "pct": 60.4,
       "units": 13.802,
       "roiPct": 2.0,
-      "pending": 60,
-      "voided": 12
+      "pending": 58,
+      "voided": 14
     },
     "byLeague": {
       "mlb": {
@@ -18078,7 +18078,7 @@
       "outcomeLabel": "Atlanta Braves to win",
       "confidence": 71.3,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -18086,7 +18086,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816309": {
       "eventId": "401816309",
@@ -18098,7 +18099,7 @@
       "outcomeLabel": "Detroit Tigers to win",
       "confidence": 58.5,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -18106,7 +18107,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816320": {
       "eventId": "401816320",
@@ -18338,7 +18340,7 @@
       "outcomeLabel": "Arizona Diamondbacks to win",
       "confidence": 58.6,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -18346,7 +18348,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29",
-      "published": false
+      "published": false,
+      "voidReason": "voided"
     },
     "401816304": {
       "eventId": "401816304",
@@ -20976,14 +20979,15 @@
       "openingSide": "away",
       "published": false,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-07-29"
+      "date": "2026-07-29",
+      "voidReason": "voided"
     },
     "401816334": {
       "eventId": "401816334",
