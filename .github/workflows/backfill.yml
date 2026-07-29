@@ -1,0 +1,89 @@
+name: Backfill season history
+
+# Manual only. This walks a date range one day at a time, so a full MLB season
+# is ~180 requests and several minutes -- far too heavy to run on the 30-minute
+# schedule, and pointless to repeat since completed games never change.
+on:
+  workflow_dispatch:
+    inputs:
+      league:
+        description: "League to replay"
+        required: true
+        default: mlb
+        type: choice
+        options: [mlb, nfl, nba, wnba, epl, afl]
+      start:
+        description: "First date, inclusive (YYYY-MM-DD)"
+        required: true
+        default: "2025-04-01"
+      end:
+        description: "Last date, inclusive (YYYY-MM-DD)"
+        required: true
+        default: "2025-09-28"
+
+permissions:
+  contents: write
+
+# Two replays writing the same file would interleave their commits. Queue them.
+concurrency:
+  group: backfill
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Replay the season
+        run: |
+          python scripts/backfill_history.py \
+            --league "${{ inputs.league }}" \
+            --start "${{ inputs.start }}" \
+            --end "${{ inputs.end }}"
+
+      - name: Report what the screening set now holds
+        run: |
+          python - <<'PY'
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          path = Path("docs/data/history_features.json")
+          rows = json.loads(path.read_text())["rows"]
+          print(f"total rows: {len(rows)}")
+          print("by league:", dict(Counter(r["league"] for r in rows)))
+          if rows:
+              print(f"span: {rows[0]['date']} .. {rows[-1]['date']}")
+              home = sum(r["homeWon"] for r in rows) / len(rows) * 100
+              print(f"home win rate: {home:.1f}%")
+              # A backfill that leaked the result would sit far from the ~53%
+              # every league actually runs at, so this is a cheap sanity check
+              # on top of the per-row guard.
+              if not 45 <= home <= 60:
+                  print(f"::warning::home win rate {home:.1f}% is implausible; check for leakage")
+          PY
+
+      - name: Commit the screening set
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Committed, unlike the other derived files: those rebuild every 30
+          # minutes, this one costs ~180 requests per season and describes games
+          # that will never change again.
+          git add docs/data/history_features.json || true
+          git diff --staged --quiet && echo "no new rows" && exit 0
+          git commit -m "Backfill ${{ inputs.league }} ${{ inputs.start }}..${{ inputs.end }} [skip ci]"
+          for attempt in 1 2 3 4; do
+            if git push; then exit 0; fi
+            sleep $((2 ** attempt))
+            git pull --rebase origin main || true
+          done
+          echo "::warning::Could not push the screening set after 4 attempts"
