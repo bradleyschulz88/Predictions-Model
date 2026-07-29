@@ -1,10 +1,15 @@
-# Sports Predictions Dashboard
+# Edge Board
 
-Multi-sport win predictions for **MLB**, **NFL**, **NBA**, **WNBA**, **EPL**, and **AFL** using ESPN schedule data.
+Model-vs-market edge for **MLB**, **NFL**, **NBA**, **WNBA**, **EPL** and **AFL**.
 
-Features include model vs market edge, totals picks, injury-adjusted predictions, accuracy tracking, mobile-friendly UI, and PWA support.
+A daily board of every game, each priced against the market, ranked by expected
+value. Built as a **benchmark to start from**, not a tipster: the probabilities
+are calibrated and the record is public, including the parts that lose.
 
-No third-party dependencies are required. Uses Python 3.10+.
+The repository is still named `Predictions-Model` so the existing Pages URL and
+any installed PWAs keep working. Renaming it would change both.
+
+No third-party dependencies. Python 3.10+, standard library only.
 
 ## Live site (GitHub Pages)
 
@@ -78,13 +83,38 @@ selection:
 | `strengthDiff` | one team-quality score collapsed from season record, home/road splits and power rating |
 | `marketLogit` | de-vigged consensus moneyline, when odds exist |
 
-Out-of-sample walk-forward on 675 graded games:
+Scored on the **same slate** for every forecaster — the 505 graded games that
+have market odds, so the market is not being judged on a different population:
 
-| forecaster | log loss | Brier |
-|---|---|---|
-| **fitted model** | **0.6428** | **0.2272** |
-| market (de-vigged) | 0.6563 | 0.2336 |
-| constant home base rate | 0.6931 | 0.2500 |
+| forecaster | log loss | Brier | AUC | accuracy |
+|---|---|---|---|---|
+| model (published) | 0.6878 | 0.2448 | 0.6470 | 59.0% |
+| **market (de-vigged)** | **0.6532** | **0.2322** | 0.6460 | 57.8% |
+| constant home base rate | 0.6931 | 0.2500 | 0.5000 | 50.5% |
+
+**The market is better calibrated than the model, and that is the honest
+reading.** The model ranks marginally better — a shade more accuracy, a shade
+more AUC — but its probabilities are worse. Any earlier claim that this model
+beats the market on log loss came from comparing a walk-forward score against a
+market score computed on a different set of games, which is not a fair test.
+
+Where the model does earn its place: on the 103 picks that fade the market it
+wins 55.3%, against a 52.4% break-even. That is a thin, unproven edge on a small
+sample, not a system.
+
+Reliability is still the weak point. The 55-65% band predicts ~11 points high,
+and the thin 85-90% bucket predicts 34.9 points high on n=17:
+
+| bucket | predicted | actual | n |
+|---|---|---|---|
+| 55-60% | 57.9% | 46.7% | 120 |
+| 60-65% | 62.6% | 50.8% | 130 |
+| 65-70% | 67.5% | 62.3% | 122 |
+| 70-75% | 72.6% | 68.3% | 139 |
+| 75-80% | 76.4% | 72.4% | 134 |
+
+The model also still picks home too often: 56.7% of picks against a 51.4% actual
+home win rate, and +7.2 points of that bias is MLB.
 
 Everything else the pipeline gathers — starting pitching, bullpen ERA, rest,
 injuries, back-to-back, schedule fatigue, weather, head-to-head — is still shown

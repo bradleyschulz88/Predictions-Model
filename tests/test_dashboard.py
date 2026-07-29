@@ -127,7 +127,7 @@ class DashboardServerTests(OfflineTestCase):
     def test_index_page(self) -> None:
         with urllib.request.urlopen(f"http://{self.host}:{self.port}/", timeout=5) as response:
             html = response.read().decode("utf-8")
-        self.assertIn("Sports Predictions Dashboard", html)
+        self.assertIn("Edge Board", html)
 
 
 if __name__ == "__main__":
@@ -327,3 +327,33 @@ class GameTimeTimezoneTests(OfflineTestCase):
         app_js = self._app_js()
         self.assertIn("const gameDate = gameScheduleDate(game.startDate, league);", app_js)
         self.assertIn("return gameDate === scheduleDate;", app_js)
+
+
+class ProductNameTests(OfflineTestCase):
+    """The name lives in five places and drifts if only some are changed."""
+
+    def _read(self, *parts: str) -> str:
+        return (Path(__file__).resolve().parents[1].joinpath(*parts)).read_text(encoding="utf-8")
+
+    def test_page_title_and_heading(self) -> None:
+        index = self._read("dashboard", "index.html")
+        self.assertIn("<title>Edge Board</title>", index)
+        self.assertIn(">Edge Board</h1>", index)
+
+    def test_installed_app_name(self) -> None:
+        manifest = json.loads(self._read("dashboard", "manifest.json"))
+        self.assertEqual(manifest["name"], "Edge Board")
+        self.assertEqual(manifest["short_name"], "Edge Board")
+
+    def test_service_worker_cache_was_bumped(self) -> None:
+        """A stale cache serves the old name to everyone who already installed."""
+        self.assertIn("edge-board-v", self._read("dashboard", "sw.js"))
+
+    def test_overview_carries_the_product_name(self) -> None:
+        """The cross-sport board is the product, not a mode of it."""
+        app_js = self._read("dashboard", "app.js")
+        self.assertNotIn('"All Sports"', app_js)
+        self.assertIn('? "Edge Board"', app_js)
+
+    def test_readme_leads_with_the_new_name(self) -> None:
+        self.assertTrue(self._read("README.md").startswith("# Edge Board"))
