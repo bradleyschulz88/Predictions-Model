@@ -2128,9 +2128,11 @@ function switchView(view, { skipHashUpdate = false } = {}) {
   document.querySelector(".page-bar-odds")?.classList.toggle("hidden", isPredictions || isAccuracy);
 
   if (isPredictions) {
+    // The cross-sport EV board is the product, not a mode of it, so it carries
+    // the product name. A single sport is a drill-down and says so.
     dashboardTitle.textContent =
       sportSelect.value === "overview"
-        ? "All Sports"
+        ? "Edge Board"
         : `${SPORT_LABELS[sportSelect.value] || "Sports"}`;
     if (lastPayload) renderGames(lastPayload.games || []);
     else loadDashboard(true);
@@ -3975,7 +3977,7 @@ function renderStats(payload, visibleGames, { topPick, gameCount } = {}) {
   }
   if (statUpdated) statUpdated.textContent = formatViewerDateTime(payload.fetchedAt);
   dashboardTitle.textContent =
-    sport === "overview" ? "All Sports" : `${payload.leagueLabel || SPORT_LABELS[sport] || "Sports"}`;
+    sport === "overview" ? "Edge Board" : `${payload.leagueLabel || SPORT_LABELS[sport] || "Sports"}`;
 
   if (statFreshness) {
     if (lastLiveScoreAt) {
