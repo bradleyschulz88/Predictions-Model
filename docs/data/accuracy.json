@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-29T23:14:00.362138+00:00",
+  "updatedAt": "2026-07-29T23:22:36.183762+00:00",
   "summary": {
     "last7Days": {
       "correct": 295,
@@ -16,8 +16,8 @@
       "pct": 60.1,
       "units": 10.328,
       "roiPct": 1.5,
-      "pending": 56,
-      "voided": 11
+      "pending": 53,
+      "voided": 14
     },
     "byLeague": {
       "mlb": {
@@ -3577,34 +3577,6 @@
       "published": true
     },
     {
-      "eventId": "401902545",
-      "league": "mlb",
-      "scheduleDate": "2026-07-29",
-      "matchup": "Atlanta Braves @ New York Mets",
-      "predicted": "Atlanta Braves",
-      "predictedSide": "away",
-      "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 64.5,
-      "rawConfidence": 64.5,
-      "rawHomeWinPct": 35.5,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-29",
-      "published": true
-    },
-    {
       "eventId": "401857098",
       "league": "wnba",
       "scheduleDate": "2026-07-29",
@@ -3653,6 +3625,26 @@
       "predictedSide": "away",
       "outcomeLabel": "Houston Astros to win",
       "confidence": 69.8,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-29",
+      "published": true
+    },
+    {
+      "eventId": "401816317",
+      "league": "mlb",
+      "scheduleDate": "2026-07-29",
+      "matchup": "Boston Red Sox @ Athletics",
+      "predicted": "Boston Red Sox",
+      "predictedSide": "away",
+      "outcomeLabel": "Boston Red Sox to win",
+      "confidence": 67.9,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -20044,7 +20036,7 @@
       "outcomeLabel": "Tampa Bay Rays to win",
       "confidence": 64.5,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -20052,7 +20044,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816310": {
       "eventId": "401816310",
@@ -20064,7 +20057,7 @@
       "outcomeLabel": "Cleveland Guardians to win",
       "confidence": 67.7,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -20072,7 +20065,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816314": {
       "eventId": "401816314",
@@ -22348,7 +22342,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -22356,7 +22350,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816388": {
       "eventId": "401816388",
