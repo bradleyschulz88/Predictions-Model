@@ -38,6 +38,38 @@ def _form_pct_from_enrichment(
     return None if pct < 0 else pct
 
 
+_series_seen = {"games": 0, "withSeries": 0, "withScore": 0, "resolved": 0, "sample": None}
+
+
+def _note_series_shape(series, home_pct, away_pct) -> None:
+    """Count what the season-series block actually contained, and say so once."""
+    _series_seen["games"] += 1
+    if series:
+        _series_seen["withSeries"] += 1
+        if (series or {}).get("seriesScore"):
+            _series_seen["withScore"] += 1
+        if _series_seen["sample"] is None:
+            _series_seen["sample"] = {
+                "summary": (series or {}).get("summary"),
+                "seriesScore": (series or {}).get("seriesScore"),
+            }
+    if home_pct is not None or away_pct is not None:
+        _series_seen["resolved"] += 1
+
+    if _series_seen["games"] == SERIES_DIAGNOSTIC_AFTER:
+        print(
+            f"::warning title=Head-to-head coverage::of {_series_seen['games']} games, "
+            f"{_series_seen['withSeries']} carried a season series, "
+            f"{_series_seen['withScore']} carried a score, "
+            f"{_series_seen['resolved']} resolved to a win share. "
+            f"sample={_series_seen['sample']!r}"
+        )
+
+
+# Enough games to be representative without waiting for a whole slate.
+SERIES_DIAGNOSTIC_AFTER = 25
+
+
 def enrich_games_with_providers(
     games: list[dict[str, Any]],
     *,
@@ -133,6 +165,12 @@ def enrich_games_with_providers(
             "summary": (series or {}).get("summary"),
             "seriesScore": (series or {}).get("seriesScore"),
         }
+        # A real build resolved h2h on 22 of 120 games and every one was 0.0,
+        # meaning only the tied case ever landed. That points at the season
+        # series being absent rather than at the parsing, but it cannot be told
+        # apart from here. Report what actually arrived, once, so the next build
+        # settles it instead of another round of guessing.
+        _note_series_shape(series, home_h2h, away_h2h)
 
         # Weighted cost of who is unavailable, as an ablation candidate. The
         # LLM importance step is off unless NVIDIA_API_KEY is set; without it

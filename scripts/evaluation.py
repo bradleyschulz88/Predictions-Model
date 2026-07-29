@@ -81,6 +81,46 @@ def accuracy(pairs: Sequence[tuple[float, int]]) -> float | None:
     return hits / len(pairs)
 
 
+# Reliability is the one metric that must not be pooled across model versions.
+# A refit changes what a stated 60% means, so mixing six weeks of an
+# overconfident model with a week of a corrected one reports the old model's
+# error as if it were current -- which it did: the all-time table showed the
+# 55-65% band running +11 points hot while the live model was running -1.8.
+# Windowed by TIME, not by count. A fixed pick count sounds equivalent and is
+# not: 250 picks reaches back months here, so it re-pools the model versions the
+# window exists to separate.
+RECENT_RELIABILITY_DAYS = 14
+
+# Below this a bucket's binomial error swamps the effect being measured -- at
+# n=17 the standard error is about 12 points, which is larger than any
+# miscalibration worth acting on. Such buckets are reported and flagged rather
+# than hidden, because "we cannot tell yet" is the finding.
+MIN_BUCKET_FOR_CONCLUSION = 30
+
+
+def recent_pairs(
+    observations: Sequence[Any], *, days: int = RECENT_RELIABILITY_DAYS
+) -> list[tuple[float, int]]:
+    """Graded picks from the last `days`, for scoring the model as it stands now.
+
+    Reliability is the one metric that must never be pooled across model
+    versions: a refit changes what a stated 60% means. Mixing six weeks of an
+    overconfident model with a week of a corrected one reports the old model's
+    error as current, which is exactly what the all-time table did.
+    """
+    from datetime import date, timedelta
+
+    dated = [item for item in observations if item.published is not None and item.date]
+    if not dated:
+        return []
+    latest = max(item.date for item in dated)
+    try:
+        cutoff = (date.fromisoformat(latest) - timedelta(days=days)).isoformat()
+    except ValueError:
+        return [(item.published, item.home_won) for item in dated]
+    return [(item.published, item.home_won) for item in dated if item.date >= cutoff]
+
+
 def reliability_curve(
     pairs: Sequence[tuple[float, int]],
     *,

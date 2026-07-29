@@ -454,3 +454,40 @@ class VoidedPickDisplayTests(unittest.TestCase):
         """Both sources feed that tally; the stored-record one needs it too."""
         app_js = self._app_js()
         self.assertEqual(app_js.count('pick.status === "voided"'), 2)
+
+
+class ReliabilityWindowTests(unittest.TestCase):
+    """Reliability must never be pooled across model versions.
+
+    A refit changes what a stated 60% means. Mixing six weeks of an
+    overconfident model with a week of a corrected one reports the old model's
+    error as if it were current, which is what the all-time table did.
+    """
+
+    def _observation(self, date: str, published: float, home_won: int):
+        from scripts.evaluation import Observation
+
+        return Observation(
+            event_id="1", league="mlb", date=date, home_won=home_won,
+            model=None, market=None, published=published,
+        )
+
+    def test_window_is_by_time_not_by_count(self) -> None:
+        """A fixed pick count sounds equivalent and re-pools the versions."""
+        from scripts import evaluation
+
+        old = [self._observation("2026-06-01", 0.6, 1) for _ in range(400)]
+        new = [self._observation("2026-07-30", 0.6, 1) for _ in range(5)]
+        pairs = evaluation.recent_pairs(old + new, days=14)
+        self.assertEqual(len(pairs), 5, "a 400-pick backlog must not enter the window")
+
+    def test_an_empty_log_is_not_an_error(self) -> None:
+        from scripts import evaluation
+
+        self.assertEqual(evaluation.recent_pairs([]), [])
+
+    def test_thin_buckets_are_flagged_not_hidden(self) -> None:
+        """'We cannot tell yet' is the finding, so it must be visible."""
+        from scripts import evaluation
+
+        self.assertGreaterEqual(evaluation.MIN_BUCKET_FOR_CONCLUSION, 30)

@@ -82,7 +82,7 @@ def team_relief_innings(
                 # the typical figure every time, so fatigue came out 0.00 for an
                 # 18-inning day and a 9-inning day alike. The feature would have
                 # logged numbers, passed its tests and never once shown signal.
-                _warn_missing_starter_innings()
+                _warn_missing_starter_innings(stat)
                 return None
             relief += max(0.0, total_ip - starter_ip)
             counted += 1
@@ -111,21 +111,28 @@ def _starter_innings(stat: dict[str, Any]) -> float | None:
     return None
 
 
-def _warn_missing_starter_innings() -> None:
-    """Say so once per run, so a silently dead feature cannot stay silent.
+def _warn_missing_starter_innings(stat: dict[str, Any] | None = None) -> None:
+    """Say so once per run, and print the field names that DID arrive.
 
     Printed rather than raised: this is a candidate feature and must not break a
-    build. But an ablation candidate that is structurally incapable of producing
-    a value needs to be visible, not discovered months later.
+    build. But an ablation candidate structurally incapable of producing a value
+    needs to be visible, not discovered months later.
+
+    The field list is the point. Without network access to the Stats API there
+    is no way to learn the right key by inspection, and guessing produced three
+    wrong names already. Letting the build report what it actually received
+    turns an open question into a one-line fix.
     """
     global _warned
     if _warned:
         return
     _warned = True
+    available = sorted(stat.keys()) if isinstance(stat, dict) else []
     print(
-        "::warning title=Bullpen workload::MLB Stats API returned no starters' "
-        "innings, so relief workload cannot be separated from total innings. "
-        "bullpenDiff will stay empty until the field name is corrected."
+        "::warning title=Bullpen workload::no starters' innings field found, so "
+        "relief workload cannot be separated from total innings and bullpenDiff "
+        f"stays empty. Tried {list(_STARTER_IP_KEYS)}. "
+        f"Fields actually returned: {available}"
     )
 
 
