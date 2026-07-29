@@ -94,75 +94,102 @@ class UmpireTests(unittest.TestCase):
 
 
 class BullpenTests(unittest.TestCase):
-    def _log(self, rows: list[dict]) -> dict:
-        return {"stats": [{"splits": [{"stat": row} for row in rows]}]}
+    """Relief innings come from the boxscore, the only endpoint that has the split.
 
-    def test_starter_innings_are_excluded(self) -> None:
-        """A complete game rests a bullpen; counting team innings inverts that."""
-        payload = self._log([{"inningsPitched": 9.0, "startersInningsPitched": 9.0}])
-        with patch.object(bullpen, "_fetch", return_value=payload):
-            self.assertEqual(bullpen.team_relief_innings(147, days=1), 0.0)
+    The team game log returns 59 pitching fields and none of them separates
+    starters from relievers -- a production build printed the whole list. The
+    first version of this feature tried to subtract starters out of that endpoint
+    and reported nothing on every game.
+    """
 
-    def test_relief_innings_accumulate(self) -> None:
-        payload = self._log([
-            {"inningsPitched": 9.0, "startersInningsPitched": 5.0},
-            {"inningsPitched": 9.0, "startersInningsPitched": 6.0},
-        ])
-        with patch.object(bullpen, "_fetch", return_value=payload):
-            self.assertEqual(bullpen.team_relief_innings(147, days=2), 7.0)
+    def _box(self, pitchers: list[int], innings: dict[int, float], team_id: int = 147) -> dict:
+        players = {
+            f"ID{pid}": {"stats": {"pitching": {"inningsPitched": innings.get(pid, 0.0)}}}
+            for pid in pitchers
+        }
+        return {
+            "teams": {
+                "home": {"team": {"id": team_id}, "pitchers": pitchers, "players": players},
+                "away": {"team": {"id": 999}, "pitchers": [], "players": {}},
+            }
+        }
+
+    def test_the_starter_is_excluded(self) -> None:
+        """Index 0 is the starter; everyone after it is relief."""
+        box = self._box([1, 2, 3], {1: 6.0, 2: 2.0, 3: 1.0})
+        with patch.object(bullpen, "_fetch", return_value=box):
+            self.assertEqual(bullpen.relief_innings_in_game("777", 147), 3.0)
+
+    def test_a_complete_game_is_zero_not_unknown(self) -> None:
+        """The bullpen rested. Zero is data; None would discard the row."""
+        box = self._box([1], {1: 9.0})
+        with patch.object(bullpen, "_fetch", return_value=box):
+            self.assertEqual(bullpen.relief_innings_in_game("777", 147), 0.0)
+
+    def test_the_other_club_in_the_game_is_not_counted(self) -> None:
+        box = self._box([1, 2], {1: 5.0, 2: 4.0}, team_id=147)
+        with patch.object(bullpen, "_fetch", return_value=box):
+            self.assertIsNone(bullpen.relief_innings_in_game("777", 555))
+
+    def test_an_empty_pitcher_list_is_unknown(self) -> None:
+        with patch.object(bullpen, "_fetch", return_value=self._box([], {})):
+            self.assertIsNone(bullpen.relief_innings_in_game("777", 147))
+
+    def test_workload_sums_across_recent_games(self) -> None:
+        box = self._box([1, 2], {1: 6.0, 2: 3.0})
+        with patch.object(bullpen, "_recent_game_pks", return_value=["1", "2", "3"]), \
+             patch.object(bullpen, "_fetch", return_value=box):
+            self.assertEqual(bullpen.team_relief_innings(147, days=3), 9.0)
+
+    def test_a_short_window_is_scaled_not_treated_as_rest(self) -> None:
+        """Two games in three days must not read as a rested bullpen."""
+        box = self._box([1, 2], {1: 6.0, 2: 3.0})
+        with patch.object(bullpen, "_recent_game_pks", return_value=["1", "2"]), \
+             patch.object(bullpen, "_fetch", return_value=box):
+            self.assertEqual(bullpen.team_relief_innings(147, days=3), 9.0)
 
     def test_fatigue_is_centred_on_a_normal_stretch(self) -> None:
         """Zero must mean 'ordinary', not 'no innings at all'."""
         normal = bullpen.TYPICAL_RELIEF_IP_PER_GAME
-        payload = self._log([{"inningsPitched": normal, "startersInningsPitched": 0.0}])
-        with patch.object(bullpen, "_fetch", return_value=payload):
+        box = self._box([1, 2], {1: 5.0, 2: normal})
+        with patch.object(bullpen, "_recent_game_pks", return_value=["1"]), \
+             patch.object(bullpen, "_fetch", return_value=box):
             self.assertAlmostEqual(bullpen.bullpen_fatigue(147, days=1), 0.0, places=2)
+
+    def test_workload_actually_varies(self) -> None:
+        """Guards the guard: prove the metric is not constant by construction.
+
+        The previous version returned exactly the typical figure every time, so
+        an 18-inning day and a 9-inning day both scored 0.00 fatigue.
+        """
+        light = self._box([1, 2], {1: 8.0, 2: 1.0})
+        heavy = self._box([1, 2, 3, 4], {1: 1.0, 2: 3.0, 3: 3.0, 4: 2.0})
+        with patch.object(bullpen, "_recent_game_pks", return_value=["1"]):
+            with patch.object(bullpen, "_fetch", return_value=light):
+                easy = bullpen.bullpen_fatigue(147, days=1)
+            with patch.object(bullpen, "_fetch", return_value=heavy):
+                hard = bullpen.bullpen_fatigue(147, days=1)
+        self.assertLess(easy, hard)
 
     def test_a_failed_fetch_never_raises(self) -> None:
         with patch.object(bullpen, "_fetch", side_effect=RuntimeError("statsapi down")):
             self.assertIsNone(bullpen.team_relief_innings(147))
             self.assertIsNone(bullpen.bullpen_fatigue(147))
 
-    def test_missing_starter_innings_is_unknown_not_zero(self) -> None:
-        """The silent-failure case, and the reason this test exists.
-
-        Falling back to "whole game minus a typical start" returns exactly the
-        typical figure every time, so an 18-inning day and a 9-inning day both
-        scored 0.00 fatigue. The feature would have logged numbers, passed its
-        tests and never once shown signal.
-        """
-        payload = self._log([{"inningsPitched": 18.0} for _ in range(3)])
-        with patch.object(bullpen, "_fetch", return_value=payload):
-            bullpen._warned = False
+    def test_no_completed_games_is_not_an_error(self) -> None:
+        with patch.object(bullpen, "_recent_game_pks", return_value=[]):
             self.assertIsNone(bullpen.team_relief_innings(147))
-            self.assertIsNone(bullpen.bullpen_fatigue(147))
 
-    def test_workload_actually_varies_when_the_field_is_present(self) -> None:
-        """Guards the guard: prove the metric is not constant by construction."""
-        light = self._log([{"inningsPitched": 9.0, "startersInningsPitched": 8.0}])
-        heavy = self._log([{"inningsPitched": 9.0, "startersInningsPitched": 1.0}])
-        with patch.object(bullpen, "_fetch", return_value=light):
-            easy = bullpen.bullpen_fatigue(147, days=1)
-        with patch.object(bullpen, "_fetch", return_value=heavy):
-            hard = bullpen.bullpen_fatigue(147, days=1)
-        self.assertLess(easy, hard)
-
-    def test_alternate_field_spellings_are_accepted(self) -> None:
-        payload = self._log([{"inningsPitched": 9.0, "startersInnings": 6.0}])
-        with patch.object(bullpen, "_fetch", return_value=payload):
-            self.assertEqual(bullpen.team_relief_innings(147, days=1), 3.0)
-
-    def test_a_dead_feature_announces_itself(self) -> None:
-        """An ablation candidate that cannot produce a value must be visible."""
-        import io
-        from contextlib import redirect_stdout
-
-        payload = self._log([{"inningsPitched": 9.0}])
-        buffer = io.StringIO()
-        with patch.object(bullpen, "_fetch", return_value=payload), redirect_stdout(buffer):
-            bullpen._warned = False
-            bullpen.team_relief_innings(147)
-        self.assertIn("Bullpen workload", buffer.getvalue())
+    def test_only_final_games_are_used(self) -> None:
+        schedule = {"dates": [
+            {"date": "2026-07-28", "games": [
+                {"gamePk": 1, "status": {"abstractGameState": "Final"}},
+                {"gamePk": 2, "status": {"abstractGameState": "Live"}},
+                {"gamePk": 3, "status": {"abstractGameState": "Preview"}},
+            ]},
+        ]}
+        with patch.object(bullpen, "_fetch", return_value=schedule):
+            self.assertEqual(bullpen._recent_game_pks(147, days=3), ["1"])
 
     def test_edge_needs_both_sides(self) -> None:
         """A one-sided figure would read as an edge when it is a data gap."""
@@ -175,10 +202,6 @@ class BullpenTests(unittest.TestCase):
 
     def test_missing_team_id_short_circuits(self) -> None:
         self.assertIsNone(bullpen.team_relief_innings(None))
-
-
-if __name__ == "__main__":
-    unittest.main()
 
 
 class DeadFeatureRegressionTests(unittest.TestCase):
@@ -261,38 +284,39 @@ class HeadToHeadResolutionTests(unittest.TestCase):
 
 
 class SelfDiagnosingTests(unittest.TestCase):
-    """A dead feature has to report what it saw, not just that it failed.
+    """A dead feature has to announce itself, not fail quietly.
 
-    Three guesses at the starters'-innings field name were all wrong, and
-    without network access there is no way to learn the right one by
-    inspection. Printing the fields that actually arrived turns an open question
-    into a one-line fix.
+    The previous warning printed the field names the game log returned, which is
+    what proved that endpoint could never work: 59 pitching fields, none of them
+    a starter/reliever split. It has done its job and is replaced by one about
+    the boxscore, which is where the split actually lives.
     """
 
-    def test_the_warning_lists_the_fields_that_arrived(self) -> None:
+    def test_an_unreadable_boxscore_warns_once(self) -> None:
         import io
         from contextlib import redirect_stdout
 
-        payload = {"stats": [{"splits": [{"stat": {
-            "inningsPitched": 9.0, "earnedRuns": 3, "whip": 1.21,
-        }}]}]}
         buffer = io.StringIO()
-        with patch.object(bullpen, "_fetch", return_value=payload), redirect_stdout(buffer):
+        empty = {"teams": {"home": {"team": {"id": 147}, "pitchers": [], "players": {}}}}
+        with patch.object(bullpen, "_recent_game_pks", return_value=["1", "2"]), \
+             patch.object(bullpen, "_fetch", return_value=empty), redirect_stdout(buffer):
             bullpen._warned = False
-            bullpen.team_relief_innings(147)
+            for _ in range(4):
+                bullpen.team_relief_innings(147)
 
         output = buffer.getvalue()
-        self.assertIn("whip", output, "must name the fields that did arrive")
-        self.assertIn("startersInningsPitched", output, "must name what it looked for")
+        self.assertIn("Bullpen workload", output)
+        self.assertEqual(output.count("Bullpen workload"), 1, "once per run, not per game")
 
-    def test_it_only_warns_once_per_run(self) -> None:
+    def test_the_warning_explains_why_the_game_log_cannot_substitute(self) -> None:
+        """So nobody retries the endpoint that was already proven unusable."""
         import io
         from contextlib import redirect_stdout
 
-        payload = {"stats": [{"splits": [{"stat": {"inningsPitched": 9.0}}]}]}
         buffer = io.StringIO()
-        with patch.object(bullpen, "_fetch", return_value=payload), redirect_stdout(buffer):
+        empty = {"teams": {"home": {"team": {"id": 147}, "pitchers": [], "players": {}}}}
+        with patch.object(bullpen, "_recent_game_pks", return_value=["1"]), \
+             patch.object(bullpen, "_fetch", return_value=empty), redirect_stdout(buffer):
             bullpen._warned = False
-            for _ in range(5):
-                bullpen.team_relief_innings(147)
-        self.assertEqual(buffer.getvalue().count("Bullpen workload"), 1)
+            bullpen.team_relief_innings(147)
+        self.assertIn("game log cannot substitute", buffer.getvalue())

@@ -411,14 +411,16 @@ allowed to move a probability only once it beats its own absence out of sample.
 | `handednessDiff` | southpaw asymmetry between the starters | no coverage yet |
 | `bullpenDiff` | relief innings absorbed in the last three days | no coverage yet — see note |
 
-> **`bullpenDiff` has an unverified dependency.** Separating relief innings from
-> total innings needs the starters' share, and the exact field name in the MLB
-> Stats API team game log could not be checked offline. If it is absent the
-> feature returns nothing and prints a CI warning, rather than fabricating a
-> figure — an earlier version fell back to "whole game minus a typical start",
-> which returns the typical figure every time and scored an 18-inning day and a
-> 9-inning day identically at 0.00. Check the build log for
-> `::warning title=Bullpen workload::` after the first run.
+> **`bullpenDiff` reads the boxscore, not the team game log.** A build printed
+> every field the game log returns — 59 of them, including `gamesStarted`,
+> `completeGames`, `gamesFinished`, `saves` and `holds` — and **none separates
+> starters from relievers**. The feature was unbuildable from there.
+>
+> The boxscore does carry it: pitchers are listed in appearance order, so index 0
+> is the starter and the rest are relief. That costs one schedule call plus one
+> boxscore per game examined, about four requests per club — the price of the
+> only endpoint that answers the question. A complete game scores zero relief
+> innings, not unknown, because zero is data.
 
 "No coverage yet" is the expected state for anything recently added: the fit
 reads features out of `predictions_log.json`, so a new one starts at zero
