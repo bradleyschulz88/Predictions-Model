@@ -12,7 +12,7 @@ from data_providers.utils import team_match_score
 from espn_client import ESPNClientError, fetch_scoreboard, parse_scoreboard
 from espn_enrichment import enrich_game, enrich_games, ensure_espn_odds_on_games
 from data_providers import enrich_games_with_providers
-from mlb_predictions import apply_predictions, is_publishable_pick
+from mlb_predictions import apply_predictions, has_moneyline_lines, is_publishable_pick
 from data_providers.schedule_advanced import clear_rolling_schedule_cache, fetch_rolling_schedule_games
 from schedule_dates import default_game_date, get_schedule_timezone
 from sbr_client import SBRClientError, build_odds_url, get_game_rows, get_page_props
@@ -147,6 +147,10 @@ def merge_sbr_odds_into_games(
         "rows": 0,
         "games": len(games),
         "matched": 0,
+        # Matched means the game was found on SBR; priced means it came back
+        # with a moneyline. WNBA matched fine and was never priced.
+        "priced": 0,
+        "viewTypes": [],
         "unmatched": [],
         "sbrNames": [],
         # Enrichment has already run by this point, so this says whether the
@@ -204,6 +208,17 @@ def merge_sbr_odds_into_games(
         if matched:
             _attach_sbr_lines(game, matched[0], matched[1])
             stats["matched"] += 1
+            # Matching is not the same as pricing. SBR can return a row whose
+            # only markets are spread and total, which attaches lines and still
+            # leaves the game unpriced -- the model needs a moneyline. Counting
+            # matches alone reported that as success.
+            if has_moneyline_lines(game.get("lines") or []):
+                stats["priced"] += 1
+            else:
+                for line in game.get("lines") or []:
+                    view = line.get("viewType")
+                    if view and view not in stats["viewTypes"]:
+                        stats["viewTypes"].append(view)
         else:
             stats["unmatched"].append(f"{game.get('awayTeam')} @ {game.get('homeTeam')}")
 
@@ -219,7 +234,9 @@ def _report_odds_merge(stats: dict[str, Any]) -> None:
     """
     if not stats.get("configured") or not stats.get("games"):
         return
-    if stats.get("matched"):
+    # Priced is the bar, not matched: a row carrying only spreads and totals
+    # attaches lines and still leaves the game unpriced.
+    if stats.get("priced"):
         return
 
     where = f"{stats['league']} {stats['date']}"
@@ -229,6 +246,15 @@ def _report_odds_merge(stats: dict[str, Any]) -> None:
         if espn
         else f" (ESPN has no odds either, on any of {stats['games']})"
     )
+
+    if stats.get("matched"):
+        markets = ", ".join(stats["viewTypes"]) or "none"
+        print(
+            f"Odds: {where}: SBR matched {stats['matched']}/{stats['games']} games but "
+            f"none carry a moneyline -- markets returned: {markets}{espn_note}",
+            flush=True,
+        )
+        return
 
     if not stats.get("fetched"):
         print(

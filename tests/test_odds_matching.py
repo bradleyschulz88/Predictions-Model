@@ -239,3 +239,71 @@ class OddsMergeDiagnosisTests(unittest.TestCase):
     def test_unpriced_league_reports_not_configured(self) -> None:
         stats = merge_sbr_odds_into_games(self._games(), league="afl", date_value="2026-07-28")
         self.assertFalse(stats["configured"])
+
+
+class MatchedIsNotPricedTests(unittest.TestCase):
+    """Being on SBR's board is not the same as having a price.
+
+    A row whose only markets are spread and total attaches lines and still
+    leaves the game unpriced -- the model needs a moneyline. Counting matches
+    as success reported that as healthy, which is why WNBA looked fine in the
+    per-date diagnosis while the coverage check said 0/5 priced.
+    """
+
+    def _row(self, away: str, home: str, *view_types: str) -> dict:
+        return {
+            "gameView": {"awayTeam": {"fullName": away}, "homeTeam": {"fullName": home}},
+            "oddsViews": [
+                {"viewType": vt, "sportsbook": "X",
+                 "currentLine": ({"homeOdds": -140, "awayOdds": 120}
+                                 if vt == "MoneyLine" else {"home": "-4.5 (-110)"})}
+                for vt in view_types
+            ],
+        }
+
+    def _merge(self, *view_types: str) -> dict:
+        from unittest.mock import patch
+
+        games = [{"awayTeam": "New York Liberty", "homeTeam": "Las Vegas Aces",
+                  "lines": [], "enrichment": {}}]
+        with patch("mlb_data.get_page_props", return_value={}), patch(
+            "mlb_data.get_game_rows",
+            return_value=[self._row("New York", "Las Vegas", *view_types)],
+        ):
+            return merge_sbr_odds_into_games(games, league="wnba", date_value="2026-07-28")
+
+    def test_spread_and_total_only_matches_but_does_not_price(self) -> None:
+        stats = self._merge("Spread", "Total")
+        self.assertEqual(stats["matched"], 1)
+        self.assertEqual(stats["priced"], 0)
+        self.assertEqual(sorted(stats["viewTypes"]), ["Spread", "Total"])
+
+    def test_moneyline_counts_as_priced(self) -> None:
+        stats = self._merge("MoneyLine", "Spread")
+        self.assertEqual(stats["matched"], 1)
+        self.assertEqual(stats["priced"], 1)
+
+    def test_report_names_the_missing_moneyline(self) -> None:
+        """Would have caught the UnboundLocalError this path shipped with."""
+        import io
+        from contextlib import redirect_stdout
+
+        import mlb_data
+
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            mlb_data._report_odds_merge(self._merge("Spread", "Total"))
+        out = buffer.getvalue()
+        self.assertIn("none carry a moneyline", out)
+        self.assertIn("Spread", out)
+
+    def test_priced_league_reports_nothing(self) -> None:
+        import io
+        from contextlib import redirect_stdout
+
+        import mlb_data
+
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            mlb_data._report_odds_merge(self._merge("MoneyLine"))
+        self.assertEqual(buffer.getvalue(), "")
