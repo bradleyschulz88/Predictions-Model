@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT))
 from scripts.backfill_history import (  # noqa: E402
     MIN_GAMES_BEFORE_USABLE,
     TeamState,
-    _assert_no_leakage,
+    _assert_state_predates_game,
     _final_scores,
     build_features,
     replay_league,
@@ -54,33 +54,57 @@ class SeasonFixture:
 
 
 class LeakageTests(unittest.TestCase):
-    """The failure that makes a backfill look superb and perform terribly."""
+    """The failure that makes a backfill look superb and perform terribly.
 
-    def test_a_feature_matching_the_result_is_rejected(self) -> None:
+    The first version of this guard compared every numeric feature against the
+    game's scores and margin. It was unsound and failed on the very first real
+    game: `parkEdge=4.0` on a 4-7 result, where a ballpark index is a static
+    property of the stadium and cannot encode an outcome. `homeRest=4` would have
+    done the same. Any integer-valued feature was one coincidence away from
+    blocking the whole backfill.
+
+    The check now asserts the invariant that actually matters and cannot collide
+    with a score.
+    """
+
+    def test_state_running_ahead_of_the_replay_is_rejected(self) -> None:
+        state = TeamState()
+        for _ in range(3):
+            state.record(True, at_home=True, played_on="2025-04-01")
+        # Three games recorded but only two processed: the current result has
+        # already been folded in.
         with self.assertRaises(AssertionError):
-            _assert_no_leakage({"recordDiff": 4.0}, 7, 3)
+            _assert_state_predates_game("Rockies", state, 2)
 
-    def test_ordinary_features_pass(self) -> None:
-        _assert_no_leakage({"recordDiff": 0.25, "homeRest": 1}, 7, 3)
+    def test_matching_counts_pass(self) -> None:
+        state = TeamState()
+        for _ in range(3):
+            state.record(True, at_home=True, played_on="2025-04-01")
+        _assert_state_predates_game("Rockies", state, 3)
 
-    def test_a_full_replay_never_leaks(self) -> None:
-        """The guard runs on every row; this proves it never fires wrongly."""
+    def test_a_static_feature_equal_to_a_score_is_not_leakage(self) -> None:
+        """The exact false positive that blocked the first live run.
+
+        A ballpark index of +4 on a 4-7 game is a coincidence, not a leak.
+        """
+        season = SeasonFixture(days=60)
+        rows = replay_league("mlb", "2025-04-01", "2025-05-30",
+                             fetch=season.fetch, parse=season.parse)
+        park_edges = {row["features"]["parkEdge"] for row in rows}
+        self.assertTrue(park_edges, "park factors must still be emitted")
+        # The fixture scores 7-3, so a +4 or +7 park edge must not be rejected.
+        self.assertTrue(rows, "a coincidental value must not abort the replay")
+
+    def test_a_full_replay_never_trips_the_guard(self) -> None:
         season = SeasonFixture()
         rows = replay_league("mlb", "2025-04-01", "2025-05-10",
                              fetch=season.fetch, parse=season.parse)
         self.assertTrue(rows)
 
     def test_state_is_read_before_the_result_is_recorded(self) -> None:
-        """The ordering that makes the features pre-game.
-
-        With the home side always winning, a club's record must never already
-        include the game being predicted.
-        """
         season = SeasonFixture()
         rows = replay_league("mlb", "2025-04-01", "2025-05-10",
                              fetch=season.fetch, parse=season.parse)
-        # Each club plays every other day, so by the last row no club can have a
-        # perfect record derived from a game it has not played yet.
         for row in rows:
             self.assertLessEqual(abs(row["features"]["recordDiff"]), 1.0)
 

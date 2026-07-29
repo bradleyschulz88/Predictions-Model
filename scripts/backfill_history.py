@@ -22,8 +22,11 @@ stood *before* the game:
 * rest is measured from the club's previous fixture;
 * park and travel are static properties of who is playing where.
 
-The final score is used for one thing only: the label. `_assert_no_leakage` and
-its tests exist to keep it that way.
+The final score is used for one thing only: the label.
+`_assert_state_predates_game` runs on every row to keep it that way: it checks
+that a club's recorded game count matches how many games the replay has
+processed for it, so folding a result in before reading the features fails
+immediately rather than quietly training on the answer.
 
 What it deliberately cannot do
 ------------------------------
@@ -38,8 +41,8 @@ Usage
 -----
     python scripts/backfill_history.py --league mlb --start 2025-04-01 --end 2025-09-28
 
-Writes `docs/data/history_features.json`, which is gitignored and rebuilt on
-demand -- it is derived data, not a record.
+Writes `docs/data/history_features.json`. Run it from Actions > Backfill season
+history rather than locally; a season is roughly 180 requests.
 """
 
 from __future__ import annotations
@@ -140,25 +143,32 @@ def _final_scores(game: dict[str, Any]) -> tuple[int, int] | None:
         return None
 
 
-def _assert_no_leakage(features: dict[str, Any], home_score: int, away_score: int) -> None:
-    """Guard against the failure mode that makes a backfill worthless.
+def _assert_state_predates_game(
+    team: str,
+    state: TeamState,
+    games_already_seen: int,
+) -> None:
+    """Assert the club's state contains only games played BEFORE this one.
 
-    A feature must not be derivable from this game's result. The cheapest useful
-    check is that no feature equals the margin or either score, which catches
-    the realistic mistakes -- writing the label in by accident, or recording the
-    game into team state before reading the features back out.
+    This replaces a score-collision heuristic that flagged any numeric feature
+    equal to a score or the margin. That check was unsound and proved it on the
+    first run: it rejected `parkEdge=4.0` on a 4-7 game, when a ballpark index is
+    a static property of the stadium and cannot encode a result. `homeRest=4`
+    would have tripped it too. Any integer-valued feature was one coincidence
+    away from blocking the whole backfill.
+
+    This asserts the invariant that actually matters, and cannot collide with a
+    score: at the moment features are read, a club must have exactly as many
+    games recorded as it has already been processed for. If someone ever moves
+    the `record()` calls above `build_features`, every row fails immediately
+    instead of quietly training on the answer.
     """
-    forbidden = {float(home_score), float(away_score), float(home_score - away_score)}
-    # Zero and small integers occur legitimately all over the feature set.
-    forbidden = {value for value in forbidden if abs(value) > 3}
-    for name, value in features.items():
-        if isinstance(value, (int, float)) and not isinstance(value, bool):
-            if float(value) in forbidden:
-                raise AssertionError(
-                    f"feature {name}={value} matches this game's score "
-                    f"({home_score}-{away_score}); state was updated before "
-                    "the features were read"
-                )
+    if state.games != games_already_seen:
+        raise AssertionError(
+            f"{team} has {state.games} games recorded but {games_already_seen} "
+            "have been processed -- the result was folded into team state before "
+            "the features were read, so the features encode the outcome"
+        )
 
 
 def build_features(
@@ -226,6 +236,8 @@ def replay_league(
     that game, and only then is the result folded in.
     """
     states: dict[str, TeamState] = defaultdict(TeamState)
+    # Games processed per club, to verify state never runs ahead of the replay.
+    seen: dict[str, int] = defaultdict(int)
     rows: list[dict[str, Any]] = []
 
     current = date.fromisoformat(start)
@@ -252,9 +264,13 @@ def replay_league(
             home_state = states[home_team]
             away_state = states[away_team]
 
+            # Checked before the features are read, and again implicitly by the
+            # counter increment below.
+            _assert_state_predates_game(home_team, home_state, seen[home_team])
+            _assert_state_predates_game(away_team, away_state, seen[away_team])
+
             features = build_features(game, home_state, away_state, league=league)
             if features is not None:
-                _assert_no_leakage(features, home_score, away_score)
                 rows.append(
                     {
                         "eventId": str(game.get("eventId") or ""),
@@ -272,6 +288,8 @@ def replay_league(
             played = (game.get("startDate") or iso)[:10]
             home_state.record(home_won, at_home=True, played_on=played)
             away_state.record(not home_won, at_home=False, played_on=played)
+            seen[home_team] += 1
+            seen[away_team] += 1
 
         current += timedelta(days=1)
 
