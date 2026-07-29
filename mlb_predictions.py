@@ -20,6 +20,7 @@ from data_providers.league_metrics import (
     soccer_draw_probability,
 )
 from data_providers.mlb_pitcher import mlb_pitching_logit_adjustment
+from data_providers.park_factors import park_run_environment
 from data_providers.schedule_advanced import schedule_flags_logit_adjustment
 from data_providers.enrich import enrich_games_with_providers
 from elo import load_ratings, rating_edge
@@ -704,6 +705,12 @@ def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
         ),
         "homePower": home_adv.get("powerRating"),
         "awayPower": away_adv.get("powerRating"),
+        # Park run index, centred on zero. Logged even though it is expected to
+        # fail the moneyline ablation -- a park inflates scoring for both teams,
+        # so it should barely move who wins. It is here because the honest way
+        # to find that out is to measure it, and because unlike weather it can
+        # be recovered for past games from the home club alone.
+        "parkEdge": (park_run_environment(game.get("homeTeam"), game.get("venueName")) or {}).get("edge"),
         "homeInjuryLoad": round(_weighted_injury_score(enrichment.get("homeMajorInjuries") or [], league), 2),
         "awayInjuryLoad": round(_weighted_injury_score(enrichment.get("awayMajorInjuries") or [], league), 2),
         # Availability x seriousness (x player importance when an LLM key is
@@ -886,6 +893,21 @@ def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment:
         over_lean += run_env
         if weather_impact.get("summary"):
             detail_parts.append(f"Weather: {weather_impact['summary']}.")
+
+    # Where the game is played. Scaled so Coors (+15) moves the lean 0.09 and a
+    # mid-table park moves it almost nothing, which matches how the effect
+    # actually distributes: the extremes are large and uncontroversial, the
+    # middle is inside the noise. Only the two extremes are annotated, so the
+    # reasoning does not fill up with "this is an average ballpark".
+    if league == "mlb":
+        park = park_run_environment(game.get("homeTeam"), game.get("venueName"))
+        if park:
+            over_lean += clamp(park["edge"] * 0.006, -0.09, 0.09)
+            if abs(park["edge"]) >= 3:
+                detail_parts.append(
+                    f"{game.get('venueName') or 'The ballpark'} is {park['note']} "
+                    f"({park['factor']:.0f} runs index)."
+                )
 
     home_adv = enrichment.get("homeAdvanced") or {}
     away_adv = enrichment.get("awayAdvanced") or {}
