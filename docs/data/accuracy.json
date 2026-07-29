@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-29T14:47:15.454988+00:00",
+  "updatedAt": "2026-07-29T16:20:42.488284+00:00",
   "summary": {
     "last7Days": {
       "correct": 294,
@@ -16,8 +16,8 @@
       "pct": 60.4,
       "units": 13.802,
       "roiPct": 2.0,
-      "pending": 61,
-      "voided": 11
+      "pending": 60,
+      "voided": 12
     },
     "byLeague": {
       "mlb": {
@@ -20414,7 +20414,7 @@
       "openingOdds": -149,
       "openingSide": "away",
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -20422,7 +20422,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401902545": {
       "eventId": "401902545",
