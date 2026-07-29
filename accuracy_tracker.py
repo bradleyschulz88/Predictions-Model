@@ -157,6 +157,16 @@ def _build_pick_record(
         if odds is not None:
             record["units"] = american_odds_profit(odds, correct)
         record["gradedAt"] = datetime.now(timezone.utc).isoformat()
+
+        # Separate markets on the same game, scored separately. They must never
+        # be folded into `correct`, which is the moneyline record, or a good
+        # totals week would flatter a bad picking week.
+        record["totalResult"] = grade_total(
+            pending.get("total"), game.get("homeScore"), game.get("awayScore")
+        )
+        record["spreadResult"] = grade_spread(
+            pending.get("spread"), game.get("homeScore"), game.get("awayScore")
+        )
     return record
 
 
@@ -244,11 +254,60 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 # it. Kept for training; excluded from the published record.
                 "published": published,
                 "features": prediction.get("features"),
+                # Separate markets on the same game. Logged so they can be
+                # graded, which none of them ever has been -- the totals
+                # heuristic has been shown on the board since the start without
+                # a single scored result behind it.
+                "total": _side_market(prediction.get("total"), ("line", "pickSide")),
+                "spread": _side_market(
+                    prediction.get("spread"), ("line", "pickSide", "market")
+                ),
                 "recordedAt": payload.get("fetchedAt"),
             }
 
     _prune_log(log)
     _save_json(log_path, log)
+
+
+def _market_summary(results: list[dict[str, Any]], key: str) -> dict[str, Any]:
+    """Win/loss/push record for one side market.
+
+    Hit rate excludes pushes, because a returned stake is not a result. Counting
+    pushes as half a win -- the other common convention -- would quietly lift a
+    break-even record above break-even.
+    """
+    graded = [item[key] for item in results if isinstance(item.get(key), dict)]
+    wins = sum(1 for row in graded if row.get("outcome") == "win")
+    losses = sum(1 for row in graded if row.get("outcome") == "loss")
+    pushes = sum(1 for row in graded if row.get("outcome") == "push")
+    decided = wins + losses
+
+    return {
+        "graded": len(graded),
+        "wins": wins,
+        "losses": losses,
+        "pushes": pushes,
+        "pct": round(wins / decided * 100, 1) if decided else None,
+        # These picks are not priced, so a hit rate is all that can be claimed.
+        # Break-even at the usual -110 is 52.4%.
+        "breakEvenPct": 52.4,
+        "note": "Hit rate only; these markets carry no logged price, so ROI is not measurable.",
+    }
+
+
+def _side_market(block: dict[str, Any] | None, keys: tuple[str, ...]) -> dict[str, Any] | None:
+    """Just enough of a totals or spread pick to grade it later.
+
+    Deliberately narrow. The full block carries reasoning text that would bloat
+    a log committed every 30 minutes, and grading needs only the line and the
+    side taken.
+    """
+    if not isinstance(block, dict):
+        return None
+    kept = {key: block.get(key) for key in keys if block.get(key) is not None}
+    if "line" not in kept or "pickSide" not in kept:
+        return None
+    return kept
 
 
 def _prune_log(log: dict[str, Any]) -> None:
@@ -326,6 +385,75 @@ def _abandoned_reason(game: dict[str, Any]) -> str | None:
     if game.get("isPostponed"):
         return "postponed"
     return None
+
+
+def grade_total(pick: dict[str, Any] | None, home_score: Any, away_score: Any) -> dict[str, Any] | None:
+    """Score an over/under pick against the final total.
+
+    A total landing exactly on the line is a push -- the stake comes back. That
+    is neither a win nor a loss, and counting it either way misstates the record,
+    so it gets its own outcome.
+    """
+    if not pick:
+        return None
+    try:
+        line = float(pick["line"])
+        actual = int(home_score) + int(away_score)
+    except (KeyError, TypeError, ValueError):
+        return None
+
+    side = str(pick.get("pickSide") or "").lower()
+    if side not in {"over", "under"}:
+        return None
+
+    if actual == line:
+        outcome = "push"
+    elif (actual > line) == (side == "over"):
+        outcome = "win"
+    else:
+        outcome = "loss"
+
+    return {"line": line, "pickSide": side, "actual": actual, "outcome": outcome}
+
+
+def grade_spread(
+    pick: dict[str, Any] | None, home_score: Any, away_score: Any
+) -> dict[str, Any] | None:
+    """Score a spread or runline pick against the final margin.
+
+    `line` is the home side's number, so a home favourite carries a negative
+    one. The home side covers when its margin beats that number; landing exactly
+    on it is a push, which cannot happen on a half-point line like baseball's
+    -1.5 but can on a whole-number spread.
+    """
+    if not pick:
+        return None
+    try:
+        line = float(pick["line"])
+        margin = int(home_score) - int(away_score)
+    except (KeyError, TypeError, ValueError):
+        return None
+
+    side = str(pick.get("pickSide") or "").lower()
+    if side not in {"home", "away"}:
+        # "push"/"No lean" picks are not positions and are not graded.
+        return None
+
+    adjusted = margin + line
+    if adjusted == 0:
+        outcome = "push"
+    elif (adjusted > 0) == (side == "home"):
+        outcome = "win"
+    else:
+        outcome = "loss"
+
+    return {
+        "line": line,
+        "pickSide": side,
+        "margin": margin,
+        "market": pick.get("market") or "spread",
+        "outcome": outcome,
+    }
 
 
 def _winner_from_game(game: dict[str, Any]) -> str | None:
@@ -567,6 +695,10 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
             "byLeague": by_league,
             "streak": streak,
             "closingLineValue": clv_summary,
+            # Their own buckets, never folded into the moneyline record above.
+            # A good totals week must not flatter a bad picking week.
+            "totals": _market_summary(all_results, "totalResult"),
+            "spreads": _market_summary(all_results, "spreadResult"),
         },
         "recentResults": recent_results,
         "pendingPicks": pending_picks,
