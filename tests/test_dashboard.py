@@ -132,3 +132,97 @@ class DashboardServerTests(OfflineTestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TeamAbbreviationTests(OfflineTestCase):
+    """The board shows abbreviations, so a wrong one is what the user sees.
+
+    Deriving them from the words produced "AB" for Atlanta Braves and "BRS" for
+    Boston Red Sox. ESPN publishes the official abbreviation next to the name,
+    so capture that instead of guessing.
+    """
+
+    def _games(self) -> list[dict]:
+        with open(ESPN_FIXTURE, encoding="utf-8") as handle:
+            return parse_scoreboard(json.load(handle), league="mlb")
+
+    def test_scoreboard_captures_official_abbreviations(self) -> None:
+        game = self._games()[0]
+        self.assertEqual(game["awayAbbr"], "MIA")
+        self.assertEqual(game["homeAbbr"], "PHI")
+
+    def test_every_game_carries_both_abbreviations(self) -> None:
+        for game in self._games():
+            self.assertTrue(game.get("awayAbbr"), game.get("matchup"))
+            self.assertTrue(game.get("homeAbbr"), game.get("matchup"))
+
+    def test_abbreviations_are_not_word_initials(self) -> None:
+        """The exact regression: initials would render these as AB and BRS."""
+        for game in self._games():
+            for side in ("away", "home"):
+                name = game[f"{side}Team"]
+                initials = "".join(word[0] for word in name.split())[:4].upper()
+                if len(name.split()) == 2:
+                    self.assertNotEqual(
+                        game[f"{side}Abbr"], initials, f"{name} still abbreviating to initials"
+                    )
+
+
+class DashboardAbbrevFallbackTests(OfflineTestCase):
+    """The JS fallback only fires for stored records with no captured abbrev."""
+
+    def _app_js(self) -> str:
+        return (Path(__file__).resolve().parents[1] / "dashboard" / "app.js").read_text(
+            encoding="utf-8"
+        )
+
+    def test_explicit_abbreviation_wins(self) -> None:
+        app_js = self._app_js()
+        self.assertIn("function teamAbbrev(name, explicit)", app_js)
+        self.assertIn("if (given) return given.toUpperCase();", app_js)
+
+    def test_two_word_names_use_the_city_not_initials(self) -> None:
+        """"Atlanta Braves" must fall back to ATL, never AB."""
+        app_js = self._app_js()
+        self.assertIn("if (words.length === 2) return words[0].slice(0, 3).toUpperCase();", app_js)
+
+    def test_call_sites_pass_the_captured_abbreviation(self) -> None:
+        app_js = self._app_js()
+        self.assertNotIn("teamAbbrev(game.homeTeam)", app_js)
+        self.assertNotIn("teamAbbrev(game.awayTeam)", app_js)
+        self.assertIn("teamAbbrev(game.homeTeam, game.homeAbbr)", app_js)
+        self.assertIn("teamAbbrev(game.awayTeam, game.awayAbbr)", app_js)
+
+
+class DoubleheaderDisplayTests(OfflineTestCase):
+    """Doubleheaders are real games, not duplicates.
+
+    Nine pairs in the logged history, every one with two different final scores.
+    The model handles them correctly; the board collapsed both to the same line
+    with the start time hidden inside <details>, so they read as a duplicate.
+    """
+
+    def _app_js(self) -> str:
+        return (Path(__file__).resolve().parents[1] / "dashboard" / "app.js").read_text(
+            encoding="utf-8"
+        )
+
+    def test_annotation_runs_before_the_cards_render(self) -> None:
+        app_js = self._app_js()
+        self.assertIn("function annotateDoubleheaders(games)", app_js)
+        self.assertIn("annotateDoubleheaders(visible);", app_js)
+
+    def test_badge_reaches_every_scoreboard_return_path(self) -> None:
+        """Three paths render the matchup line -- scored, with form, plain."""
+        app_js = self._app_js()
+        start = app_js.index("function renderScoreboardTeams(game)")
+        body = app_js[start : app_js.index("\n}", start)]
+        self.assertEqual(body.count("${dh}"), 3, "a return path renders no doubleheader badge")
+
+    def test_single_games_carry_no_badge(self) -> None:
+        app_js = self._app_js()
+        self.assertIn("game.gameInSeries = null;", app_js)
+
+    def test_ordered_by_start_time_with_event_id_as_tiebreak(self) -> None:
+        app_js = self._app_js()
+        self.assertIn("if (Number.isFinite(at) && Number.isFinite(bt) && at !== bt) return at - bt;", app_js)
