@@ -300,3 +300,169 @@ class PublishedFlagReconciliationTests(unittest.TestCase):
 
         self.assertTrue(accuracy["picksByEventId"]["42"]["published"])
         self.assertEqual(accuracy["summary"]["allTime"]["total"], 1)
+
+
+class AbandonedGameTests(unittest.TestCase):
+    """A pick on a game that never happened must reach a terminal state.
+
+    12 picks were stuck at "pending", the oldest from 2026-06-18. Ten were
+    rain-outs replayed later -- six as the second game of a doubleheader the
+    next day, which is what a postponed MLB game normally becomes. Grading
+    correctly refused to score them, then treated "called off" exactly like
+    "not finished yet", so they never resolved.
+    """
+
+    def _setup(self, tmp: str, *, schedule_date: str, games: list[dict]) -> dict:
+        from pathlib import Path
+        from unittest.mock import patch
+
+        import accuracy_tracker
+
+        data_dir = Path(tmp)
+        (data_dir / "predictions_log.json").write_text(
+            json.dumps(
+                {
+                    "predictions": {
+                        "42": {
+                            "eventId": "42",
+                            "league": "mlb",
+                            "scheduleDate": schedule_date,
+                            "matchup": "Orioles @ Red Sox",
+                            "predictedWinner": "Red Sox",
+                            "confidence": 70.0,
+                            "published": True,
+                        }
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        def fake_parse(_scoreboard, league=None):
+            return games
+
+        with patch.object(accuracy_tracker, "fetch_scoreboard", return_value={}), patch.object(
+            accuracy_tracker, "parse_scoreboard", side_effect=fake_parse
+        ):
+            return accuracy_tracker.grade_predictions(data_dir)
+
+    def _game(self, **flags) -> dict:
+        game = {
+            "eventId": "42",
+            "homeTeam": "Red Sox",
+            "awayTeam": "Orioles",
+            "isFinal": False,
+            "isPostponed": False,
+            "isCanceled": False,
+            "isVoided": False,
+            "isWashedOut": False,
+            "isDelayed": False,
+        }
+        game.update(flags)
+        return game
+
+    def _yesterday(self) -> str:
+        from schedule_dates import league_schedule_date
+
+        return league_schedule_date("mlb", -1)
+
+    def _long_ago(self) -> str:
+        from schedule_dates import league_schedule_date
+
+        return league_schedule_date("mlb", -10)
+
+    def test_postponed_game_seen_on_its_date_is_voided(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            accuracy = self._setup(
+                tmp, schedule_date=self._yesterday(), games=[self._game(isPostponed=True)]
+            )
+        record = accuracy["picksByEventId"]["42"]
+        self.assertEqual(record["status"], "voided")
+        self.assertEqual(record["voidReason"], "postponed")
+
+    def test_canceled_game_is_voided(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            accuracy = self._setup(
+                tmp, schedule_date=self._yesterday(), games=[self._game(isCanceled=True)]
+            )
+        self.assertEqual(accuracy["picksByEventId"]["42"]["voidReason"], "canceled")
+
+    def test_rescheduled_game_that_vanished_is_aged_out(self) -> None:
+        """ESPN drops a rescheduled game from its original date entirely.
+
+        It is never seen again, so ageing out is the only way it can resolve.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            accuracy = self._setup(tmp, schedule_date=self._long_ago(), games=[])
+        record = accuracy["picksByEventId"]["42"]
+        self.assertEqual(record["status"], "voided")
+        self.assertEqual(record["voidReason"], "no result reported")
+
+    def test_a_delayed_game_is_left_alone(self) -> None:
+        """A rain delay has not finished; it has not been called off."""
+        with tempfile.TemporaryDirectory() as tmp:
+            accuracy = self._setup(
+                tmp, schedule_date=self._yesterday(), games=[self._game(isDelayed=True)]
+            )
+        self.assertEqual(accuracy["picksByEventId"]["42"]["status"], "pending")
+
+    def test_a_recent_missing_game_is_not_voided_yet(self) -> None:
+        """Yesterday's game may simply not have a final posted yet."""
+        with tempfile.TemporaryDirectory() as tmp:
+            accuracy = self._setup(tmp, schedule_date=self._yesterday(), games=[])
+        self.assertEqual(accuracy["picksByEventId"]["42"]["status"], "pending")
+
+    def test_a_fetch_failure_never_voids_a_pick(self) -> None:
+        """The guard that matters: ESPN being down is not evidence of anything."""
+        from pathlib import Path
+        from unittest.mock import patch
+
+        import accuracy_tracker
+
+        with tempfile.TemporaryDirectory() as tmp:
+            data_dir = Path(tmp)
+            (data_dir / "predictions_log.json").write_text(
+                json.dumps(
+                    {
+                        "predictions": {
+                            "42": {
+                                "eventId": "42",
+                                "league": "mlb",
+                                "scheduleDate": self._long_ago(),
+                                "predictedWinner": "Red Sox",
+                                "confidence": 70.0,
+                                "published": True,
+                            }
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            with patch.object(
+                accuracy_tracker, "fetch_scoreboard", side_effect=RuntimeError("ESPN down")
+            ):
+                accuracy = accuracy_tracker.grade_predictions(data_dir)
+
+        self.assertEqual(accuracy["picksByEventId"]["42"]["status"], "pending")
+
+    def test_a_played_game_still_grades_normally(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            accuracy = self._setup(
+                tmp,
+                schedule_date=self._yesterday(),
+                games=[self._game(isFinal=True, homeScore=5, awayScore=2)],
+            )
+        record = accuracy["picksByEventId"]["42"]
+        self.assertEqual(record["status"], "graded")
+        self.assertTrue(record["correct"])
+
+    def test_voids_are_counted_not_silently_dropped(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            accuracy = self._setup(
+                tmp, schedule_date=self._yesterday(), games=[self._game(isPostponed=True)]
+            )
+        summary = accuracy["summary"]["allTime"]
+        self.assertEqual(summary["voided"], 1)
+        # A void is neither a win nor a loss, and is no longer pending either.
+        self.assertEqual(summary["total"], 0)
+        self.assertEqual(summary["pending"], 0)

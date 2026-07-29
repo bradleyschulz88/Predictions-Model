@@ -97,6 +97,35 @@ Raw accuracy is ~60%, and that is close to the ceiling: published MLB
 binary-prediction accuracy tops out around 55-60%. The value is in probabilities
 that mean what they say, not in a higher hit rate.
 
+### Games that never happened get voided, not left pending
+
+A pick can only be graded against a result. If the game is called off there will
+never be one, so the pick is marked **`voided`** — never a win, never a loss, and
+no longer pending.
+
+Without that terminal state 12 picks sat at "pending" indefinitely, the oldest
+from 18 June. Ten were rain-outs replayed later, **six of them as the second game
+of a doubleheader the next day**, which is what a postponed MLB game normally
+becomes. Grading was already refusing to score them — correctly — but then
+treated "called off" exactly like "not finished yet".
+
+Two routes to that dead end, so both are handled:
+
+| what ESPN does | how it resolves |
+|---|---|
+| still lists the game on its original date, flagged postponed | voided on sight, with the reason recorded |
+| drops the game from that date once it is rescheduled | aged out after `VOID_UNRESOLVED_AFTER_DAYS` (3) |
+
+Two guards keep this from firing wrongly:
+
+- **A failed fetch never voids anything.** Only dates actually read this run can
+  age a pick out — ESPN being down is not evidence about a game.
+- **A delay is not a cancellation.** `isDelayed` stays pending; only postponed,
+  cancelled, voided or washed-out games are closed.
+
+The makeup game is predicted and graded in its own right, so voiding the
+original is also what stops one postponement being counted twice.
+
 ### Dates are league-local, everywhere
 
 A slate is filed under the **league's own calendar day**, which is how ESPN and
