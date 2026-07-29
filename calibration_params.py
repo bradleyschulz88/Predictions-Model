@@ -33,6 +33,37 @@ LEAN_THRESHOLD = 57
 # with MIN_PUBLISHABLE_CONFIDENCE in dashboard/app.js.
 MIN_PICK_CONFIDENCE = 55
 
+# MLB is held to a higher bar, because its 55-65% band has no skill and loses
+# money at a rate that is not survivable.
+#
+# Measured 2026-07-29 on 150 graded, priced MLB picks in that band: 42.7% hit
+# rate into prices implying roughly 58-62%, for -20.2% ROI. That is not a run of
+# bad luck. Splitting the history in half gives 42.7% / -20.3% then
+# 42.7% / -20.0%, two independent samples landing on the same number, and both
+# sides fail -- home 42.4% (n=85), away 43.1% (n=65) -- so it is not home bias
+# either.
+#
+# Above 65% MLB is healthy: 61.0% in the 65-75% band and 62.6% above 75%. So
+# this is one dead band, not a broken model, and withholding it moves the whole
+# board from -0.75% ROI to +7.86% while dropping 150 of 488 priced picks.
+#
+# Other leagues do not share it, so this is deliberately per-league rather than
+# a blanket raise. Re-measure as the log grows; if the band recovers, this
+# override should come back off.
+MIN_PICK_CONFIDENCE_BY_LEAGUE = {
+    "mlb": 65,
+}
+
+
+def min_pick_confidence(league: str | None = None) -> float:
+    """Publish threshold for a league, falling back to the global minimum."""
+    if league:
+        override = MIN_PICK_CONFIDENCE_BY_LEAGUE.get(str(league).lower())
+        if override is not None:
+            return float(override)
+    return float(MIN_PICK_CONFIDENCE)
+
+
 DEFAULT_SHRINK = 0.88
 
 DEFAULT_BUCKET_SHRINK = {
@@ -238,6 +269,7 @@ def compute_calibration_params(report: dict[str, Any]) -> dict[str, Any]:
     return {
         "defaultShrink": DEFAULT_SHRINK,
         "minPickConfidence": MIN_PICK_CONFIDENCE,
+        "minPickConfidenceByLeague": dict(MIN_PICK_CONFIDENCE_BY_LEAGUE),
         "buckets": by_league,
         "derivedFromGraded": report.get("summary", {}).get("graded"),
     }
@@ -296,10 +328,20 @@ def calibrate_probability(
     return max(0.0, min(1.0, 0.5 + centered * shrink))
 
 
-def is_publishable_pick(prediction: dict[str, Any] | None) -> bool:
+def is_publishable_pick(
+    prediction: dict[str, Any] | None, league: str | None = None
+) -> bool:
+    """Whether a pick clears its league's publish threshold.
+
+    The league is read from the prediction's own features when not passed, so
+    existing single-argument callers keep working and still get the per-league
+    bar.
+    """
     if not prediction or not prediction.get("predictedWinner"):
         return False
     confidence = prediction.get("confidence")
     if confidence is None:
         return False
-    return float(confidence) >= MIN_PICK_CONFIDENCE
+    if league is None:
+        league = (prediction.get("features") or {}).get("league")
+    return float(confidence) >= min_pick_confidence(league)

@@ -1910,7 +1910,7 @@ def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
     for game in games:
         prediction = predict_game(game)
-        prediction["publishable"] = is_publishable_pick(prediction)
+        prediction["publishable"] = is_publishable_pick(prediction, game.get("league"))
 
         lines = game.get("lines", [])
         enrichment = game.get("enrichment", {})
@@ -1925,7 +1925,11 @@ def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
         
         game["prediction"] = prediction
 
-    publishable = [game for game in games if is_publishable_pick(game.get("prediction"))]
+    publishable = [
+        game
+        for game in games
+        if is_publishable_pick(game.get("prediction"), game.get("league"))
+    ]
     publishable.sort(key=lambda game: game.get("prediction", {}).get("confidence", 0), reverse=True)
     for index, game in enumerate(publishable, start=1):
         game["predictionRank"] = index

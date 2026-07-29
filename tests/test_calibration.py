@@ -200,9 +200,16 @@ class PublishThresholdTests(unittest.TestCase):
     def test_dashboard_reads_the_live_threshold_from_data(self) -> None:
         app_js = self._app_js()
         self.assertIn("minPickConfidence", app_js)
-        self.assertIn("function minPublishableConfidence()", app_js)
+        self.assertIn("function minPublishableConfidence(league)", app_js)
         # The publish check must consult the data, not the baked-in constant.
-        self.assertIn("return confidence >= minPublishableConfidence();", app_js)
+        self.assertIn("return confidence >= minPublishableConfidence(key);", app_js)
+
+    def test_dashboard_honours_the_per_league_threshold(self) -> None:
+        """MLB is held to a higher bar. If the dashboard ignored the per-league
+        map it would keep showing picks the backend already withheld."""
+        app_js = self._app_js()
+        self.assertIn("minPickConfidenceByLeague", app_js)
+        self.assertIn("perLeague[key]", app_js)
 
     def test_dashboard_reads_tier_thresholds_from_data(self) -> None:
         """Tier boundaries were duplicated in JS and drifted from the model."""
@@ -244,3 +251,149 @@ class PublishThresholdTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PerLeagueThresholdTests(unittest.TestCase):
+    """MLB is held to a higher publish bar than the rest.
+
+    Its 55-65% band hits 42.7% on 150 graded priced picks into prices implying
+    roughly 58-62%, for -20.2% ROI. Split in half the history gives
+    42.7%/-20.3% then 42.7%/-20.0%, so it is systematic rather than a bad run.
+    Other leagues do not share it, so the override is per-league.
+    """
+
+    def _pick(self, confidence: float, league: str) -> dict:
+        return {
+            "predictedWinner": "Team A",
+            "confidence": confidence,
+            "features": {"league": league},
+        }
+
+    def test_mlb_bar_is_higher_than_the_default(self) -> None:
+        self.assertGreater(cal.min_pick_confidence("mlb"), cal.min_pick_confidence("wnba"))
+        self.assertEqual(cal.min_pick_confidence("wnba"), float(cal.MIN_PICK_CONFIDENCE))
+
+    def test_mlb_mid_band_pick_is_withheld(self) -> None:
+        """The 150 losing picks live here."""
+        for confidence in (55.0, 58.0, 62.0, 64.9):
+            self.assertFalse(
+                is_publishable_pick(self._pick(confidence, "mlb")),
+                f"MLB at {confidence}% should not publish",
+            )
+
+    def test_mlb_above_the_bar_still_publishes(self) -> None:
+        """Above 65 MLB is healthy at 62-64%, so it must not be withheld."""
+        for confidence in (65.0, 71.0, 88.0):
+            self.assertTrue(is_publishable_pick(self._pick(confidence, "mlb")))
+
+    def test_other_leagues_keep_the_default_bar(self) -> None:
+        for league in ("wnba", "afl", "nba", "nfl", "epl"):
+            self.assertTrue(
+                is_publishable_pick(self._pick(58.0, league)),
+                f"{league} at 58% should still publish",
+            )
+
+    def test_league_can_be_passed_explicitly(self) -> None:
+        pick = {"predictedWinner": "A", "confidence": 60.0}
+        self.assertFalse(is_publishable_pick(pick, league="mlb"))
+        self.assertTrue(is_publishable_pick(pick, league="wnba"))
+
+    def test_unknown_league_falls_back_to_the_default(self) -> None:
+        self.assertTrue(is_publishable_pick(self._pick(58.0, "cricket")))
+        self.assertTrue(is_publishable_pick({"predictedWinner": "A", "confidence": 58.0}))
+
+    def test_case_is_ignored(self) -> None:
+        self.assertFalse(is_publishable_pick(self._pick(60.0, "MLB")))
+
+    def test_threshold_is_published_for_the_dashboard(self) -> None:
+        """The dashboard reads this rather than hardcoding it, so it must ship."""
+        params = cal.compute_calibration_params({"summary": {"graded": 0}})
+        self.assertIn("minPickConfidenceByLeague", params)
+        self.assertEqual(params["minPickConfidenceByLeague"].get("mlb"), 65)
+
+    def test_bar_reaches_the_board_end_to_end(self) -> None:
+        """The threshold is only worth anything if it survives to the board.
+
+        Four call sites decide what publishes. Unit-testing is_publishable_pick
+        proves none of them; this walks a slate through build_overview, which is
+        what the landing page actually renders.
+        """
+        from scripts.build_pages_data import build_overview
+
+        def game(event_id: str, league: str, confidence: float) -> dict:
+            return {
+                "eventId": event_id,
+                "league": league,
+                "matchup": f"Away @ {event_id}",
+                "prediction": {
+                    "predictedWinner": event_id,
+                    "predictedSide": "home",
+                    "outcomeLabel": f"{event_id} to win",
+                    "confidence": confidence,
+                    "confidenceLabel": "Lean",
+                    "features": {"league": league},
+                },
+            }
+
+        overview = build_overview(
+            {
+                "mlb": {
+                    "leagueLabel": "MLB",
+                    "gameCount": 3,
+                    "games": [
+                        game("mlb-low", "mlb", 58.0),
+                        game("mlb-mid", "mlb", 60.0),
+                        game("mlb-high", "mlb", 71.0),
+                    ],
+                },
+                "wnba": {
+                    "leagueLabel": "WNBA",
+                    "gameCount": 1,
+                    "games": [game("wnba-mid", "wnba", 60.0)],
+                },
+            }
+        )
+
+        shown = sorted(
+            play["pick"]
+            for play in overview["worthBacking"] + overview["passedOn"] + overview["unpriced"]
+        )
+        # MLB's dead band never reaches the board; WNBA's same band does.
+        self.assertEqual(shown, ["mlb-high", "wnba-mid"])
+        self.assertEqual(overview["summary"]["picks"], 2)
+
+    def test_apply_predictions_flags_publishable_per_league(self) -> None:
+        """`publishable` is written once, at prediction time, and must be per-league."""
+        from unittest.mock import patch
+
+        import mlb_predictions
+
+        games = [
+            {
+                "eventId": "1",
+                "league": "mlb",
+                "homeTeam": "A",
+                "awayTeam": "B",
+                "homeRecord": "70-30",
+                "awayRecord": "50-50",
+            },
+            {
+                "eventId": "2",
+                "league": "wnba",
+                "homeTeam": "C",
+                "awayTeam": "D",
+                "homeRecord": "18-10",
+                "awayRecord": "14-14",
+            },
+        ]
+        with patch.object(mlb_predictions, "enrich_games_with_providers", lambda *a, **k: None):
+            mlb_predictions.apply_predictions(games)
+
+        for game_row in games:
+            prediction = game_row["prediction"]
+            expected = prediction["confidence"] >= cal.min_pick_confidence(game_row["league"])
+            self.assertEqual(
+                prediction["publishable"],
+                expected,
+                f"{game_row['league']} at {prediction['confidence']}",
+            )

@@ -400,7 +400,11 @@ def finalize_dashboard_payload(
 
     top_game = next((game for game in games if game.get("predictionRank") == 1), None)
     if top_game is None:
-        publishable = [game for game in games if is_publishable_pick(game.get("prediction"))]
+        publishable = [
+            game
+            for game in games
+            if is_publishable_pick(game.get("prediction"), game.get("league"))
+        ]
         if publishable:
             top_game = max(
                 publishable,

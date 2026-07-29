@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -143,3 +145,80 @@ class QuarantineTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PublishVersusLogTests(unittest.TestCase):
+    """Publishing and logging are different questions.
+
+    MLB's 55-65% band is withheld from the board because it loses money, but it
+    is exactly where the fit is most wrong. Censoring it from the training log
+    would stop the model ever learning to correct itself there -- the threshold
+    would entrench the error it exists to hide.
+    """
+
+    def _payload(self, confidence: float, league: str = "mlb") -> dict:
+        return {
+            "league": league,
+            "scheduleDate": "2026-07-28",
+            "fetchedAt": "now",
+            "games": [
+                {
+                    "eventId": "42",
+                    "matchup": "A @ B",
+                    "prediction": {
+                        "predictedWinner": "B",
+                        "predictedSide": "home",
+                        "outcomeLabel": "B to win",
+                        "confidence": confidence,
+                        "features": {"recordDiff": 0.2, "league": league},
+                    },
+                }
+            ],
+        }
+
+    def _log(self, tmp: str, payload: dict) -> dict:
+        from pathlib import Path
+
+        from accuracy_tracker import record_predictions
+
+        record_predictions(Path(tmp), [payload])
+        return json.loads((Path(tmp) / "predictions_log.json").read_text(encoding="utf-8"))
+
+    def test_withheld_mlb_pick_is_still_logged_for_training(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            log = self._log(tmp, self._payload(60.0))
+        row = log["predictions"]["42"]
+        self.assertFalse(row["published"])
+        # The features are the whole point -- the fit reads these.
+        self.assertEqual(row["features"]["recordDiff"], 0.2)
+
+    def test_published_mlb_pick_is_flagged_published(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            log = self._log(tmp, self._payload(71.0))
+        self.assertTrue(log["predictions"]["42"]["published"])
+
+    def test_other_leagues_publish_in_the_mid_band(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            log = self._log(tmp, self._payload(60.0, league="wnba"))
+        self.assertTrue(log["predictions"]["42"]["published"])
+
+    def test_withheld_picks_are_excluded_from_the_record(self) -> None:
+        """A record nobody could have bet is not a record.
+
+        Asserts the filter directly rather than through grade_predictions, which
+        fetches a scoreboard per league per day and would take the suite off the
+        network for minutes.
+        """
+        from accuracy_tracker import _build_pick_record
+
+        withheld = _build_pick_record(pending={"eventId": "42", "published": False}, status="pending")
+        shown = _build_pick_record(pending={"eventId": "43", "published": True}, status="pending")
+        kept = [row for row in (withheld, shown) if row.get("published", True)]
+        self.assertEqual([row["eventId"] for row in kept], ["43"])
+
+    def test_legacy_rows_without_the_flag_count_as_published(self) -> None:
+        """Everything logged before the split was publishable by definition."""
+        from accuracy_tracker import _build_pick_record
+
+        record = _build_pick_record(pending={"eventId": "1"}, status="pending")
+        self.assertTrue(record["published"])

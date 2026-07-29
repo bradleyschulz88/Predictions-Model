@@ -132,6 +132,9 @@ def _build_pick_record(
         "pickOdds": pending.get("pickOdds"),
         "openingOdds": pending.get("openingOdds"),
         "openingSide": pending.get("openingSide"),
+        # Rows logged before publishing and logging were separated have no flag
+        # and were publishable by definition, so absent means True.
+        "published": pending.get("published", True),
         "clvPct": closing_line_value(pending),
         "status": status,
         "actual": actual,
@@ -185,8 +188,17 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
             event_id = str(game.get("eventId") or "")
             if not event_id or not prediction.get("predictedWinner"):
                 continue
-            if not is_publishable_pick(prediction):
-                continue
+            # Log every pick the model makes, publish only the ones that clear
+            # the bar. These are different questions and were previously one.
+            #
+            # MLB's 55-65% band is withheld from the board because it loses
+            # money, but it is precisely the band where the fit is most wrong,
+            # so censoring it from the training log would stop the model ever
+            # learning to correct itself there -- the threshold would entrench
+            # the very error it exists to hide. `published` records which side
+            # of the bar a pick fell on, so accuracy and ROI can still report on
+            # the board alone.
+            published = is_publishable_pick(prediction, league)
 
             current_odds = extract_pick_american_odds(game, prediction.get("predictedSide"))
             existing = (log.get("predictions") or {}).get(event_id) or {}
@@ -225,6 +237,9 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 "pickOdds": current_odds,
                 "openingOdds": opening_odds,
                 "openingSide": opening_side,
+                # False means the model made this pick but the board withheld
+                # it. Kept for training; excluded from the published record.
+                "published": published,
                 "features": prediction.get("features"),
                 "recordedAt": payload.get("fetchedAt"),
             }
@@ -375,8 +390,11 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
             continue
         picks_by_event[event_id] = _build_pick_record(pending=pending, status="pending")
 
+    # Accuracy and ROI describe what the board actually showed. Picks the
+    # threshold withheld are kept in the log so the model can still learn from
+    # them, but counting them here would report a record nobody could have bet.
     all_results = sorted(
-        picks_by_event.values(),
+        (item for item in picks_by_event.values() if item.get("published", True)),
         key=lambda item: (item.get("gradedAt") or item.get("scheduleDate") or "", item.get("eventId") or ""),
         reverse=True,
     )

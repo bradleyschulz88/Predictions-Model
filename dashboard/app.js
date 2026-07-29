@@ -56,12 +56,13 @@ const modelDayResultEl = document.getElementById("model-day-result");
 // MIN_PICK_CONFIDENCE for the first paint, before calibration.json loads.
 const MIN_PUBLISHABLE_CONFIDENCE = 55;
 
-function isPublishablePrediction(prediction) {
+function isPublishablePrediction(prediction, league) {
   if (!prediction?.predictedWinner && !prediction?.outcomeLabel) return false;
   if (prediction.publishable === false) return false;
   const confidence = Number(prediction?.confidence);
   if (Number.isNaN(confidence)) return Boolean(prediction?.predictedWinner);
-  return confidence >= minPublishableConfidence();
+  const key = league || prediction?.features?.league;
+  return confidence >= minPublishableConfidence(key);
 }
 
 function coverageFromGame(game) {
@@ -3651,8 +3652,18 @@ function confidenceTiers() {
   };
 }
 
-function minPublishableConfidence() {
-  const value = calibrationData?.calibrationParams?.minPickConfidence;
+function minPublishableConfidence(league) {
+  const params = calibrationData?.calibrationParams;
+  // MLB is held to a higher bar than the rest: its 55-65% band hits 42.7% into
+  // prices implying ~60%, for -20.2% ROI over 150 graded picks. Without the
+  // per-league lookup the dashboard would keep showing picks the backend has
+  // already withheld.
+  const perLeague = params?.minPickConfidenceByLeague;
+  const key = String(league || "").toLowerCase();
+  if (key && perLeague && Number.isFinite(Number(perLeague[key]))) {
+    return Number(perLeague[key]);
+  }
+  const value = params?.minPickConfidence;
   return Number.isFinite(Number(value)) ? Number(value) : MIN_PUBLISHABLE_CONFIDENCE;
 }
 
