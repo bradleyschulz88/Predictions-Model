@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-29T23:49:51.555723+00:00",
+  "updatedAt": "2026-07-29T23:56:40.049178+00:00",
   "summary": {
     "last7Days": {
       "correct": 295,
@@ -16,8 +16,8 @@
       "pct": 60.1,
       "units": 10.328,
       "roiPct": 1.5,
-      "pending": 53,
-      "voided": 14
+      "pending": 51,
+      "voided": 16
     },
     "byLeague": {
       "mlb": {
@@ -20078,7 +20078,7 @@
       "outcomeLabel": "Chicago Cubs to win",
       "confidence": 69.9,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -20086,7 +20086,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816319": {
       "eventId": "401816319",
@@ -20518,7 +20519,7 @@
       "outcomeLabel": "Minnesota Twins to win",
       "confidence": 57.3,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -20526,7 +20527,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816339": {
       "eventId": "401816339",
