@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-29T06:25:56.918055+00:00",
+  "updatedAt": "2026-07-29T07:48:27.173941+00:00",
   "summary": {
     "last7Days": {
       "correct": 280,
@@ -7,7 +7,7 @@
       "pct": 61.9,
       "units": 8.455,
       "roiPct": 1.9,
-      "pending": 32,
+      "pending": 33,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 60.0,
       "units": 6.68,
       "roiPct": 1.0,
-      "pending": 32,
+      "pending": 33,
       "voided": 11
     },
     "byLeague": {
@@ -2751,6 +2751,26 @@
       "predictedSide": "away",
       "outcomeLabel": "Minnesota Lynx to win",
       "confidence": 70.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-30",
+      "published": true
+    },
+    {
+      "eventId": "401816330",
+      "league": "mlb",
+      "scheduleDate": "2026-07-30",
+      "matchup": "Seattle Mariners @ Los Angeles Dodgers",
+      "predicted": "Los Angeles Dodgers",
+      "predictedSide": "home",
+      "outcomeLabel": "Los Angeles Dodgers to win",
+      "confidence": 63.2,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -18616,7 +18636,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-30",
-      "published": false
+      "published": true
     },
     "401816348": {
       "eventId": "401816348",
