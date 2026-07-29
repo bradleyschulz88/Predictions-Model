@@ -222,3 +222,81 @@ class PublishVersusLogTests(unittest.TestCase):
 
         record = _build_pick_record(pending={"eventId": "1"}, status="pending")
         self.assertTrue(record["published"])
+
+
+class PublishedFlagReconciliationTests(unittest.TestCase):
+    """A graded record is never rebuilt, so its flag has to be refreshed.
+
+    accuracy.json is carried forward between runs and rows that are already
+    graded are skipped by the grading loop. Without an explicit reconciliation
+    pass, every row written before the publish/log split keeps no flag at all --
+    which reads as published -- so raising a threshold would only ever apply to
+    picks made after the change, and the losing picks it exists to remove would
+    stay in the published record forever.
+    """
+
+    def _run(self, tmp: str, *, stored_flag, log_flag) -> dict:
+        from pathlib import Path
+        from unittest.mock import patch
+
+        import accuracy_tracker
+
+        data_dir = Path(tmp)
+        stored: dict = {
+            "eventId": "42",
+            "league": "mlb",
+            "scheduleDate": "2026-07-28",
+            "predicted": "B",
+            "outcomeLabel": "B to win",
+            "confidence": 60.0,
+            "status": "graded",
+            "correct": False,
+            "gradedAt": "2026-07-28",
+        }
+        if stored_flag is not None:
+            stored["published"] = stored_flag
+
+        (data_dir / "accuracy.json").write_text(
+            json.dumps({"picksByEventId": {"42": stored}}), encoding="utf-8"
+        )
+        (data_dir / "predictions_log.json").write_text(
+            json.dumps(
+                {
+                    "predictions": {
+                        "42": {
+                            "eventId": "42",
+                            "league": "mlb",
+                            "scheduleDate": "2026-07-28",
+                            "predictedWinner": "B",
+                            "confidence": 60.0,
+                            "published": log_flag,
+                        }
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        # No network: the grading loop has nothing to fetch, which is exactly the
+        # path where an already-graded row is skipped.
+        with patch.object(
+            accuracy_tracker, "fetch_scoreboard", side_effect=RuntimeError("offline")
+        ):
+            return accuracy_tracker.grade_predictions(data_dir)
+
+    def test_legacy_graded_row_is_withheld_when_the_log_says_so(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            accuracy = self._run(tmp, stored_flag=None, log_flag=False)
+
+        self.assertFalse(accuracy["picksByEventId"]["42"]["published"])
+        graded = [row for row in accuracy.get("recentResults") or [] if row["eventId"] == "42"]
+        self.assertEqual(graded, [], "withheld pick leaked into the published record")
+        self.assertEqual(accuracy["summary"]["allTime"]["total"], 0)
+
+    def test_a_pick_that_becomes_publishable_returns_to_the_record(self) -> None:
+        """The reconciliation runs both ways, so lowering a bar restores picks."""
+        with tempfile.TemporaryDirectory() as tmp:
+            accuracy = self._run(tmp, stored_flag=False, log_flag=True)
+
+        self.assertTrue(accuracy["picksByEventId"]["42"]["published"])
+        self.assertEqual(accuracy["summary"]["allTime"]["total"], 1)

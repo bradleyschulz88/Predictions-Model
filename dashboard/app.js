@@ -2757,6 +2757,9 @@ function summarizeModelDayResults(games, scheduleDate, league = sportSelect.valu
   for (const game of games || []) {
     if (isUnplayableGame(refreshGameStatusFlags(game))) continue;
     if (!game.prediction?.predictedWinner && !game.prediction?.outcomeLabel) continue;
+    // The day's record must count only what the board showed. Payloads carry
+    // every game the model scored, withheld picks included.
+    if (!isPublishablePrediction(game.prediction, game.league)) continue;
     const pick = resolvePickStatus(game);
     if (pick) addPick(game.eventId, pick);
   }
@@ -2766,6 +2769,7 @@ function summarizeModelDayResults(games, scheduleDate, league = sportSelect.valu
       if (pick.scheduleDate !== scheduleDate) continue;
       if (league !== "overview" && pick.league !== league) continue;
       if (!pick.predicted && !pick.outcomeLabel) continue;
+      if (!isPublishedRecord(pick)) continue;
       if (!picks.has(String(eventId))) addPick(eventId, pick);
     }
   }
@@ -2845,7 +2849,8 @@ function renderModelDayResult(games) {
 
 function resolvePickStatus(game) {
   const eventId = String(game.eventId || "");
-  const serverPick = accuracyData?.picksByEventId?.[eventId];
+  const stored = accuracyData?.picksByEventId?.[eventId];
+  const serverPick = isPublishedRecord(stored) ? stored : null;
   const liveScores =
     game.homeScore != null && game.awayScore != null
       ? { homeScore: game.homeScore, awayScore: game.awayScore }
@@ -3654,8 +3659,8 @@ function confidenceTiers() {
 
 function minPublishableConfidence(league) {
   const params = calibrationData?.calibrationParams;
-  // MLB is held to a higher bar than the rest: its 55-65% band hits 42.7% into
-  // prices implying ~60%, for -20.2% ROI over 150 graded picks. Without the
+  // MLB is held to a higher bar than the rest: its 55-65% band hits 45.1% into
+  // prices implying ~60%, for -16.4% ROI over 164 graded picks. Without the
   // per-league lookup the dashboard would keep showing picks the backend has
   // already withheld.
   const perLeague = params?.minPickConfidenceByLeague;
@@ -3676,6 +3681,14 @@ function confidenceLabelFromConfidence(confidence) {
   return "Coin flip";
 }
 
+// Logged picks now outnumber published ones: everything the model produces is
+// written down so it can be trained on, and `published: false` marks the ones
+// the board withheld. Anything reading a stored record has to honour that, or
+// the withheld picks reappear in the UI through the back door.
+function isPublishedRecord(record) {
+  return record?.published !== false;
+}
+
 function recordToPrediction(record) {
   if (!record) return null;
   const predictedWinner = record.predictedWinner || record.predicted;
@@ -3688,7 +3701,10 @@ function recordToPrediction(record) {
     outcomeLabel,
     confidence,
     confidenceLabel: confidenceLabelFromConfidence(confidence),
-    publishable: record.publishable,
+    // A withheld record must not hydrate back onto the board. `publishable` is
+    // what the live payload carries; `published` is what the stored record
+    // carries. Either one saying no is a no.
+    publishable: record.publishable === false || !isPublishedRecord(record) ? false : record.publishable,
     features: record.features,
   };
 }
