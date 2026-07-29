@@ -10,6 +10,7 @@ from typing import Any
 
 from data_providers.utils import team_match_score
 from espn_client import ESPNClientError, fetch_scoreboard, parse_scoreboard
+from espn_odds import fill_missing_moneylines
 from espn_enrichment import enrich_game, enrich_games, ensure_espn_odds_on_games
 from data_providers import enrich_games_with_providers
 from mlb_predictions import apply_predictions, has_moneyline_lines, is_publishable_pick
@@ -223,6 +224,33 @@ def merge_sbr_odds_into_games(
             stats["unmatched"].append(f"{game.get('awayTeam')} @ {game.get('homeTeam')}")
 
     return stats
+
+
+def _report_core_odds(stats: dict[str, Any], date_value: str) -> None:
+    """Report only when the last-resort source was actually needed.
+
+    Silence means SBR and the summary already priced everything, which is the
+    normal MLB case. A line here means a league that had no market before now
+    has one -- or that this source could not help either.
+    """
+    considered = stats.get("considered") or 0
+    if not considered:
+        return
+
+    where = f"{stats['league']} {date_value}"
+    if stats.get("priced"):
+        books = ", ".join(stats["books"][:3]) or "unknown"
+        print(
+            f"Odds: {where}: ESPN core priced {stats['priced']}/{considered} "
+            f"previously unpriced games via {books}",
+            flush=True,
+        )
+    else:
+        print(
+            f"Odds: {where}: ESPN core had no moneyline for any of "
+            f"{considered} unpriced games either",
+            flush=True,
+        )
 
 
 def _report_odds_merge(stats: dict[str, Any]) -> None:
@@ -559,6 +587,27 @@ def fetch_dashboard_data(
         )
 
     _optional("ESPN odds", lambda: ensure_espn_odds_on_games(games))
+
+    # Last resort, and only for games still without a moneyline. SBR prices
+    # most of MLB and the ESPN summary catches some of the rest, so on a normal
+    # day this makes no requests at all. It exists for WNBA, which SBR returns
+    # with spread and total but never a moneyline, and for AFL, which has no
+    # SBR board at all -- between them about a third of the graded history has
+    # never had a market to anchor to.
+    if include_odds:
+        _optional(
+            "ESPN core odds",
+            lambda: _report_core_odds(
+                fill_missing_moneylines(
+                    games,
+                    league=league,
+                    retries=retries,
+                    retry_delay=retry_delay,
+                    verify_ssl=verify_ssl,
+                ),
+                date_value,
+            ),
+        )
 
     payload = build_dashboard_payload_from_espn_games(games, url=url, league=league)
     if degraded:
