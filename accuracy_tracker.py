@@ -390,6 +390,16 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
             continue
         picks_by_event[event_id] = _build_pick_record(pending=pending, status="pending")
 
+    # Reconcile `published` against the log on every run. Records already graded
+    # are never rebuilt, so without this a row keeps whatever flag it had when it
+    # was first written -- and every row from before the publish/log split has no
+    # flag at all, which defaults to published. A threshold change would then only
+    # apply to picks made after it, silently leaving the old ones in the record.
+    for event_id, record in picks_by_event.items():
+        pending = predictions.get(event_id)
+        if pending is not None:
+            record["published"] = bool(pending.get("published", True))
+
     # Accuracy and ROI describe what the board actually showed. Picks the
     # threshold withheld are kept in the log so the model can still learn from
     # them, but counting them here would report a record nobody could have bet.

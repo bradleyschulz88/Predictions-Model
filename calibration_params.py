@@ -36,20 +36,29 @@ MIN_PICK_CONFIDENCE = 55
 # MLB is held to a higher bar, because its 55-65% band has no skill and loses
 # money at a rate that is not survivable.
 #
-# Measured 2026-07-29 on 150 graded, priced MLB picks in that band: 42.7% hit
-# rate into prices implying roughly 58-62%, for -20.2% ROI. That is not a run of
-# bad luck. Splitting the history in half gives 42.7% / -20.3% then
-# 42.7% / -20.0%, two independent samples landing on the same number, and both
-# sides fail -- home 42.4% (n=85), away 43.1% (n=65) -- so it is not home bias
-# either.
+# Measured 2026-07-29 on priced, graded MLB picks, joining the CURRENT model's
+# confidence from predictions_log.json to the graded outcome. Do not measure
+# this off accuracy.json's own `confidence` field: that is frozen at the value
+# shown when the pick was graded, and 537 rows now disagree with the model, so
+# band boundaries drawn on it group the wrong games.
 #
-# Above 65% MLB is healthy: 61.0% in the 65-75% band and 62.6% above 75%. So
-# this is one dead band, not a broken model, and withholding it moves the whole
-# board from -0.75% ROI to +7.86% while dropping 150 of 488 priced picks.
+#     band     n     hit      ROI
+#     <55     16   43.8%   -17.8%
+#     55-65  164   45.1%   -16.4%     <- the dead band
+#     65-75  184   58.7%    +3.8%
+#     75+     78   71.8%   +17.5%
 #
-# Other leagues do not share it, so this is deliberately per-league rather than
-# a blanket raise. Re-measure as the log grows; if the band recovers, this
-# override should come back off.
+# 45.1% into prices implying roughly 58-62% is not a near miss, and the bands
+# above 65 are cleanly monotonic, so this is one dead band rather than a broken
+# model. Withholding it moves the board from +0.69% ROI to +9.38% and drops 164
+# of 487 priced picks.
+#
+# This is per-league because MLB is the only league with enough priced graded
+# history to measure a bar at all (MLB 442, WNBA 6, and NFL/NBA/EPL/AFL zero --
+# they are unpriced or out of season). The others keep the default because there
+# is no evidence to justify moving it, NOT because they were measured and found
+# healthy. Re-measure each league once it has priced history, and take this
+# override back off if MLB's band recovers.
 MIN_PICK_CONFIDENCE_BY_LEAGUE = {
     "mlb": 65,
 }

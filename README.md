@@ -104,19 +104,32 @@ A pick is only shown once it clears its league's bar. The default is **55%**;
 
 | MLB priced picks | n | hit | ROI |
 |---|---|---|---|
-| 55-65% | 150 | 42.7% | **-20.2%** |
-| 65-75% | 182 | 61.0% | +8.7% |
-| 75%+ | 99 | 62.6% | +2.2% |
+| <55% | 16 | 43.8% | -17.8% |
+| **55-65%** | **164** | **45.1%** | **-16.4%** |
+| 65-75% | 184 | 58.7% | +3.8% |
+| 75%+ | 78 | 71.8% | +17.5% |
 
-Those picks go into prices implying roughly 58-62%, so 42.7% is not a near miss.
-It is also not a bad run: splitting the history in half gives 42.7% then 42.7%,
-and both sides fail (home 42.4%, away 43.1%), so it is not home bias either.
-Above 65% MLB is healthy, so this is one dead band rather than a broken model.
+Those picks go into prices implying roughly 58-62%, so 45.1% is not a near miss,
+and everything above 65% is cleanly monotonic — one dead band rather than a
+broken model. Withholding it takes the board from **+0.69% to +9.38% ROI**,
+dropping 164 of 487 priced picks.
 
-Withholding it takes the whole board from **-0.75% to +7.86% ROI**, dropping 150
-of 488 priced picks. Other leagues do not show the pattern, so the override is
-per-league rather than a blanket raise, and it should come back off if the band
-recovers — re-measure as the log grows.
+The override is per-league because **MLB is the only league with enough priced
+graded history to measure a bar at all** — MLB has 442 priced graded picks, WNBA
+6, and NFL/NBA/EPL/AFL none. The others keep the default because there is no
+evidence to move it, *not* because they were checked and found healthy. Take the
+override back off if MLB's band recovers.
+
+> **Measuring this correctly.** Join the current model's confidence from
+> `predictions_log.json` to the graded outcome. Do **not** band on
+> `accuracy.json`'s own `confidence` field — that is frozen at the value shown
+> when the pick was graded, and 537 rows now disagree with the live model, so
+> bands drawn on it group the wrong games.
+
+The threshold is **not retroactive**. Picks published before it took effect stay
+in the record, because the site did show them. So the headline ROI still carries
+the 133 historical MLB mid-band picks (41.4%, -30.5u) and will converge on the
+figures above only as new picks accumulate.
 
 **Withheld picks are still logged.** Publishing and logging are different
 questions: the 55-65% band is exactly where the fit is most wrong, so censoring

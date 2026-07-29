@@ -256,10 +256,13 @@ if __name__ == "__main__":
 class PerLeagueThresholdTests(unittest.TestCase):
     """MLB is held to a higher publish bar than the rest.
 
-    Its 55-65% band hits 42.7% on 150 graded priced picks into prices implying
-    roughly 58-62%, for -20.2% ROI. Split in half the history gives
-    42.7%/-20.3% then 42.7%/-20.0%, so it is systematic rather than a bad run.
-    Other leagues do not share it, so the override is per-league.
+    Its 55-65% band hits 45.1% on 164 graded priced picks into prices implying
+    roughly 58-62%, for -16.4% ROI, while the bands above 65 run 58.7% and
+    71.8% -- one dead band, not a broken model.
+
+    The override is per-league because MLB is the only league with enough priced
+    graded history to measure a bar at all (MLB 442, WNBA 6, the rest zero), not
+    because the others were measured and found healthy.
     """
 
     def _pick(self, confidence: float, league: str) -> dict:
@@ -310,6 +313,29 @@ class PerLeagueThresholdTests(unittest.TestCase):
         params = cal.compute_calibration_params({"summary": {"graded": 0}})
         self.assertIn("minPickConfidenceByLeague", params)
         self.assertEqual(params["minPickConfidenceByLeague"].get("mlb"), 65)
+
+    def test_dashboard_honours_the_published_flag_on_stored_records(self) -> None:
+        """The dashboard reads picksByEventId directly, around the board filter.
+
+        Withheld picks stay in accuracy.json so they can be graded and trained
+        on. Every dashboard path that reads a stored record therefore has to
+        check the flag, or they reappear in the UI through the back door -- which
+        is exactly what happened on the first cut of this change.
+        """
+        app_js = (
+            Path(__file__).resolve().parents[1] / "dashboard" / "app.js"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("function isPublishedRecord(record)", app_js)
+        # The day's win/loss tally, both of its sources.
+        self.assertIn("if (!isPublishedRecord(pick)) continue;", app_js)
+        self.assertIn(
+            "if (!isPublishablePrediction(game.prediction, game.league)) continue;", app_js
+        )
+        # Per-game status lookup.
+        self.assertIn("const serverPick = isPublishedRecord(stored) ? stored : null;", app_js)
+        # Hydrating a stored record back onto the board.
+        self.assertIn("!isPublishedRecord(record) ? false : record.publishable", app_js)
 
     def test_bar_reaches_the_board_end_to_end(self) -> None:
         """The threshold is only worth anything if it survives to the board.
