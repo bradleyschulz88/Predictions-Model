@@ -113,6 +113,33 @@ python scripts/backtest_model.py --evaluate
 python scripts/check_regression.py
 ```
 
+### Odds sources
+
+Moneylines reach a game through three sources, in order, each only trying what
+the previous one left unpriced:
+
+| order | source | covers | notes |
+|---|---|---|---|
+| 1 | SportsBookReview | MLB, NFL, NBA, EPL | full board where it has one |
+| 2 | ESPN game summary | opportunistic | already part of enrichment |
+| 3 | **ESPN core API** (`espn_odds.py`) | **everything, incl. WNBA and AFL** | keyless, no quota |
+
+The third exists because the first two leave a third of the model unpriced.
+SBR returns WNBA games with spread and total but **never a moneyline**, which
+the model cannot use -- `marketLogit` is built from moneyline alone. AFL has no
+SBR board at all. Both ran with no market to anchor to, so their EV and ROI
+read "not measurable".
+
+ESPN's core API carries moneylines for both, needs no key and publishes no
+quota, and -- the part that matters most -- is the same origin as the schedule,
+so team names and event ids match by construction. None of the fuzzy matching
+SBR needs applies.
+
+It is called **only for games still lacking a moneyline**, so a normal MLB day
+makes zero extra requests. Prediction sites (Consensus, TeamRankings,
+numberFire) are skipped: folding a model's output back in as "the market" would
+make the anchor circular.
+
 ### YouTube team news (`youtube_intel.py`)
 
 Collects pre-game team news from the channels you subscribe to, extracts it into

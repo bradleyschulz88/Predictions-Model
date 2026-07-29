@@ -126,6 +126,8 @@ class ProviderFailureDoesNotDropSchedule(unittest.TestCase):
             mlb_data, "enrich_games_with_providers", side_effect=ValueError("bad JSON")
         ), patch.object(
             mlb_data, "merge_sbr_odds_into_games", side_effect=RuntimeError("SBR down")
+        ), patch.object(
+            mlb_data, "fill_missing_moneylines", side_effect=RuntimeError("ESPN core down")
         ):
             payload = mlb_data.fetch_dashboard_data(
                 league="nba", date="2026-07-25", source="espn", include_odds=True, include_enrichment=True
@@ -136,6 +138,7 @@ class ProviderFailureDoesNotDropSchedule(unittest.TestCase):
         # day can still be told apart from a broken one.
         self.assertIn("SBR odds", payload["degraded"])
         self.assertIn("ESPN enrichment", payload["degraded"])
+        self.assertIn("ESPN core odds", payload["degraded"])
 
     def test_healthy_build_records_no_degradation(self) -> None:
         from unittest.mock import patch
