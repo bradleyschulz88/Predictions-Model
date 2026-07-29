@@ -21,6 +21,8 @@ from data_providers.league_metrics import (
 )
 from data_providers.mlb_pitcher import mlb_pitching_logit_adjustment
 from data_providers.park_factors import park_run_environment
+from data_providers.matchup_context import handedness_diff
+from data_providers.travel import travel_edge
 from data_providers.schedule_advanced import schedule_flags_logit_adjustment
 from data_providers.enrich import enrich_games_with_providers
 from elo import load_ratings, rating_edge
@@ -717,6 +719,17 @@ def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
         # inside the season records that feed strengthDiff. It earns a place only
         # if it beats its own absence out of sample, like everything else.
         "h2hDiff": _h2h_diff(enrichment),
+        # Distance and body-clock shift carried by the visiting club. Positive
+        # favours the home side, matching every other diff here. Candidate only.
+        "travelDiff": travel_edge(game.get("homeTeam"), game.get("awayTeam"))
+        if _league_id(game) == "mlb"
+        else None,
+        # Southpaw asymmetry between the two starters. Facts only -- no platoon
+        # adjustment, which would need lineup splits that confirm too late.
+        "handednessDiff": handedness_diff(game) if _league_id(game) == "mlb" else None,
+        # Relief innings the two bullpens have absorbed lately, home minus away.
+        # Filled by enrichment when team ids resolve; absent is normal.
+        "bullpenDiff": enrichment.get("bullpenDiff"),
         "homeInjuryLoad": round(_weighted_injury_score(enrichment.get("homeMajorInjuries") or [], league), 2),
         "awayInjuryLoad": round(_weighted_injury_score(enrichment.get("awayMajorInjuries") or [], league), 2),
         # Availability x seriousness (x player importance when an LLM key is

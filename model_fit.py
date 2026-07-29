@@ -90,6 +90,19 @@ ANCHORED_FEATURES = ("strengthDiff", "marketLogit")
 STANDALONE_FEATURES = ("strengthDiff",)
 
 # Every feature the collapser knows how to build, for ablation runs.
+# Ordered by how much prior reason there is to believe them, because the
+# ablation tests nested prefixes -- a feature is only ever judged alongside
+# everything before it. The first two are what currently ships.
+#
+# Everything from h2hDiff onward was added later and has no coverage in the
+# graded log yet, so today it contributes nothing and the ablation will
+# correctly decline to ship it. That is the intended state: these are
+# candidates accumulating evidence, not features waiting to be switched on.
+#
+# On sample size: there are ~700 graded games, and roughly 10-20 games per
+# predictor is the honest limit, so this list is a queue to be tested one at a
+# time rather than a model to be fitted all at once. Walk-forward is what
+# enforces that -- nothing ships unless it beats its own absence out of sample.
 CANDIDATE_FEATURES = (
     "strengthDiff",
     "marketLogit",
@@ -100,6 +113,11 @@ CANDIDATE_FEATURES = (
     "eloDiff",
     "b2bDiff",
     "videoIntelDiff",
+    "h2hDiff",
+    "parkDiff",
+    "travelDiff",
+    "handednessDiff",
+    "bullpenDiff",
 )
 
 # Shrinkage constant for per-league intercepts: a league needs ~K graded games
@@ -305,6 +323,17 @@ def build_feature_dict(
         "eloDiff": elo_diff,
         "b2bDiff": away_b2b - home_b2b,
         "videoIntelDiff": video_intel,
+        # Newest candidates. These have no history in the log yet, so they are
+        # all-None for every graded game today and contribute exactly zero to
+        # the fit -- an absent feature is standardised to the mean, not to an
+        # extreme. They start earning coverage from the build that ships them
+        # and cannot be judged until a few weeks of games have graded with the
+        # data present.
+        "h2hDiff": _first_number(features.get("h2hDiff")),
+        "parkDiff": _first_number(features.get("parkEdge")),
+        "travelDiff": _first_number(features.get("travelDiff")),
+        "handednessDiff": _first_number(features.get("handednessDiff")),
+        "bullpenDiff": _first_number(features.get("bullpenDiff")),
     }
 
 
