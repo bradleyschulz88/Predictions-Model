@@ -90,6 +90,9 @@ def _summary_bucket() -> dict[str, Any]:
         "units": 0.0,
         "roiPct": None,
         "pending": 0,
+        # Games called off. Never counted as a win or a loss, but counted, so a
+        # pick that disappears from the record has a stated reason.
+        "voided": 0,
     }
 
 
@@ -291,6 +294,40 @@ def _prediction_matches_actual(predicted: str | None, actual: str | None) -> boo
     return team_match_score(predicted, actual) >= 0.92
 
 
+# A pick on a game that never happened has no result and never will. Left alone
+# it sits at "pending" forever: 12 picks were stuck that way, the oldest from
+# 2026-06-18, and 10 of them were rain-outs replayed later -- six as the second
+# game of a doubleheader the very next day, which is what a postponed MLB game
+# normally becomes.
+#
+# Two ways a pick reaches that dead end, so both are handled:
+#   1. ESPN still lists the game on its original date, flagged postponed. Seen
+#      directly, voided immediately.
+#   2. ESPN drops the game from that date entirely once it is rescheduled. Never
+#      seen, so it can only be aged out.
+#
+# The makeup game is predicted and graded in its own right, so voiding the
+# original is also what stops one postponement being counted twice.
+VOID_UNRESOLVED_AFTER_DAYS = 3
+
+
+def _abandoned_reason(game: dict[str, Any]) -> str | None:
+    """Why this game will not produce a result, or None if it still might.
+
+    Deliberately does not include `isDelayed` -- a rain delay is a game that has
+    not finished yet, not one that was called off.
+    """
+    if game.get("isVoided"):
+        return "voided"
+    if game.get("isCanceled"):
+        return "canceled"
+    if game.get("isWashedOut"):
+        return "washed out"
+    if game.get("isPostponed"):
+        return "postponed"
+    return None
+
+
 def _winner_from_game(game: dict[str, Any]) -> str | None:
     if game.get("isVoided") or game.get("isPostponed") or game.get("isCanceled") or game.get("isWashedOut"):
         return None
@@ -353,6 +390,11 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
             if league and schedule_date:
                 dates_to_check.add((league, schedule_date))
 
+    # Only dates we actually managed to read can age a pick out. A pick must
+    # never be voided because ESPN happened to be down when we looked.
+    checked_dates: set[tuple[str, str]] = set()
+    abandoned_events: dict[str, str] = {}
+
     for league, check_date in sorted(dates_to_check):
         try:
             scoreboard = fetch_scoreboard(league, check_date, retries=2, retry_delay=0.5, verify_ssl=verify_ssl)
@@ -361,12 +403,18 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
             skipped_dates.append({"league": league, "date": check_date, "error": str(exc)})
             continue
 
+        checked_dates.add((league, check_date))
+
         for game in games:
             event_id = str(game.get("eventId") or "")
             if not event_id or event_id in graded_ids:
                 continue
             pending = log.get("predictions", {}).get(event_id)
             if not pending:
+                continue
+            reason = _abandoned_reason(game)
+            if reason:
+                abandoned_events[event_id] = reason
                 continue
             actual = _winner_from_game(game)
             if not actual:
@@ -389,6 +437,37 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
         if event_id in picks_by_event:
             continue
         picks_by_event[event_id] = _build_pick_record(pending=pending, status="pending")
+
+    # Close out picks that can no longer produce a result. Without this they stay
+    # "pending" forever and the pending count stops meaning "not played yet".
+    for event_id, record in picks_by_event.items():
+        if record.get("status") != "pending":
+            continue
+
+        reason = abandoned_events.get(event_id)
+        if reason:
+            record["status"] = "voided"
+            record["voidReason"] = reason
+            continue
+
+        league = record.get("league")
+        schedule_date = record.get("scheduleDate")
+        if not league or not schedule_date:
+            continue
+        # Rescheduled games vanish from their original date, so they can only be
+        # aged out -- and only against a date we actually read this run.
+        if (league, schedule_date) not in checked_dates:
+            continue
+        try:
+            age_days = (
+                date.fromisoformat(league_schedule_date(league, 0))
+                - date.fromisoformat(schedule_date)
+            ).days
+        except ValueError:
+            continue
+        if age_days > VOID_UNRESOLVED_AFTER_DAYS:
+            record["status"] = "voided"
+            record["voidReason"] = "no result reported"
 
     # Reconcile `published` against the log on every run. Records already graded
     # are never rebuilt, so without this a row keeps whatever flag it had when it
@@ -428,6 +507,11 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
             _accumulate_summary(all_time, item)
         elif item.get("status") == "pending":
             all_time["pending"] = all_time.get("pending", 0) + 1
+        elif item.get("status") == "voided":
+            # Reported rather than dropped. A void is a real outcome -- the game
+            # was called off -- and silently discarding it would make picks
+            # disappear from the count with no explanation.
+            all_time["voided"] = all_time.get("voided", 0) + 1
 
     for item in window:
         _accumulate_summary(last7, item)

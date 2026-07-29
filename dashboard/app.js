@@ -2770,6 +2770,7 @@ function summarizeModelDayResults(games, scheduleDate, league = sportSelect.valu
       if (league !== "overview" && pick.league !== league) continue;
       if (!pick.predicted && !pick.outcomeLabel) continue;
       if (!isPublishedRecord(pick)) continue;
+      if (pick.status === "voided") continue;
       if (!picks.has(String(eventId))) addPick(eventId, pick);
     }
   }
@@ -2779,6 +2780,10 @@ function summarizeModelDayResults(games, scheduleDate, league = sportSelect.valu
   let pending = 0;
 
   for (const pick of picks.values()) {
+    // A called-off game is not waiting on anything, so it is neither a result
+    // nor pending. Counting it as pending is how a rained-out game sat in the
+    // day's line forever.
+    if (pick.status === "voided") continue;
     if (pick.status !== "graded") {
       pending += 1;
     } else if (pick.correct) {

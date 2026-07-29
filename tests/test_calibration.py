@@ -423,3 +423,24 @@ class PerLeagueThresholdTests(unittest.TestCase):
                 expected,
                 f"{game_row['league']} at {prediction['confidence']}",
             )
+
+
+class VoidedPickDisplayTests(unittest.TestCase):
+    """A voided pick must not read as pending on the board.
+
+    The day's line counts anything that is not graded as pending, so without an
+    explicit branch a rained-out game sits in "N pending" forever.
+    """
+
+    def _app_js(self) -> str:
+        return (Path(__file__).resolve().parents[1] / "dashboard" / "app.js").read_text(
+            encoding="utf-8"
+        )
+
+    def test_day_tally_skips_voided_picks(self) -> None:
+        self.assertIn('if (pick.status === "voided") continue;', self._app_js())
+
+    def test_voided_records_do_not_enter_the_day_tally(self) -> None:
+        """Both sources feed that tally; the stored-record one needs it too."""
+        app_js = self._app_js()
+        self.assertEqual(app_js.count('pick.status === "voided"'), 2)
