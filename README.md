@@ -392,6 +392,42 @@ A fresh clone has no weights and will fall back to the heuristic until you run
 `python model_fit.py`. CI runs it before predicting and fails the build if it
 produces nothing.
 
+### Candidate features, and why none of them ship yet
+
+Beyond `strengthDiff` and `marketLogit`, everything the pipeline gathers is a
+**candidate**: logged on every game, offered to the walk-forward ablation, and
+allowed to move a probability only once it beats its own absence out of sample.
+
+| candidate | what it is | status |
+|---|---|---|
+| `pitchingDiff` | starter + bullpen ERA edge | tested, does not beat its absence |
+| `restDiff` · `b2bDiff` | days off, back-to-backs | tested, does not beat its absence |
+| `injuryDiff` · `injurySeverityDiff` | who is unavailable, and what it costs | tested, does not beat its absence |
+| `eloDiff` | pre-game Elo gap | tested, does not beat its absence |
+| `videoIntelDiff` | team news from subscribed YouTube channels | tested, does not beat its absence |
+| `h2hDiff` | season series between the two clubs | no coverage yet |
+| `parkDiff` | ballpark run index | no coverage yet |
+| `travelDiff` | distance + body-clock shift on the visitors | no coverage yet |
+| `handednessDiff` | southpaw asymmetry between the starters | no coverage yet |
+| `bullpenDiff` | relief innings absorbed in the last three days | no coverage yet |
+
+"No coverage yet" is the expected state for anything recently added: the fit
+reads features out of `predictions_log.json`, so a new one starts at zero
+history and contributes nothing until games grade with it present. An absent
+feature is standardised to the mean, so it cannot distort the fit while it
+waits.
+
+**The sample size is the binding constraint.** There are ~700 graded games, and
+roughly 10-20 games per predictor is the honest limit, so this list is a queue
+to be tested one at a time rather than a model to be fitted all at once. Re-run
+`python model_fit.py --ablate` every few weeks and let it arbitrate.
+
+Why so many candidates fail: the model anchors to `marketLogit`, and a de-vigged
+closing line has already priced the starter, the rest and the injuries. A
+feature only helps if it carries information the market has not absorbed, which
+is why recent bullpen workload is the most promising of the new ones and
+head-to-head the least.
+
 ### Optional: LLM injury weighting
 
 `data_providers/injury_severity.py` scores how much an injury list costs a team

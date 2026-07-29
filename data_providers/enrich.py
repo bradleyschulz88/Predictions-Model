@@ -163,6 +163,22 @@ def enrich_games_with_providers(
             except Exception:
                 enrichment["mlbPitching"] = {}
 
+            # Recent relief workload, home minus away. Guarded the same way and
+            # for the same reason: this is a candidate feature decorating a
+            # prediction that is already made, so a Stats API outage must cost
+            # this number and nothing else.
+            try:
+                from data_providers.bullpen import bullpen_edge
+                from data_providers.mlb_pitcher import _resolve_team_id
+
+                enrichment["bullpenDiff"] = bullpen_edge(
+                    _resolve_team_id(home_team, verify_ssl=verify_ssl),
+                    _resolve_team_id(away_team, verify_ssl=verify_ssl),
+                    verify_ssl=verify_ssl,
+                )
+            except Exception:
+                enrichment["bullpenDiff"] = None
+
         provider_sources = sorted(
             {
                 *(home_profile.get("sources") or []),
