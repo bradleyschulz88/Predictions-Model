@@ -1998,6 +1998,7 @@ function renderAccuracyView() {
       ${isOverview ? renderLeagueAccuracyTable(summary) : ""}
     </section>
     ${renderModelVsMarket()}
+    ${renderSideMarkets(summary)}
     ${renderClosingLineValue(summary)}
     <section class="calibration-chart">
       <h3>Calibration (predicted vs actual)</h3>
@@ -2058,6 +2059,56 @@ function renderModelVsMarket() {
         </table>
       </div>
       ${fitted?.features?.length ? `<p class="lineup-note">Features in use: ${fitted.features.map(escapeHtml).join(" + ")}.</p>` : ""}
+    </section>
+  `;
+}
+
+// Totals and runline records, kept visually apart from the moneyline record
+// because they are different bets on the same game. Folding them together would
+// let a good totals week flatter a bad picking week.
+function renderSideMarkets(summary) {
+  const markets = [
+    ["Totals", summary?.totals],
+    ["Runline / spread", summary?.spreads],
+  ].filter(([, data]) => data && data.graded > 0);
+
+  if (!markets.length) {
+    return `
+      <section class="accuracy-hero">
+        <h3 class="section-title">Totals and spreads</h3>
+        <p class="lineup-note">
+          Collecting. These markets have been shown on the board but never
+          scored, so nothing is claimed for them yet. Results start appearing
+          once today's games grade.
+        </p>
+      </section>
+    `;
+  }
+
+  const cards = markets.map(([label, data]) => {
+    const decided = data.wins + data.losses;
+    const beat = data.pct != null && data.pct > data.breakEvenPct;
+    const tone = data.pct == null ? "" : beat ? "acc-correct" : "acc-wrong";
+    return `
+      <div class="accuracy-metric">
+        <span class="accuracy-metric-label">${escapeHtml(label)}</span>
+        <span class="accuracy-metric-value ${tone}">${data.pct != null ? `${data.pct}%` : "—"}</span>
+        <span class="lineup-note">
+          ${data.wins}-${data.losses}${data.pushes ? `-${data.pushes}` : ""}
+          ${decided ? ` · break-even ${data.breakEvenPct}%` : ""}
+        </span>
+      </div>`;
+  }).join("");
+
+  return `
+    <section class="accuracy-hero">
+      <h3 class="section-title">Totals and spreads <span class="runenv-caveat">hit rate only — no price logged</span></h3>
+      <div class="accuracy-summary-grid">${cards}</div>
+      <p class="lineup-note">
+        Scored separately from the win record on purpose: these are different
+        bets on the same game. Pushes are excluded from the hit rate, because a
+        returned stake is not a result.
+      </p>
     </section>
   `;
 }
