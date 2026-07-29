@@ -98,27 +98,24 @@ RECENT_RELIABILITY_DAYS = 14
 MIN_BUCKET_FOR_CONCLUSION = 30
 
 
-def recent_pairs(
-    observations: Sequence[Any], *, days: int = RECENT_RELIABILITY_DAYS
-) -> list[tuple[float, int]]:
-    """Graded picks from the last `days`, for scoring the model as it stands now.
+def recent_pairs(observations: Sequence[Any], **_ignored: Any) -> list[tuple[float, int]]:
+    """Graded picks made by the probability pipeline that is live now.
 
     Reliability is the one metric that must never be pooled across model
-    versions: a refit changes what a stated 60% means. Mixing six weeks of an
-    overconfident model with a week of a corrected one reports the old model's
-    error as current, which is exactly what the all-time table did.
-    """
-    from datetime import date, timedelta
+    versions, because a refit changes what a stated 60% means.
 
-    dated = [item for item in observations if item.published is not None and item.date]
-    if not dated:
-        return []
-    latest = max(item.date for item in dated)
-    try:
-        cutoff = (date.fromisoformat(latest) - timedelta(days=days)).isoformat()
-    except ValueError:
-        return [(item.published, item.home_won) for item in dated]
-    return [(item.published, item.home_won) for item in dated if item.date >= cutoff]
+    Selected by pipeline marker, not by a time window. A window was the obvious
+    approach and it does not work: `date` is the grade date rather than when the
+    pick was made, so a 14-day window still captured 219 picks when only 92 had
+    been made by the current pipeline -- and duly reported the old model's
+    +15-point miss as if it were current. The presence of a raw probability is
+    exact, because raw values are only logged since the rework.
+    """
+    return [
+        (item.published, item.home_won)
+        for item in observations
+        if item.published is not None and getattr(item, "current_pipeline", False)
+    ]
 
 
 def reliability_curve(
@@ -190,7 +187,10 @@ def _round(value: float | None, digits: int) -> float | None:
 class Observation:
     """One graded game with every forecaster's home-win probability attached."""
 
-    __slots__ = ("event_id", "league", "date", "home_won", "model", "market", "published")
+    __slots__ = (
+        "event_id", "league", "date", "home_won", "model", "market", "published",
+        "current_pipeline",
+    )
 
     def __init__(
         self,
@@ -202,6 +202,7 @@ class Observation:
         model: float | None,
         market: float | None,
         published: float | None,
+        current_pipeline: bool = False,
     ) -> None:
         self.event_id = event_id
         self.league = league
@@ -210,6 +211,7 @@ class Observation:
         self.model = model
         self.market = market
         self.published = published
+        self.current_pipeline = current_pipeline
 
 
 def _home_won(record: dict[str, Any]) -> int | None:
@@ -269,6 +271,11 @@ def load_observations(data_dir: Path) -> list[Observation]:
                 event_id=event_id,
                 league=merged.get("league") or "unknown",
                 date=merged.get("date") or merged.get("scheduleDate") or "",
+                # Exact marker for "made by the probability pipeline that is
+                # live now": raw probabilities are only logged since that
+                # rework. A date window cannot separate the versions,
+                # because `date` is the grade date, not when the pick was made.
+                current_pipeline=merged.get("rawHomeWinPct") is not None,
                 home_won=home_won,
                 model=float(model_home) / 100.0 if model_home is not None else None,
                 market=float(implied_home) / 100.0 if implied_home is not None else None,

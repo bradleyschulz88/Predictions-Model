@@ -464,22 +464,36 @@ class ReliabilityWindowTests(unittest.TestCase):
     error as if it were current, which is what the all-time table did.
     """
 
-    def _observation(self, date: str, published: float, home_won: int):
+    def _observation(self, date: str, published: float, home_won: int, *, current=False):
         from scripts.evaluation import Observation
 
         return Observation(
             event_id="1", league="mlb", date=date, home_won=home_won,
-            model=None, market=None, published=published,
+            model=None, market=None, published=published, current_pipeline=current,
         )
 
-    def test_window_is_by_time_not_by_count(self) -> None:
-        """A fixed pick count sounds equivalent and re-pools the versions."""
+    def test_selection_is_by_pipeline_not_by_time(self) -> None:
+        """A time window was the obvious approach and does not work.
+
+        `date` is the grade date, not when the pick was made, so a 14-day window
+        captured 219 picks when only 92 came from the current pipeline -- and
+        duly reported the old model's miss as if it were current.
+        """
         from scripts import evaluation
 
-        old = [self._observation("2026-06-01", 0.6, 1) for _ in range(400)]
-        new = [self._observation("2026-07-30", 0.6, 1) for _ in range(5)]
-        pairs = evaluation.recent_pairs(old + new, days=14)
-        self.assertEqual(len(pairs), 5, "a 400-pick backlog must not enter the window")
+        stale = [self._observation("2026-07-30", 0.6, 1, current=False) for _ in range(400)]
+        live = [self._observation("2026-06-01", 0.6, 1, current=True) for _ in range(5)]
+        pairs = evaluation.recent_pairs(stale + live)
+        self.assertEqual(len(pairs), 5, "only current-pipeline picks may be scored")
+
+    def test_a_recent_date_does_not_qualify_an_old_pick(self) -> None:
+        """The exact trap: graded yesterday, predicted by last month's model."""
+        from scripts import evaluation
+
+        self.assertEqual(
+            evaluation.recent_pairs([self._observation("2026-07-30", 0.6, 1, current=False)]),
+            [],
+        )
 
     def test_an_empty_log_is_not_an_error(self) -> None:
         from scripts import evaluation
