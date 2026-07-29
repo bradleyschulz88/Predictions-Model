@@ -4547,6 +4547,7 @@ button:active:not(:disabled) {
   }
 }
 
+.scoreboard-runenv,
 .scoreboard-total,
 .scoreboard-spread {
   display: inline-flex;
@@ -4561,6 +4562,7 @@ button:active:not(:disabled) {
   white-space: nowrap;
 }
 
+.scoreboard-runenv-label,
 .scoreboard-total-label,
 .scoreboard-spread-label {
   font-size: 0.65rem;
@@ -5482,4 +5484,48 @@ details[open] .scoreboard-summary-chips {
 @media (max-width: 560px) {
   .play-row { grid-template-columns: 1fr; gap: var(--space-2); }
   .play-value { text-align: left; }
+}
+
+
+/* Ballpark + forecast. Deliberately quieter than the pick chips: these
+   conditions have never been graded against totals results, so they must not
+   read with the same authority as a calibrated win probability. */
+.scoreboard-runenv-value {
+  font-weight: 600;
+}
+
+.runenv-over .scoreboard-runenv-value {
+  color: var(--series-warm, #e8833a);
+}
+
+.runenv-under .scoreboard-runenv-value {
+  color: var(--series-cool, #3d7fd6);
+}
+
+.runenv-panel {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  border: 1px solid var(--panel-border-soft);
+}
+
+.runenv-caveat {
+  margin-left: 8px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-muted, #9aa4b2);
+  text-transform: none;
+}
+
+.runenv-list {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #c3cbd6);
+}
+
+.runenv-list li {
+  margin: 2px 0;
 }

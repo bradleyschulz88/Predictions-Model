@@ -79,14 +79,45 @@ class ParseTests(unittest.TestCase):
         self.assertEqual(parse_core_odds({"items": [item]})[0]["openingLine"],
                          {"home": -135, "away": 115})
 
-    def test_spread_and_total_only_row_is_skipped(self) -> None:
-        """The exact WNBA-on-SBR symptom. A priceless row must not look priced."""
-        payload = {"items": [{
+    def _spread_total_only(self) -> dict:
+        return {"items": [{
             "provider": {"id": "59", "name": "Caesars"},
             "spread": -4.5, "overUnder": 165.5,
             "homeTeamOdds": {"spreadOdds": -110}, "awayTeamOdds": {"spreadOdds": -110},
         }]}
-        self.assertEqual(parse_core_odds(payload), [])
+
+    def test_spread_and_total_only_row_yields_no_moneyline(self) -> None:
+        """The exact WNBA-on-SBR symptom. A priceless row must not look priced.
+
+        `marketLogit` is built from the moneyline alone, so a row carrying only a
+        spread and a total must never produce one.
+        """
+        views = {line["viewType"] for line in parse_core_odds(self._spread_total_only())}
+        self.assertNotIn("MoneyLine", views)
+
+    def test_spread_and_total_are_still_captured(self) -> None:
+        """They are useless for the win model and exactly what the card needs.
+
+        Emitting only MoneyLine is why totals and spreads never appeared on a
+        card for a game ESPN priced.
+        """
+        lines = parse_core_odds(self._spread_total_only())
+        by_view = {line["viewType"]: line for line in lines}
+        self.assertIn("Total", by_view)
+        self.assertIn("Spread", by_view)
+        # extract_total_line parses the "o165.5 (-110)" spelling SBR uses.
+        self.assertIn("165.5", str(by_view["Total"]["currentLine"]["over"]))
+        # ESPN quotes the spread from the home side; away is its mirror.
+        self.assertIn("-4.5", str(by_view["Spread"]["currentLine"]["home"]))
+        self.assertIn("+4.5", str(by_view["Spread"]["currentLine"]["away"]))
+
+    def test_captured_markets_parse_back_out(self) -> None:
+        """Round-trip through the model's own extractors, not just the shape."""
+        from mlb_predictions import extract_spread_line, extract_total_line
+
+        lines = parse_core_odds(self._spread_total_only())
+        self.assertEqual(extract_total_line(lines), 165.5)
+        self.assertEqual(extract_spread_line(lines), -4.5)
 
     def test_prediction_sites_are_skipped(self) -> None:
         """Folding a model's own output back in as "the market" is circular."""

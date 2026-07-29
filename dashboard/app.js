@@ -3546,6 +3546,45 @@ function annotateDoubleheaders(games) {
   return games;
 }
 
+// Ballpark plus forecast, as an over/under percentage. Shown on every baseball
+// card rather than only priced ones, because neither input needs a market to be
+// known -- a game with no posted total still has a ballpark and a forecast.
+//
+// Labelled as conditions, not as a pick: these have never been graded against
+// totals results, so presenting them beside a calibrated win probability would
+// overstate what is known.
+// Two shapes land on `prediction.spread`: a continuous spread, which solves for
+// a model line, and baseball's runline, which is fixed at +/-1.5 so there is no
+// line to solve for -- only a cover probability. Neither has been graded, so
+// both say so.
+function spreadChipTitle(spread) {
+  if (spread?.market === "runline") {
+    const best = Math.max(spread.homePct ?? 0, spread.awayPct ?? 0);
+    return `Runline ${spread.line} — model gives ${best}% to cover. Not yet graded.`;
+  }
+  const edge = spread?.edgePoints;
+  const edgeText = edge == null ? "" : ` (${edge > 0 ? "+" : ""}${edge} pts)`;
+  return `Market line ${spread?.line} — model line ${spread?.modelLine}${edgeText}. Not yet graded.`;
+}
+
+function renderRunEnvironmentChip(prediction) {
+  const env = prediction?.runEnvironment;
+  if (!env || env.lean === "neutral") return "";
+
+  const over = env.lean === "over";
+  const pct = over ? env.overPct : env.underPct;
+  const parts = [];
+  if (env.parkFactor != null) parts.push(`park ${Math.round(env.parkFactor)}`);
+  if (env.weatherAdj != null) parts.push("weather");
+  const because = parts.length ? ` (${parts.join(" + ")})` : "";
+
+  return `<span class="scoreboard-runenv ${over ? "runenv-over" : "runenv-under"}"
+    title="Conditions${because} lean ${over ? "over" : "under"} — ${env.overPct}% over / ${env.underPct}% under. Not graded; shown as context.">
+    <span class="scoreboard-runenv-label">Conditions</span>
+    <span class="scoreboard-runenv-value">${over ? "Over" : "Under"} <span class="tabular-nums">${Math.round(pct)}%</span></span>
+  </span>`;
+}
+
 function renderScoreboardTeams(game) {
   const away = teamAbbrev(game.awayTeam, game.awayAbbr);
   const home = teamAbbrev(game.homeTeam, game.homeAbbr);
@@ -4270,6 +4309,33 @@ function renderInjuryColumn(teamName, injuries) {
   return `<div class="injury-column"><h5>${teamName || "Team"}</h5><ul class="injury-list">${rows}</ul></div>`;
 }
 
+// Season series between these two clubs. Shown because it is the first thing
+// people look for, and labelled with the sample size because that is the whole
+// story: a season series is a handful of games, so it is mostly noise dressed
+// as history. It does not move the published probability.
+function renderHeadToHead(game) {
+  const h2h = game?.enrichment?.headToHead;
+  if (!h2h) return "";
+  const home = h2h.homeSeriesWinPct;
+  const away = h2h.awaySeriesWinPct;
+  if (home == null && away == null && !h2h.summary) return "";
+
+  const score = h2h.seriesScore ? `<p class="h2h-score">${escapeHtml(String(h2h.seriesScore))}</p>` : "";
+  const summary = h2h.summary ? `<p class="lineup-note">${escapeHtml(String(h2h.summary))}</p>` : "";
+  const pct = (value) => (value == null ? "—" : `${Math.round(Number(value) * 100)}%`);
+
+  return `
+    <section class="detail-panel h2h-panel">
+      <h4>Head to head <span class="runenv-caveat">season series — not in the model</span></h4>
+      ${score}
+      <div class="spread-probs">
+        <span class="spread-prob home">${escapeHtml(game.homeTeam || "Home")}: <strong>${pct(home)}</strong></span>
+        <span class="spread-prob away">${escapeHtml(game.awayTeam || "Away")}: <strong>${pct(away)}</strong></span>
+      </div>
+      ${summary}
+    </section>`;
+}
+
 function renderMajorInjuries(game) {
   const hasInjuries = game.homeMajorInjuries?.length || game.awayMajorInjuries?.length;
   if (!hasInjuries && sportSelect.value !== "mlb") return "";
@@ -4440,6 +4506,24 @@ function renderPrediction(game) {
   const probabilityCompare = renderTeamProbabilityTable(prediction, game);
   const pickResult = renderModelPickBlock(game);
 
+  // Conditions: ballpark and forecast, independent of any market.
+  const env = prediction.runEnvironment;
+  const runEnvSection = env ? `
+    <section class="runenv-panel">
+      <h4>Conditions <span class="runenv-caveat">not graded — context only</span></h4>
+      <div class="total-probs">
+        <span class="total-prob over">Over: <strong>${env.overPct}%</strong></span>
+        <span class="total-prob under">Under: <strong>${env.underPct}%</strong></span>
+      </div>
+      <ul class="runenv-list">
+        ${env.parkFactor != null ? `<li>Ballpark runs index <strong>${Math.round(env.parkFactor)}</strong>
+          (${env.parkEdge > 0 ? "+" : ""}${env.parkEdge} vs neutral)</li>` : ""}
+        ${env.weatherAdj != null ? `<li>Weather shifts the run environment
+          <strong>${env.weatherAdj > 0 ? "+" : ""}${(env.weatherAdj * 100).toFixed(1)} pts</strong></li>` : ""}
+      </ul>
+      ${(env.notes || []).length ? `<p class="total-detail">${escapeHtml(env.notes.join(" "))}</p>` : ""}
+    </section>` : "";
+
   // Totals and spreads sections
   const totalSection = prediction.total ? `
     <section class="total-panel">
@@ -4453,16 +4537,21 @@ function renderPrediction(game) {
       <p class="total-confidence">Confidence: <strong>${prediction.total.confidence}%</strong></p>
     </section>` : "";
 
-  const spreadSection = prediction.spread ? `
+  const spread = prediction.spread;
+  const isRunline = spread?.market === "runline";
+  const spreadSection = spread ? `
     <section class="spread-panel">
-      <h4>Point Spread</h4>
-      <p class="spread-line">Market Line: <strong>${prediction.spread.line >= 0 ? "+" : ""}${prediction.spread.line}</strong> | Model: <strong>${prediction.spread.modelLine >= 0 ? "+" : ""}${prediction.spread.modelLine}</strong></p>
+      <h4>${isRunline ? "Runline" : "Point Spread"}
+        ${spread.unvalidated ? '<span class="runenv-caveat">not graded — context only</span>' : ""}</h4>
+      <p class="spread-line">${isRunline
+        ? `Line: <strong>${spread.line >= 0 ? "+" : ""}${spread.line}</strong>`
+        : `Market Line: <strong>${spread.line >= 0 ? "+" : ""}${spread.line}</strong> | Model: <strong>${spread.modelLine >= 0 ? "+" : ""}${spread.modelLine}</strong>`}</p>
       <div class="spread-probs">
-        <span class="spread-prob home">Home: <strong>${prediction.spread.homePct}%</strong></span>
-        <span class="spread-prob away">Away: <strong>${prediction.spread.awayPct}%</strong></span>
+        <span class="spread-prob home">Home covers: <strong>${spread.homePct}%</strong></span>
+        <span class="spread-prob away">Away covers: <strong>${spread.awayPct}%</strong></span>
       </div>
-      <p class="spread-detail">${prediction.spread.detail}</p>
-      <p class="spread-confidence">Confidence: <strong>${prediction.spread.confidence}%</strong></p>
+      <p class="spread-detail">${escapeHtml(spread.detail)}</p>
+      ${spread.confidence != null ? `<p class="spread-confidence">Confidence: <strong>${spread.confidence}%</strong></p>` : ""}
     </section>` : "";
 
   return `
@@ -4476,6 +4565,7 @@ function renderPrediction(game) {
       </div>
       <p class="prediction-detail-pick">${escapeHtml(prediction.outcomeLabel)} <span class="prediction-detail-pct">${formatConfidenceDisplay(prediction.confidence)}% model confidence</span></p>
       ${pickResult}
+      ${runEnvSection}
       ${totalSection}
       ${spreadSection}
       ${probabilityCompare}
@@ -4642,14 +4732,15 @@ function renderGames(games) {
                     </span>
                   </span>
                 </span>` : ""}
-                ${prediction?.total ? `<span class="scoreboard-total" title="Total: ${prediction.total.line}">
+                ${prediction?.total ? `<span class="scoreboard-total" title="Market total ${prediction.total.line} — model reads it ${prediction.total.overPct}% over / ${prediction.total.underPct}% under">
                   <span class="scoreboard-total-label">Total</span>
-                  <span class="scoreboard-total-value">${prediction.total.pick}</span>
+                  <span class="scoreboard-total-value">${escapeHtml(prediction.total.pick)} <span class="tabular-nums">${Math.round(prediction.total.confidence)}%</span></span>
                 </span>` : ""}
-                ${prediction?.spread ? `<span class="scoreboard-spread" title="Spread: ${prediction.spread.line}">
-                  <span class="scoreboard-spread-label">Spread</span>
-                  <span class="scoreboard-spread-value">${prediction.spread.pick}</span>
+                ${prediction?.spread ? `<span class="scoreboard-spread" title="${escapeAttr(spreadChipTitle(prediction.spread))}">
+                  <span class="scoreboard-spread-label">${prediction.spread.market === "runline" ? "Runline" : "Spread"}</span>
+                  <span class="scoreboard-spread-value">${escapeHtml(prediction.spread.pick)}</span>
                 </span>` : ""}
+                ${renderRunEnvironmentChip(prediction)}
                 <span class="scoreboard-pick-conf">
                   ${confLabel ? `<span class="confidence-label ${labelClass}">${confLabel}</span>` : ""}
                   ${!hasPick && prediction?.confidence != null ? `<span class="confidence-label label-coin">${formatConfidenceDisplay(prediction.confidence)}% lean</span>` : ""}
@@ -4669,6 +4760,7 @@ function renderGames(games) {
                 </div>
               </div>
               ${renderLineups(game, lineupLabel)}
+              ${renderHeadToHead(game)}
               ${renderMajorInjuries(game)}
             </div>
           </details>

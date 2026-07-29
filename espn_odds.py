@@ -200,6 +200,73 @@ def parse_core_odds(payload: dict[str, Any]) -> list[dict[str, Any]]:
             }
         )
 
+    return lines + _market_lines(payload)
+
+
+def _number(value: Any) -> float | None:
+    """A spread or total as a float. None when absent or unusable."""
+    if value is None or isinstance(value, bool):
+        return None
+    try:
+        return float(str(value).strip().replace("+", ""))
+    except (TypeError, ValueError):
+        return None
+
+
+def _market_lines(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    """Total and Spread rows, in the shape the model already consumes.
+
+    Split out from the moneyline pass because these rows survive a different
+    test: a book can post a total with no moneyline, and that total is still
+    perfectly good. Requiring a moneyline first -- which the loop above does,
+    correctly, for its own purposes -- would throw those away.
+
+    This is why the totals and spread sections never appeared on a card for a
+    game ESPN priced: the parser only ever emitted MoneyLine, so
+    `extract_total_line` had nothing to find and `predict_total` returned None.
+    """
+    lines: list[dict[str, Any]] = []
+    for item in payload.get("items") or []:
+        if not isinstance(item, dict) or not _is_book(item):
+            continue
+        book = str((item.get("provider") or {}).get("name"))
+
+        total = _number(item.get("overUnder"))
+        if total is not None:
+            over_price = _american(item.get("overOdds"))
+            under_price = _american(item.get("underOdds"))
+            lines.append(
+                {
+                    "sportsbook": book,
+                    "viewType": "Total",
+                    # extract_total_line parses the "o8.5 (-110)" spelling SBR
+                    # uses, so emit that rather than teaching it a second shape.
+                    "currentLine": {
+                        "over": f"o{total:g}" + (f" ({over_price:+d})" if over_price else ""),
+                        "under": f"u{total:g}" + (f" ({under_price:+d})" if under_price else ""),
+                    },
+                    "openingLine": None,
+                }
+            )
+
+        spread = _number(item.get("spread"))
+        if spread is not None:
+            home_price = _american((item.get("homeTeamOdds") or {}).get("spreadOdds"))
+            away_price = _american((item.get("awayTeamOdds") or {}).get("spreadOdds"))
+            # ESPN quotes `spread` from the home side, so the away number is its
+            # mirror. Getting this backwards is a silent sign flip.
+            lines.append(
+                {
+                    "sportsbook": book,
+                    "viewType": "Spread",
+                    "currentLine": {
+                        "home": f"{spread:+g}" + (f" ({home_price:+d})" if home_price else ""),
+                        "away": f"{-spread:+g}" + (f" ({away_price:+d})" if away_price else ""),
+                    },
+                    "openingLine": None,
+                }
+            )
+
     return lines
 
 
