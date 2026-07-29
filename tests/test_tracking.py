@@ -469,3 +469,33 @@ class AbandonedGameTests(unittest.TestCase):
         # A void is neither a win nor a loss, and is no longer pending either.
         self.assertEqual(summary["total"], 0)
         self.assertEqual(summary["pending"], 0)
+
+
+class ClosingLineValueRobustnessTests(unittest.TestCase):
+    """CLV runs on every record in the grading loop, so it must never raise.
+
+    `int(float("inf"))` raises OverflowError, not ValueError, so a single
+    non-finite price aborted the whole run instead of costing one row its CLV.
+    Same family as the grade_total/grade_spread overflow, found by fuzzing the
+    wagering math rather than by reading it.
+    """
+
+    def _record(self, opening, closing=-110):
+        return {
+            "openingOdds": opening, "pickOdds": closing,
+            "predictedSide": "home", "openingSide": "home",
+        }
+
+    def test_non_finite_odds_do_not_raise(self) -> None:
+        for bad in (float("inf"), float("-inf"), float("nan")):
+            self.assertIsNone(closing_line_value(self._record(bad)))
+            self.assertIsNone(closing_line_value(self._record(-110, bad)))
+
+    def test_unparseable_odds_still_return_none(self) -> None:
+        self.assertIsNone(closing_line_value(self._record("n/a")))
+        self.assertIsNone(closing_line_value(self._record(None)))
+
+    def test_a_real_move_is_still_measured(self) -> None:
+        """Guards the guard: hardening must not have broken the calculation."""
+        self.assertGreater(closing_line_value(self._record(130, 110)), 0)
+        self.assertLess(closing_line_value(self._record(-130, -110)), 0)
