@@ -711,6 +711,12 @@ def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
         # to find that out is to measure it, and because unlike weather it can
         # be recovered for past games from the home club alone.
         "parkEdge": (park_run_environment(game.get("homeTeam"), game.get("venueName")) or {}).get("edge"),
+        # Season-series record between these two clubs. Logged as a candidate,
+        # with low expectations: a season series is 3-13 games, so this is mostly
+        # noise dressed as history, and whatever real signal it holds is already
+        # inside the season records that feed strengthDiff. It earns a place only
+        # if it beats its own absence out of sample, like everything else.
+        "h2hDiff": _h2h_diff(enrichment),
         "homeInjuryLoad": round(_weighted_injury_score(enrichment.get("homeMajorInjuries") or [], league), 2),
         "awayInjuryLoad": round(_weighted_injury_score(enrichment.get("awayMajorInjuries") or [], league), 2),
         # Availability x seriousness (x player importance when an LLM key is
@@ -743,6 +749,16 @@ def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
         "mlbPitching": enrichment.get("mlbPitching"),
         "leagueMetrics": enrichment.get("leagueMetrics"),
     }
+
+
+def _h2h_diff(enrichment: dict[str, Any]) -> float | None:
+    """Season-series edge, home minus away. None when the clubs have not met."""
+    head_to_head = enrichment.get("headToHead") or {}
+    home = head_to_head.get("homeSeriesWinPct")
+    away = head_to_head.get("awaySeriesWinPct")
+    if home is None or away is None:
+        return None
+    return round(float(home) - float(away), 4)
 
 
 def extract_prediction_features(game: dict[str, Any], prediction: dict[str, Any]) -> dict[str, Any]:
@@ -858,6 +874,66 @@ def _scoring_pace_from_form(enrichment: dict[str, Any]) -> float | None:
     return sum(combined) / len(combined)
 
 
+def run_environment(game: dict[str, Any], enrichment: dict[str, Any]) -> dict[str, Any] | None:
+    """How much the ballpark and the forecast push a game over or under.
+
+    Separate from `predict_total` because it is knowable without a market. A
+    total pick needs a posted line to lean against; the run environment does
+    not, so this is shown on every baseball card while a totals pick appears
+    only where a book has priced one.
+
+    `shift` is a probability offset centred on zero, so 0.0 means the conditions
+    say nothing and the caller adds it to a 0.5 base.
+    """
+    if _league_id(game) != "mlb":
+        return None
+
+    shift = 0.0
+    notes: list[str] = []
+    park_edge = None
+
+    park = park_run_environment(game.get("homeTeam"), game.get("venueName"))
+    if park:
+        park_edge = park["edge"]
+        # Scaled so Coors (+15) moves the lean 0.09 and a mid-table park moves
+        # almost nothing, matching how the effect actually distributes: the
+        # extremes are large and uncontroversial, the middle is inside the noise.
+        shift += clamp(park["edge"] * 0.006, -0.09, 0.09)
+        # Only the extremes are worth saying out loud; otherwise every card
+        # carries a line about the ballpark being average.
+        if abs(park["edge"]) >= 3:
+            notes.append(
+                f"{game.get('venueName') or 'The ballpark'} is {park['note']} "
+                f"({park['factor']:.0f} runs index)."
+            )
+
+    weather_impact = enrichment.get("weatherImpact") or {}
+    weather_adj = weather_impact.get("runEnvironmentAdj") or 0.0
+    if weather_adj:
+        shift += weather_adj
+        if weather_impact.get("summary"):
+            notes.append(f"Weather: {weather_impact['summary']}.")
+
+    if park is None and not weather_adj:
+        return None
+
+    shift = clamp(shift, -0.18, 0.18)
+    over_pct = round((0.5 + shift) * 100, 1)
+    return {
+        "shift": shift,
+        "overPct": over_pct,
+        "underPct": round(100 - over_pct, 1),
+        "lean": "over" if shift > 0.005 else "under" if shift < -0.005 else "neutral",
+        "parkEdge": park_edge,
+        "parkFactor": park["factor"] if park else None,
+        "weatherAdj": round(weather_adj, 4) if weather_adj else None,
+        "notes": notes,
+        # These conditions have never been graded against totals results, so
+        # they are shown as context and not as a priced edge.
+        "unvalidated": True,
+    }
+
+
 def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment: dict[str, Any]) -> dict[str, Any] | None:
     total_line = extract_total_line(lines)
     if total_line is None:
@@ -887,27 +963,10 @@ def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment:
             over_lean += 0.12
             detail_parts.append(f"Weaker pitching matchup (avg ERA {avg_era:.2f}) favors the over.")
 
-    weather_impact = enrichment.get("weatherImpact") or {}
-    run_env = weather_impact.get("runEnvironmentAdj")
-    if run_env:
-        over_lean += run_env
-        if weather_impact.get("summary"):
-            detail_parts.append(f"Weather: {weather_impact['summary']}.")
-
-    # Where the game is played. Scaled so Coors (+15) moves the lean 0.09 and a
-    # mid-table park moves it almost nothing, which matches how the effect
-    # actually distributes: the extremes are large and uncontroversial, the
-    # middle is inside the noise. Only the two extremes are annotated, so the
-    # reasoning does not fill up with "this is an average ballpark".
-    if league == "mlb":
-        park = park_run_environment(game.get("homeTeam"), game.get("venueName"))
-        if park:
-            over_lean += clamp(park["edge"] * 0.006, -0.09, 0.09)
-            if abs(park["edge"]) >= 3:
-                detail_parts.append(
-                    f"{game.get('venueName') or 'The ballpark'} is {park['note']} "
-                    f"({park['factor']:.0f} runs index)."
-                )
+    environment = run_environment(game, enrichment)
+    if environment:
+        over_lean += environment["shift"]
+        detail_parts.extend(environment["notes"])
 
     home_adv = enrichment.get("homeAdvanced") or {}
     away_adv = enrichment.get("awayAdvanced") or {}
@@ -1826,12 +1885,106 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
 # Leagues absent from this map get no spread pick: baseball and hockey run a
 # fixed 1.5 line where this mapping does not apply, and soccer uses handicaps
 # that need their own treatment.
+# Standard deviation of final margin, used to turn a win probability into a
+# points line. Measured from graded results in docs/data/accuracy.json where
+# there are enough of them, rather than assumed:
+#
+#     league   n     mean margin   SD
+#     mlb    503        +0.04     4.83
+#     wnba    97        +2.00    13.49   (was 10.0 -- understated)
+#     afl     46        +8.28    40.05   (was 36.0 -- understated)
+#
+# NFL and NBA keep published figures; neither has graded games here yet.
+#
+# MLB and EPL are deliberately absent. Their handicap is a FIXED line -- the
+# baseball runline is always +/-1.5 -- so mapping a win probability through a
+# normal curve is the wrong tool, and the data says so plainly: run margins are
+# discrete, cannot be zero, and pile up at 1, with 29% of 503 graded games
+# decided by exactly one run. A normal curve cannot represent that spike.
+# Baseball is handled by `predict_runline` below instead.
 MARGIN_STD_DEV = {
     "nfl": 13.5,
     "nba": 11.5,
-    "wnba": 10.0,
-    "afl": 36.0,
+    "wnba": 13.49,
+    "afl": 40.05,
 }
+
+# P(winner covers -1.5 | they won), measured on 503 graded MLB games: 147 of the
+# 503 decided games were won by exactly one run, so 70.8% of wins clear the
+# runline. This is what makes a runline model possible without a continuous
+# margin distribution -- the line never moves, so only this one number is needed.
+#
+# It is applied symmetrically even though the split is not quite even (home
+# winners take 33.9% of their wins by one run, away winners 24.6%). That gap is
+# roughly the home-field edge showing up in close games and at n=251/252 it is
+# not separated from noise, so splitting it would be fitting the sample.
+RUNLINE_COVER_GIVEN_WIN = 0.7078
+RUNLINE = 1.5
+
+
+def predict_runline(
+    game: dict[str, Any],
+    lines: list[dict[str, Any]],
+    prediction: dict[str, Any],
+) -> dict[str, Any] | None:
+    """Baseball's fixed +/-1.5 handicap, from the win probability.
+
+    A separate function from `predict_spread` because the runline is not a
+    spread. It never moves, so there is nothing to solve for; the question is
+    only whether the favourite wins by two or more. That makes it a single
+    conditional probability rather than a normal-curve inversion, and it is
+    measured (`RUNLINE_COVER_GIVEN_WIN`) rather than assumed.
+    """
+    if _league_id(game) != "mlb":
+        return None
+    if extract_spread_line(lines) is None:
+        return None
+
+    true_probs = (prediction.get("probabilities") or {}).get("true") or {}
+    home_prob = true_probs.get("home")
+    away_prob = true_probs.get("away")
+    if home_prob is None or away_prob is None:
+        return None
+    two_way = home_prob + away_prob
+    if two_way <= 0:
+        return None
+
+    p_home = home_prob / two_way
+    # Laying -1.5 needs a win by two or more; taking +1.5 also cashes when the
+    # underdog loses by exactly one, which is why the favourite's runline price
+    # is so much shorter than its moneyline.
+    home_covers = p_home * RUNLINE_COVER_GIVEN_WIN
+    away_covers = 1.0 - home_covers
+
+    favourite_home = p_home >= 0.5
+    if favourite_home:
+        pick_side = "home" if home_covers >= 0.5 else "away"
+    else:
+        pick_side = "away" if away_covers >= 0.5 else "home"
+    line_for_pick = -RUNLINE if pick_side == "home" else RUNLINE
+    # The favourite lays the runs; the underdog takes them.
+    if (pick_side == "home") != favourite_home:
+        line_for_pick = RUNLINE if pick_side == "home" else -RUNLINE
+
+    team = game.get("homeTeam") if pick_side == "home" else game.get("awayTeam")
+    return {
+        "line": -RUNLINE if favourite_home else RUNLINE,
+        "pick": f"{team} {line_for_pick:+.1f}",
+        "pickSide": pick_side,
+        "homePct": round(home_covers * 100, 1),
+        "awayPct": round(away_covers * 100, 1),
+        "market": "runline",
+        # No confidence figure: runline picks have never been graded, so any
+        # number here would be invented.
+        "confidence": None,
+        "unvalidated": True,
+        "detail": (
+            f"Runline {line_for_pick:+.1f}. Model gives {team} "
+            f"{max(home_covers, away_covers) * 100:.0f}% to cover, from a "
+            f"{p_home * 100:.0f}% home win probability and the measured 70.8% of "
+            f"wins that clear 1.5 runs. Not yet graded or calibrated."
+        ),
+    }
 
 
 def predict_spread(
@@ -1936,15 +2089,28 @@ def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
         lines = game.get("lines", [])
         enrichment = game.get("enrichment", {})
+
+        # Outside the `if lines` block on purpose: the ballpark and the forecast
+        # do not need a market to be known, so this shows on every baseball card
+        # rather than only the ones a book has priced.
+        environment = run_environment(game, enrichment)
+        if environment:
+            prediction["runEnvironment"] = environment
+
         if lines:
             total_pred = predict_total(game, lines, enrichment)
             if total_pred:
                 prediction["total"] = total_pred
 
-            spread_pred = predict_spread(game, lines, prediction)
+            # Baseball's handicap is a fixed runline, not a spread, so it takes
+            # its own model. Either way it lands on `prediction["spread"]`, which
+            # is what the card renders.
+            spread_pred = predict_runline(game, lines, prediction) or predict_spread(
+                game, lines, prediction
+            )
             if spread_pred:
                 prediction["spread"] = spread_pred
-        
+
         game["prediction"] = prediction
 
     publishable = [
