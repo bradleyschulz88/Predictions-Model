@@ -184,23 +184,26 @@ class PublishVersusLogTests(unittest.TestCase):
         record_predictions(Path(tmp), [payload])
         return json.loads((Path(tmp) / "predictions_log.json").read_text(encoding="utf-8"))
 
-    def test_withheld_mlb_pick_is_still_logged_for_training(self) -> None:
+    def test_withheld_pick_is_still_logged_for_training(self) -> None:
+        """Below the floor, so never shown -- but the fit still needs it."""
         with tempfile.TemporaryDirectory() as tmp:
-            log = self._log(tmp, self._payload(60.0))
+            log = self._log(tmp, self._payload(51.0))
         row = log["predictions"]["42"]
         self.assertFalse(row["published"])
         # The features are the whole point -- the fit reads these.
         self.assertEqual(row["features"]["recordDiff"], 0.2)
 
-    def test_published_mlb_pick_is_flagged_published(self) -> None:
+    def test_published_pick_is_flagged_published(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             log = self._log(tmp, self._payload(71.0))
         self.assertTrue(log["predictions"]["42"]["published"])
 
-    def test_other_leagues_publish_in_the_mid_band(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            log = self._log(tmp, self._payload(60.0, league="wnba"))
-        self.assertTrue(log["predictions"]["42"]["published"])
+    def test_mid_band_publishes_in_every_league(self) -> None:
+        """No league carries an override now, so 60% publishes everywhere."""
+        for league in ("mlb", "wnba"):
+            with tempfile.TemporaryDirectory() as tmp:
+                log = self._log(tmp, self._payload(60.0, league=league))
+            self.assertTrue(log["predictions"]["42"]["published"], league)
 
     def test_withheld_picks_are_excluded_from_the_record(self) -> None:
         """A record nobody could have bet is not a record.

@@ -33,35 +33,36 @@ LEAN_THRESHOLD = 57
 # with MIN_PUBLISHABLE_CONFIDENCE in dashboard/app.js.
 MIN_PICK_CONFIDENCE = 55
 
-# MLB is held to a higher bar, because its 55-65% band has no skill and loses
-# money at a rate that is not survivable.
+# Per-league overrides of the publish bar. EMPTY ON PURPOSE -- read this before
+# adding one, because the obvious version of this idea is wrong.
 #
-# Measured 2026-07-29 on priced, graded MLB picks, joining the CURRENT model's
-# confidence from predictions_log.json to the graded outcome. Do not measure
-# this off accuracy.json's own `confidence` field: that is frozen at the value
-# shown when the pick was graded, and 537 rows now disagree with the model, so
-# band boundaries drawn on it group the wrong games.
+# MLB carried a 65 bar here briefly. The evidence looked strong: 164 priced
+# graded picks in the 55-65 band hit 45.1% into prices implying 58-62%, for
+# -16.4% ROI, stable across both halves of the history and both home and away.
 #
-#     band     n     hit      ROI
-#     <55     16   43.8%   -17.8%
-#     55-65  164   45.1%   -16.4%     <- the dead band
-#     65-75  184   58.7%    +3.8%
-#     75+     78   71.8%   +17.5%
+# It was still wrong, because a fixed cutoff was pinned to a distribution that
+# then moved underneath it. MLB's median stated confidence ran 65-73 through
+# 2026-07-23 and 54-61 from 2026-07-24, a 9.6-point drop at the median, when
+# Platt calibration started correcting the model's overconfidence. The bar was
+# measured where it excluded the bottom quartile and ended up excluding the
+# middle: it withheld 90% of MLB games, and 100% on several days, leaving an
+# empty board.
 #
-# 45.1% into prices implying roughly 58-62% is not a near miss, and the bands
-# above 65 are cleanly monotonic, so this is one dead band rather than a broken
-# model. Withholding it moves the board from +0.69% ROI to +9.38% and drops 164
-# of 487 priced picks.
+# The band was never the problem. Overconfidence was, and calibration fixed it:
 #
-# This is per-league because MLB is the only league with enough priced graded
-# history to measure a bar at all (MLB 442, WNBA 6, and NFL/NBA/EPL/AFL zero --
-# they are unpriced or out of season). The others keep the default because there
-# is no evidence to justify moving it, NOT because they were measured and found
-# healthy. Re-measure each league once it has priced history, and take this
-# override back off if MLB's band recovers.
-MIN_PICK_CONFIDENCE_BY_LEAGUE = {
-    "mlb": 65,
-}
+#     graded MLB      n     mean stated   actual   gap
+#     before 07-24   432       67.6%      55.1%   +12.5 pts
+#     after  07-24    71       59.8%      59.2%    +0.6 pts
+#
+# A stated 60 used to mean roughly 45, which loses money at any price. It now
+# means roughly 60, which clears the 52.4% break-even at -110. Withholding that
+# band today would be discarding the picks calibration just repaired.
+#
+# So if a league ever looks like it needs its own bar, first check whether the
+# distribution has moved -- the two are very hard to tell apart from the band
+# statistics alone. If a bar is genuinely needed, derive it from the CURRENT
+# distribution and re-derive it whenever the model is refit.
+MIN_PICK_CONFIDENCE_BY_LEAGUE: dict[str, float] = {}
 
 
 def min_pick_confidence(league: str | None = None) -> float:

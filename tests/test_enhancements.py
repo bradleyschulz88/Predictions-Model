@@ -264,3 +264,60 @@ class OddsCoverageWarningTests(unittest.TestCase):
 
         warnings = coverage_warnings({"worldcup": self._summary(3, 0)})
         self.assertFalse(any("odds source configured" in w for w in warnings))
+
+
+class EmptyBoardWarningTests(unittest.TestCase):
+    """A publish bar that swallows the slate is a broken bar, not a quiet day.
+
+    MLB carried a 65 threshold measured against a confidence distribution that
+    then shifted 9.6 points down underneath it. The bar went from excluding the
+    bottom quartile to withholding 90% of games -- 100% on some days -- and
+    nothing said a word, because every build stayed green. An empty board is not
+    an error, so it needed to be made into a warning.
+    """
+
+    def _summary(self, games: int, published: int) -> dict:
+        return {
+            "gameCount": games,
+            "published": published,
+            "counts": {"espnPredictor": games, "impliedOdds": games},
+            "pct": {"espnPredictor": 100.0 if games else 0.0},
+        }
+
+    def _fired(self, summary: dict, league: str = "mlb") -> bool:
+        from data_coverage import coverage_warnings
+
+        return any("publish bar" in w for w in coverage_warnings({league: summary}))
+
+    def test_a_swallowed_slate_warns(self) -> None:
+        """The exact regression: 2 of 16 published."""
+        self.assertTrue(self._fired(self._summary(16, 2)))
+
+    def test_a_completely_empty_board_warns(self) -> None:
+        self.assertTrue(self._fired(self._summary(15, 0)))
+
+    def test_a_healthy_board_stays_silent(self) -> None:
+        self.assertFalse(self._fired(self._summary(16, 9)))
+
+    def test_a_small_slate_is_not_judged(self) -> None:
+        """1 of 3 is 33% and means nothing; small slates swing wildly."""
+        self.assertFalse(self._fired(self._summary(3, 0)))
+
+    def test_absent_published_count_is_not_an_error(self) -> None:
+        """Older snapshots carry no `published` key; that is not a failure."""
+        summary = self._summary(16, 0)
+        summary.pop("published")
+        self.assertFalse(self._fired(summary))
+
+    def test_summarize_coverage_reports_what_reached_the_board(self) -> None:
+        from data_coverage import summarize_coverage
+
+        games = [
+            {"league": "mlb", "prediction": {"predictedWinner": "A", "confidence": 71.0}},
+            {"league": "mlb", "prediction": {"predictedWinner": "B", "confidence": 60.0}},
+            {"league": "mlb", "prediction": {"predictedWinner": "C", "confidence": 51.0}},
+        ]
+        summary = summarize_coverage(games)
+        self.assertEqual(summary["gameCount"], 3)
+        # 71 and 60 clear the global floor; 51 does not.
+        self.assertEqual(summary["published"], 2)
