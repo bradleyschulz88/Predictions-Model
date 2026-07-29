@@ -48,3 +48,7 @@ docs/data/afl.json
 # them coming back; 94 stale June files were still tracked weeks after they
 # left the dashboard's date window.
 docs/data/*_20[0-9][0-9]-[0-9][0-9]-[0-9][0-9].json
+
+# Backfilled past seasons. Derived data, rebuilt on demand by
+# scripts/backfill_history.py, and large -- not a record worth committing.
+docs/data/history_features.json
