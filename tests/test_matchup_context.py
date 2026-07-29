@@ -123,6 +123,47 @@ class BullpenTests(unittest.TestCase):
             self.assertIsNone(bullpen.team_relief_innings(147))
             self.assertIsNone(bullpen.bullpen_fatigue(147))
 
+    def test_missing_starter_innings_is_unknown_not_zero(self) -> None:
+        """The silent-failure case, and the reason this test exists.
+
+        Falling back to "whole game minus a typical start" returns exactly the
+        typical figure every time, so an 18-inning day and a 9-inning day both
+        scored 0.00 fatigue. The feature would have logged numbers, passed its
+        tests and never once shown signal.
+        """
+        payload = self._log([{"inningsPitched": 18.0} for _ in range(3)])
+        with patch.object(bullpen, "_fetch", return_value=payload):
+            bullpen._warned = False
+            self.assertIsNone(bullpen.team_relief_innings(147))
+            self.assertIsNone(bullpen.bullpen_fatigue(147))
+
+    def test_workload_actually_varies_when_the_field_is_present(self) -> None:
+        """Guards the guard: prove the metric is not constant by construction."""
+        light = self._log([{"inningsPitched": 9.0, "startersInningsPitched": 8.0}])
+        heavy = self._log([{"inningsPitched": 9.0, "startersInningsPitched": 1.0}])
+        with patch.object(bullpen, "_fetch", return_value=light):
+            easy = bullpen.bullpen_fatigue(147, days=1)
+        with patch.object(bullpen, "_fetch", return_value=heavy):
+            hard = bullpen.bullpen_fatigue(147, days=1)
+        self.assertLess(easy, hard)
+
+    def test_alternate_field_spellings_are_accepted(self) -> None:
+        payload = self._log([{"inningsPitched": 9.0, "startersInnings": 6.0}])
+        with patch.object(bullpen, "_fetch", return_value=payload):
+            self.assertEqual(bullpen.team_relief_innings(147, days=1), 3.0)
+
+    def test_a_dead_feature_announces_itself(self) -> None:
+        """An ablation candidate that cannot produce a value must be visible."""
+        import io
+        from contextlib import redirect_stdout
+
+        payload = self._log([{"inningsPitched": 9.0}])
+        buffer = io.StringIO()
+        with patch.object(bullpen, "_fetch", return_value=payload), redirect_stdout(buffer):
+            bullpen._warned = False
+            bullpen.team_relief_innings(147)
+        self.assertIn("Bullpen workload", buffer.getvalue())
+
     def test_edge_needs_both_sides(self) -> None:
         """A one-sided figure would read as an edge when it is a data gap."""
         with patch.object(bullpen, "bullpen_fatigue", side_effect=[2.0, None]):

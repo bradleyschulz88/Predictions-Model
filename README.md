@@ -409,7 +409,16 @@ allowed to move a probability only once it beats its own absence out of sample.
 | `parkDiff` | ballpark run index | no coverage yet |
 | `travelDiff` | distance + body-clock shift on the visitors | no coverage yet |
 | `handednessDiff` | southpaw asymmetry between the starters | no coverage yet |
-| `bullpenDiff` | relief innings absorbed in the last three days | no coverage yet |
+| `bullpenDiff` | relief innings absorbed in the last three days | no coverage yet — see note |
+
+> **`bullpenDiff` has an unverified dependency.** Separating relief innings from
+> total innings needs the starters' share, and the exact field name in the MLB
+> Stats API team game log could not be checked offline. If it is absent the
+> feature returns nothing and prints a CI warning, rather than fabricating a
+> figure — an earlier version fell back to "whole game minus a typical start",
+> which returns the typical figure every time and scored an 18-inning day and a
+> 9-inning day identically at 0.00. Check the build log for
+> `::warning title=Bullpen workload::` after the first run.
 
 "No coverage yet" is the expected state for anything recently added: the fit
 reads features out of `predictions_log.json`, so a new one starts at zero
