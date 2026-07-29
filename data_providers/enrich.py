@@ -152,8 +152,10 @@ def enrich_games_with_providers(
         away_rest = compute_rest_days(context_games, away_team, game.get("startDate"))
         weather = parse_weather_impact(enrichment.get("weather"))
         series = enrichment.get("seasonSeries")
-        home_h2h = series_win_pct(series, home_team)
-        away_h2h = series_win_pct(series, away_team)
+        # The abbreviation is what ESPN actually writes in the series summary
+        # ("TB wins series 5-1"), so without it nothing ever matched.
+        home_h2h = series_win_pct(series, home_team, game.get("homeAbbr"))
+        away_h2h = series_win_pct(series, away_team, game.get("awayAbbr"))
 
         enrichment["homeAdvanced"] = home_profile
         enrichment["awayAdvanced"] = away_profile
