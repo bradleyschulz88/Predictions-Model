@@ -22,8 +22,14 @@ US_SCHEDULE_LEAGUES = frozenset({"mlb", "nfl", "nba", "wnba"})
 EARLY_SLATE_CUTOFF_HOUR = 10
 
 # How many calendar days to pre-build in GitHub Actions (lookback / lookahead from today).
+#
+# The lookahead is deliberately short. This is a day-to-day board, and a game
+# four days out has no market yet -- books post moneylines a day or two ahead --
+# so it is scored with no `marketLogit`, which is the model's strongest feature.
+# Those picks are the least trustworthy ones on the board and they slowed every
+# build to produce. Three days covers today, tomorrow and the day after.
 SCHEDULE_BUILD_LOOKBACK_DAYS = 3
-SCHEDULE_BUILD_LOOKAHEAD_DAYS = 7
+SCHEDULE_BUILD_LOOKAHEAD_DAYS = 3
 SCHEDULE_BUILD_LOOKBACK_DAYS_NON_US = 2
 
 

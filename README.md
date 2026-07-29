@@ -180,37 +180,48 @@ initials so `NYM` and `LAD` stay correct.
 
 ### Publish thresholds
 
-A pick is only shown once it clears its league's bar. The default is **55%**;
-**MLB is held to 65%**, because its 55-65% band has no skill and loses money:
+A pick is shown once it clears **55%** confidence. No league currently carries
+its own bar — and the story of why is worth keeping, because the obvious version
+of that idea is wrong.
 
-| MLB priced picks | n | hit | ROI |
-|---|---|---|---|
-| <55% | 16 | 43.8% | -17.8% |
-| **55-65%** | **164** | **45.1%** | **-16.4%** |
-| 65-75% | 184 | 58.7% | +3.8% |
-| 75%+ | 78 | 71.8% | +17.5% |
+MLB briefly carried a 65% bar. The evidence looked strong: 164 priced graded
+picks in the 55‑65 band hit 45.1% into prices implying 58‑62%, for −16.4% ROI,
+stable across both halves of the history and on both home and away sides.
 
-Those picks go into prices implying roughly 58-62%, so 45.1% is not a near miss,
-and everything above 65% is cleanly monotonic — one dead band rather than a
-broken model. Withholding it takes the board from **+0.69% to +9.38% ROI**,
-dropping 164 of 487 priced picks.
+It was still wrong, because **a fixed cutoff was pinned to a distribution that
+then moved underneath it.** Platt calibration was correcting the model's
+overconfidence at the same time:
 
-The override is per-league because **MLB is the only league with enough priced
-graded history to measure a bar at all** — MLB has 442 priced graded picks, WNBA
-6, and NFL/NBA/EPL/AFL none. The others keep the default because there is no
-evidence to move it, *not* because they were checked and found healthy. Take the
-override back off if MLB's band recovers.
+| graded MLB | n | mean stated | actual | gap |
+|---|---|---|---|---|
+| before 2026‑07‑24 | 432 | 67.6% | 55.1% | **+12.5 pts** |
+| after 2026‑07‑24 | 71 | 59.8% | 59.2% | **+0.6 pts** |
+
+MLB's median stated confidence fell from 65‑73 to 54‑61 — 9.6 points at the
+median. A bar measured to exclude the bottom quartile ended up excluding the
+middle: it withheld **90% of MLB games, and 100% on several days**, leaving an
+empty board.
+
+The band was never the problem. Overconfidence was, and calibration fixed it. A
+stated 60 used to mean roughly 45, which loses money at any price; it now means
+roughly 60, which clears the 52.4% break‑even at −110. Withholding that band
+today would discard exactly the picks calibration had just repaired.
+
+`MIN_PICK_CONFIDENCE_BY_LEAGUE` remains, empty, with tests proving it still
+works. **If a league ever looks like it needs its own bar, first check whether
+the distribution has moved** — the two are very hard to tell apart from band
+statistics alone. Derive any new bar from the current distribution, and
+re-derive it whenever the model is refit.
+
+A coverage warning now fires when a league publishes under 25% of a slate of 8+
+games, because nothing caught this the first time: every build stayed green, as
+an empty board is not an error.
 
 > **Measuring this correctly.** Join the current model's confidence from
 > `predictions_log.json` to the graded outcome. Do **not** band on
 > `accuracy.json`'s own `confidence` field — that is frozen at the value shown
 > when the pick was graded, and 537 rows now disagree with the live model, so
 > bands drawn on it group the wrong games.
-
-The threshold is **not retroactive**. Picks published before it took effect stay
-in the record, because the site did show them. So the headline ROI still carries
-the 133 historical MLB mid-band picks (41.4%, -30.5u) and will converge on the
-figures above only as new picks accumulate.
 
 **Withheld picks are still logged.** Publishing and logging are different
 questions: the 55-65% band is exactly where the fit is most wrong, so censoring

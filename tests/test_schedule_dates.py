@@ -46,13 +46,20 @@ class ScheduleDateTests(unittest.TestCase):
         self.assertIn("2026-06-14", dates)
         self.assertIn("2026-06-16", dates)
 
-    def test_schedule_dates_include_upcoming_week_for_mlb(self) -> None:
+    def test_schedule_dates_cover_a_short_window_for_mlb(self) -> None:
+        """Three days ahead, not a week.
+
+        A game four days out has no market yet -- books post moneylines a day or
+        two ahead -- so it is scored without `marketLogit`, the model's strongest
+        feature. Those are the least trustworthy picks on the board.
+        """
         afternoon_et = datetime(2026, 6, 15, 18, 0, tzinfo=ZoneInfo("America/New_York"))
         with patch("schedule_dates.league_now", return_value=afternoon_et):
             dates = schedule_dates_for_league("mlb")
-        self.assertIn("2026-06-12", dates)
-        self.assertIn("2026-06-22", dates)
-        self.assertGreaterEqual(len(dates), 10)
+        self.assertIn("2026-06-12", dates)      # lookback still 3 days
+        self.assertIn("2026-06-18", dates)      # today + 3
+        self.assertNotIn("2026-06-19", dates)   # and no further
+        self.assertEqual(len(dates), 7)
 
     def test_league_schedule_date_format(self) -> None:
         self.assertRegex(league_schedule_date("epl"), r"^\d{4}-\d{2}-\d{2}$")

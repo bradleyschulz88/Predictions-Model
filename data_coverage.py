@@ -17,6 +17,14 @@ COVERAGE_FLAGS = (
 
 PREDICTOR_COVERAGE_WARN_THRESHOLD = 20.0
 
+# Warn when a slate publishes almost nothing. Set low on purpose: a genuinely
+# flat slate can legitimately produce few picks, so this fires only when the
+# board is effectively empty, which is a threshold problem rather than a weak day.
+PUBLISH_RATE_WARN_THRESHOLD = 25.0
+
+# Small slates swing wildly -- 1 of 3 is 33% and means nothing.
+MIN_SLATE_FOR_PUBLISH_WARNING = 8
+
 
 def coverage_from_game(game: dict[str, Any]) -> dict[str, bool]:
     enrichment = game.get("enrichment") or {}
@@ -61,10 +69,22 @@ def summarize_coverage(games: list[dict[str, Any]]) -> dict[str, Any]:
         flag: round(counts[flag] / total * 100, 1) if total else 0.0
         for flag in COVERAGE_FLAGS
     }
+    # How many of these games actually reached the board. Kept alongside data
+    # coverage because "the model had the data" and "the user saw a pick" are
+    # different failures and only one of them was ever being watched.
+    from calibration_params import is_publishable_pick
+
+    published = sum(
+        1
+        for game in games
+        if is_publishable_pick(game.get("prediction"), game.get("league"))
+    )
+
     return {
         "gameCount": total,
         "counts": counts,
         "pct": pct,
+        "published": published,
     }
 
 
@@ -109,6 +129,23 @@ def coverage_warnings(
                 f"0/{game_count} games -- the slug or the team-name match is broken, "
                 f"not the market"
             )
+
+        # A publish bar that swallows the slate is a broken bar, not a quiet day.
+        #
+        # This is the check that was missing when MLB carried a 65 threshold: it
+        # was measured against a distribution that then shifted 9.6 points down
+        # under it, so it went from excluding the bottom quartile to withholding
+        # 90% of games -- 100% on some days -- and nothing said a word. Every
+        # build looked green because an empty board is not an error.
+        published = summary.get("published")
+        if published is not None and game_count >= MIN_SLATE_FOR_PUBLISH_WARNING:
+            published_pct = published / game_count * 100
+            if published_pct < PUBLISH_RATE_WARN_THRESHOLD:
+                warnings.append(
+                    f"{league}{date_note}: published only {published}/{game_count} picks "
+                    f"({published_pct:.0f}%) -- check the publish bar against the current "
+                    f"confidence distribution before assuming the slate is just weak"
+                )
     return warnings
 
 

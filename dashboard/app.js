@@ -3445,19 +3445,30 @@ function showLoadingSkeletons() {
   topPicksEl?.classList.add("hidden");
 }
 
+// Counts only picks that actually reach the board. Counting every prediction
+// made the header contradict the day's record directly below it -- "PICKS 16"
+// over "2 picks total" -- with nothing on screen to explain the gap. A pick the
+// board withholds is not a pick the user has.
+//
+// `live` is deliberately left counting every game: a game in progress is on the
+// slate whether or not the model published a pick for it.
 function summarizePickTiers(games) {
   let strong = 0;
   let lean = 0;
   let live = 0;
+  let picks = 0;
   const tiers = confidenceTiers();
   for (const game of games || []) {
-    const confidence = game.prediction?.confidence;
+    if (game.isLive) live += 1;
+    const prediction = game.prediction;
+    if (!isPublishablePrediction(prediction, game.league)) continue;
+    picks += 1;
+    const confidence = prediction?.confidence;
     if (confidence == null) continue;
     if (confidence >= tiers.strong) strong += 1;
     else if (confidence >= tiers.lean) lean += 1;
-    if (game.isLive) live += 1;
   }
-  return { strong, lean, live, picks: (games || []).filter((g) => g.prediction?.outcomeLabel).length };
+  return { strong, lean, live, picks };
 }
 
 // ESPN publishes the official abbreviation for every game it returns, so pass it
