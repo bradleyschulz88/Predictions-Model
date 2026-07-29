@@ -170,3 +170,63 @@ class HeadToHeadFeatureTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RunlineCoherenceTests(unittest.TestCase):
+    """The number attached to a pick must match whether that side is favoured.
+
+    Deriving it from the picked side alone printed "Padres -1.5" for a side the
+    model had at 40% -- the opposite bet to the one intended. Four of six sample
+    probabilities were wrong.
+    """
+
+    LINES = [{"viewType": "Spread", "currentLine": {"home": -1.5, "away": 1.5}}]
+
+    def _runline(self, p_home: float) -> dict:
+        from mlb_predictions import predict_runline
+
+        return predict_runline(
+            {"league": "mlb", "homeTeam": "Dodgers", "awayTeam": "Padres"},
+            self.LINES,
+            {"probabilities": {"true": {"home": p_home, "away": 1 - p_home}}},
+        )
+
+    def test_the_favourite_lays_and_the_underdog_takes(self) -> None:
+        for p_home in (0.20, 0.30, 0.45, 0.50, 0.60, 0.70, 0.80, 0.90):
+            result = self._runline(p_home)
+            favourite = "home" if p_home >= 0.5 else "away"
+            lays = "-1.5" in result["pick"]
+            self.assertEqual(
+                lays,
+                result["pickSide"] == favourite,
+                f"p(home)={p_home}: picked {result['pickSide']}, favourite {favourite}, "
+                f"pick text {result['pick']!r}",
+            )
+
+    def test_an_underdog_pick_takes_the_plus_number(self) -> None:
+        """The specific regression: home favoured, away picked."""
+        result = self._runline(0.60)
+        self.assertEqual(result["pickSide"], "away")
+        self.assertIn("+1.5", result["pick"])
+
+    def test_the_stored_line_is_always_the_home_number(self) -> None:
+        """Grading reads `line` as the home side's, so the sign must follow."""
+        self.assertEqual(self._runline(0.70)["line"], -1.5)
+        self.assertEqual(self._runline(0.30)["line"], 1.5)
+
+    def test_the_pick_side_is_the_better_cover_probability(self) -> None:
+        for p_home in (0.25, 0.5, 0.75):
+            result = self._runline(p_home)
+            better = "home" if result["homePct"] >= result["awayPct"] else "away"
+            self.assertEqual(result["pickSide"], better)
+
+
+class GradingRobustnessTests(unittest.TestCase):
+    """One malformed row must not abort a grading run over live data."""
+
+    def test_non_finite_scores_are_survivable(self) -> None:
+        from accuracy_tracker import grade_spread, grade_total
+
+        for score in (float("inf"), float("-inf"), float("nan")):
+            self.assertIsNone(grade_total({"line": 8.5, "pickSide": "over"}, score, 4))
+            self.assertIsNone(grade_spread({"line": -1.5, "pickSide": "home"}, score, 4))

@@ -179,3 +179,82 @@ class BullpenTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DeadFeatureRegressionTests(unittest.TestCase):
+    """Three candidates that logged a value on every game and meant nothing.
+
+    A real build produced 120 rows: h2hDiff and handednessDiff were None on all
+    of them, and bullpenDiff was exactly 0.0 on all 99 it filled. A feature that
+    is constant or always-absent cannot be detected as broken by the ablation --
+    it simply never ships, looking like a fair test that it lost.
+    """
+
+    def test_handedness_has_a_data_source(self) -> None:
+        """ESPN carries name, id, ERA and record -- and no arm."""
+        from data_providers.mlb_pitcher import _pitcher_hand
+
+        payload = {"people": [{"pitchHand": {"code": "L"}}]}
+        with patch("data_providers.mlb_pitcher._fetch_api", return_value=payload):
+            self.assertEqual(_pitcher_hand(669373), "L")
+
+    def test_handedness_lookup_never_raises(self) -> None:
+        from data_providers.mlb_pitcher import _pitcher_hand
+
+        with patch("data_providers.mlb_pitcher._fetch_api", side_effect=RuntimeError("down")):
+            self.assertIsNone(_pitcher_hand(669373))
+
+    def test_handedness_reaches_the_pitcher_the_feature_reads(self) -> None:
+        """The lookup is useless unless it lands where pitcher_hand looks."""
+        from data_providers.mlb_pitcher import enrich_mlb_pitching_context
+
+        game = {
+            "league": "mlb", "homeTeam": "Dodgers", "awayTeam": "Padres",
+            "homePitcher": {"name": "A"}, "awayPitcher": {"name": "B"},
+        }
+        with patch("data_providers.mlb_pitcher._resolve_pitcher_id", return_value=1), \
+             patch("data_providers.mlb_pitcher._pitcher_season_stats", return_value={}), \
+             patch("data_providers.mlb_pitcher._pitcher_recent_start_era", return_value=None), \
+             patch("data_providers.mlb_pitcher._resolve_team_id", return_value=None), \
+             patch("data_providers.mlb_pitcher._pitcher_hand", side_effect=["L", "R"]):
+            enrich_mlb_pitching_context(game)
+
+        self.assertEqual(matchup.pitcher_hand(game["homePitcher"]), "L")
+        self.assertEqual(matchup.pitcher_hand(game["awayPitcher"]), "R")
+        self.assertEqual(matchup.handedness_diff(game), 1.0)
+
+
+class HeadToHeadResolutionTests(unittest.TestCase):
+    """h2hDiff was None on all 120 rows of a real build.
+
+    `series_win_pct` only resolves for a club named in ESPN's summary string,
+    and the commonest summary -- "Series tied 1-1" -- names neither, while
+    "Dodgers lead series 2-1" names only one. Requiring both to resolve
+    independently meant the pair almost never did.
+    """
+
+    def _diff(self, **h2h):
+        from mlb_predictions import _h2h_diff
+
+        return _h2h_diff({"headToHead": h2h})
+
+    def test_one_named_club_determines_the_other(self) -> None:
+        self.assertAlmostEqual(self._diff(homeSeriesWinPct=0.75, awaySeriesWinPct=None), 0.5)
+        self.assertAlmostEqual(self._diff(homeSeriesWinPct=None, awaySeriesWinPct=0.75), -0.5)
+
+    def test_a_tied_series_names_neither_club(self) -> None:
+        self.assertEqual(
+            self._diff(homeSeriesWinPct=None, awaySeriesWinPct=None, seriesScore="1-1"), 0.0
+        )
+
+    def test_both_sides_still_work(self) -> None:
+        self.assertAlmostEqual(self._diff(homeSeriesWinPct=0.6, awaySeriesWinPct=0.4), 0.2)
+
+    def test_an_uneven_unnamed_series_is_not_guessed(self) -> None:
+        """Nothing says which club holds the 2, so it stays unknown."""
+        self.assertIsNone(
+            self._diff(homeSeriesWinPct=None, awaySeriesWinPct=None, seriesScore="2-1")
+        )
+
+    def test_no_series_is_still_none(self) -> None:
+        self.assertIsNone(self._diff())

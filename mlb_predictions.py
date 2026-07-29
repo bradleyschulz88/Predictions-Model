@@ -765,12 +765,37 @@ def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
 
 
 def _h2h_diff(enrichment: dict[str, Any]) -> float | None:
-    """Season-series edge, home minus away. None when the clubs have not met."""
+    """Season-series edge, home minus away. None when the clubs have not met.
+
+    Requiring both sides to resolve independently made this dead on arrival: it
+    was None on all 120 rows of a real build. `series_win_pct` only resolves for
+    a club actually named in ESPN's summary string, and the most common summary
+    -- "Series tied 1-1" -- names neither, while "Dodgers lead series 2-1" names
+    only one. So the pair almost never both resolved.
+
+    A season series is two-sided, so one known share determines the other. The
+    tied case is read straight off the score.
+    """
     head_to_head = enrichment.get("headToHead") or {}
     home = head_to_head.get("homeSeriesWinPct")
     away = head_to_head.get("awaySeriesWinPct")
-    if home is None or away is None:
-        return None
+
+    if home is None and away is not None:
+        home = 1.0 - float(away)
+    elif away is None and home is not None:
+        away = 1.0 - float(home)
+    elif home is None and away is None:
+        # Neither club named: a tied series still carries a real score.
+        score = str(head_to_head.get("seriesScore") or "")
+        match = re.search(r"(\d+)\s*-\s*(\d+)", score)
+        if not match:
+            return None
+        left, right = int(match.group(1)), int(match.group(2))
+        if left + right == 0 or left != right:
+            # An uneven score with neither club named cannot be assigned a side.
+            return None
+        home = away = 0.5
+
     return round(float(home) - float(away), 4)
 
 
@@ -1970,14 +1995,14 @@ def predict_runline(
     away_covers = 1.0 - home_covers
 
     favourite_home = p_home >= 0.5
-    if favourite_home:
-        pick_side = "home" if home_covers >= 0.5 else "away"
-    else:
-        pick_side = "away" if away_covers >= 0.5 else "home"
-    line_for_pick = -RUNLINE if pick_side == "home" else RUNLINE
-    # The favourite lays the runs; the underdog takes them.
-    if (pick_side == "home") != favourite_home:
-        line_for_pick = RUNLINE if pick_side == "home" else -RUNLINE
+    pick_side = "home" if home_covers >= away_covers else "away"
+
+    # The favourite lays the runs, the underdog takes them -- so the number
+    # attached to a pick depends on whether THAT side is favoured, not on which
+    # side was picked. Deriving it from pick_side alone printed "Padres -1.5"
+    # for a side the model had at 40%, which is the opposite bet.
+    picked_side_is_favourite = (pick_side == "home") == favourite_home
+    line_for_pick = -RUNLINE if picked_side_is_favourite else RUNLINE
 
     team = game.get("homeTeam") if pick_side == "home" else game.get("awayTeam")
     return {
