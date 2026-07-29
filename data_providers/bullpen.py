@@ -72,11 +72,18 @@ def team_relief_innings(
                 continue
             # A complete game rests a bullpen. Subtracting the starter's work is
             # what stops that being scored as the heaviest possible day.
-            starter_ip = to_float(stat.get("startersInningsPitched"))
+            starter_ip = _starter_innings(stat)
             if starter_ip is None:
-                # The field is not always present; fall back to the whole game
-                # minus a typical start rather than discarding the row.
-                starter_ip = max(0.0, total_ip - TYPICAL_RELIEF_IP_PER_GAME)
+                # Without the starter's share there is no way to separate relief
+                # work from the whole game, so this is genuinely unknown.
+                #
+                # It previously fell back to "the whole game minus a typical
+                # start", which looks harmless and is not: that returns exactly
+                # the typical figure every time, so fatigue came out 0.00 for an
+                # 18-inning day and a 9-inning day alike. The feature would have
+                # logged numbers, passed its tests and never once shown signal.
+                _warn_missing_starter_innings()
+                return None
             relief += max(0.0, total_ip - starter_ip)
             counted += 1
             if counted >= days:
@@ -87,6 +94,39 @@ def team_relief_innings(
     if not counted:
         return None
     return round(relief, 2)
+
+
+# Field names the Stats API has been seen to use for the starters' share. Tried
+# in order; if none is present the figure is unknown rather than guessed.
+_STARTER_IP_KEYS = ("startersInningsPitched", "startersInnings", "starterInningsPitched")
+
+_warned = False
+
+
+def _starter_innings(stat: dict[str, Any]) -> float | None:
+    for key in _STARTER_IP_KEYS:
+        value = to_float(stat.get(key))
+        if value is not None:
+            return value
+    return None
+
+
+def _warn_missing_starter_innings() -> None:
+    """Say so once per run, so a silently dead feature cannot stay silent.
+
+    Printed rather than raised: this is a candidate feature and must not break a
+    build. But an ablation candidate that is structurally incapable of producing
+    a value needs to be visible, not discovered months later.
+    """
+    global _warned
+    if _warned:
+        return
+    _warned = True
+    print(
+        "::warning title=Bullpen workload::MLB Stats API returned no starters' "
+        "innings, so relief workload cannot be separated from total innings. "
+        "bullpenDiff will stay empty until the field name is corrected."
+    )
 
 
 def bullpen_fatigue(
