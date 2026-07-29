@@ -242,3 +242,41 @@ class ProviderFilterTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CircuitBreakerTests(unittest.TestCase):
+    """A league ESPN does not cover must not be retried forever.
+
+    Measured on the live build of 2026-07-29: ESPN prices WNBA but returns
+    nothing for AFL. Without a breaker every AFL game is re-requested on every
+    build -- roughly 400 pointless calls a day for a permanent negative.
+    """
+
+    def _games(self, count: int) -> list[dict]:
+        return [{"eventId": str(i), "awayTeam": "A", "homeTeam": "B", "lines": []}
+                for i in range(count)]
+
+    def test_gives_up_after_consecutive_empties(self) -> None:
+        with patch("espn_odds.fetch_event_odds", return_value=[]):
+            stats = fill_missing_moneylines(self._games(12), league="afl")
+        self.assertEqual(stats["considered"], 12)
+        self.assertEqual(stats["fetched"], 3)
+        self.assertTrue(stats["gaveUp"])
+
+    def test_a_hit_resets_the_counter(self) -> None:
+        """A slate where only some games are posted yet must not trip it."""
+        priced = parse_core_odds({"items": [book("DraftKings", -140, 120)]})
+        # empty, empty, hit, empty, empty, hit ... never three in a row
+        responses = [[], [], priced, [], [], priced, [], []]
+        with patch("espn_odds.fetch_event_odds", side_effect=responses):
+            stats = fill_missing_moneylines(self._games(8), league="wnba")
+        self.assertFalse(stats["gaveUp"])
+        self.assertEqual(stats["fetched"], 8)
+        self.assertEqual(stats["priced"], 2)
+
+    def test_a_fully_priced_league_never_trips_it(self) -> None:
+        priced = parse_core_odds({"items": [book("DraftKings", -140, 120)]})
+        with patch("espn_odds.fetch_event_odds", return_value=priced):
+            stats = fill_missing_moneylines(self._games(6), league="wnba")
+        self.assertFalse(stats["gaveUp"])
+        self.assertEqual(stats["priced"], 6)
