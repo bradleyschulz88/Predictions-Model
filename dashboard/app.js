@@ -2900,8 +2900,8 @@ function resolvePickStatus(game) {
 
 function pickTeamAbbrev(game, prediction) {
   if (!prediction) return "—";
-  if (prediction.predictedSide === "home") return teamAbbrev(game.homeTeam);
-  if (prediction.predictedSide === "away") return teamAbbrev(game.awayTeam);
+  if (prediction.predictedSide === "home") return teamAbbrev(game.homeTeam, game.homeAbbr);
+  if (prediction.predictedSide === "away") return teamAbbrev(game.awayTeam, game.awayAbbr);
   if (prediction.predictedSide === "draw") return "DRAW";
   const label = prediction.outcomeLabel || "";
   const match = label.match(/^(.+?)\s+to\s+win/i);
@@ -2914,8 +2914,8 @@ function renderGameScoreLine(game) {
     return `<p class="game-score-line voided">${escapeHtml(gameStatusLabel(game))}</p>`;
   }
   if (game.homeScore == null || game.awayScore == null) return "";
-  const away = teamAbbrev(game.awayTeam);
-  const home = teamAbbrev(game.homeTeam);
+  const away = teamAbbrev(game.awayTeam, game.awayAbbr);
+  const home = teamAbbrev(game.homeTeam, game.homeAbbr);
   const prefix = game.isFinal ? "Final" : game.isLive ? "Live" : "Score";
   const cls = game.isLive ? "game-score-line live" : game.isFinal ? "game-score-line final" : "game-score-line";
   return `<p class="${cls}" data-live-score="${game.eventId}">${prefix}: ${away} <span class="tabular-nums">${game.awayScore}</span> – ${home} <span class="tabular-nums">${game.homeScore}</span></p>`;
@@ -3413,10 +3413,25 @@ function summarizePickTiers(games) {
   return { strong, lean, live, picks: (games || []).filter((g) => g.prediction?.outcomeLabel).length };
 }
 
-function teamAbbrev(name) {
+// ESPN publishes the official abbreviation for every game it returns, so pass it
+// in and this is exact. The derived fallback exists only for stored records from
+// before we captured that field.
+//
+// The fallback is deliberately word-count aware, because one rule cannot serve
+// both shapes. Taking initials -- what this used to do -- reads "Atlanta Braves"
+// as AB and "Boston Red Sox" as BRS. Taking the first three letters of the first
+// word instead is correct for essentially every two-word name (ATL, PIT, CLE,
+// MIA, PHI, HOU, DET, BAL, CIN, MIN, MIL, WAS, ARI, COL, TOR, TEX, SEA) but
+// would collapse "New York Mets" and "New York Yankees" both to NEW. So longer
+// names keep the initials rule, which is what makes NYM, NYY, LAD and CWS come
+// out right.
+function teamAbbrev(name, explicit) {
+  const given = String(explicit || "").trim();
+  if (given) return given.toUpperCase();
   if (!name) return "—";
   const words = String(name).trim().split(/\s+/);
   if (words.length === 1) return words[0].slice(0, 3).toUpperCase();
+  if (words.length === 2) return words[0].slice(0, 3).toUpperCase();
   return words.map((w) => w[0]).join("").slice(0, 4).toUpperCase();
 }
 
@@ -3427,13 +3442,58 @@ function formatGameTimeShort(startDate) {
   return date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
 }
 
+// Doubleheaders are real and the model handles them correctly -- two ESPN event
+// ids, two schedules, two graded results. But both cards collapse to the same
+// "AB @ NYM" line, and the start time lives inside the collapsed <details>, so
+// the board looked like it was showing a duplicate. Number them instead.
+//
+// Ordered by start time so "Gm 1" is the one played first. ESPN issues the
+// makeup game a much later event id, so id order is a sound tiebreak when a
+// start time is missing.
+function annotateDoubleheaders(games) {
+  const bySeries = new Map();
+  for (const game of games || []) {
+    const key = `${game.league || ""}|${game.awayTeam || ""}@${game.homeTeam || ""}`;
+    if (!bySeries.has(key)) bySeries.set(key, []);
+    bySeries.get(key).push(game);
+  }
+
+  for (const group of bySeries.values()) {
+    if (group.length < 2) {
+      for (const game of group) {
+        game.seriesSize = 1;
+        game.gameInSeries = null;
+      }
+      continue;
+    }
+    group
+      .slice()
+      .sort((a, b) => {
+        const at = Date.parse(a.startDate || "");
+        const bt = Date.parse(b.startDate || "");
+        if (Number.isFinite(at) && Number.isFinite(bt) && at !== bt) return at - bt;
+        return String(a.eventId || "").localeCompare(String(b.eventId || ""));
+      })
+      .forEach((game, index) => {
+        game.seriesSize = group.length;
+        game.gameInSeries = index + 1;
+      });
+  }
+  return games;
+}
+
 function renderScoreboardTeams(game) {
-  const away = teamAbbrev(game.awayTeam);
-  const home = teamAbbrev(game.homeTeam);
+  const away = teamAbbrev(game.awayTeam, game.awayAbbr);
+  const home = teamAbbrev(game.homeTeam, game.homeAbbr);
+  const dh = game.gameInSeries
+    ? ` <span class="dh-badge" title="Doubleheader: game ${game.gameInSeries} of ${game.seriesSize}${
+        game.startDate ? ` — ${formatGameTimeShort(game.startDate)}` : ""
+      }">Gm ${game.gameInSeries}</span>`
+    : "";
   const hasScore = game.homeScore != null && game.awayScore != null;
   if (hasScore && (game.isLive || game.isFinal)) {
     const scoreClass = game.isLive ? "score-live" : "";
-    return `<p class="scoreboard-teams ${scoreClass}" data-live-score="${game.eventId}">${away} <span class="tabular-nums">${game.awayScore}</span> @ ${home} <span class="tabular-nums">${game.homeScore}</span></p>`;
+    return `<p class="scoreboard-teams ${scoreClass}" data-live-score="${game.eventId}">${away} <span class="tabular-nums">${game.awayScore}</span> @ ${home} <span class="tabular-nums">${game.homeScore}</span>${dh}</p>`;
   }
   
   // Add form sparkline if enrichment data available
@@ -3444,14 +3504,14 @@ function renderScoreboardTeams(game) {
   if (hasForm) {
     const homeSpark = formSparkline(homeForm);
     const awaySpark = formSparkline(awayForm);
-    return `<p class="scoreboard-teams">${away} @ ${home}</p>
+    return `<p class="scoreboard-teams">${away} @ ${home}${dh}</p>
       <div class="form-sparkline-row">
         <span class="form-sparkline" title="${game.awayTeam} form: ${awayForm.join(', ')}">${awaySpark}</span>
         <span class="form-sparkline" title="${game.homeTeam} form: ${homeForm.join(', ')}">${homeSpark}</span>
       </div>`;
   }
   
-  return `<p class="scoreboard-teams">${away} @ ${home}</p>`;
+  return `<p class="scoreboard-teams">${away} @ ${home}${dh}</p>`;
 }
 
 function formSparkline(results) {
@@ -3565,8 +3625,8 @@ function patchLiveScoreDom(games) {
   let patched = false;
   for (const game of visible) {
     if (game.homeScore == null) continue;
-    const away = teamAbbrev(game.awayTeam);
-    const home = teamAbbrev(game.homeTeam);
+    const away = teamAbbrev(game.awayTeam, game.awayAbbr);
+    const home = teamAbbrev(game.homeTeam, game.homeAbbr);
     const nodes = gamesEl.querySelectorAll(`[data-live-score="${game.eventId}"]`);
     if (!nodes.length) continue;
 
@@ -4471,6 +4531,8 @@ function renderGames(games) {
 
   gamesEl.classList.remove("skeleton-list");
   gamesEl.setAttribute("aria-busy", "false");
+
+  annotateDoubleheaders(visible);
 
   gamesEl.innerHTML = visible
     .map((game) => {

@@ -97,6 +97,30 @@ Raw accuracy is ~60%, and that is close to the ceiling: published MLB
 binary-prediction accuracy tops out around 55-60%. The value is in probabilities
 that mean what they say, not in a higher hit rate.
 
+### Doubleheaders are two games, not a duplicate
+
+MLB doubleheaders appear on the board twice, and that is correct: ESPN issues
+each game its own event id, both are predicted, and both grade separately. Nine
+pairs are in the logged history and every one has two different final scores.
+
+The board numbers them **Gm 1 / Gm 2**, ordered by start time. Before that they
+collapsed to the same matchup line with the start time hidden inside the
+collapsed card, so a real doubleheader read as a duplicate row.
+
+ESPN issues the second game an event id from a much later block
+(`401902545` alongside `401816308`), so id order is a sound tiebreak when a
+start time is missing.
+
+### Team abbreviations come from ESPN
+
+`awayAbbr` / `homeAbbr` are captured from the scoreboard payload. They are never
+derived from the team name — initials render "Atlanta Braves" as `AB` and
+"Boston Red Sox" as `BRS`, and no rule gets `NYM`, `NYY`, `CHC` and `CWS` right
+from the words alone. The dashboard keeps a fallback for records stored before
+the field was captured, and it is word-count aware: two-word names take the
+first three letters of the city (`ATL`, `PIT`, `CLE`), longer names keep
+initials so `NYM` and `LAD` stay correct.
+
 ### Publish thresholds
 
 A pick is only shown once it clears its league's bar. The default is **55%**;

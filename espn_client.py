@@ -152,6 +152,12 @@ def parse_scoreboard(scoreboard: dict[str, Any], *, league: LeagueConfig | str) 
         home = _competitor(competition.get("competitors") or [], "home")
         away_team = (away.get("team") or {}).get("displayName")
         home_team = (home.get("team") or {}).get("displayName")
+        # ESPN publishes the official abbreviation next to the name. Take it
+        # rather than deriving one: initials turn "Atlanta Braves" into "AB" and
+        # "Boston Red Sox" into "BRS", and no rule gets NYM, NYY, CHC and CWS
+        # right from the words alone.
+        away_abbr = (away.get("team") or {}).get("abbreviation")
+        home_abbr = (home.get("team") or {}).get("abbreviation")
         venue = (competition.get("venue") or {}).get("fullName")
 
         away_records = away.get("records")
@@ -178,6 +184,8 @@ def parse_scoreboard(scoreboard: dict[str, Any], *, league: LeagueConfig | str) 
             "startDate": competition.get("date") or event.get("date"),
             "awayTeam": away_team,
             "homeTeam": home_team,
+            "awayAbbr": away_abbr,
+            "homeAbbr": home_abbr,
             "matchup": f"{away_team} @ {home_team}" if away_team and home_team else event.get("name"),
             "gameStatusText": status_flags["gameStatusText"],
             "gameStatusDetail": status_flags["gameStatusDetail"],

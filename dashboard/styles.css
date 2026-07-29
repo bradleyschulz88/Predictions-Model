@@ -4388,6 +4388,23 @@ button:active:not(:disabled) {
   margin: 0 0 6px;
 }
 
+/* Marks game 1 vs game 2 of a doubleheader. Without it the two cards are
+   identical when collapsed and read as a duplicate. Recessive on purpose --
+   it disambiguates, it is not a status. */
+.dh-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted, #9aa4b2);
+  font-family: var(--font-body, inherit);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+
 .scoreboard-teams .score-live {
   color: var(--live);
 }
