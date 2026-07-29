@@ -1,34 +1,34 @@
 {
-  "updatedAt": "2026-07-29T20:12:19.892992+00:00",
+  "updatedAt": "2026-07-29T21:28:55.359637+00:00",
   "summary": {
     "last7Days": {
       "correct": 294,
-      "total": 472,
-      "pct": 62.3,
-      "units": 13.577,
-      "roiPct": 2.9,
+      "total": 473,
+      "pct": 62.2,
+      "units": 12.577,
+      "roiPct": 2.7,
       "pending": 50,
       "voided": 0
     },
     "allTime": {
       "correct": 426,
-      "total": 707,
-      "pct": 60.3,
-      "units": 11.802,
-      "roiPct": 1.7,
-      "pending": 57,
+      "total": 708,
+      "pct": 60.2,
+      "units": 10.802,
+      "roiPct": 1.5,
+      "pending": 58,
       "voided": 13
     },
     "byLeague": {
       "mlb": {
         "correct": 202,
-        "total": 344,
-        "pct": 58.7,
-        "units": 9.298,
-        "roiPct": 2.7,
+        "total": 345,
+        "pct": 58.6,
+        "units": 8.298,
+        "roiPct": 2.4,
         "pending": 0,
         "voided": 0,
-        "priced": 300,
+        "priced": 301,
         "unpriced": 44,
         "pricedPct": 87.2
       },
@@ -71,15 +71,15 @@
       }
     },
     "streak": {
-      "current": 1,
-      "type": "loss",
+      "current": 2,
+      "type": "win",
       "bestWin": 6,
       "bestLoss": 3
     },
     "closingLineValue": {
-      "picks": 24,
-      "avgPct": -0.94,
-      "beatCloseP": 37.5,
+      "picks": 25,
+      "avgPct": -0.79,
+      "beatCloseP": 40.0,
       "note": "Closing line value predicts long-run profitability better than win rate."
     },
     "totals": {
@@ -102,6 +102,36 @@
     }
   },
   "recentResults": [
+    {
+      "eventId": "401816309",
+      "league": "mlb",
+      "scheduleDate": "2026-07-29",
+      "matchup": "Baltimore Orioles @ Detroit Tigers",
+      "predicted": "Detroit Tigers",
+      "predictedSide": "home",
+      "outcomeLabel": "Detroit Tigers to win",
+      "confidence": 58.8,
+      "rawConfidence": 58.8,
+      "rawHomeWinPct": 58.8,
+      "probabilityMethod": "fitted",
+      "evPct": -7.33,
+      "kellyPct": 0.0,
+      "pickOdds": -192,
+      "openingOdds": -170,
+      "openingSide": "home",
+      "published": true,
+      "clvPct": 2.79,
+      "status": "graded",
+      "actual": "Baltimore Orioles",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "9",
+      "awayScore": "10",
+      "gradedAt": "2026-07-29T21:28:47.345638+00:00",
+      "date": "2026-07-29",
+      "totalResult": null,
+      "spreadResult": null
+    },
     {
       "eventId": "401816308",
       "league": "mlb",
@@ -2281,26 +2311,6 @@
       "gradedAt": "2026-07-22T21:38:33.501704+00:00",
       "date": "2026-07-22",
       "published": true
-    },
-    {
-      "eventId": "401816219",
-      "league": "mlb",
-      "scheduleDate": "2026-07-22",
-      "matchup": "Pittsburgh Pirates @ New York Yankees",
-      "predicted": "New York Yankees",
-      "predictedSide": "home",
-      "outcomeLabel": "New York Yankees to win",
-      "confidence": 61.6,
-      "pickOdds": -137,
-      "status": "graded",
-      "actual": "Pittsburgh Pirates",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "3",
-      "awayScore": "5",
-      "gradedAt": "2026-07-22T21:38:33.501681+00:00",
-      "date": "2026-07-22",
-      "published": true
     }
   ],
   "pendingPicks": [
@@ -2669,6 +2679,26 @@
       "published": true
     },
     {
+      "eventId": "401816360",
+      "league": "mlb",
+      "scheduleDate": "2026-08-01",
+      "matchup": "Minnesota Twins @ Seattle Mariners",
+      "predicted": "Seattle Mariners",
+      "predictedSide": "home",
+      "outcomeLabel": "Seattle Mariners to win",
+      "confidence": 63.7,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-01",
+      "published": true
+    },
+    {
       "eventId": "401816359",
       "league": "mlb",
       "scheduleDate": "2026-08-01",
@@ -2909,6 +2939,26 @@
       "published": true
     },
     {
+      "eventId": "401816345",
+      "league": "mlb",
+      "scheduleDate": "2026-07-31",
+      "matchup": "Minnesota Twins @ Seattle Mariners",
+      "predicted": "Seattle Mariners",
+      "predictedSide": "home",
+      "outcomeLabel": "Seattle Mariners to win",
+      "confidence": 69.1,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-31",
+      "published": true
+    },
+    {
       "eventId": "401816344",
       "league": "mlb",
       "scheduleDate": "2026-07-31",
@@ -2969,14 +3019,14 @@
       "published": true
     },
     {
-      "eventId": "401816336",
+      "eventId": "401816341",
       "league": "mlb",
       "scheduleDate": "2026-07-31",
-      "matchup": "Pittsburgh Pirates @ Cincinnati Reds",
-      "predicted": "Pittsburgh Pirates",
+      "matchup": "Kansas City Royals @ Colorado Rockies",
+      "predicted": "Kansas City Royals",
       "predictedSide": "away",
-      "outcomeLabel": "Pittsburgh Pirates to win",
-      "confidence": 64.1,
+      "outcomeLabel": "Kansas City Royals to win",
+      "confidence": 63.0,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -3305,46 +3355,6 @@
       "predictedSide": "away",
       "outcomeLabel": "Golden State Valkyries to win",
       "confidence": 67.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-29",
-      "published": true
-    },
-    {
-      "eventId": "401816321",
-      "league": "mlb",
-      "scheduleDate": "2026-07-29",
-      "matchup": "Seattle Mariners @ Los Angeles Dodgers",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "home",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 71.9,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-29",
-      "published": true
-    },
-    {
-      "eventId": "401816319",
-      "league": "mlb",
-      "scheduleDate": "2026-07-29",
-      "matchup": "Houston Astros @ Los Angeles Angels",
-      "predicted": "Houston Astros",
-      "predictedSide": "away",
-      "outcomeLabel": "Houston Astros to win",
-      "confidence": 69.8,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -18126,18 +18136,27 @@
       "predicted": "Detroit Tigers",
       "predictedSide": "home",
       "outcomeLabel": "Detroit Tigers to win",
-      "confidence": 58.5,
-      "pickOdds": null,
-      "status": "voided",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-29",
+      "confidence": 58.8,
+      "rawConfidence": 58.8,
+      "rawHomeWinPct": 58.8,
+      "probabilityMethod": "fitted",
+      "evPct": -7.33,
+      "kellyPct": 0.0,
+      "pickOdds": -192,
+      "openingOdds": -170,
+      "openingSide": "home",
       "published": true,
-      "voidReason": "voided"
+      "clvPct": 2.79,
+      "status": "graded",
+      "actual": "Baltimore Orioles",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "9",
+      "awayScore": "10",
+      "gradedAt": "2026-07-29T21:28:47.345638+00:00",
+      "date": "2026-07-29",
+      "totalResult": null,
+      "spreadResult": null
     },
     "401816320": {
       "eventId": "401816320",
@@ -18170,7 +18189,7 @@
       "outcomeLabel": "Colorado Rockies to win",
       "confidence": 64.7,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -18178,7 +18197,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816312": {
       "eventId": "401816312",
@@ -18716,7 +18736,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": true
+      "published": false
     },
     "401816333": {
       "eventId": "401816333",
@@ -18776,7 +18796,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": false
+      "published": true
     },
     "401816344": {
       "eventId": "401816344",
@@ -18876,7 +18896,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": false
+      "published": true
     },
     "401857102": {
       "eventId": "401857102",
@@ -19164,7 +19184,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-01",
-      "published": false
+      "published": true
     },
     "401816350": {
       "eventId": "401816350",
