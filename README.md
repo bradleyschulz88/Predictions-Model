@@ -134,9 +134,26 @@ figures above only as new picks accumulate.
 **Withheld picks are still logged.** Publishing and logging are different
 questions: the 55-65% band is exactly where the fit is most wrong, so censoring
 it from training would entrench the very error the threshold exists to hide.
-Every pick is written to `predictions_log.json` with a `published` flag; the
-model trains on all of them, while accuracy and ROI report only the ones the
-board actually showed.
+Every pick is written to `predictions_log.json` with a `published` flag.
+
+Which side of that line each consumer sits on is deliberate:
+
+| reads the record | filters on `published`? | why |
+|---|---|---|
+| `accuracy.json` summary / ROI / streak | **yes** | a record nobody could have bet is not a record |
+| dashboard board, day tally, hydration | **yes** | it reads `picksByEventId` directly, around the board filter |
+| `model_fit.py` | no | the withheld band is where the fit most needs correcting |
+| `scripts/backtest_model.py` | no | calibration must see the errors it exists to fix |
+| `scripts/evaluation.py` | no | emits log loss / Brier / AUC; filtering would bias them |
+| `elo.py` | no | replays game outcomes, not picks |
+
+Do not add a `published` filter to the bottom four — that would recreate the
+censoring this split exists to prevent. Currently the model trains on 706 graded
+games while the board reports 687.
+
+`published` is reconciled against the log on every run, because graded rows in
+`accuracy.json` are carried forward and never rebuilt. Without that pass, a
+threshold change would apply only to picks made after it.
 
 ### Model commands
 
