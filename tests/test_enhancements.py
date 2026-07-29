@@ -321,3 +321,58 @@ class EmptyBoardWarningTests(unittest.TestCase):
         self.assertEqual(summary["gameCount"], 3)
         # 71 and 60 clear the global floor; 51 does not.
         self.assertEqual(summary["published"], 2)
+
+
+class PredictorCoverageExpectationTests(unittest.TestCase):
+    """Warn where a feed is broken, not where it never existed.
+
+    AFL logged a 0% ESPN-predictor coverage warning on every build. Measured
+    across the whole history: MLB 183 of 623 games carried a predictor and WNBA
+    30 of 120, while AFL managed 0 of 55 and the World Cup 0 of 74. ESPN
+    publishes it for the US major leagues and not for Australian football or
+    soccer, so the AFL warning was permanent noise -- worse than silence,
+    because it trains you to skip the annotations that matter.
+    """
+
+    def _summary(self, games: int, predictor: int) -> dict:
+        return {
+            "gameCount": games,
+            "published": games,
+            "counts": {"espnPredictor": predictor, "impliedOdds": games},
+            "pct": {"espnPredictor": round(predictor / games * 100, 1) if games else 0.0},
+        }
+
+    def _fired(self, league: str, games: int, predictor: int) -> bool:
+        from data_coverage import coverage_warnings
+
+        return any(
+            "predictor coverage" in w
+            for w in coverage_warnings({league: self._summary(games, predictor)})
+        )
+
+    def test_afl_no_longer_warns(self) -> None:
+        """The exact noise: one game, no predictor, every single build."""
+        self.assertFalse(self._fired("afl", 1, 0))
+        self.assertFalse(self._fired("afl", 9, 0))
+
+    def test_soccer_no_longer_warns(self) -> None:
+        self.assertFalse(self._fired("epl", 10, 0))
+
+    def test_a_genuinely_broken_us_feed_still_warns(self) -> None:
+        """MLB does carry a predictor, so zero coverage there is a real break."""
+        self.assertTrue(self._fired("mlb", 15, 0))
+        self.assertTrue(self._fired("wnba", 12, 0))
+
+    def test_healthy_coverage_stays_silent(self) -> None:
+        self.assertFalse(self._fired("mlb", 15, 15))
+
+    def test_a_retired_league_carries_no_expectation(self) -> None:
+        self.assertFalse(self._fired("worldcup", 8, 0))
+
+    def test_the_flag_matches_what_was_measured(self) -> None:
+        from sports_config import get_league
+
+        for league in ("mlb", "nfl", "nba", "wnba"):
+            self.assertTrue(get_league(league).supports_espn_predictor, league)
+        for league in ("epl", "afl"):
+            self.assertFalse(get_league(league).supports_espn_predictor, league)

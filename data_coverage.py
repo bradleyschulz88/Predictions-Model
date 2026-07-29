@@ -110,8 +110,12 @@ def coverage_warnings(
             continue
         date_note = f" on {schedule_date}" if schedule_date else ""
 
+        # Only warn where the feed exists. ESPN publishes a win predictor for the
+        # US major leagues and not for Australian football or soccer, so AFL
+        # logged a 0% coverage warning on every build -- permanent noise, which
+        # is worse than silence because it trains you to skip the annotations.
         predictor_pct = (summary.get("pct") or {}).get("espnPredictor", 0.0)
-        if predictor_pct < threshold:
+        if _expects_predictor(league) and predictor_pct < threshold:
             warnings.append(
                 f"{league}{date_note}: ESPN predictor coverage {predictor_pct}% "
                 f"({summary['counts']['espnPredictor']}/{game_count}) below {threshold}%"
@@ -147,6 +151,17 @@ def coverage_warnings(
                     f"confidence distribution before assuming the slate is just weak"
                 )
     return warnings
+
+
+def _expects_predictor(league: str) -> bool:
+    """True when ESPN publishes a win predictor for this league."""
+    try:
+        from sports_config import get_league
+
+        return bool(get_league(league).supports_espn_predictor)
+    except (ImportError, ValueError):
+        # Retired or unknown leagues carry no expectation.
+        return False
 
 
 def _expects_odds(league: str) -> bool:
