@@ -337,9 +337,15 @@ def closing_line_value(record: dict[str, Any]) -> float | None:
     if record.get("openingSide") and record.get("openingSide") != record.get("predictedSide"):
         return None
     try:
+        # OverflowError is the one that mattered: int(float("inf")) raises it,
+        # not ValueError, so a single non-finite price aborted the whole grading
+        # run rather than costing one row its CLV. This function is called for
+        # every record in the loop.
         open_implied = american_odds_to_implied(int(opening))
         close_implied = american_odds_to_implied(int(closing))
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
+        return None
+    if open_implied is None or close_implied is None:
         return None
     # Beating the close means paying a lower implied probability than the market.
     return round((close_implied - open_implied) * 100, 2)
