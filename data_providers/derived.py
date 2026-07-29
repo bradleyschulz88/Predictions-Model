@@ -41,23 +41,57 @@ def parse_weather_impact(weather: str | None) -> dict[str, Any] | None:
     }
 
 
-def series_win_pct(series: dict[str, Any] | None, team_name: str | None) -> float | None:
-    if not series or not team_name:
+def series_win_pct(
+    series: dict[str, Any] | None,
+    team_name: str | None,
+    abbrev: str | None = None,
+) -> float | None:
+    """Share of the season series this club holds, from ESPN's summary string.
+
+    ESPN writes the summary with the club's ABBREVIATION, not its name:
+    "TB wins series 5-1". Matching on the full name and the nickname therefore
+    never matched, and a real build reported the result exactly -- of 25 games,
+    25 carried a season series, 25 carried a score, and 0 resolved to a win
+    share. Passing the abbreviation, which the scoreboard already gives us, is
+    what makes this work at all.
+
+    The name and nickname are still tried, because other leagues word it
+    differently ("Arsenal lead series 2-1").
+    """
+    if not series or not (team_name or abbrev):
         return None
     summary = series.get("summary") or ""
     score = series.get("seriesScore") or ""
-    if team_name.lower() not in summary.lower() and team_name.split()[-1].lower() not in summary.lower():
+    if not summary or not score:
         return None
-    match = re.search(r"(\d+)-(\d+)", score)
+
+    match = re.search(r"(\d+)\s*-\s*(\d+)", score)
     if not match:
         return None
     left, right = int(match.group(1)), int(match.group(2))
     total = left + right
     if not total:
         return None
-    if summary.lower().index(team_name.split()[-1].lower()) < len(summary) / 2:
-        return left / total
-    return right / total
+
+    # Longest first, so "Chicago White Sox" is preferred over "Sox".
+    candidates = [token for token in (team_name, abbrev) if token]
+    if team_name:
+        candidates.append(team_name.split()[-1])
+    candidates.sort(key=len, reverse=True)
+
+    position = None
+    for token in candidates:
+        # Word-boundary matched: a bare "TB" must not be found inside "TBR" or
+        # some other club's nickname.
+        found = re.search(rf"\b{re.escape(token)}\b", summary, re.IGNORECASE)
+        if found:
+            position = found.start()
+            break
+    if position is None:
+        return None
+
+    # The club named first in the summary holds the first number.
+    return left / total if position < len(summary) / 2 else right / total
 
 
 def compute_rest_days(games: list[dict[str, Any]], team_name: str | None, current_start: str | None) -> int | None:
