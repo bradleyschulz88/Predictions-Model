@@ -183,6 +183,29 @@ def _team_pitching_era(team_name: str | None, *, verify_ssl: bool = True) -> flo
     return None
 
 
+def _pitcher_hand(player_id: int, *, verify_ssl: bool = True) -> str | None:
+    """"L" or "R" for a resolved pitcher. None when unknown.
+
+    Handedness exists nowhere else in the pipeline: ESPN's probable-pitcher
+    block carries name, id, ERA and record and nothing about which arm they
+    throw with. Without this lookup `handednessDiff` is None on every game --
+    which is exactly what a real build produced, 0 non-null across 120 rows.
+    """
+    try:
+        payload = _fetch_api(
+            f"/api/v1/people/{player_id}",
+            cache_key=f"mlb:pitcher:hand:{player_id}",
+            verify_ssl=verify_ssl,
+        )
+    except Exception:
+        return None
+    for person in payload.get("people") or []:
+        code = ((person.get("pitchHand") or {}).get("code") or "").strip().upper()[:1]
+        if code in {"L", "R"}:
+            return code
+    return None
+
+
 def enrich_mlb_pitching_context(game: dict[str, Any], *, verify_ssl: bool = True) -> dict[str, Any]:
     """Attach supplemental SP/team pitching ERA from MLB Stats API when ESPN data is thin."""
     context: dict[str, Any] = {"sources": []}
@@ -211,6 +234,12 @@ def enrich_mlb_pitching_context(game: dict[str, Any], *, verify_ssl: bool = True
                 pitcher["era"] = api_era
             if api_fip is not None:
                 pitcher["fip"] = api_fip
+            hand = _pitcher_hand(player_id, verify_ssl=verify_ssl)
+            if hand:
+                # The one field the handedness candidate needs; nothing else in
+                # the pipeline carries it.
+                pitcher["pitchHand"] = hand
+                context[f"{side}PitcherHand"] = hand
             game[f"{side}Pitcher"] = pitcher
 
         team = game.get(f"{side}Team")

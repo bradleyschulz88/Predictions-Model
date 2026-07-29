@@ -3662,8 +3662,8 @@ function renderScoreboardTeams(game) {
     const awaySpark = formSparkline(awayForm);
     return `<p class="scoreboard-teams">${away} @ ${home}${dh}</p>
       <div class="form-sparkline-row">
-        <span class="form-sparkline" title="${game.awayTeam} form: ${awayForm.join(', ')}">${awaySpark}</span>
-        <span class="form-sparkline" title="${game.homeTeam} form: ${homeForm.join(', ')}">${homeSpark}</span>
+        <span class="form-sparkline" title="${escapeAttr(game.awayTeam)} form: ${escapeAttr(awayForm.join(', '))}">${awaySpark}</span>
+        <span class="form-sparkline" title="${escapeAttr(game.homeTeam)} form: ${escapeAttr(homeForm.join(', '))}">${homeSpark}</span>
       </div>`;
   }
   
@@ -4586,7 +4586,7 @@ function renderPrediction(game) {
         <span class="total-prob over">Over: <strong>${prediction.total.overPct}%</strong></span>
         <span class="total-prob under">Under: <strong>${prediction.total.underPct}%</strong></span>
       </div>
-      <p class="total-detail">${prediction.total.detail}</p>
+      <p class="total-detail">${escapeHtml(prediction.total.detail)}</p>
       <p class="total-confidence">Confidence: <strong>${prediction.total.confidence}%</strong></p>
     </section>` : "";
 

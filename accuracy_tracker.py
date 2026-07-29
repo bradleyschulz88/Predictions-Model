@@ -399,7 +399,7 @@ def grade_total(pick: dict[str, Any] | None, home_score: Any, away_score: Any) -
     try:
         line = float(pick["line"])
         actual = int(home_score) + int(away_score)
-    except (KeyError, TypeError, ValueError):
+    except (KeyError, TypeError, ValueError, OverflowError):
         return None
 
     side = str(pick.get("pickSide") or "").lower()
@@ -431,7 +431,7 @@ def grade_spread(
     try:
         line = float(pick["line"])
         margin = int(home_score) - int(away_score)
-    except (KeyError, TypeError, ValueError):
+    except (KeyError, TypeError, ValueError, OverflowError):
         return None
 
     side = str(pick.get("pickSide") or "").lower()
