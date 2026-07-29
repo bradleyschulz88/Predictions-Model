@@ -3,20 +3,27 @@
 Why this and not bullpen ERA
 ----------------------------
 Bullpen quality is already fetched (`mlb_pitcher._team_bullpen_era`) and is
-largely priced by the market, because it is a season-long number anyone can
-look up. Recent *workload* is different: a bullpen that threw six innings
-yesterday and five the day before has its best arms unavailable tonight, and
-that is a same-day fact the closing line often lags.
+largely priced by the market, because it is a season-long number anyone can look
+up. Recent *workload* is different: a bullpen that threw six innings yesterday
+and five the day before has its best arms unavailable tonight, and that is a
+same-day fact the closing line often lags.
 
 That lag is the entire reason this is worth trying. A feature the market has
 already absorbed cannot help a model that anchors to the market.
 
-What is measured
-----------------
-Relief innings over the last few days, from the club's game log. Starters'
-innings are excluded by subtracting them out -- a nine-inning complete game
-rests a bullpen rather than taxing it, and counting total team innings would
-score it as the heaviest possible day.
+Why the boxscore, and what it costs
+-----------------------------------
+The first version of this read the team game log and tried to subtract the
+starter's innings out. That endpoint cannot do it. A production build printed
+every field it returns -- 59 of them, including `gamesStarted`, `completeGames`,
+`gamesFinished`, `saves` and `holds` -- and **not one separates starters from
+relievers**. The feature was unbuildable from there and reported nothing on
+every game.
+
+The boxscore does carry the split: it lists a side's pitchers in the order they
+appeared, so the first is the starter and the rest are relief. That costs one
+schedule call plus one boxscore per game examined, roughly four requests per
+club. That is the price of the only endpoint that answers the question.
 
 Nothing here moves a published probability. It is logged as an ablation
 candidate and ships only if it beats its own absence out of sample.
@@ -36,16 +43,109 @@ WORKLOAD_DAYS = 3
 # zero means "an ordinary few days" rather than "no innings at all".
 TYPICAL_RELIEF_IP_PER_GAME = 3.4
 
+_warned = False
+
 
 def _fetch(path: str, params: dict[str, str], *, cache_key: str, verify_ssl: bool = True) -> dict:
-    query = "?" + "&".join(f"{key}={value}" for key, value in params.items())
-    return fetch_json(f"https://statsapi.mlb.com{path}{query}", cache_key=cache_key, verify_ssl=verify_ssl)
+    query = ("?" + "&".join(f"{key}={value}" for key, value in params.items())) if params else ""
+    return fetch_json(
+        f"https://statsapi.mlb.com{path}{query}", cache_key=cache_key, verify_ssl=verify_ssl
+    )
+
+
+def _warn_unreadable_boxscore() -> None:
+    """Say so once if no boxscore could be read, so a dead feature stays visible.
+
+    Printed rather than raised: this is a candidate feature and must not break a
+    build. But a candidate structurally incapable of producing a value needs to
+    be seen, not discovered months later in an ablation that reports it as
+    "tested and did not help".
+    """
+    global _warned
+    if _warned:
+        return
+    _warned = True
+    print(
+        "::warning title=Bullpen workload::no boxscore yielded a pitcher list, so "
+        "relief innings could not be measured and bullpenDiff stays empty. The "
+        "team game log cannot substitute -- it returns 59 pitching fields and "
+        "none of them separates starters from relievers."
+    )
+
+
+def _recent_game_pks(team_id: int, *, days: int, verify_ssl: bool = True) -> list[str]:
+    """Completed game ids for a club, most recent first."""
+    from datetime import date, timedelta
+
+    today = date.today()
+    # A few extra days of slack, because clubs have off-days and a three-game
+    # window is three games played, not three calendar days.
+    params = {
+        "sportId": "1",
+        "teamId": str(team_id),
+        "startDate": (today - timedelta(days=days + 5)).isoformat(),
+        "endDate": today.isoformat(),
+    }
+    payload = _fetch(
+        "/api/v1/schedule",
+        params,
+        cache_key=f"mlb:bullpen:schedule:{team_id}:{today.isoformat()}",
+        verify_ssl=verify_ssl,
+    )
+
+    finished: list[tuple[str, str]] = []
+    for day in payload.get("dates") or []:
+        for game in day.get("games") or []:
+            state = ((game.get("status") or {}).get("abstractGameState") or "").lower()
+            if state != "final":
+                continue
+            game_pk = game.get("gamePk")
+            if game_pk:
+                finished.append((str(day.get("date") or ""), str(game_pk)))
+    finished.sort(reverse=True)
+    return [game_pk for _, game_pk in finished]
+
+
+def relief_innings_in_game(
+    game_pk: str, team_id: int, *, verify_ssl: bool = True
+) -> float | None:
+    """Innings the club's bullpen threw in one game. None if unreadable.
+
+    `pitchers` is ordered by appearance, so index 0 is the starter and the rest
+    are relief. A single-entry list is a complete game, which rested the bullpen
+    -- that is zero innings, not unknown, and the distinction matters because
+    zero is data and None is not.
+    """
+    payload = _fetch(
+        f"/api/v1/game/{game_pk}/boxscore",
+        {},
+        cache_key=f"mlb:bullpen:box:{game_pk}",
+        verify_ssl=verify_ssl,
+    )
+    for side in ("home", "away"):
+        block = ((payload.get("teams") or {}).get(side)) or {}
+        if ((block.get("team") or {}).get("id")) != team_id:
+            continue
+        pitchers = block.get("pitchers") or []
+        if not pitchers:
+            return None
+        if len(pitchers) == 1:
+            return 0.0
+        players = block.get("players") or {}
+        relief = 0.0
+        for player_id in pitchers[1:]:
+            stats = ((players.get(f"ID{player_id}") or {}).get("stats") or {}).get("pitching") or {}
+            innings = to_float(stats.get("inningsPitched"))
+            if innings:
+                relief += innings
+        return round(relief, 2)
+    return None
 
 
 def team_relief_innings(
     team_id: int | None, *, days: int = WORKLOAD_DAYS, verify_ssl: bool = True
 ) -> float | None:
-    """Relief innings thrown across the club's last few games. None on failure.
+    """Relief innings across the club's last few completed games. None on failure.
 
     Never raises. Workload decorates a prediction that is already made, so a
     failure here must cost this feature and nothing else.
@@ -53,87 +153,30 @@ def team_relief_innings(
     if not team_id:
         return None
     try:
-        payload = _fetch(
-            f"/api/v1/teams/{team_id}/stats",
-            {"stats": "gameLog", "group": "pitching", "season": "2026"},
-            cache_key=f"mlb:bullpen:gamelog:{team_id}",
-            verify_ssl=verify_ssl,
-        )
+        game_pks = _recent_game_pks(team_id, days=days, verify_ssl=verify_ssl)
     except Exception:
         return None
+    if not game_pks:
+        return None
 
-    relief = 0.0
+    total = 0.0
     counted = 0
-    for group in payload.get("stats") or []:
-        for split in group.get("splits") or []:
-            stat = split.get("stat") or {}
-            total_ip = to_float(stat.get("inningsPitched"))
-            if total_ip is None:
-                continue
-            # A complete game rests a bullpen. Subtracting the starter's work is
-            # what stops that being scored as the heaviest possible day.
-            starter_ip = _starter_innings(stat)
-            if starter_ip is None:
-                # Without the starter's share there is no way to separate relief
-                # work from the whole game, so this is genuinely unknown.
-                #
-                # It previously fell back to "the whole game minus a typical
-                # start", which looks harmless and is not: that returns exactly
-                # the typical figure every time, so fatigue came out 0.00 for an
-                # 18-inning day and a 9-inning day alike. The feature would have
-                # logged numbers, passed its tests and never once shown signal.
-                _warn_missing_starter_innings(stat)
-                return None
-            relief += max(0.0, total_ip - starter_ip)
-            counted += 1
-            if counted >= days:
-                break
-        if counted >= days:
-            break
+    for game_pk in game_pks[:days]:
+        try:
+            innings = relief_innings_in_game(game_pk, team_id, verify_ssl=verify_ssl)
+        except Exception:
+            continue
+        if innings is None:
+            continue
+        total += innings
+        counted += 1
 
     if not counted:
+        _warn_unreadable_boxscore()
         return None
-    return round(relief, 2)
-
-
-# Field names the Stats API has been seen to use for the starters' share. Tried
-# in order; if none is present the figure is unknown rather than guessed.
-_STARTER_IP_KEYS = ("startersInningsPitched", "startersInnings", "starterInningsPitched")
-
-_warned = False
-
-
-def _starter_innings(stat: dict[str, Any]) -> float | None:
-    for key in _STARTER_IP_KEYS:
-        value = to_float(stat.get(key))
-        if value is not None:
-            return value
-    return None
-
-
-def _warn_missing_starter_innings(stat: dict[str, Any] | None = None) -> None:
-    """Say so once per run, and print the field names that DID arrive.
-
-    Printed rather than raised: this is a candidate feature and must not break a
-    build. But an ablation candidate structurally incapable of producing a value
-    needs to be visible, not discovered months later.
-
-    The field list is the point. Without network access to the Stats API there
-    is no way to learn the right key by inspection, and guessing produced three
-    wrong names already. Letting the build report what it actually received
-    turns an open question into a one-line fix.
-    """
-    global _warned
-    if _warned:
-        return
-    _warned = True
-    available = sorted(stat.keys()) if isinstance(stat, dict) else []
-    print(
-        "::warning title=Bullpen workload::no starters' innings field found, so "
-        "relief workload cannot be separated from total innings and bullpenDiff "
-        f"stays empty. Tried {list(_STARTER_IP_KEYS)}. "
-        f"Fields actually returned: {available}"
-    )
+    # Scaled to the window, so a club that has played two games in three days is
+    # not scored as though it rested for the third.
+    return round(total / counted * days, 2)
 
 
 def bullpen_fatigue(
