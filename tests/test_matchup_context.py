@@ -258,3 +258,41 @@ class HeadToHeadResolutionTests(unittest.TestCase):
 
     def test_no_series_is_still_none(self) -> None:
         self.assertIsNone(self._diff())
+
+
+class SelfDiagnosingTests(unittest.TestCase):
+    """A dead feature has to report what it saw, not just that it failed.
+
+    Three guesses at the starters'-innings field name were all wrong, and
+    without network access there is no way to learn the right one by
+    inspection. Printing the fields that actually arrived turns an open question
+    into a one-line fix.
+    """
+
+    def test_the_warning_lists_the_fields_that_arrived(self) -> None:
+        import io
+        from contextlib import redirect_stdout
+
+        payload = {"stats": [{"splits": [{"stat": {
+            "inningsPitched": 9.0, "earnedRuns": 3, "whip": 1.21,
+        }}]}]}
+        buffer = io.StringIO()
+        with patch.object(bullpen, "_fetch", return_value=payload), redirect_stdout(buffer):
+            bullpen._warned = False
+            bullpen.team_relief_innings(147)
+
+        output = buffer.getvalue()
+        self.assertIn("whip", output, "must name the fields that did arrive")
+        self.assertIn("startersInningsPitched", output, "must name what it looked for")
+
+    def test_it_only_warns_once_per_run(self) -> None:
+        import io
+        from contextlib import redirect_stdout
+
+        payload = {"stats": [{"splits": [{"stat": {"inningsPitched": 9.0}}]}]}
+        buffer = io.StringIO()
+        with patch.object(bullpen, "_fetch", return_value=payload), redirect_stdout(buffer):
+            bullpen._warned = False
+            for _ in range(5):
+                bullpen.team_relief_innings(147)
+        self.assertEqual(buffer.getvalue().count("Bullpen workload"), 1)

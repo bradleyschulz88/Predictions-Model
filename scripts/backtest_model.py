@@ -231,6 +231,13 @@ def build_evaluation_report(data_dir: Path) -> dict[str, Any]:
         "divergence": evaluation.divergence_report(observations),
         "homeBias": evaluation.home_bias_report(observations),
         "reliability": evaluation.reliability_curve(published),
+        # Scored on the current model only. The all-time curve above pools every
+        # model version this log has ever carried, so it describes history
+        # rather than what the board is doing now.
+        "reliabilityRecent": evaluation.reliability_curve(
+            evaluation.recent_pairs(observations)
+        ),
+        "reliabilityRecentPicks": len(evaluation.recent_pairs(observations)),
         "byLeague": by_league,
         "fittedWalkForward": _fitted_walk_forward(data_dir),
     }
@@ -317,11 +324,27 @@ def print_evaluation(report: dict[str, Any]) -> None:
               f" · home wins {stats['actualHomeWinPct']:>5}%"
               f" · bias {stats['biasPct']:+.1f}pts (n={stats['n']})")
 
-    print("\n  Reliability (confidence bucket vs actual)")
-    for row in report["reliability"]:
-        print(f"    {row['range']}%: predicted {row['avgPredictedPct']}%"
-              f" · actual {row['actualWinPct']}% ±{row['stdErrPct']}"
-              f" · miss {row['overconfidencePct']:+.1f}pts (n={row['picks']})")
+    def _print_reliability(title: str, rows: list[dict[str, Any]]) -> None:
+        print(f"\n  {title}")
+        for row in rows:
+            flag = (
+                ""
+                if row["picks"] >= evaluation.MIN_BUCKET_FOR_CONCLUSION
+                else "   <- too thin to conclude"
+            )
+            print(f"    {row['range']}%: predicted {row['avgPredictedPct']}%"
+                  f" · actual {row['actualWinPct']}% ±{row['stdErrPct']}"
+                  f" · miss {row['overconfidencePct']:+.1f}pts (n={row['picks']}){flag}")
+
+    recent_n = report.get("reliabilityRecentPicks") or 0
+    _print_reliability(
+        f"Reliability, CURRENT model (last {recent_n} graded picks)",
+        report.get("reliabilityRecent") or [],
+    )
+    _print_reliability(
+        "Reliability, all-time -- pools every past model version, read as history",
+        report["reliability"],
+    )
 
 
 def _actual_winner_from_snapshot_game(game: dict[str, Any]) -> str | None:
