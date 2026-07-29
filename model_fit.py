@@ -118,6 +118,7 @@ CANDIDATE_FEATURES = (
     "travelDiff",
     "handednessDiff",
     "bullpenDiff",
+    "formDiff",
 )
 
 # Shrinkage constant for per-league intercepts: a league needs ~K graded games
@@ -334,6 +335,11 @@ def build_feature_dict(
         "travelDiff": _first_number(features.get("travelDiff")),
         "handednessDiff": _first_number(features.get("handednessDiff")),
         "bullpenDiff": _first_number(features.get("bullpenDiff")),
+        # Last-five win rate, home minus away. The live log folds form into
+        # strengthDiff rather than carrying it separately, so this is only
+        # populated by the backfill -- which is exactly the point: recent form is
+        # cheap to reconstruct historically and is worth a fair test.
+        "formDiff": _first_number(features.get("formDiff")),
     }
 
 

@@ -409,7 +409,38 @@ allowed to move a probability only once it beats its own absence out of sample.
 | `parkDiff` | ballpark run index | no coverage yet |
 | `travelDiff` | distance + body-clock shift on the visitors | no coverage yet |
 | `handednessDiff` | southpaw asymmetry between the starters | no coverage yet |
-| `bullpenDiff` | relief innings absorbed in the last three days | no coverage yet — see note |
+| `bullpenDiff` | relief innings absorbed in the last three days | no coverage yet |
+| `formDiff` | last-five win rate, home minus away | **tested, does not beat its absence** |
+
+### First screening result
+
+The backfill did its job. Screened on **2,922 games** (2,209 backfilled), each
+candidate tested against `strengthDiff` alone rather than buried behind ten
+others:
+
+| candidate | coverage | log loss vs baseline | verdict |
+|---|---|---|---|
+| baseline `strengthDiff` | 100% | 0.6764 | — |
+| `parkDiff` | 77% | +0.0020 | **fails** |
+| `travelDiff` | 77% | +0.0019 | **fails** |
+| `formDiff` | 76% | +0.0010 | **fails** |
+| `pitchingDiff` | — | +0.0020 | fails |
+| `restDiff` | — | +0.0013 | fails |
+| `b2bDiff` | — | +0.0009 | fails |
+| `h2hDiff` · `handednessDiff` · `bullpenDiff` · `eloDiff` | **~2%** | 0.0000 | **not testable yet** |
+
+**Park factor and travel are settled: neither predicts a winner.** That is the
+expected answer for a ballpark — it inflates scoring for both teams equally, so
+it belongs in the totals model where it already is — and a genuine negative
+result for travel, which sounded promising and is not.
+
+The four at ~2% coverage show exactly 0.0000 because they barely exist in the
+enlarged pool. **That is not a fair test and must not be read as one**, which is
+why coverage is printed beside every verdict. They need live accumulation, since
+none can be reconstructed from a past season: relief innings, handedness and
+head-to-head all depend on data that only exists at game time.
+
+
 
 > **`bullpenDiff` reads the boxscore, not the team game log.** A build printed
 > every field the game log returns — 59 of them, including `gamesStarted`,
