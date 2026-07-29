@@ -65,7 +65,10 @@ class AccuracyTrackerTests(unittest.TestCase):
                             "predictedWinner": "B",
                             "predictedSide": "home",
                             "outcomeLabel": "B to win",
-                            "confidence": 62.0,
+                            # Above MLB's 65 bar. At 62 this pick is now
+                            # correctly withheld, which is the point of the
+                            # per-league threshold.
+                            "confidence": 71.0,
                             "features": {"recordDiff": 0.1, "league": "mlb"},
                         },
                     }

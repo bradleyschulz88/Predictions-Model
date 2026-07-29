@@ -140,7 +140,9 @@ def build_overview(payloads: dict[str, dict]) -> dict:
     for league_id, payload in payloads.items():
         label = payload.get("leagueLabel", league_id)
         games = payload.get("games") or []
-        publishable = [game for game in games if is_publishable_pick(game.get("prediction"))]
+        publishable = [
+            game for game in games if is_publishable_pick(game.get("prediction"), league_id)
+        ]
         league_plays = [_play_from_game(league_id, label, game) for game in publishable]
         plays.extend(league_plays)
 

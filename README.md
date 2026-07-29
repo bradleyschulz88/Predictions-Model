@@ -97,6 +97,34 @@ Raw accuracy is ~60%, and that is close to the ceiling: published MLB
 binary-prediction accuracy tops out around 55-60%. The value is in probabilities
 that mean what they say, not in a higher hit rate.
 
+### Publish thresholds
+
+A pick is only shown once it clears its league's bar. The default is **55%**;
+**MLB is held to 65%**, because its 55-65% band has no skill and loses money:
+
+| MLB priced picks | n | hit | ROI |
+|---|---|---|---|
+| 55-65% | 150 | 42.7% | **-20.2%** |
+| 65-75% | 182 | 61.0% | +8.7% |
+| 75%+ | 99 | 62.6% | +2.2% |
+
+Those picks go into prices implying roughly 58-62%, so 42.7% is not a near miss.
+It is also not a bad run: splitting the history in half gives 42.7% then 42.7%,
+and both sides fail (home 42.4%, away 43.1%), so it is not home bias either.
+Above 65% MLB is healthy, so this is one dead band rather than a broken model.
+
+Withholding it takes the whole board from **-0.75% to +7.86% ROI**, dropping 150
+of 488 priced picks. Other leagues do not show the pattern, so the override is
+per-league rather than a blanket raise, and it should come back off if the band
+recovers — re-measure as the log grows.
+
+**Withheld picks are still logged.** Publishing and logging are different
+questions: the 55-65% band is exactly where the fit is most wrong, so censoring
+it from training would entrench the very error the threshold exists to hide.
+Every pick is written to `predictions_log.json` with a `published` flag; the
+model trains on all of them, while accuracy and ROI report only the ones the
+board actually showed.
+
 ### Model commands
 
 ```bash
