@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-29T12:53:34.725104+00:00",
+  "updatedAt": "2026-07-29T13:01:43.301311+00:00",
   "summary": {
     "last7Days": {
       "correct": 294,
@@ -16,7 +16,7 @@
       "pct": 60.4,
       "units": 13.802,
       "roiPct": 2.0,
-      "pending": 61,
+      "pending": 63,
       "voided": 11
     },
     "byLeague": {
@@ -2889,6 +2889,26 @@
       "published": true
     },
     {
+      "eventId": "401816345",
+      "league": "mlb",
+      "scheduleDate": "2026-07-31",
+      "matchup": "Minnesota Twins @ Seattle Mariners",
+      "predicted": "Seattle Mariners",
+      "predictedSide": "home",
+      "outcomeLabel": "Seattle Mariners to win",
+      "confidence": 69.1,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-31",
+      "published": true
+    },
+    {
       "eventId": "401816344",
       "league": "mlb",
       "scheduleDate": "2026-07-31",
@@ -2949,14 +2969,34 @@
       "published": true
     },
     {
-      "eventId": "401816336",
+      "eventId": "401816341",
       "league": "mlb",
       "scheduleDate": "2026-07-31",
-      "matchup": "Pittsburgh Pirates @ Cincinnati Reds",
-      "predicted": "Pittsburgh Pirates",
+      "matchup": "Kansas City Royals @ Colorado Rockies",
+      "predicted": "Kansas City Royals",
       "predictedSide": "away",
-      "outcomeLabel": "Pittsburgh Pirates to win",
-      "confidence": 64.1,
+      "outcomeLabel": "Kansas City Royals to win",
+      "confidence": 63.0,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-31",
+      "published": true
+    },
+    {
+      "eventId": "401816338",
+      "league": "mlb",
+      "scheduleDate": "2026-07-31",
+      "matchup": "Washington Nationals @ Atlanta Braves",
+      "predicted": "Atlanta Braves",
+      "predictedSide": "home",
+      "outcomeLabel": "Atlanta Braves to win",
+      "confidence": 72.3,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -3285,46 +3325,6 @@
       "predictedSide": "away",
       "outcomeLabel": "Golden State Valkyries to win",
       "confidence": 67.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-29",
-      "published": true
-    },
-    {
-      "eventId": "401816321",
-      "league": "mlb",
-      "scheduleDate": "2026-07-29",
-      "matchup": "Seattle Mariners @ Los Angeles Dodgers",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "home",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 71.9,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-29",
-      "published": true
-    },
-    {
-      "eventId": "401816320",
-      "league": "mlb",
-      "scheduleDate": "2026-07-29",
-      "matchup": "Milwaukee Brewers @ San Francisco Giants",
-      "predicted": "Milwaukee Brewers",
-      "predictedSide": "away",
-      "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 71.3,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -18674,7 +18674,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": true
+      "published": false
     },
     "401816333": {
       "eventId": "401816333",
@@ -18714,7 +18714,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": false
+      "published": true
     },
     "401816341": {
       "eventId": "401816341",
@@ -18734,7 +18734,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": false
+      "published": true
     },
     "401816344": {
       "eventId": "401816344",
@@ -18834,7 +18834,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": false
+      "published": true
     },
     "401857102": {
       "eventId": "401857102",
