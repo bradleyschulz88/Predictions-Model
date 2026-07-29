@@ -226,3 +226,104 @@ class DoubleheaderDisplayTests(OfflineTestCase):
     def test_ordered_by_start_time_with_event_id_as_tiebreak(self) -> None:
         app_js = self._app_js()
         self.assertIn("if (Number.isFinite(at) && Number.isFinite(bt) && at !== bt) return at - bt;", app_js)
+
+
+class ScheduleDateCorrectnessTests(OfflineTestCase):
+    """A slate is filed under its league-local calendar day.
+
+    This is the guard that matters for scheduling: if a game's start time does
+    not fall on the date it is filed under -- read in the league's own timezone
+    -- then the board is showing it on the wrong day. MLB is the case that
+    breaks naive handling, because roughly half a normal night's games start
+    after midnight UTC.
+    """
+
+    def _assert_filed_correctly(self, fixture: str, league: str, tz: str, filed: str) -> None:
+        from datetime import datetime
+        from zoneinfo import ZoneInfo
+
+        with open(FIXTURES / fixture, encoding="utf-8") as handle:
+            games = parse_scoreboard(json.load(handle), league=league)
+        self.assertTrue(games, f"{fixture} parsed no games")
+
+        for game in games:
+            start = game.get("startDate")
+            self.assertTrue(start, f"{game.get('matchup')} has no startDate")
+            local = datetime.fromisoformat(start.replace("Z", "+00:00")).astimezone(ZoneInfo(tz))
+            self.assertEqual(
+                local.date().isoformat(),
+                filed,
+                f"{game['matchup']} starts {start} -> {local:%Y-%m-%d %H:%M %Z}, filed under {filed}",
+            )
+
+    def test_mlb_games_land_on_their_filed_date(self) -> None:
+        self._assert_filed_correctly(
+            "espn_scoreboard_20260616.json", "mlb", "America/New_York", "2026-06-16"
+        )
+
+    def test_afl_games_land_on_their_filed_date(self) -> None:
+        """AFL is the opposite skew -- its local day starts before UTC midnight."""
+        self._assert_filed_correctly(
+            "espn_afl_scoreboard_20260614.json", "afl", "Australia/Melbourne", "2026-06-14"
+        )
+
+    def test_mlb_slate_really_does_straddle_utc_midnight(self) -> None:
+        """Guards the guard: if this stopped being true the test above is vacuous."""
+        with open(FIXTURES / "espn_scoreboard_20260616.json", encoding="utf-8") as handle:
+            games = parse_scoreboard(json.load(handle), league="mlb")
+        next_utc_day = [g for g in games if (g.get("startDate") or "").startswith("2026-06-17")]
+        self.assertGreaterEqual(
+            len(next_utc_day), 5, "expected a chunk of the slate to fall on the next UTC day"
+        )
+
+
+class GameTimeTimezoneTests(OfflineTestCase):
+    """Game times are rendered in the league's timezone, not the viewer's.
+
+    The board is organised by league-local date, so restating times in the
+    viewer's calendar made every card contradict the header above it: a viewer
+    in Australia read "Today - Tue 16 June" and saw cards stamped "Wed, Jun 17".
+    Nothing was mis-scheduled; the times were quoted in a calendar the page
+    never used.
+    """
+
+    def _app_js(self) -> str:
+        return (Path(__file__).resolve().parents[1] / "dashboard" / "app.js").read_text(
+            encoding="utf-8"
+        )
+
+    def test_game_times_are_formatted_in_the_league_timezone(self) -> None:
+        app_js = self._app_js()
+        self.assertIn("function formatDateTime(value, league = sportSelect.value)", app_js)
+        self.assertIn("const tz = leagueTimezone(league);", app_js)
+        self.assertIn("timeZone: tz,", app_js)
+
+    def test_short_game_time_also_uses_the_league_timezone(self) -> None:
+        app_js = self._app_js()
+        self.assertIn(
+            "function formatGameTimeShort(startDate, league = sportSelect.value)", app_js
+        )
+        self.assertIn("timeZone: leagueTimezone(league),", app_js)
+
+    def test_viewer_local_time_is_appended_only_when_it_differs(self) -> None:
+        app_js = self._app_js()
+        self.assertIn("if (!viewerTz || viewerTz === tz) return leagueText;", app_js)
+        self.assertIn("your time", app_js)
+
+    def test_call_sites_pass_the_league(self) -> None:
+        """A missing league argument silently falls back to the selected sport."""
+        app_js = self._app_js()
+        self.assertIn("formatDateTime(game.startDate, game.league)", app_js)
+        self.assertIn("formatGameTimeShort(game.startDate, game.league)", app_js)
+        self.assertIn("formatGameTimeShort(top.startDate, top.league)", app_js)
+
+    def test_last_updated_stays_in_the_viewer_timezone(self) -> None:
+        """A refresh stamp is a fact about the viewer's day, not a fixture."""
+        app_js = self._app_js()
+        self.assertIn("function formatViewerDateTime(value)", app_js)
+        self.assertIn("formatViewerDateTime(payload.fetchedAt)", app_js)
+
+    def test_date_filtering_uses_the_league_calendar(self) -> None:
+        app_js = self._app_js()
+        self.assertIn("const gameDate = gameScheduleDate(game.startDate, league);", app_js)
+        self.assertIn("return gameDate === scheduleDate;", app_js)

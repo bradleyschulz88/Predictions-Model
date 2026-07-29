@@ -3276,7 +3276,22 @@ function onDateNav(delta) {
   onDateSelected(shiftIsoDate(current, delta));
 }
 
-function formatDateTime(value) {
+// Game times are shown in the LEAGUE's timezone, because that is the calendar
+// the whole board is organised by: a slate is filed under its league-local date,
+// exactly as ESPN and the leagues themselves label it.
+//
+// Rendering in the viewer's timezone instead -- which this used to do, weekday
+// and day-of-month included -- makes the card contradict the header above it.
+// Six of fifteen MLB games on a normal night start after midnight UTC, so a
+// viewer in Australia reading the "Tue 16 June" slate saw cards stamped
+// "Wed, Jun 17". Nothing was mis-scheduled; the times were being restated in a
+// calendar the page never used.
+//
+// The viewer's own time is still what tells them when to watch, so it is
+// appended whenever their timezone differs.
+// "Last updated" is a wall-clock fact about the viewer's own day, not a fixture
+// on a league calendar, so it stays in their timezone.
+function formatViewerDateTime(value) {
   if (!value) return "—";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
@@ -3287,6 +3302,33 @@ function formatDateTime(value) {
     hour: "numeric",
     minute: "2-digit",
   });
+}
+
+function formatDateTime(value, league = sportSelect.value) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  const tz = leagueTimezone(league);
+  const leagueText = date.toLocaleString(undefined, {
+    timeZone: tz,
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  });
+
+  const viewerTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  if (!viewerTz || viewerTz === tz) return leagueText;
+
+  const localText = date.toLocaleString(undefined, {
+    weekday: "short",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  return `${leagueText} · ${localText} your time`;
 }
 
 function showBanner(message, { autoHideMs = 0, type = "info", details = "" } = {}) {
@@ -3435,11 +3477,17 @@ function teamAbbrev(name, explicit) {
   return words.map((w) => w[0]).join("").slice(0, 4).toUpperCase();
 }
 
-function formatGameTimeShort(startDate) {
+// League-local for the same reason as formatDateTime: it has to agree with the
+// date the slate is filed under.
+function formatGameTimeShort(startDate, league = sportSelect.value) {
   if (!startDate) return "TBD";
   const date = new Date(startDate);
   if (Number.isNaN(date.getTime())) return "TBD";
-  return date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  return date.toLocaleTimeString(undefined, {
+    timeZone: leagueTimezone(league),
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }
 
 // Doubleheaders are real and the model handles them correctly -- two ESPN event
@@ -3487,7 +3535,7 @@ function renderScoreboardTeams(game) {
   const home = teamAbbrev(game.homeTeam, game.homeAbbr);
   const dh = game.gameInSeries
     ? ` <span class="dh-badge" title="Doubleheader: game ${game.gameInSeries} of ${game.seriesSize}${
-        game.startDate ? ` — ${formatGameTimeShort(game.startDate)}` : ""
+        game.startDate ? ` — ${formatGameTimeShort(game.startDate, game.league)}` : ""
       }">Gm ${game.gameInSeries}</span>`
     : "";
   const hasScore = game.homeScore != null && game.awayScore != null;
@@ -3664,7 +3712,7 @@ function patchLiveScoreDom(games) {
     }
     const featuredTime = document.querySelector(`[data-featured-time="${game.eventId}"]`);
     if (featuredTime) {
-      const nextFeaturedTime = game.isLive ? "LIVE" : formatGameTimeShort(game.startDate);
+      const nextFeaturedTime = game.isLive ? "LIVE" : formatGameTimeShort(game.startDate, game.league);
       if (featuredTime.textContent !== nextFeaturedTime) {
         featuredTime.textContent = nextFeaturedTime;
         featuredTime.classList.toggle("featured-pick-live", game.isLive);
@@ -3870,7 +3918,7 @@ function renderStats(payload, visibleGames, { topPick, gameCount } = {}) {
     statLeague.textContent =
       sport === "overview" ? "All sports" : payload.leagueLabel || SPORT_LABELS[sport] || "—";
   }
-  if (statUpdated) statUpdated.textContent = formatDateTime(payload.fetchedAt);
+  if (statUpdated) statUpdated.textContent = formatViewerDateTime(payload.fetchedAt);
   dashboardTitle.textContent =
     sport === "overview" ? "All Sports" : `${payload.leagueLabel || SPORT_LABELS[sport] || "Sports"}`;
 
@@ -4135,7 +4183,7 @@ function renderTopPicks(games) {
   const labelClass = prediction.confidenceLabel === "Strong pick" ? "label-strong" : prediction.confidenceLabel === "Lean" ? "label-lean" : "";
   const timeLabel = top.isLive
     ? `<span class="featured-pick-time featured-pick-live" data-featured-time="${top.eventId}">LIVE</span>`
-    : `<span class="featured-pick-time" data-featured-time="${top.eventId}">${formatGameTimeShort(top.startDate)}</span>`;
+    : `<span class="featured-pick-time" data-featured-time="${top.eventId}">${formatGameTimeShort(top.startDate, top.league)}</span>`;
 
   topPicksEl.classList.remove("hidden");
   topPicksEl.innerHTML = `
@@ -4541,7 +4589,7 @@ function renderGames(games) {
       const labelClass = prediction?.confidenceLabel === "Strong pick" ? "label-strong" : prediction?.confidenceLabel === "Lean" ? "label-lean" : "label-coin";
       const records = game.awayRecord || game.homeRecord ? `${game.awayTeam} ${game.awayRecord || "—"} · ${game.homeTeam} ${game.homeRecord || "—"}` : null;
       const pitchers = sport === "mlb" && (game.awayPitcher?.name || game.homePitcher?.name) ? `SP: ${game.awayPitcher?.name || "TBD"} vs ${game.homePitcher?.name || "TBD"}` : null;
-      const metaParts = [formatDateTime(game.startDate), game.venueName || "Venue TBD"];
+      const metaParts = [formatDateTime(game.startDate, game.league), game.venueName || "Venue TBD"];
       if (game.broadcast) metaParts.push(game.broadcast);
       if (records) metaParts.push(records);
       if (pitchers) metaParts.push(pitchers);
