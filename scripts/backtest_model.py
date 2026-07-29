@@ -326,6 +326,18 @@ def print_evaluation(report: dict[str, Any]) -> None:
 
     def _print_reliability(title: str, rows: list[dict[str, Any]]) -> None:
         print(f"\n  {title}")
+        # The aggregate first, because at this sample size it is usually the only
+        # conclusive number: every individual bucket can be too thin to read
+        # while the pooled figure is solid. Reporting only the buckets invited
+        # exactly the wrong conclusion -- a noisy +22 on n=10 looks alarming and
+        # says nothing.
+        picks = sum(row["picks"] for row in rows)
+        if picks:
+            stated = sum(row["avgPredictedPct"] * row["picks"] for row in rows) / picks
+            actual = sum(row["actualWinPct"] * row["picks"] for row in rows) / picks
+            verdict = "well calibrated" if abs(stated - actual) <= 3 else "miscalibrated"
+            print(f"    OVERALL: predicted {stated:.1f}% · actual {actual:.1f}%"
+                  f" · miss {stated - actual:+.1f}pts (n={picks}) -- {verdict}")
         for row in rows:
             flag = (
                 ""
