@@ -426,6 +426,35 @@ history and contributes nothing until games grade with it present. An absent
 feature is standardised to the mean, so it cannot distort the fit while it
 waits.
 
+### Lifting the sample size
+
+`scripts/backfill_history.py` replays completed ESPN seasons to build a larger
+screening set, because a candidate added today otherwise needs months before it
+has enough coverage to be judged at all.
+
+```bash
+python scripts/backfill_history.py --league mlb --start 2025-04-01 --end 2025-09-28
+python model_fit.py --ablate --with-history
+```
+
+**Leakage is the whole problem with a backfill.** One built from end-of-season
+records looks superb in backtest and fails live, because the features encode the
+answer. Every number is therefore produced by replaying the season *in date
+order* and reading state as it stood before the game: records accumulate from
+prior results only, form is the previous five, rest comes from the club's last
+fixture. The final score is used for the label and nothing else, and
+`_assert_no_leakage` runs on every row — a test deliberately breaks the ordering
+to prove the guard is not vacuous.
+
+**It carries no `marketLogit`.** Historical closing lines are not available from
+any source here, and inventing them would be worse than omitting them. So this
+screens candidates against the *standalone* model: read the rows without
+`marketLogit` and ignore the rest. A candidate that cannot beat `strengthDiff`
+alone on thousands of games will not earn a place beside the market anchor on
+seven hundred.
+
+The output is gitignored and rebuilt on demand — derived data, not a record.
+
 **The sample size is the binding constraint.** There are ~700 graded games, and
 roughly 10-20 games per predictor is the honest limit, so this list is a queue
 to be tested one at a time rather than a model to be fitted all at once. Re-run

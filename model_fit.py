@@ -565,6 +565,30 @@ class Sample:
         self.has_market = values.get("marketLogit") is not None
 
 
+def load_history_samples(data_dir: Path) -> list[tuple[dict[str, Any], int, str, str]]:
+    """Backfilled pre-game rows from completed seasons, if any have been built.
+
+    Optional by design: `scripts/backfill_history.py` writes this on demand and
+    it is gitignored, so a fresh clone simply has none and the fit behaves
+    exactly as before.
+
+    These rows carry NO market feature, because historical closing lines are not
+    available. That makes them a screening set for the standalone model rather
+    than extra training data for the live one -- mixing them into the anchored
+    fit would let thousands of market-less games swamp the few hundred that
+    actually have a price.
+    """
+    history = _load_json(data_dir / "history_features.json", {"rows": []})
+    rows: list[tuple[dict[str, Any], int, str, str]] = []
+    for row in history.get("rows") or []:
+        features = row.get("features") or {}
+        label = row.get("homeWon")
+        if label is None:
+            continue
+        rows.append((features, int(label), row.get("league") or "unknown", row.get("date") or ""))
+    return rows
+
+
 def samples_from_log(data_dir: Path) -> tuple[list[Sample], float]:
     """Join logged features to graded outcomes.
 
@@ -861,10 +885,39 @@ def main() -> int:
     parser.add_argument("--l2", type=float, default=None, help="Ridge strength (default: choose by walk-forward)")
     parser.add_argument("--dry-run", action="store_true", help="Fit and report without writing weights")
     parser.add_argument("--ablate", action="store_true", help="Walk-forward score each nested feature set")
+    parser.add_argument(
+        "--with-history",
+        action="store_true",
+        help="Include backfilled past seasons in the ablation (screening only -- no market feature)",
+    )
     args = parser.parse_args()
 
     if args.ablate:
-        samples, _ = samples_from_log(args.data_dir)
+        samples, centre = samples_from_log(args.data_dir)
+        if args.with_history:
+            history = load_history_samples(args.data_dir)
+            if history:
+                extra = [
+                    Sample(
+                        values=build_feature_dict(features, split_diff_centre=centre),
+                        label=label,
+                        league=league,
+                        date=row_date,
+                    )
+                    for features, label, league, row_date in history
+                ]
+                samples = sorted(list(samples) + extra, key=lambda item: item.date)
+                print(
+                    f"Screening set: {len(extra)} backfilled games added. "
+                    "These carry no market feature, so read the standalone rows "
+                    "and ignore anything involving marketLogit."
+                )
+            else:
+                print(
+                    "No backfilled history found. Build some with:\n"
+                    "  python scripts/backfill_history.py --league mlb "
+                    "--start 2025-04-01 --end 2025-09-28"
+                )
         print(f"Walk-forward ablation on {len(samples)} graded games")
         print(f"  {'features':<52} {'l2':>5} {'logloss':>8} {'brier':>8} {'acc':>7}")
         for row in ablate(samples):
