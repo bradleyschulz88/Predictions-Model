@@ -21,6 +21,24 @@ class LeagueConfig:
     def supports_sbr_odds(self) -> bool:
         return bool(self.sbr_odds_slug)
 
+    @property
+    def supports_espn_predictor(self) -> bool:
+        """Whether ESPN publishes a win predictor for this league.
+
+        Measured, not assumed. Across the whole logged history: MLB 183 of 623
+        games carried one and WNBA 30 of 120, while AFL managed 0 of 55 and the
+        World Cup 0 of 74. ESPN provides it for the US major leagues and not for
+        Australian football or soccer.
+
+        This exists so the coverage warning can tell "the feed is broken" apart
+        from "this feed has never existed". Without it AFL logged a 0% coverage
+        warning on every single build -- permanent noise that trains you to
+        ignore the warnings that matter.
+        """
+        # "football" here is American football; Australian football has its own
+        # espn_path prefix and is deliberately absent.
+        return self.espn_path.split("/", 1)[0] in {"baseball", "basketball", "football"}
+
 
 LEAGUES: dict[str, LeagueConfig] = {
     "mlb": LeagueConfig(
