@@ -604,8 +604,25 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
     # apply to picks made after it, silently leaving the old ones in the record.
     for event_id, record in picks_by_event.items():
         pending = predictions.get(event_id)
-        if pending is not None:
-            record["published"] = bool(pending.get("published", True))
+        if pending is None:
+            continue
+        record["published"] = bool(pending.get("published", True))
+
+        # Side markets need the same treatment, and for the same reason. Eight
+        # games were graded with a total sitting in the log and no result against
+        # it, because they had already graded before side-market scoring shipped
+        # and an already-graded record is never rebuilt. Without this the totals
+        # record would have started from whatever graded next and silently
+        # discarded every earlier pick.
+        if record.get("status") != "graded":
+            continue
+        home_score, away_score = record.get("homeScore"), record.get("awayScore")
+        if home_score is None or away_score is None:
+            continue
+        if not record.get("totalResult"):
+            record["totalResult"] = grade_total(pending.get("total"), home_score, away_score)
+        if not record.get("spreadResult"):
+            record["spreadResult"] = grade_spread(pending.get("spread"), home_score, away_score)
 
     # Accuracy and ROI describe what the board actually showed. Picks the
     # threshold withheld are kept in the log so the model can still learn from
