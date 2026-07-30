@@ -51,11 +51,13 @@ jobs:
       - name: Prepare docs site
         run: |
           mkdir -p docs/data
-          cp dashboard/index.html docs/index.html
-          cp dashboard/app.js docs/app.js
-          cp dashboard/styles.css docs/styles.css
-          cp dashboard/manifest.json docs/manifest.json
-          cp dashboard/sw.js docs/sw.js
+          # Copy every shipped asset rather than an enumerated list that a new
+          # file can be left out of. tests/test_dashboard_assets.py asserts the
+          # two stay in step.
+          cp dashboard/index.html dashboard/tools.html docs/
+          cp dashboard/board.css dashboard/board.js docs/
+          cp dashboard/app.js dashboard/styles.css docs/
+          cp dashboard/manifest.json dashboard/sw.js docs/
 
       - name: Run tests
         run: python -m unittest discover -s tests -q
