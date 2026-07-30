@@ -1,8 +1,18 @@
 // Bump on any app-shell change. `activate` deletes every cache that is not this
 // one, so a bump is what evicts a previous build's index.html/app.js/styles.css
 // from a browser that already has them.
-const CACHE = "edge-board-v52";
-const ASSETS = ["./", "./index.html", "./app.js", "./styles.css", "./manifest.json"];
+const CACHE = "edge-board-v53";
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./board.css",
+  "./board.js",
+  // The legacy bet tracker and its stylesheet still ship, at tools.html.
+  "./tools.html",
+  "./app.js",
+  "./styles.css",
+  "./manifest.json",
+];
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();

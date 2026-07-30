@@ -1,215 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0e14">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="description" content="Model-vs-market edge for MLB, NFL, NBA, WNBA, EPL and AFL">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Edge Board</title>
-  <link rel="manifest" href="./manifest.json">
-  <!-- The redesign moved to a system font stack, so the Barlow Condensed and
-       IBM Plex webfonts are no longer referenced by any rule. Dropping the
-       requests removes two render-blocking round trips to Google. -->
-  <link rel="stylesheet" href="./styles.css">
+  <meta name="description" content="A calibrated multi-sport prediction benchmark: today's board ranked by expected value, the reasoning behind each number, and an honest accuracy record.">
+  <meta name="theme-color" content="#0D1114">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Crect%20width%3D%27100%27%20height%3D%27100%27%20rx%3D%2718%27%20fill%3D%27%230D1114%27%2F%3E%3Crect%20x%3D%2717%27%20y%3D%2733%27%20width%3D%2762%27%20height%3D%2715%27%20rx%3D%274%27%20fill%3D%27%234E90D2%27%2F%3E%3Crect%20x%3D%2717%27%20y%3D%2755%27%20width%3D%2740%27%20height%3D%2715%27%20rx%3D%274%27%20fill%3D%27%23B87A2C%27%2F%3E%3C%2Fsvg%3E">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="board.css">
 </head>
 <body>
-  <div class="ambient-bg" aria-hidden="true"></div>
-  <div class="app">
-    <header class="header shell-card sticky-header">
-      <div class="header-top">
-        <div class="header-brand-compact">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <h1 id="dashboard-title" class="header-title">Edge Board</h1>
+<div class="shell">
+  <aside class="rail">
+    <div class="brand">
+      <h1>Edge Board</h1>
+      <div class="tag">Calibrated benchmark, six leagues</div>
+    </div>
+    <nav class="nav" id="nav" aria-label="Views">
+      <button type="button" data-v="board" aria-current="page">Today's Board <span class="kbd">1</span></button>
+      <button type="button" data-v="sport">Sports <span class="kbd">2</span></button>
+      <button type="button" data-v="accuracy">Accuracy <span class="kbd">3</span></button>
+      <button type="button" data-v="dig">Dig Deeper <span class="kbd">4</span></button>
+    </nav>
+    <a class="tools-link" href="tools.html">Bet tracker &amp; tools &rarr;</a>
+    <div class="railfoot">
+      <button type="button" class="themebtn" id="theme">Toggle theme</button>
+      <div style="margin-top:10px" id="foot"></div>
+    </div>
+  </aside>
+
+  <main>
+    <!-- =================== TODAY'S BOARD =================== -->
+    <div class="view on" id="v-board">
+      <div class="wire">
+        <div class="top">
+          <h2>Today's Board</h2>
+          <span class="when" id="boardDate"></span>
         </div>
-        <div class="header-actions">
-          <label class="field field-inline">
-            <span class="sr-only">Sport</span>
-            <select id="sport-select" aria-label="Sport">
-              <option value="overview" selected>Today</option>
-              <option value="mlb">MLB</option>
-              <option value="nfl">NFL</option>
-              <option value="nba">NBA</option>
-              <option value="nbasummer">NBA Summer</option>
-              <option value="wnba">WNBA</option>
-              <option value="epl">EPL</option>
-              <option value="afl">AFL</option>
-            </select>
-          </label>
-          <button type="button" class="btn-filter-chip" id="filter-open-btn" aria-haspopup="dialog" aria-controls="filter-sheet">
-            Filters
-          </button>
-          <button type="button" class="btn-theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle theme">
-            <svg class="sun-icon" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-            <svg class="moon-icon" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-          </button>
-          <button id="refresh-btn" type="button" class="btn-primary btn-compact">Refresh</button>
-        </div>
+        <div class="readings" id="readings"></div>
       </div>
+      <section class="block"><div class="wrap" id="boardBody">
+        <div class="panel"><div class="loading">Loading the board…</div></div>
+      </div></section>
+    </div>
 
-      <div class="day-bar" id="date-field">
-        <div class="date-controls">
-          <button type="button" class="btn-icon date-nav-btn" id="date-prev" title="Previous day" aria-label="Previous day">‹</button>
-          <button type="button" id="date-display" class="date-display-btn" title="Pick a schedule date" aria-haspopup="dialog">Pick date</button>
-          <input type="date" id="date-picker-input" class="date-picker-input" aria-hidden="true" tabindex="-1" />
-          <button type="button" class="btn-icon date-nav-btn" id="date-next" title="Next day" aria-label="Next day">›</button>
+    <!-- =================== SPORT =================== -->
+    <div class="view" id="v-sport">
+      <div class="wire">
+        <div class="top">
+          <h2 id="sportTitle">Sports</h2>
+          <span class="when" id="sportWhen"></span>
         </div>
-        <div class="date-quick" id="date-quick"></div>
-        <p class="date-hint sr-only" id="date-hint"></p>
+        <div class="readings" id="sportReadings"></div>
       </div>
-
-      <div class="filter-panel-desktop" id="filter-panel-desktop">
-        <div class="toolbar-row toolbar-secondary">
-          <label class="field">
-            <span>Confidence</span>
-            <select id="confidence-filter">
-              <option value="0">All games</option>
-              <option value="55">Lean+ (55%+)</option>
-              <option value="65">Strong picks (65%+)</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Search</span>
-            <input id="team-search" type="search" placeholder="Team name…" autocomplete="off">
-          </label>
-          <label class="toggle">
-            <input id="live-scores" type="checkbox" checked>
-            <span>Live scores</span>
-          </label>
-          <label class="toggle">
-            <input id="auto-refresh" type="checkbox">
-            <span>Auto-refresh (2m)</span>
-          </label>
+      <section class="block"><div class="wrap">
+        <div class="tools">
+          <span class="lbl" style="margin-right:3px">Sport</span>
+          <div class="seg" id="sportSeg"></div>
+          <span class="lbl" style="margin:0 3px 0 12px">Sort</span>
+          <div class="seg" id="sortSeg">
+            <button type="button" data-s="ev" aria-pressed="true">Edge</button>
+            <button type="button" data-s="conf">Confidence</button>
+            <button type="button" data-s="time">Start time</button>
+            <button type="button" data-s="gap">Vs market</button>
+          </div>
+          <div class="seg" id="showSeg" style="margin-left:12px">
+            <button type="button" data-f="pub" aria-pressed="true">Published</button>
+            <button type="button" data-f="all">All incl. withheld</button>
+          </div>
         </div>
+        <div class="legend" style="padding:13px 0 0">
+          <span class="lbl"><i style="background:var(--model)"></i>Model</span>
+          <span class="lbl"><i style="background:var(--market)"></i>Market (de-vigged)</span>
+          <span style="color:var(--muted);font-size:11.5px">click a game for the decomposition</span>
+        </div>
+        <div class="games" id="games" style="margin-top:11px"></div>
+      </div></section>
+    </div>
+
+    <!-- =================== ACCURACY =================== -->
+    <div class="view" id="v-accuracy">
+      <div class="wire">
+        <div class="top">
+          <h2>Model Accuracy</h2>
+          <span class="when" id="accWhen"></span>
+        </div>
+        <div class="readings" id="accReadings"></div>
       </div>
-    </header>
-
-    <div class="page-bar shell-card">
-      <nav class="view-tabs" id="view-tabs" aria-label="Dashboard views">
-        <button type="button" class="view-tab active" data-view="predictions">
-          <span class="view-tab-label view-tab-label-full">Predictions</span>
-          <span class="view-tab-label view-tab-label-short">Picks</span>
-        </button>
-        <button type="button" class="view-tab" data-view="accuracy">
-          <span class="view-tab-label view-tab-label-full">Accuracy</span>
-          <span class="view-tab-label view-tab-label-short">Record</span>
-        </button>
-        <button type="button" class="view-tab" data-view="model-tracker">
-          <span class="view-tab-label view-tab-label-full">Tracker</span>
-          <span class="view-tab-label view-tab-label-short">Track</span>
-        </button>
-        <button type="button" class="view-tab" data-view="my-bets">
-          <span class="view-tab-label view-tab-label-full">My Bets</span>
-          <span class="view-tab-label view-tab-label-short">Bets</span>
-        </button>
-      </nav>
-      <label class="field field-compact page-bar-odds">
-        <span>Odds</span>
-        <select id="odds-format">
-          <option value="decimal">Decimal</option>
-          <option value="american">American</option>
-        </select>
-      </label>
+      <section class="block"><div class="wrap" id="accBody">
+        <div class="panel"><div class="loading">Loading the record…</div></div>
+      </div></section>
     </div>
 
-    <div id="banner" class="banner hidden" role="status" aria-live="polite">
-      <p id="banner-summary" class="banner-summary"></p>
-      <details id="banner-details" class="banner-details hidden">
-        <summary>More details</summary>
-        <p id="banner-detail-text" class="banner-detail-text"></p>
-      </details>
+    <!-- =================== DIG DEEPER =================== -->
+    <div class="view" id="v-dig">
+      <div class="wire">
+        <div class="top">
+          <h2>Dig Deeper</h2>
+          <span class="when">Where the model is blind, so you know where to look</span>
+        </div>
+        <div class="readings" id="digReadings"></div>
+      </div>
+      <section class="block"><div class="wrap" id="digBody">
+        <div class="panel"><div class="loading">Preparing the briefs…</div></div>
+      </div></section>
     </div>
+  </main>
+</div>
 
-    <div id="predictions-view">
-      <section class="stats-strip stats-ticker" id="stats" aria-busy="false">
-        <div class="stat-item stat-item-primary">
-          <span class="stat-label">Games</span>
-          <span class="stat-value tabular-nums" id="stat-games">—</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Picks</span>
-          <span class="stat-value tabular-nums" id="stat-picks">—</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Strong</span>
-          <span class="stat-value tabular-nums" id="stat-strong">—</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Lean</span>
-          <span class="stat-value tabular-nums" id="stat-lean">—</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Live</span>
-          <span class="stat-value tabular-nums" id="stat-live">—</span>
-        </div>
-        <div class="stat-item stat-item-meta">
-          <span class="stat-label">Updated</span>
-          <span class="stat-value stat-value-sm" id="stat-updated">—</span>
-        </div>
-        <span class="sr-only" id="stat-top-pick" aria-hidden="true"></span>
-        <span class="sr-only" id="stat-league" aria-hidden="true"></span>
-        <span class="sr-only" id="stat-date" aria-hidden="true"></span>
-        <span class="sr-only" id="stat-freshness" aria-hidden="true"></span>
-      </section>
+<nav class="mobilebar" id="mbar" aria-label="Views">
+  <button type="button" data-v="board" aria-current="page">Board</button>
+  <button type="button" data-v="sport">Sports</button>
+  <button type="button" data-v="accuracy">Accuracy</button>
+  <button type="button" data-v="dig">Dig</button>
+</nav>
 
-      <section id="model-day-result" class="model-day-result hidden" aria-label="Model pick record for this day"></section>
-
-      <section id="top-picks" class="top-picks featured-pick hidden" aria-label="Top pick"></section>
-      <p id="freshness-note" class="freshness-note hidden"></p>
-      <main id="games" class="games scoreboard-list" aria-busy="false"></main>
-    </div>
-
-    <section id="accuracy-view" class="accuracy-view hidden" aria-label="Model accuracy"></section>
-
-    <section id="my-bets-view" class="my-bets-view hidden" aria-label="Personal bet tracker"></section>
-    <section id="model-tracker-view" class="model-tracker-view my-bets-view hidden" aria-label="Model pick tracker"></section>
-  </div>
-
-  <div class="filter-sheet-backdrop hidden" id="filter-sheet-backdrop" aria-hidden="true"></div>
-  <div class="filter-sheet hidden" id="filter-sheet" role="dialog" aria-modal="true" aria-labelledby="filter-sheet-title">
-    <div class="filter-sheet-head">
-      <h2 id="filter-sheet-title">Filters</h2>
-      <button type="button" class="btn-icon filter-sheet-close" id="filter-close-btn" aria-label="Close filters">×</button>
-    </div>
-    <div class="filter-sheet-body">
-      <label class="field">
-        <span>Confidence</span>
-        <select id="confidence-filter-mobile">
-          <option value="0">All games</option>
-          <option value="55">Lean+ (55%+)</option>
-          <option value="65">Strong picks (65%+)</option>
-        </select>
-      </label>
-      <label class="field">
-        <span>Search</span>
-        <input id="team-search-mobile" type="search" placeholder="Team name…" autocomplete="off">
-      </label>
-      <label class="toggle">
-        <input id="live-scores-mobile" type="checkbox" checked>
-        <span>Live scores</span>
-      </label>
-      <label class="toggle">
-        <input id="auto-refresh-mobile" type="checkbox">
-        <span>Auto-refresh (2m)</span>
-      </label>
-    </div>
-    <button type="button" class="btn-primary filter-sheet-apply" id="filter-apply-btn">Apply</button>
-  </div>
-
-  <script src="./app.js"></script>
+<script src="board.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+</script>
 </body>
 </html>
