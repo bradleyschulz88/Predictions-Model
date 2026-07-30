@@ -267,9 +267,35 @@ class InjuryScorerReportTests(unittest.TestCase):
         self.assertIn("is working", out)
 
     def test_reports_fallback_when_the_key_is_missing(self) -> None:
-        out = self._report({"mlb": self._payload(("deterministic", "deterministic"))})
+        """No key is a supported mode, so it must not read as a failure."""
+        import os
+        from unittest import mock
+
+        with mock.patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("NVIDIA_API_KEY", None)
+            out = self._report({"mlb": self._payload(("deterministic", "deterministic"))})
         self.assertIn("deterministic on all 2", out)
-        self.assertIn("absent, rejected or out of quota", out)
+        self.assertIn("not set", out)
+        self.assertNotIn("::warning", out)
+
+    def test_a_key_that_is_set_but_failing_warns_with_the_reason(self) -> None:
+        """The case that sent the user to rotate a key twice: name the cause."""
+        import os
+        from unittest import mock
+
+        from data_providers import injury_severity
+
+        injury_severity._note_failure("HTTP 401, the key was rejected")
+        try:
+            with mock.patch.dict(os.environ, {"NVIDIA_API_KEY": "nvapi-test"}):
+                out = self._report(
+                    {"mlb": self._payload(("deterministic", "deterministic"))}
+                )
+        finally:
+            injury_severity.reset_failure()
+        self.assertIn("::warning title=Injury scorer::", out)
+        self.assertIn("HTTP 401", out)
+        self.assertIn("the key is set", out)
 
     def test_no_injuries_is_not_reported_as_failure(self) -> None:
         """"none" means nobody was hurt, which says nothing about the key."""
@@ -279,3 +305,62 @@ class InjuryScorerReportTests(unittest.TestCase):
 
     def test_empty_build_is_safe(self) -> None:
         self.assertIn("no teams", self._report({}))
+
+
+class FailureReportingTests(unittest.TestCase):
+    """A rotated key that still fails must say WHY, not repeat one vague string."""
+
+    def setUp(self) -> None:
+        from data_providers import injury_severity
+
+        self.module = injury_severity
+        injury_severity.reset_failure()
+
+    def _http_error(self, code: int, reason: str, body: bytes = b"") -> Exception:
+        import io
+        import urllib.error
+
+        return urllib.error.HTTPError("http://x", code, reason, {}, io.BytesIO(body))
+
+    def test_a_rejected_key_says_to_regenerate_it(self) -> None:
+        message = self.module._describe_http_error(self._http_error(401, "Unauthorized"))
+        self.assertIn("401", message)
+        self.assertIn("regenerate", message)
+
+    def test_a_model_entitlement_failure_says_not_to_rotate(self) -> None:
+        """403 is the case where rotating the key wastes the user's time."""
+        message = self.module._describe_http_error(self._http_error(403, "Forbidden"))
+        self.assertIn("NOT a stale key", message)
+
+    def test_quota_is_distinguished_from_a_bad_key(self) -> None:
+        quota = self.module._describe_http_error(self._http_error(429, "Too Many"))
+        rejected = self.module._describe_http_error(self._http_error(401, "Unauthorized"))
+        self.assertNotEqual(quota, rejected)
+        self.assertIn("quota", quota)
+
+    def test_a_retired_model_names_the_override(self) -> None:
+        message = self.module._describe_http_error(self._http_error(404, "Not Found"))
+        self.assertIn("NVIDIA_INJURY_MODEL", message)
+
+    def test_the_reason_survives_for_the_build_report(self) -> None:
+        self.assertIsNone(self.module.last_failure())
+        self.module._note_failure("HTTP 401, the key was rejected")
+        self.assertIn("401", self.module.last_failure())
+
+    def test_an_unreachable_api_is_not_reported_as_a_bad_key(self) -> None:
+        import urllib.error
+
+        original = self.module.urllib.request.urlopen
+
+        def boom(*args, **kwargs):
+            raise urllib.error.URLError("proxy refused")
+
+        self.module.urllib.request.urlopen = boom
+        try:
+            self.module._calls_made = 0
+            self.assertIsNone(self.module._call_nvidia("prompt", "nvapi-test"))
+        finally:
+            self.module.urllib.request.urlopen = original
+        reason = self.module.last_failure()
+        self.assertIn("could not reach", reason)
+        self.assertNotIn("regenerate", reason)

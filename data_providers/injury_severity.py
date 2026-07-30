@@ -77,6 +77,30 @@ LLM_TIMEOUT_SECONDS = 20
 # 1.6s between calls keeps it just under, at a cost of roughly two minutes.
 MIN_SECONDS_BETWEEN_CALLS = 1.6
 
+# Why the last call failed, for the build report. Every failure path used to
+# return a bare None, so a rejected key, an exhausted quota, a blocked network
+# and a malformed reply were indistinguishable -- the build could only say
+# "absent, rejected or out of quota" and leave you to guess which. Rotating the
+# key and seeing the same message is exactly the situation that needs a status
+# code, so the reason is recorded here and reported once per run.
+_last_failure: str | None = None
+
+
+def last_failure() -> str | None:
+    """Why the LLM scorer last failed, or None if it never did."""
+    return _last_failure
+
+
+def reset_failure() -> None:
+    """Clear the recorded reason. For tests, and for a fresh build."""
+    global _last_failure
+    _last_failure = None
+
+
+def _note_failure(reason: str) -> None:
+    global _last_failure
+    _last_failure = reason
+
 # Hard ceiling per process, so an unusually large slate cannot stall a build.
 MAX_CALLS_PER_RUN = 200
 
@@ -173,6 +197,7 @@ def _throttle() -> None:
 def _call_nvidia(prompt: str, api_key: str) -> str | None:
     global _calls_made
     if _calls_made >= MAX_CALLS_PER_RUN:
+        _note_failure(f"hit the {MAX_CALLS_PER_RUN}-call budget for this run")
         return None
 
     payload = json.dumps(
@@ -207,16 +232,57 @@ def _call_nvidia(prompt: str, api_key: str) -> str | None:
             if error.code == 429 and attempt == 0:
                 time.sleep(4.0)
                 continue
+            _note_failure(_describe_http_error(error))
             return None
-        except (urllib.error.URLError, ValueError, TimeoutError, OSError):
+        except (urllib.error.URLError, ValueError, TimeoutError, OSError) as error:
+            _note_failure(f"could not reach the API ({type(error).__name__}: {error})")
             return None
 
         try:
             return body["choices"][0]["message"]["content"]
         except (KeyError, IndexError, TypeError):
+            _note_failure(f"the reply had no message content (keys: {sorted(body)})")
             return None
 
+    _note_failure("rate limited twice in a row (429)")
     return None
+
+
+def _describe_http_error(error: urllib.error.HTTPError) -> str:
+    """Turn a status code into the sentence that names the actual fix.
+
+    401 and 403 are the two that matter here and they mean different things: a
+    401 is a key the API does not accept at all, which a rotation fixes; a 403
+    is a key it accepts but will not let near this model, which a rotation does
+    not fix. Reporting them as one message sends you back to regenerate a key
+    that was never the problem.
+    """
+    detail = ""
+    try:
+        body = error.read().decode("utf-8", errors="replace")[:200].strip()
+        detail = f" -- {body}" if body else ""
+    except Exception:  # noqa: BLE001 - the status code is the point, not the body
+        detail = ""
+
+    if error.code == 401:
+        return (
+            f"HTTP 401, the key was rejected: regenerate it at build.nvidia.com and "
+            f"update the NVIDIA_API_KEY secret{detail}"
+        )
+    if error.code == 403:
+        return (
+            f"HTTP 403, the key is valid but not entitled to {NVIDIA_MODEL}: this is "
+            f"a model-access problem, NOT a stale key, so rotating again will not fix "
+            f"it{detail}"
+        )
+    if error.code == 429:
+        return f"HTTP 429, out of free-tier quota -- it resets, so try later{detail}"
+    if error.code == 404:
+        return (
+            f"HTTP 404, no such model as {NVIDIA_MODEL}: NVIDIA retired or renamed it, "
+            f"set NVIDIA_INJURY_MODEL to a current one{detail}"
+        )
+    return f"HTTP {error.code} {error.reason}{detail}"
 
 
 def _parse_importance(text: str | None) -> dict[str, float]:

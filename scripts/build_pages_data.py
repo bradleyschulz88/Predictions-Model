@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -236,12 +237,27 @@ def report_injury_scorer(payloads: dict[str, dict]) -> None:
             f"({counts['deterministic']} fell back) -- NVIDIA_API_KEY is working",
             flush=True,
         )
-    else:
+        return
+
+    # Name the actual cause. "absent, rejected or out of quota" was three
+    # different problems with three different fixes wearing one message, so a
+    # rotated key that still failed looked identical to no key at all.
+    if not os.environ.get("NVIDIA_API_KEY"):
         print(
             f"Injury scorer: deterministic on all {scored} teams -- NVIDIA_API_KEY is "
-            f"absent, rejected or out of quota",
+            f"not set, so the LLM step never ran (this is a supported mode, not an error)",
             flush=True,
         )
+        return
+
+    from data_providers.injury_severity import last_failure
+
+    reason = last_failure()
+    print(
+        f"::warning title=Injury scorer::the key is set but the LLM step scored 0 of "
+        f"{scored} teams: {reason or 'no call was attempted'}",
+        flush=True,
+    )
 
 
 def main() -> int:
