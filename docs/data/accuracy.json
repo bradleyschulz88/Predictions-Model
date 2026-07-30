@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-30T17:05:42.094665+00:00",
+  "updatedAt": "2026-07-30T18:57:50.883922+00:00",
   "summary": {
     "last7Days": {
       "correct": 290,
@@ -7,7 +7,7 @@
       "pct": 61.7,
       "units": 9.499,
       "roiPct": 2.0,
-      "pending": 49,
+      "pending": 47,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 60.1,
       "units": 10.219,
       "roiPct": 1.4,
-      "pending": 49,
-      "voided": 12
+      "pending": 47,
+      "voided": 14
     },
     "byLeague": {
       "afl": {
@@ -3661,46 +3661,6 @@
       "predictedSide": "away",
       "outcomeLabel": "Boston Red Sox to win",
       "confidence": 71.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-30",
-      "published": true
-    },
-    {
-      "eventId": "401816327",
-      "league": "mlb",
-      "scheduleDate": "2026-07-30",
-      "matchup": "Kansas City Royals @ Minnesota Twins",
-      "predicted": "Minnesota Twins",
-      "predictedSide": "home",
-      "outcomeLabel": "Minnesota Twins to win",
-      "confidence": 62.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-30",
-      "published": true
-    },
-    {
-      "eventId": "401816326",
-      "league": "mlb",
-      "scheduleDate": "2026-07-30",
-      "matchup": "Chicago Cubs @ St. Louis Cardinals",
-      "predicted": "Chicago Cubs",
-      "predictedSide": "away",
-      "outcomeLabel": "Chicago Cubs to win",
-      "confidence": 67.1,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -20546,7 +20506,7 @@
       "outcomeLabel": "Chicago Cubs to win",
       "confidence": 67.1,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -20554,7 +20514,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-30",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816325": {
       "eventId": "401816325",
@@ -20726,7 +20687,7 @@
       "outcomeLabel": "Minnesota Twins to win",
       "confidence": 62.4,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -20734,7 +20695,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-30",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816315": {
       "eventId": "401816315",
@@ -21586,7 +21548,7 @@
       "outcomeLabel": "New York Yankees to win",
       "confidence": 57.3,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -21594,7 +21556,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-30",
-      "published": false
+      "published": false,
+      "voidReason": "voided"
     },
     "401816347": {
       "eventId": "401816347",
