@@ -42,7 +42,18 @@ _series_seen = {"games": 0, "withSeries": 0, "withScore": 0, "resolved": 0, "sam
 
 
 def _note_series_shape(series, home_pct, away_pct) -> None:
-    """Count what the season-series block actually contained, and say so once."""
+    """Count what the season-series block actually contained, and warn if it is dead.
+
+    This started as an unconditional report, because head-to-head was returning
+    None on all 120 rows and nobody could tell whether ESPN was omitting the
+    block or the parser was failing to read it. It answered that -- ESPN writes
+    the summary with the club's abbreviation ("TB wins series 5-1"), not its
+    name -- and the fix took resolution from 0 of 25 to 23 of 25.
+
+    It now warns only when resolution is actually poor. An unconditional
+    ::warning:: on a healthy build is the same mistake the AFL predictor check
+    made: permanent noise trains you to skip the annotations that matter.
+    """
     _series_seen["games"] += 1
     if series:
         _series_seen["withSeries"] += 1
@@ -56,18 +67,35 @@ def _note_series_shape(series, home_pct, away_pct) -> None:
     if home_pct is not None or away_pct is not None:
         _series_seen["resolved"] += 1
 
-    if _series_seen["games"] == SERIES_DIAGNOSTIC_AFTER:
-        print(
-            f"::warning title=Head-to-head coverage::of {_series_seen['games']} games, "
-            f"{_series_seen['withSeries']} carried a season series, "
-            f"{_series_seen['withScore']} carried a score, "
-            f"{_series_seen['resolved']} resolved to a win share. "
-            f"sample={_series_seen['sample']!r}"
-        )
+    if _series_seen["games"] != SERIES_DIAGNOSTIC_AFTER:
+        return
+
+    with_series = _series_seen["withSeries"]
+    # Nothing to report when ESPN simply is not publishing a series for this
+    # league -- that is a property of the feed, not a regression in the parser.
+    if with_series < MIN_SERIES_TO_JUDGE:
+        return
+    if _series_seen["resolved"] >= with_series * MIN_SERIES_RESOLVED_RATE:
+        return
+
+    print(
+        f"::warning title=Head-to-head coverage::{_series_seen['resolved']} of "
+        f"{with_series} games carrying a season series resolved to a win share "
+        f"({_series_seen['withScore']} carried a score). The parser matches the "
+        f"club by abbreviation then by name; if ESPN changed the summary wording "
+        f"again this is where it shows. sample={_series_seen['sample']!r}"
+    )
 
 
 # Enough games to be representative without waiting for a whole slate.
 SERIES_DIAGNOSTIC_AFTER = 25
+
+# Below this there is not enough to judge a parser on.
+MIN_SERIES_TO_JUDGE = 5
+
+# Two misses in 25 is normal -- an interleague opener has no season series yet.
+# Half is not: that is the parser failing to read a block that is present.
+MIN_SERIES_RESOLVED_RATE = 0.5
 
 
 def enrich_games_with_providers(

@@ -88,6 +88,53 @@ class FeatureResolutionTests(unittest.TestCase):
         self.assertAlmostEqual(home_led, -away_led)
 
 
+class DiagnosticTests(unittest.TestCase):
+    """The build annotation must fire on a broken parser and stay quiet otherwise."""
+
+    def setUp(self) -> None:
+        from data_providers import enrich
+
+        self.enrich = enrich
+        enrich._series_seen.update(
+            {"games": 0, "withSeries": 0, "withScore": 0, "resolved": 0, "sample": None}
+        )
+
+    def _run(self, *, resolved: int) -> str:
+        import io
+        from contextlib import redirect_stdout
+
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            for index in range(self.enrich.SERIES_DIAGNOSTIC_AFTER):
+                pct = 5 / 6 if index < resolved else None
+                self.enrich._note_series_shape(REAL, pct, None)
+        return buffer.getvalue()
+
+    def test_a_healthy_build_says_nothing(self) -> None:
+        """23 of 25 is what production reports after the fix -- that is not news."""
+        self.assertEqual(self._run(resolved=23), "")
+
+    def test_a_dead_parser_still_warns(self) -> None:
+        """The 0-of-25 case that started this must never become silent."""
+        output = self._run(resolved=0)
+        self.assertIn("::warning title=Head-to-head coverage::", output)
+        self.assertIn("0 of 25", output)
+
+    def test_no_series_in_the_feed_is_not_a_parser_failure(self) -> None:
+        import io
+        from contextlib import redirect_stdout
+
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            for _ in range(self.enrich.SERIES_DIAGNOSTIC_AFTER):
+                self.enrich._note_series_shape(None, None, None)
+        self.assertEqual(buffer.getvalue(), "")
+
+    def test_it_reports_once_and_not_every_game(self) -> None:
+        output = self._run(resolved=0)
+        self.assertEqual(output.count("::warning"), 1)
+
+
 class WiringTests(unittest.TestCase):
     def test_enrichment_passes_the_abbreviation(self) -> None:
         """The fix is inert unless the abbreviation reaches the matcher."""
