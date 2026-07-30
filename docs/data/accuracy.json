@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-30T00:17:17.830990+00:00",
+  "updatedAt": "2026-07-30T00:24:53.072481+00:00",
   "summary": {
     "last7Days": {
       "correct": 295,
@@ -17,7 +17,7 @@
       "units": 10.328,
       "roiPct": 1.5,
       "pending": 51,
-      "voided": 16
+      "voided": 17
     },
     "byLeague": {
       "mlb": {
@@ -3597,6 +3597,26 @@
       "published": true
     },
     {
+      "eventId": "401857097",
+      "league": "wnba",
+      "scheduleDate": "2026-07-29",
+      "matchup": "Atlanta Dream @ Dallas Wings",
+      "predicted": "Dallas Wings",
+      "predictedSide": "home",
+      "outcomeLabel": "Dallas Wings to win",
+      "confidence": 65.1,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-29",
+      "published": true
+    },
+    {
       "eventId": "401816321",
       "league": "mlb",
       "scheduleDate": "2026-07-29",
@@ -3625,26 +3645,6 @@
       "predictedSide": "away",
       "outcomeLabel": "Houston Astros to win",
       "confidence": 69.8,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-29",
-      "published": true
-    },
-    {
-      "eventId": "401816317",
-      "league": "mlb",
-      "scheduleDate": "2026-07-29",
-      "matchup": "Boston Red Sox @ Athletics",
-      "predicted": "Boston Red Sox",
-      "predictedSide": "away",
-      "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 67.9,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -20167,7 +20167,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29",
-      "published": false
+      "published": true
     },
     "401857098": {
       "eventId": "401857098",
@@ -20279,7 +20279,7 @@
       "outcomeLabel": "New York Yankees to win",
       "confidence": 61.8,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -20287,7 +20287,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-29",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816324": {
       "eventId": "401816324",
