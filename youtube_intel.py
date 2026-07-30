@@ -328,7 +328,23 @@ _PROMPT = (
 
 
 def llm_enabled() -> bool:
-    return bool(os.environ.get("NVIDIA_API_KEY"))
+    return _api_key() is not None
+
+
+def _api_key() -> str | None:
+    """The key, stripped. See data_providers.injury_severity.api_key for why.
+
+    A trailing newline from pasting the key into the GitHub secrets field makes
+    urllib raise `Invalid header value` and the request never goes out, which
+    reads as an unreachable API rather than a formatting problem.
+    """
+    raw = os.environ.get("NVIDIA_API_KEY")
+    if raw is None:
+        return None
+    key = raw.strip()
+    if not key or any(character.isspace() for character in key):
+        return None
+    return key
 
 
 def _throttle() -> None:
@@ -413,11 +429,11 @@ def _parse_scores(reply: str | None) -> dict[str, float]:
 
 def extract_team_news(transcript: str, league: str) -> dict[str, float]:
     """Team -> news impact in [-3, 3]. Empty when the model is off or unhelpful."""
-    api_key = os.environ.get("NVIDIA_API_KEY")
-    if not api_key or not transcript:
+    key = _api_key()
+    if not key or not transcript:
         return {}
     prompt = _PROMPT.format(league=league, transcript=transcript[:MAX_TRANSCRIPT_CHARS])
-    return _parse_scores(_call_nvidia(prompt, api_key))
+    return _parse_scores(_call_nvidia(prompt, key))
 
 
 # --------------------------------------------------------------------------

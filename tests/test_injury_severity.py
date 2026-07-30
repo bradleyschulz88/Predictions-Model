@@ -364,3 +364,78 @@ class FailureReportingTests(unittest.TestCase):
         reason = self.module.last_failure()
         self.assertIn("could not reach", reason)
         self.assertNotIn("regenerate", reason)
+
+
+class ApiKeyHygieneTests(unittest.TestCase):
+    """A pasted key carries a newline; urllib refuses to send it."""
+
+    def setUp(self) -> None:
+        from data_providers import injury_severity
+
+        self.module = injury_severity
+        injury_severity.reset_failure()
+
+    def _with(self, value):
+        import os
+        from unittest import mock
+
+        if value is None:
+            ctx = mock.patch.dict(os.environ, {}, clear=False)
+            ctx.__enter__()
+            os.environ.pop("NVIDIA_API_KEY", None)
+            return ctx
+        return mock.patch.dict(os.environ, {"NVIDIA_API_KEY": value})
+
+    def test_a_trailing_newline_is_stripped(self) -> None:
+        """The exact production failure: 0 of 34 teams, masked value ending in \\."""
+        with self._with("nvapi-abc123\n"):
+            self.assertEqual(self.module.api_key(), "nvapi-abc123")
+            self.assertTrue(self.module.llm_enabled())
+
+    def test_surrounding_spaces_are_stripped(self) -> None:
+        with self._with("  nvapi-abc123\t"):
+            self.assertEqual(self.module.api_key(), "nvapi-abc123")
+
+    def test_a_stripped_key_makes_a_valid_header(self) -> None:
+        """The regression that matters: the header must be constructible."""
+        import urllib.request
+
+        with self._with("nvapi-abc123\n"):
+            key = self.module.api_key()
+        request = urllib.request.Request(
+            "https://example.invalid", headers={"Authorization": f"Bearer {key}"}
+        )
+        self.assertEqual(request.get_header("Authorization"), "Bearer nvapi-abc123")
+
+    def test_a_raw_newline_key_would_have_failed(self) -> None:
+        """Documents why stripping is required, not merely tidy.
+
+        Request() accepts the bad value; http.client rejects it when the header
+        is actually written, which is why the production symptom was a generic
+        "could not reach the API" rather than anything mentioning the key.
+        """
+        import http.client
+
+        connection = http.client.HTTPConnection("example.invalid")
+        connection.putrequest("POST", "/", skip_host=True, skip_accept_encoding=True)
+        with self.assertRaises(ValueError) as caught:
+            connection.putheader("Authorization", "Bearer nvapi-abc123\n")
+        self.assertIn("Invalid header value", str(caught.exception))
+
+    def test_interior_whitespace_is_refused_with_its_own_reason(self) -> None:
+        with self._with("nvapi-abc 123"):
+            self.assertIsNone(self.module.api_key())
+        self.assertIn("single line", self.module.last_failure())
+
+    def test_whitespace_only_is_refused(self) -> None:
+        with self._with("   "):
+            self.assertIsNone(self.module.api_key())
+        self.assertIn("only whitespace", self.module.last_failure())
+
+    def test_an_unset_key_reports_nothing(self) -> None:
+        ctx = self._with(None)
+        try:
+            self.assertIsNone(self.module.api_key())
+        finally:
+            ctx.__exit__(None, None, None)
+        self.assertIsNone(self.module.last_failure())
