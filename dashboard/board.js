@@ -98,12 +98,96 @@ const S = {
   evaluation: null,
   weights: null,
   manifest: null,
-  slates: {},          // league -> payload
+  slates: {},          // `${league}:${date}` -> payload
   sport: null,
+  dateByLeague: {},    // league -> ISO date currently showing
   sort: "ev",
   filter: "pub",
   failures: [],
 };
+
+/* --------------------------------------------------------------- dates */
+
+function manifestLeague(id) {
+  return (S.manifest?.leagues || []).find((x) => x.id === id) || null;
+}
+
+function shiftIsoDate(iso, days) {
+  const d = new Date(iso + "T12:00:00Z");
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+/* Every date this league actually has a built slate for, oldest first. Falls
+   back to just today's date when the manifest failed to load or carries
+   nothing for this league, so date navigation degrades to "today only"
+   instead of throwing. */
+function datesFor(id) {
+  const m = manifestLeague(id);
+  if (m?.availableDates?.length) return m.availableDates.slice().sort();
+  const O = (S.overview?.leagues || []).find((x) => x.id === id);
+  return O?.scheduleDate ? [O.scheduleDate] : [];
+}
+
+function todayFor(id) {
+  return manifestLeague(id)?.defaultDate ||
+    (S.overview?.leagues || []).find((x) => x.id === id)?.scheduleDate || null;
+}
+
+function selectedDateFor(id) {
+  return S.dateByLeague[id] || todayFor(id) || datesFor(id)[0] || null;
+}
+
+function setDate(iso) {
+  S.dateByLeague[S.sport] = iso;
+  renderSport();
+}
+
+/* "Today" and "Tomorrow" are read off the manifest's own defaultDate for that
+   league -- computed server-side in the league's own timezone -- rather than
+   compared against the viewer's local clock, which would drift near a
+   timezone boundary (an AFL slate is built in Melbourne time; a viewer in
+   Chicago is up to a day off if the comparison were done locally). */
+function describeDate(iso, league) {
+  if (!iso) return "";
+  const today = todayFor(league);
+  if (today) {
+    if (iso === today) return "Today";
+    if (iso === shiftIsoDate(today, 1)) return "Tomorrow";
+    if (iso === shiftIsoDate(today, -1)) return "Yesterday";
+  }
+  const d = new Date(iso + "T12:00:00Z");
+  if (Number.isNaN(d.getTime())) return iso;
+  return new Intl.DateTimeFormat(undefined, { weekday: "short", month: "short", day: "numeric" }).format(d);
+}
+
+function renderDateBar() {
+  const bar = $("#dateBar");
+  const dates = datesFor(S.sport);
+  if (dates.length <= 1) { bar.style.display = "none"; return; }
+  bar.style.display = "";
+
+  const selected = selectedDateFor(S.sport);
+  const today = todayFor(S.sport);
+  const idx = dates.indexOf(selected);
+
+  $("#datePrev").disabled = idx <= 0;
+  $("#dateNext").disabled = idx < 0 || idx >= dates.length - 1;
+
+  const chips = $("#dateChips");
+  chips.innerHTML = "";
+  dates.forEach((iso) => {
+    const d = new Date(iso + "T12:00:00Z");
+    const b = el("button", "datechip" + (iso === today ? " istoday" : ""));
+    b.type = "button";
+    b.setAttribute("aria-pressed", String(iso === selected));
+    b.innerHTML = `<span class="dow">${new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(d)}</span>` +
+      `<span>${new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(d)}</span>`;
+    b.title = describeDate(iso, S.sport);
+    b.addEventListener("click", () => setDate(iso));
+    chips.appendChild(b);
+  });
+}
 
 /* ------------------------------------------------- market and calibration */
 
@@ -397,14 +481,18 @@ function listPanel(title, note, plays, footer) {
 /* ============================================================ VIEW: SPORT */
 function setSport(id) { S.sport = id; }
 
+let _sportRenderToken = 0;
+
 async function renderSport() {
+  const token = ++_sportRenderToken;
   const O = S.overview;
   const leagues = (O?.leagues || []).filter((L) => L.gameCount > 0);
   if (!S.sport) S.sport = (leagues[0] || (O?.leagues || [])[0] || {}).id || "mlb";
   const L = (O?.leagues || []).find((x) => x.id === S.sport) || { id: S.sport, label: S.sport };
+  const date = selectedDateFor(S.sport);
 
   $("#sportTitle").textContent = String(L.id || "").toUpperCase();
-  $("#sportWhen").textContent = [leagueSport(L), L.scheduleDate].filter(Boolean).join(" \u00b7 ");
+  $("#sportWhen").textContent = [leagueSport(L), describeDate(date, S.sport)].filter(Boolean).join(" \u00b7 ");
 
   const seg = $("#sportSeg");
   seg.innerHTML = "";
@@ -415,29 +503,49 @@ async function renderSport() {
     b.addEventListener("click", () => { S.sport = x.id; renderSport(); });
     seg.appendChild(b);
   });
+  renderDateBar();
 
   const host = $("#games");
-  host.innerHTML = `<div class="g"><div class="loading">Loading the ${esc(L.label || L.id)} slate…</div></div>`;
+  host.innerHTML = `<div class="g"><div class="loading">Loading the ${esc(L.label || L.id)} slate for ${esc(describeDate(date, S.sport))}\u2026</div></div>`;
 
-  let payload = S.slates[S.sport];
+  const cacheKey = `${S.sport}:${date}`;
+  let payload = S.slates[cacheKey];
   if (!payload) {
-    const dated = L.scheduleDate ? `data/${S.sport}_${L.scheduleDate}.json` : null;
-    for (const path of [dated, `data/${S.sport}.json`].filter(Boolean)) {
+    const dateFile = manifestLeague(S.sport)?.dateFiles?.[date];
+    const candidates = [
+      dateFile,
+      date ? `data/${S.sport}_${date}.json` : null,
+      date && date === todayFor(S.sport) ? `data/${S.sport}.json` : null,
+    ].filter(Boolean);
+    for (const path of candidates) {
       try { payload = await getJson(path); break; } catch { /* try the next */ }
     }
-    if (payload) S.slates[S.sport] = payload;
+    if (payload) S.slates[cacheKey] = payload;
   }
 
+  // A slower, superseded fetch must not clobber whatever the user has since
+  // clicked to -- date and sport can both change again before this resolves.
+  if (token !== _sportRenderToken) return;
+
   if (!payload) {
-    host.innerHTML = `<div class="g"><div class="failed">Could not load the slate for ${esc(L.label || L.id)}.</div></div>`;
+    host.innerHTML = `<div class="g"><div class="failed">Could not load the ${esc(describeDate(date, S.sport))} slate for ${esc(L.label || L.id)}.</div></div>`;
+    readings($("#sportReadings"), [
+      { v: "\u2014", k: "Games" }, { v: "\u2014", k: "Published" }, { v: "\u2014", k: "Priced" }, { v: "\u2014", k: "Positive edge" },
+    ]);
     return;
   }
 
   let games = (payload.games || []).slice();
+  // Computed from the loaded slate itself, not the overview's per-league
+  // summary -- that summary describes only today, so reusing it once the
+  // date changes would show today's published/priced counts beside
+  // tomorrow's games.
+  const publishedCount = games.filter((g) => isPublished(g.prediction || {}, S.sport)).length;
+  const pricedCount = games.filter((g) => ((g.prediction || {}).value || {}).evPct != null).length;
   readings($("#sportReadings"), [
     { v: games.length, k: "Games" },
-    { v: L.pickCount ?? "—", k: "Published" },
-    { v: L.pricedCount ?? "—", k: "Priced" },
+    { v: publishedCount, k: "Published" },
+    { v: pricedCount, k: "Priced" },
     { v: games.filter((g) => ((g.prediction || {}).value || {}).evPct > 0).length, k: "Positive edge" },
   ]);
 
@@ -1073,7 +1181,11 @@ function renderDig() {
    league slate when it has been loaded and inferred conservatively otherwise.
    A blind spot is only claimed when the data says so. */
 function featuresFor(play) {
-  const payload = S.slates[play.league];
+  // Dig Deeper only ever briefs today's board (from overview.json), so the
+  // cache key is always the league's today-date, same convention the Sports
+  // view uses now that slates are cached per date.
+  const payload = S.slates[`${play.league}:${todayFor(play.league)}`] ||
+    S.slates[`${play.league}:${play.startDate ? play.startDate.slice(0, 10) : ""}`];
   if (!payload) return null;
   const game = (payload.games || []).find((g) => String(g.eventId) === String(play.eventId));
   return game ? (game.prediction || {}).features || null : null;
@@ -1241,6 +1353,20 @@ function wireNav() {
     if (e.target.matches("input, textarea, select")) return;
     const map = { 1: "board", 2: "sport", 3: "accuracy", 4: "dig" };
     if (map[e.key]) go(map[e.key]);
+    if ($("#v-sport").classList.contains("on")) {
+      if (e.key === "ArrowLeft" && !$("#datePrev").disabled) setDate(datesFor(S.sport)[datesFor(S.sport).indexOf(selectedDateFor(S.sport)) - 1]);
+      if (e.key === "ArrowRight" && !$("#dateNext").disabled) setDate(datesFor(S.sport)[datesFor(S.sport).indexOf(selectedDateFor(S.sport)) + 1]);
+    }
+  });
+  $("#datePrev").addEventListener("click", () => {
+    const dates = datesFor(S.sport);
+    const idx = dates.indexOf(selectedDateFor(S.sport));
+    if (idx > 0) setDate(dates[idx - 1]);
+  });
+  $("#dateNext").addEventListener("click", () => {
+    const dates = datesFor(S.sport);
+    const idx = dates.indexOf(selectedDateFor(S.sport));
+    if (idx >= 0 && idx < dates.length - 1) setDate(dates[idx + 1]);
   });
   $("#sortSeg").addEventListener("click", (e) => {
     const b = e.target.closest("button");

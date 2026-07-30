@@ -89,5 +89,47 @@ class EntryPointTests(unittest.TestCase):
         self.assertEqual(float(match.group(1)), float(MIN_PICK_CONFIDENCE))
 
 
+class DateNavigationTests(unittest.TestCase):
+    """The redesign shipped without any way to move off today's slate --
+
+    the model publishes three days out per league, and there was no prev/next,
+    no date picker, nothing. The Sports view could only ever load
+    `L.scheduleDate` from overview.json, which is always today. These pin the
+    pieces that fix it, statically, so the capability cannot quietly drop out
+    of a future edit the way it dropped out of the first one.
+    """
+
+    def setUp(self) -> None:
+        self.js = (DASHBOARD / "board.js").read_text(encoding="utf-8")
+        self.html = (DASHBOARD / "index.html").read_text(encoding="utf-8")
+
+    def test_the_date_bar_markup_exists(self) -> None:
+        for control in ("datePrev", "dateNext", "dateChips"):
+            self.assertIn(f'id="{control}"', self.html)
+
+    def test_the_slate_loader_reads_manifest_date_files(self) -> None:
+        """Without this, a date change has no path to a different day's JSON."""
+        self.assertIn("manifestLeague(S.sport)?.dateFiles?.[date]", self.js)
+
+    def test_slates_are_cached_per_date_not_per_league(self) -> None:
+        """The pre-fix cache was S.slates[league] -- one slot per league, so a
+        second date could never coexist with the first and every navigation
+        re-fetched, or worse, silently returned the wrong day from cache."""
+        self.assertIn("S.slates[cacheKey]", self.js)
+        self.assertNotIn("S.slates[S.sport]", self.js)
+
+    def test_next_and_prev_are_wired_to_a_handler(self) -> None:
+        self.assertIn('$("#datePrev").addEventListener', self.js)
+        self.assertIn('$("#dateNext").addEventListener', self.js)
+
+    def test_readings_are_recomputed_for_the_loaded_slate(self) -> None:
+        """The pre-fix Published/Priced counts came from the overview's
+        per-league summary, which describes only today -- so browsing to
+        tomorrow kept showing today's counts beside tomorrow's games."""
+        self.assertIn("publishedCount", self.js)
+        self.assertIn("pricedCount", self.js)
+        self.assertNotIn("L.pickCount ?? ", self.js)
+
+
 if __name__ == "__main__":
     unittest.main()
