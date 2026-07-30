@@ -171,8 +171,38 @@ def deterministic_injury_score(
 # --------------------------------------------------------------------------
 
 
+def api_key() -> str | None:
+    """The key with surrounding whitespace removed, or None if unusable.
+
+    Stripping is not cosmetic. Pasting a key into the GitHub secrets field
+    carries a trailing newline more often than not, and urllib rejects a header
+    value containing one outright -- `ValueError: Invalid header value`. The
+    request never leaves the machine, so the failure looks like an unreachable
+    API or a rejected key when the key is perfectly good. A production build
+    proved it: 0 of 34 teams scored, with a masked value ending in a backslash.
+
+    A key with interior whitespace is a truncated or concatenated paste rather
+    than a stray newline, so it is refused with a distinct reason instead of
+    being silently mangled into something the API will reject.
+    """
+    raw = os.environ.get("NVIDIA_API_KEY")
+    if raw is None:
+        return None
+    key = raw.strip()
+    if not key:
+        _note_failure("NVIDIA_API_KEY is set but contains only whitespace")
+        return None
+    if any(character.isspace() for character in key):
+        _note_failure(
+            "NVIDIA_API_KEY contains a space or line break inside it, so it is a "
+            "partial or doubled paste -- copy the key again as a single line"
+        )
+        return None
+    return key
+
+
 def llm_enabled() -> bool:
-    return bool(os.environ.get("NVIDIA_API_KEY"))
+    return api_key() is not None
 
 
 _PROMPT = (
@@ -194,7 +224,7 @@ def _throttle() -> None:
     _last_call_at = time.monotonic()
 
 
-def _call_nvidia(prompt: str, api_key: str) -> str | None:
+def _call_nvidia(prompt: str, key: str) -> str | None:
     global _calls_made
     if _calls_made >= MAX_CALLS_PER_RUN:
         _note_failure(f"hit the {MAX_CALLS_PER_RUN}-call budget for this run")
@@ -218,7 +248,7 @@ def _call_nvidia(prompt: str, api_key: str) -> str | None:
             NVIDIA_BASE_URL,
             data=payload,
             headers={
-                "Authorization": f"Bearer {api_key}",
+                "Authorization": f"Bearer {key}",
                 "Content-Type": "application/json",
                 "Accept": "application/json",
             },
@@ -322,10 +352,10 @@ def player_importance(
     injury, which keeps a full multi-league build inside the free tier's
     40 requests per minute.
     """
-    api_key = os.environ.get("NVIDIA_API_KEY")
+    key = api_key()
     names = [str(injury.get("player") or "").strip() for injury in injuries]
     names = [name for name in names if name]
-    if not api_key or not names:
+    if not key or not names:
         return {}
 
     cache_key = f"injury-importance:{league}:{team}:{','.join(sorted(names))}"
@@ -338,7 +368,7 @@ def player_importance(
         team=team or "Unknown",
         players="\n".join(f"- {name}" for name in names),
     )
-    scores = _parse_importance(_call_nvidia(prompt, api_key))
+    scores = _parse_importance(_call_nvidia(prompt, key))
     PROVIDER_CACHE.set(cache_key, scores)
     return scores
 
