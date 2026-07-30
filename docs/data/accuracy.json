@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-30T23:19:26.874047+00:00",
+  "updatedAt": "2026-07-30T23:58:46.443838+00:00",
   "summary": {
     "last7Days": {
       "correct": 293,
@@ -7,7 +7,7 @@
       "pct": 61.9,
       "units": 11.718,
       "roiPct": 2.5,
-      "pending": 47,
+      "pending": 46,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 60.2,
       "units": 12.438,
       "roiPct": 1.7,
-      "pending": 47,
-      "voided": 12
+      "pending": 46,
+      "voided": 13
     },
     "byLeague": {
       "mlb": {
@@ -3705,26 +3705,6 @@
       "predictedSide": "away",
       "outcomeLabel": "Boston Red Sox to win",
       "confidence": 71.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-30",
-      "published": true
-    },
-    {
-      "eventId": "401816323",
-      "league": "mlb",
-      "scheduleDate": "2026-07-30",
-      "matchup": "Pittsburgh Pirates @ Cincinnati Reds",
-      "predicted": "Pittsburgh Pirates",
-      "predictedSide": "away",
-      "outcomeLabel": "Pittsburgh Pirates to win",
-      "confidence": 69.7,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -20610,7 +20590,7 @@
       "outcomeLabel": "Pittsburgh Pirates to win",
       "confidence": 69.7,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -20618,7 +20598,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-30",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816329": {
       "eventId": "401816329",
