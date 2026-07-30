@@ -731,7 +731,6 @@ function whyPanel(play) {
   const right = el("div");
   right.innerHTML = `<div class="subh"><h4>Context</h4><span class="note">known, not yet trusted as its own input</span></div>`;
   const f = play.features || {};
-  const en = play.enrichment || {};
   const n = (v) => { const x = Number(v); return Number.isFinite(x) ? x : null; };
   const items = [
     { kk: "Elo gap", kv: n(f.eloEdge) == null ? null : sgn(n(f.eloEdge), 0) },
@@ -1405,20 +1404,19 @@ async function boot() {
     getJson("data/accuracy.json").catch(() => { S.failures.push("accuracy.json"); return null; }),
     getJson("data/evaluation.json").catch(() => { S.failures.push("evaluation.json"); return null; }),
     getJson("data/model_weights.json").catch(() => { S.failures.push("model_weights.json"); return null; }),
-    getJson("data/manifest.json").catch(() => null),
+    // Not fetched with the others' bare `catch(() => null)` because losing
+    // this file has a specific, easy-to-miss consequence: the Sports view
+    // silently degrades to today-only with no prev/next and no chips, and
+    // nothing else on the page looks wrong. That is exactly the failure mode
+    // this session exists to fix, so it gets its own line in the banner
+    // rather than disappearing the way it did before this was noticed.
+    getJson("data/manifest.json").catch(() => { S.failures.push("manifest.json (date navigation will be limited to today)"); return null; }),
   ]);
   S.overview = overview;
   S.accuracy = accuracy;
   S.evaluation = evaluation;
   S.weights = weights;
   S.manifest = manifest;
-
-  if (S.failures.length) {
-    const b = el("div", "banner",
-      `<b>Some data did not load</b>${esc(S.failures.join(", "))}. The views below show what is available and say ` +
-      `explicitly where a number is missing rather than substituting a placeholder.`);
-    $("#boardBody").before(b);
-  }
 
   $("#foot").innerHTML = accuracy
     ? `Built ${new Date(accuracy.updatedAt).toLocaleString(undefined, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}<br>` +
@@ -1428,6 +1426,21 @@ async function boot() {
   renderBoard();
   renderAccuracy();
   renderDig();
+
+  if (S.failures.length) {
+    const b = el("div", "banner",
+      `<b>Some data did not load</b>${esc(S.failures.join(", "))}. The views below show what is available and say ` +
+      `explicitly where a number is missing rather than substituting a placeholder.`);
+    // Prepended INSIDE #boardBody, after renderBoard() has already run --
+    // renderBoard() clears #boardBody's innerHTML at its own top, so
+    // inserting the banner any earlier just gets wiped out by that clear.
+    // It must also land inside .wrap rather than before it: a sibling of
+    // .wrap sits outside its padding and max-width entirely, which is why the
+    // first version ran full-bleed, 104px wider than every panel beneath it,
+    // flush against the first one with no gap. As a first child it shares
+    // .wrap's measure and picks up the standard `* + *` spacing for free.
+    $("#boardBody").prepend(b);
+  }
 
   const hash = (location.hash || "").replace("#", "");
   go(["board", "sport", "accuracy", "dig"].includes(hash) ? hash : "board");

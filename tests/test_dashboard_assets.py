@@ -131,5 +131,43 @@ class DateNavigationTests(unittest.TestCase):
         self.assertNotIn("L.pickCount ?? ", self.js)
 
 
+class FailureBannerTests(unittest.TestCase):
+    """A second audit pass on the date-nav fix found the failure banner had
+    two bugs of its own, both caught by actually rendering it rather than by
+    reading the code: manifest.json was fetched with a bare
+    `catch(() => null)`, so if it ever failed in production the date bar
+    would vanish with zero indication -- the exact silent-degradation this
+    session exists to fix, reintroduced one function away. And the banner
+    itself, once added, was inserted as a sibling of `.wrap` rather than a
+    child, so it rendered 104px wider than every panel beneath it and flush
+    against the first one with no gap.
+    """
+
+    def setUp(self) -> None:
+        self.js = (DASHBOARD / "board.js").read_text(encoding="utf-8")
+
+    def test_a_missing_manifest_is_reported_not_swallowed(self) -> None:
+        manifest_fetch = self.js.index('getJson("data/manifest.json")')
+        clause = self.js[manifest_fetch : manifest_fetch + 400]
+        self.assertIn("S.failures.push", clause,
+            "manifest.json must not be the one fetch with a bare catch(() => null) "
+            "-- losing it silently drops date navigation to today-only")
+
+    def test_the_banner_is_inserted_inside_wrap_not_before_it(self) -> None:
+        """A sibling of .wrap sits outside its padding and max-width."""
+        self.assertIn('$("#boardBody").prepend(b)', self.js)
+        self.assertNotIn('$("#boardBody").before(b)', self.js)
+
+    def test_the_banner_is_inserted_after_renderboard_clears_the_host(self) -> None:
+        """renderBoard() sets #boardBody's innerHTML = "" at its own top. A
+        banner prepended into #boardBody before that call runs is erased by
+        it a moment later -- the insertion must come after."""
+        render_call = self.js.index("renderBoard();")
+        banner_insert = self.js.index('$("#boardBody").prepend(b)')
+        self.assertLess(render_call, banner_insert,
+            "the banner is prepended before renderBoard() runs, so its own "
+            "innerHTML clear will wipe the banner out immediately")
+
+
 if __name__ == "__main__":
     unittest.main()
