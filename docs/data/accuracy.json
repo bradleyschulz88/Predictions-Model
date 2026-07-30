@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-30T09:12:47.817678+00:00",
+  "updatedAt": "2026-07-30T11:29:49.431970+00:00",
   "summary": {
     "last7Days": {
       "correct": 290,
@@ -16,7 +16,7 @@
       "pct": 60.1,
       "units": 10.219,
       "roiPct": 1.4,
-      "pending": 51,
+      "pending": 50,
       "voided": 11
     },
     "byLeague": {
@@ -3705,26 +3705,6 @@
       "published": true
     },
     {
-      "eventId": "401816325",
-      "league": "mlb",
-      "scheduleDate": "2026-07-30",
-      "matchup": "Washington Nationals @ Atlanta Braves",
-      "predicted": "Atlanta Braves",
-      "predictedSide": "home",
-      "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 63.8,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-30",
-      "published": true
-    },
-    {
       "eventId": "401816324",
       "league": "mlb",
       "scheduleDate": "2026-07-30",
@@ -3753,6 +3733,26 @@
       "predictedSide": "away",
       "outcomeLabel": "Pittsburgh Pirates to win",
       "confidence": 69.7,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-30",
+      "published": true
+    },
+    {
+      "eventId": "1133655",
+      "league": "afl",
+      "scheduleDate": "2026-07-30",
+      "matchup": "Geelong Cats @ Collingwood",
+      "predicted": "Collingwood",
+      "predictedSide": "home",
+      "outcomeLabel": "Collingwood to win",
+      "confidence": 82.4,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -20575,7 +20575,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-30",
-      "published": true
+      "published": false
     },
     "401816322": {
       "eventId": "401816322",
