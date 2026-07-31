@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-31T08:38:29.852602+00:00",
+  "updatedAt": "2026-07-31T11:23:12.854509+00:00",
   "summary": {
     "last7Days": {
       "correct": 288,
@@ -7,7 +7,7 @@
       "pct": 62.2,
       "units": 10.754,
       "roiPct": 2.3,
-      "pending": 45,
+      "pending": 46,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 60.4,
       "units": 14.113,
       "roiPct": 1.9,
-      "pending": 45,
+      "pending": 46,
       "voided": 11
     },
     "byLeague": {
@@ -3671,6 +3671,26 @@
       "predictedSide": "home",
       "outcomeLabel": "Atlanta Dream to win",
       "confidence": 72.5,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-31",
+      "published": true
+    },
+    {
+      "eventId": "401816346",
+      "league": "mlb",
+      "scheduleDate": "2026-07-31",
+      "matchup": "San Francisco Giants @ San Diego Padres",
+      "predicted": "San Diego Padres",
+      "predictedSide": "home",
+      "outcomeLabel": "San Diego Padres to win",
+      "confidence": 65.3,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -21173,7 +21193,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": false
+      "published": true
     },
     "401816342": {
       "eventId": "401816342",
