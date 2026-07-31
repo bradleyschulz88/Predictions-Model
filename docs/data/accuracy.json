@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-31T21:37:54.136525+00:00",
+  "updatedAt": "2026-07-31T22:57:09.284143+00:00",
   "summary": {
     "last7Days": {
       "correct": 289,
@@ -7,7 +7,7 @@
       "pct": 62.2,
       "units": 9.754,
       "roiPct": 2.1,
-      "pending": 50,
+      "pending": 49,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 60.4,
       "units": 13.113,
       "roiPct": 1.8,
-      "pending": 50,
-      "voided": 11
+      "pending": 49,
+      "voided": 12
     },
     "byLeague": {
       "mlb": {
@@ -3907,26 +3907,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Toronto Blue Jays to win",
       "confidence": 63.0,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-31",
-      "published": true
-    },
-    {
-      "eventId": "401816336",
-      "league": "mlb",
-      "scheduleDate": "2026-07-31",
-      "matchup": "Pittsburgh Pirates @ Cincinnati Reds",
-      "predicted": "Pittsburgh Pirates",
-      "predictedSide": "away",
-      "outcomeLabel": "Pittsburgh Pirates to win",
-      "confidence": 64.1,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -21181,7 +21161,7 @@
       "outcomeLabel": "Pittsburgh Pirates to win",
       "confidence": 64.1,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -21189,7 +21169,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816333": {
       "eventId": "401816333",
