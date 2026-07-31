@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-31T18:53:56.390039+00:00",
+  "updatedAt": "2026-07-31T20:20:05.943825+00:00",
   "summary": {
     "last7Days": {
       "correct": 289,
@@ -7,7 +7,7 @@
       "pct": 62.3,
       "units": 10.754,
       "roiPct": 2.3,
-      "pending": 47,
+      "pending": 49,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 60.5,
       "units": 14.113,
       "roiPct": 1.9,
-      "pending": 47,
+      "pending": 49,
       "voided": 12
     },
     "byLeague": {
@@ -3325,6 +3325,26 @@
       "published": true
     },
     {
+      "eventId": "401816368",
+      "league": "mlb",
+      "scheduleDate": "2026-08-02",
+      "matchup": "Washington Nationals @ Atlanta Braves",
+      "predicted": "Atlanta Braves",
+      "predictedSide": "home",
+      "outcomeLabel": "Atlanta Braves to win",
+      "confidence": 69.2,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-02",
+      "published": true
+    },
+    {
       "eventId": "401816363",
       "league": "mlb",
       "scheduleDate": "2026-08-02",
@@ -3599,6 +3619,26 @@
       "predictedSide": "home",
       "outcomeLabel": "Tampa Bay Rays to win",
       "confidence": 73.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-01",
+      "published": true
+    },
+    {
+      "eventId": "401816347",
+      "league": "mlb",
+      "scheduleDate": "2026-08-01",
+      "matchup": "Arizona Diamondbacks @ Cleveland Guardians",
+      "predicted": "Arizona Diamondbacks",
+      "predictedSide": "away",
+      "outcomeLabel": "Arizona Diamondbacks to win",
+      "confidence": 57.1,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -21952,7 +21992,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-01",
-      "published": false
+      "published": true
     },
     "401816351": {
       "eventId": "401816351",
@@ -21992,7 +22032,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": false
+      "published": true
     },
     "401816366": {
       "eventId": "401816366",
