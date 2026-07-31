@@ -44,6 +44,28 @@ class GradeTotalTests(unittest.TestCase):
         self.assertIsNone(grade_total({"line": 8.5}, 5, 4))
         self.assertIsNone(grade_total({"line": 8.5, "pickSide": "sideways"}, 5, 4))
 
+    def test_a_priced_win_computes_units(self) -> None:
+        pick = {"line": 8.5, "pickSide": "over", "odds": -110}
+        result = grade_total(pick, 6, 4)
+        self.assertEqual(result["odds"], -110)
+        self.assertAlmostEqual(result["units"], 0.909, places=3)
+
+    def test_a_priced_loss_computes_units(self) -> None:
+        pick = {"line": 8.5, "pickSide": "over", "odds": -110}
+        result = grade_total(pick, 3, 2)
+        self.assertEqual(result["units"], -1.0)
+
+    def test_a_priced_push_has_no_units(self) -> None:
+        pick = {"line": 9, "pickSide": "over", "odds": -110}
+        result = grade_total(pick, 5, 4)
+        self.assertEqual(result["outcome"], "push")
+        self.assertIsNone(result["units"])
+
+    def test_an_unpriced_pick_has_no_units(self) -> None:
+        result = grade_total(self._pick("over"), 6, 4)
+        self.assertIsNone(result["odds"])
+        self.assertIsNone(result["units"])
+
 
 class GradeSpreadTests(unittest.TestCase):
     """`line` is the home number, so a home favourite carries a negative one."""
@@ -81,12 +103,31 @@ class GradeSpreadTests(unittest.TestCase):
         self.assertIsNone(grade_spread(None, 5, 2))
         self.assertIsNone(grade_spread({"line": -1.5, "pickSide": "home"}, None, 2))
 
+    def test_a_priced_cover_computes_units(self) -> None:
+        pick = {"line": -1.5, "pickSide": "home", "odds": +105}
+        result = grade_spread(pick, 5, 2)
+        self.assertEqual(result["odds"], 105)
+        self.assertAlmostEqual(result["units"], 1.05, places=3)
+
+    def test_an_unpriced_pick_has_no_units(self) -> None:
+        pick = {"line": -1.5, "pickSide": "home"}
+        result = grade_spread(pick, 5, 2)
+        self.assertIsNone(result["odds"])
+        self.assertIsNone(result["units"])
+
 
 class EndToEndTests(unittest.TestCase):
     """Log a game with side markets, grade it, read the record back."""
 
     def _run(self, *, total_side: str, spread_side: str, home: int, away: int,
-             total_line: float = 8.5) -> dict:
+             total_line: float = 8.5, total_odds: int | None = None,
+             spread_odds: int | None = None) -> dict:
+        total_pick = {"line": total_line, "pickSide": total_side, "pick": "x", "detail": "ignored"}
+        if total_odds is not None:
+            total_pick["odds"] = total_odds
+        spread_pick = {"line": -1.5, "pickSide": spread_side, "market": "runline"}
+        if spread_odds is not None:
+            spread_pick["odds"] = spread_odds
         payload = {
             "league": "mlb",
             "scheduleDate": "2026-07-28",
@@ -100,8 +141,8 @@ class EndToEndTests(unittest.TestCase):
                     "outcomeLabel": "Home to win",
                     "confidence": 70.0,
                     "features": {"league": "mlb"},
-                    "total": {"line": total_line, "pickSide": total_side, "pick": "x", "detail": "ignored"},
-                    "spread": {"line": -1.5, "pickSide": spread_side, "market": "runline"},
+                    "total": total_pick,
+                    "spread": spread_pick,
                 },
             }],
         }
@@ -147,12 +188,31 @@ class EndToEndTests(unittest.TestCase):
         self.assertEqual(spreads["graded"], 1)
         self.assertEqual(spreads["losses"], 1)
 
-    def test_summaries_claim_no_roi(self) -> None:
+    def test_summaries_claim_no_roi_when_nothing_is_priced(self) -> None:
         """No price is logged for these, so a return cannot be computed."""
         accuracy = self._run(total_side="over", spread_side="home", home=6, away=4)
         for key in ("totals", "spreads"):
-            self.assertNotIn("roiPct", accuracy["summary"][key])
-            self.assertIn("not measurable", accuracy["summary"][key]["note"])
+            summary = accuracy["summary"][key]
+            self.assertIsNone(summary["roiPct"])
+            self.assertEqual(summary["priced"], 0)
+            self.assertIn("not measurable", summary["note"])
+
+    def test_a_priced_pick_carries_real_roi_through_the_summary(self) -> None:
+        """ESPN core odds embedded a price for this one -- the summary should
+        say so and compute a real return instead of falling back to hit rate."""
+        accuracy = self._run(
+            total_side="over", spread_side="home", home=6, away=4,
+            total_odds=-110, spread_odds=-110,
+        )
+        for key in ("totals", "spreads"):
+            summary = accuracy["summary"][key]
+            self.assertEqual(summary["priced"], 1)
+            self.assertEqual(summary["unpriced"], 0)
+            self.assertAlmostEqual(summary["roiPct"], 90.9, delta=0.1)
+            self.assertIn("both cover the full graded record", summary["note"])
+        record = accuracy["picksByEventId"]["42"]
+        self.assertEqual(record["totalResult"]["odds"], -110)
+        self.assertEqual(record["spreadResult"]["odds"], -110)
 
     def test_pushes_are_excluded_from_the_hit_rate(self) -> None:
         """Counting a push as half a win lifts a break-even record above it.
@@ -186,6 +246,58 @@ class EndToEndTests(unittest.TestCase):
         stored = log["predictions"]["1"]["total"]
         self.assertEqual(stored, {"line": 8.5, "pickSide": "over"})
         payload_dir.cleanup()
+
+
+class MarketSummaryTests(unittest.TestCase):
+    """`_market_summary` directly, isolating the priced/unpriced convention
+    from the rest of the grading pipeline."""
+
+    def _row(self, key: str, *, outcome: str, odds=None, units=None) -> dict:
+        row = {"outcome": outcome}
+        if odds is not None:
+            row["odds"] = odds
+        if units is not None:
+            row["units"] = units
+        return {key: row}
+
+    def test_all_unpriced_reports_no_measurable_roi(self) -> None:
+        results = [
+            self._row("totalResult", outcome="win"),
+            self._row("totalResult", outcome="loss"),
+        ]
+        summary = accuracy_tracker._market_summary(results, "totalResult")
+        self.assertEqual(summary["priced"], 0)
+        self.assertIsNone(summary["roiPct"])
+        self.assertEqual(summary["units"], 0.0)
+        self.assertIn("not measurable", summary["note"])
+
+    def test_all_priced_computes_roi_over_the_full_record(self) -> None:
+        results = [
+            self._row("totalResult", outcome="win", odds=-110, units=0.909),
+            self._row("totalResult", outcome="loss", odds=-110, units=-1.0),
+        ]
+        summary = accuracy_tracker._market_summary(results, "totalResult")
+        self.assertEqual(summary["priced"], 2)
+        self.assertEqual(summary["unpriced"], 0)
+        self.assertAlmostEqual(summary["units"], -0.091, places=3)
+        self.assertAlmostEqual(summary["roiPct"], -4.55, delta=0.05)
+        self.assertIn("both cover the full graded record", summary["note"])
+
+    def test_mixed_priced_and_unpriced_counts_unpriced_as_zero_return(self) -> None:
+        """The unpriced pick still counts in the denominator -- ROI reads as
+        return per graded pick, not return per priced pick -- but contributes
+        nothing to the numerator, mirroring the per-league moneyline summary."""
+        results = [
+            self._row("totalResult", outcome="win", odds=-110, units=0.909),
+            self._row("totalResult", outcome="win"),  # unpriced
+        ]
+        summary = accuracy_tracker._market_summary(results, "totalResult")
+        self.assertEqual(summary["graded"], 2)
+        self.assertEqual(summary["priced"], 1)
+        self.assertEqual(summary["unpriced"], 1)
+        self.assertAlmostEqual(summary["units"], 0.909, places=3)
+        self.assertAlmostEqual(summary["roiPct"], 45.45, delta=0.05)
+        self.assertIn("1 of them", summary["note"])
 
 
 if __name__ == "__main__":

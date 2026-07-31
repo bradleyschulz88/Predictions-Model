@@ -16,6 +16,8 @@ from mlb_predictions import (  # noqa: E402
     _lineup_logit_adjustment,
     apply_predictions,
     extract_spread_line,
+    extract_spread_price,
+    extract_total_price,
 )
 from shared_utils import win_pct_from_record  # noqa: E402
 
@@ -38,6 +40,38 @@ class SpreadSignTests(unittest.TestCase):
 
     def test_returns_none_without_spread_lines(self) -> None:
         self.assertIsNone(extract_spread_line([{"viewType": "MoneyLine", "currentLine": {}}]))
+
+
+class SidePriceTests(unittest.TestCase):
+    """SBR's totals/spread lines are bare numbers with nowhere to carry a
+    price; ESPN core odds embed it as parenthetical text on the line itself.
+    These extractors must read that text and stay silent when it isn't there."""
+
+    def test_total_price_reads_the_espn_core_parenthetical(self) -> None:
+        lines = [{"viewType": "Total", "currentLine": {"over": "o8.5 (-110)", "under": "u8.5 (-110)"}}]
+        self.assertEqual(extract_total_price(lines, "over"), -110)
+        self.assertEqual(extract_total_price(lines, "under"), -110)
+
+    def test_total_price_is_none_on_an_sbr_bare_number(self) -> None:
+        lines = [{"viewType": "Total", "currentLine": {"over": "o8.5", "under": "u8.5"}}]
+        self.assertIsNone(extract_total_price(lines, "over"))
+
+    def test_total_price_rejects_an_invalid_side(self) -> None:
+        lines = [{"viewType": "Total", "currentLine": {"over": "o8.5 (-110)"}}]
+        self.assertIsNone(extract_total_price(lines, "push"))
+
+    def test_spread_price_reads_the_espn_core_parenthetical(self) -> None:
+        lines = [{"viewType": "Spread", "currentLine": {"home": "-1.5 (+105)", "away": "+1.5 (-125)"}}]
+        self.assertEqual(extract_spread_price(lines, "home"), 105)
+        self.assertEqual(extract_spread_price(lines, "away"), -125)
+
+    def test_spread_price_is_none_on_an_sbr_bare_number(self) -> None:
+        lines = [{"viewType": "Spread", "currentLine": {"home": "-1.5", "away": "+1.5"}}]
+        self.assertIsNone(extract_spread_price(lines, "home"))
+
+    def test_spread_price_ignores_non_spread_lines(self) -> None:
+        lines = [{"viewType": "Total", "currentLine": {"home": "-1.5 (+105)"}}]
+        self.assertIsNone(extract_spread_price(lines, "home"))
 
 
 class LastFiveSentinelTests(unittest.TestCase):

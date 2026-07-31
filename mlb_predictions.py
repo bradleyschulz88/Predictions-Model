@@ -473,6 +473,53 @@ def extract_spread_line(lines: list[dict[str, Any]]) -> float | None:
     return None
 
 
+# SBR's total/spread lines are bare numbers with no price attached -- there is
+# nowhere on that source for one to live. ESPN's core odds embed it as
+# parenthetical text alongside the line itself, e.g. "o8.5 (-110)" or
+# "+1.5 (-108)" (see espn_odds.py's _market_lines), because that endpoint has
+# no separate field for it either. Both extractors below return None on an
+# SBR-sourced line, which is correct: the price genuinely is not there.
+_PRICE_IN_PARENS = re.compile(r"\(([+-]\d+)\)")
+
+
+def extract_total_price(lines: list[dict[str, Any]], side: str) -> int | None:
+    """American price for the over/under side actually picked, if logged."""
+    if side not in ("over", "under"):
+        return None
+    for line in lines:
+        if "Total" not in (line.get("viewType") or ""):
+            continue
+        current = line.get("currentLine") or line.get("openingLine")
+        if not isinstance(current, dict):
+            continue
+        value = current.get(side)
+        if value is None:
+            continue
+        match = _PRICE_IN_PARENS.search(str(value))
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def extract_spread_price(lines: list[dict[str, Any]], side: str) -> int | None:
+    """American price for the spread side actually picked, if logged."""
+    if side not in ("home", "away"):
+        return None
+    for line in lines:
+        if "Spread" not in (line.get("viewType") or ""):
+            continue
+        current = line.get("currentLine") or line.get("openingLine")
+        if not isinstance(current, dict):
+            continue
+        value = current.get(side)
+        if value is None:
+            continue
+        match = _PRICE_IN_PARENS.search(str(value))
+        if match:
+            return int(match.group(1))
+    return None
+
+
 def _get_calibration_params() -> dict[str, Any]:
     global _CALIBRATION_PARAMS
     if _CALIBRATION_PARAMS is None:
@@ -1029,15 +1076,19 @@ def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment:
     under_lean = 1.0 - over_lean
     pick = "Over" if over_lean >= under_lean else "Under"
     confidence = max(over_lean, under_lean) * 100
+    pick_side = pick.lower()
 
     return {
         "line": total_line,
         "pick": f"{pick} {total_line}",
-        "pickSide": pick.lower(),
+        "pickSide": pick_side,
         "overPct": round(over_lean * 100, 1),
         "underPct": round(under_lean * 100, 1),
         "confidence": round(confidence, 1),
-        "detail": " ".join(detail_parts) if detail_parts else f"Model leans {pick.lower()} vs market total {total_line}.",
+        # None on an SBR-sourced line, which has nowhere to carry a price.
+        # Present when ESPN core supplied it -- see extract_total_price.
+        "odds": extract_total_price(lines, pick_side),
+        "detail": " ".join(detail_parts) if detail_parts else f"Model leans {pick_side} vs market total {total_line}.",
     }
 
 
@@ -2083,6 +2134,9 @@ def predict_spread(
         # nothing to calibrate against and any number here would be invented.
         "confidence": None,
         "unvalidated": True,
+        # None on a push (no side taken) or an SBR-sourced line, which has
+        # nowhere to carry a price. Present when ESPN core supplied it.
+        "odds": extract_spread_price(lines, pick_side) if pick_side in ("home", "away") else None,
         "detail": (
             f"Model line {model_spread:+.1f} vs market {spread_line:+.1f} "
             f"({edge:+.1f} pts). Spread picks are not yet graded or calibrated."
