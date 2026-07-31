@@ -1,34 +1,34 @@
 {
-  "updatedAt": "2026-07-30T23:58:46.443838+00:00",
+  "updatedAt": "2026-07-31T00:40:07.588065+00:00",
   "summary": {
     "last7Days": {
-      "correct": 293,
-      "total": 473,
-      "pct": 61.9,
-      "units": 11.718,
-      "roiPct": 2.5,
-      "pending": 46,
+      "correct": 294,
+      "total": 474,
+      "pct": 62.0,
+      "units": 12.432,
+      "roiPct": 2.6,
+      "pending": 45,
       "voided": 0
     },
     "allTime": {
-      "correct": 436,
-      "total": 724,
-      "pct": 60.2,
-      "units": 12.438,
-      "roiPct": 1.7,
-      "pending": 46,
-      "voided": 13
+      "correct": 437,
+      "total": 725,
+      "pct": 60.3,
+      "units": 13.152,
+      "roiPct": 1.8,
+      "pending": 45,
+      "voided": 15
     },
     "byLeague": {
       "mlb": {
-        "correct": 202,
-        "total": 346,
-        "pct": 58.4,
-        "units": 7.439,
-        "roiPct": 2.2,
+        "correct": 203,
+        "total": 347,
+        "pct": 58.5,
+        "units": 8.153,
+        "roiPct": 2.3,
         "pending": 0,
         "voided": 0,
-        "priced": 303,
+        "priced": 304,
         "unpriced": 43,
         "pricedPct": 87.6
       },
@@ -71,9 +71,9 @@
       }
     },
     "streak": {
-      "current": 3,
+      "current": 2,
       "type": "loss",
-      "bestWin": 6,
+      "bestWin": 7,
       "bestLoss": 4
     },
     "closingLineValue": {
@@ -1104,6 +1104,36 @@
       "homeScore": "3",
       "awayScore": "2",
       "gradedAt": "2026-07-29T04:37:19.122760+00:00",
+      "date": "2026-07-28",
+      "published": true,
+      "totalResult": null,
+      "spreadResult": null
+    },
+    {
+      "eventId": "401816298",
+      "league": "mlb",
+      "scheduleDate": "2026-07-28",
+      "matchup": "Toronto Blue Jays @ Washington Nationals",
+      "predicted": "Washington Nationals",
+      "predictedSide": "home",
+      "outcomeLabel": "Washington Nationals to win",
+      "confidence": 70.9,
+      "rawConfidence": null,
+      "rawHomeWinPct": null,
+      "probabilityMethod": null,
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": -140,
+      "openingOdds": null,
+      "openingSide": null,
+      "clvPct": null,
+      "status": "graded",
+      "actual": "Washington Nationals",
+      "correct": true,
+      "units": 0.714,
+      "homeScore": "8",
+      "awayScore": "6",
+      "gradedAt": "2026-07-29T04:37:19.122688+00:00",
       "date": "2026-07-28",
       "published": true,
       "totalResult": null,
@@ -2721,28 +2751,6 @@
       "published": true,
       "totalResult": null,
       "spreadResult": null
-    },
-    {
-      "eventId": "401816223",
-      "league": "mlb",
-      "scheduleDate": "2026-07-22",
-      "matchup": "Detroit Tigers @ Chicago Cubs",
-      "predicted": "Chicago Cubs",
-      "predictedSide": "home",
-      "outcomeLabel": "Chicago Cubs to win",
-      "confidence": 63.3,
-      "pickOdds": -120,
-      "status": "graded",
-      "actual": "Detroit Tigers",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "1",
-      "awayScore": "5",
-      "gradedAt": "2026-07-23T05:19:53.990625+00:00",
-      "date": "2026-07-22",
-      "published": true,
-      "totalResult": null,
-      "spreadResult": null
     }
   ],
   "pendingPicks": [
@@ -3537,6 +3545,26 @@
       "published": true
     },
     {
+      "eventId": "401816337",
+      "league": "mlb",
+      "scheduleDate": "2026-07-31",
+      "matchup": "St. Louis Cardinals @ Toronto Blue Jays",
+      "predicted": "Toronto Blue Jays",
+      "predictedSide": "home",
+      "outcomeLabel": "Toronto Blue Jays to win",
+      "confidence": 63.0,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-07-31",
+      "published": true
+    },
+    {
       "eventId": "401816336",
       "league": "mlb",
       "scheduleDate": "2026-07-31",
@@ -3605,46 +3633,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Las Vegas Aces to win",
       "confidence": 63.0,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-30",
-      "published": true
-    },
-    {
-      "eventId": "401857100",
-      "league": "wnba",
-      "scheduleDate": "2026-07-30",
-      "matchup": "Connecticut Sun @ Chicago Sky",
-      "predicted": "Chicago Sky",
-      "predictedSide": "home",
-      "outcomeLabel": "Chicago Sky to win",
-      "confidence": 61.9,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-30",
-      "published": true
-    },
-    {
-      "eventId": "401857099",
-      "league": "wnba",
-      "scheduleDate": "2026-07-30",
-      "matchup": "Minnesota Lynx @ Toronto Tempo",
-      "predicted": "Minnesota Lynx",
-      "predictedSide": "away",
-      "outcomeLabel": "Minnesota Lynx to win",
-      "confidence": 70.3,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -19397,7 +19385,7 @@
       "awayScore": "6",
       "gradedAt": "2026-07-29T04:37:19.122688+00:00",
       "date": "2026-07-28",
-      "published": false,
+      "published": true,
       "totalResult": null,
       "spreadResult": null
     },
@@ -20570,7 +20558,7 @@
       "outcomeLabel": "New York Mets to win",
       "confidence": 58.0,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -20578,7 +20566,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-30",
-      "published": false
+      "published": false,
+      "voidReason": "voided"
     },
     "401816323": {
       "eventId": "401816323",
@@ -20631,7 +20620,7 @@
       "outcomeLabel": "Minnesota Lynx to win",
       "confidence": 70.3,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -20639,7 +20628,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-30",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401857100": {
       "eventId": "401857100",
@@ -20651,7 +20641,7 @@
       "outcomeLabel": "Chicago Sky to win",
       "confidence": 61.9,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -20659,7 +20649,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-30",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401857101": {
       "eventId": "401857101",
@@ -21549,7 +21540,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": false
+      "published": true
     },
     "401816352": {
       "eventId": "401816352",
