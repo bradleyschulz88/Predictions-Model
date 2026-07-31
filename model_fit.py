@@ -16,10 +16,12 @@ from __future__ import annotations
 
 import json
 import math
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Protocol, Sequence
 
 WEIGHTS_FILE = "model_weights.json"
+ABLATION_FILE = "ablation.json"
 
 # Feature order is part of the serialised model; append, never reorder.
 #
@@ -931,6 +933,31 @@ def ablate(samples: Sequence[Sample]) -> list[dict[str, Any]]:
     return results
 
 
+def ablate_and_write(
+    data_dir: Path, samples: Sequence[Sample] | None = None
+) -> dict[str, Any]:
+    """Run the walk-forward ablation and persist it next to the other reports.
+
+    The comment above ANCHORED_FEATURES already says every queued candidate
+    (h2h, handedness, bullpen, elo, ...) needs re-running once more games have
+    graded with the data actually present -- but re-running it meant someone
+    remembering to do that by hand and reading a CLI table. Writing it to disk
+    on the same cadence as everything else in docs/data means the dashboard
+    can show it instead, so "queued" candidates are visibly rechecked every
+    build rather than the next time someone happens to think of it.
+    """
+    if samples is None:
+        samples, _centre = samples_from_log(data_dir)
+    payload = {
+        "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "nSamples": len(samples),
+        "shippedSize": len(ANCHORED_FEATURES),
+        "rows": ablate(samples),
+    }
+    (data_dir / ABLATION_FILE).write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return payload
+
+
 def fit_and_write(data_dir: Path, *, l2: float | None = None) -> dict[str, Any]:
     """Fit from the graded log and persist weights next to the other data files.
 
@@ -1003,6 +1030,12 @@ def main() -> int:
         action="store_true",
         help="Include backfilled past seasons in the ablation (screening only -- no market feature)",
     )
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="With --ablate, persist the table to docs/data/ablation.json (ignored with --with-history, "
+        "whose mixed sample would misrepresent the standard recheck)",
+    )
     args = parser.parse_args()
 
     if args.ablate:
@@ -1037,6 +1070,14 @@ def main() -> int:
             names = "+".join(row["features"])
             print(f"  {names:<52} {row['l2']:>5} {row['logLoss']:>8.4f}"
                   f" {row['brier']:>8.4f} {row['accuracy']:>7.4f}")
+        if args.write:
+            if args.with_history:
+                print("\n--write ignored: --with-history mixes in screening-only "
+                      "games with no market feature, which would misrepresent the "
+                      "standard recheck on the dashboard.")
+            else:
+                ablate_and_write(args.data_dir, samples=samples)
+                print(f"\nWrote {args.data_dir / ABLATION_FILE}")
         return 0
 
     if args.dry_run:
