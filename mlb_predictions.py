@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import json
 import math
 import re
+from pathlib import Path
 from statistics import NormalDist
 from typing import Any
 
@@ -53,6 +55,12 @@ MARKET_BLEND_WEIGHT = {
 DEFAULT_MARKET_BLEND_WEIGHT = 0.10
 
 _CALIBRATION_PARAMS: dict[str, Any] | None = None
+_EVALUATION_REPORT: dict[str, Any] | None = None
+
+# Below this many graded picks at a confidence level, evaluation.py itself
+# calls the reliability bucket noise rather than signal -- reuse the same
+# floor here rather than sizing a stake off a bucket of four games.
+MIN_KELLY_BAND_SAMPLE = 30
 
 
 def american_odds_to_implied(odds: int | float) -> float:
@@ -525,6 +533,60 @@ def _get_calibration_params() -> dict[str, Any]:
     if _CALIBRATION_PARAMS is None:
         _CALIBRATION_PARAMS = load_calibration_params()
     return _CALIBRATION_PARAMS
+
+
+def _get_evaluation_report() -> dict[str, Any]:
+    """docs/data/evaluation.json, if the build already wrote one this run.
+
+    Refit happens before this module's predictions do (see pages.yml), so the
+    reliability curve on disk reflects every graded game up to today, not the
+    picks about to be made -- there is no leakage. Missing or unparsable is
+    the normal case in a fresh checkout or in tests, and is silently empty.
+    """
+    global _EVALUATION_REPORT
+    if _EVALUATION_REPORT is None:
+        path = Path(__file__).resolve().parent / "docs" / "data" / "evaluation.json"
+        try:
+            _EVALUATION_REPORT = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            _EVALUATION_REPORT = {}
+    return _EVALUATION_REPORT
+
+
+def kelly_band_probability(confidence_pct: float | None) -> float | None:
+    """The measured win rate of picks this confident, for sizing a stake.
+
+    A model can be miscalibrated even after the shrinkage calibrate_probability
+    already applies -- the 85-90% band has, at times, won barely half its
+    games. Kelly staked on the model's own 85-90% number treats that gap as
+    real edge instead of the overconfidence it is. When a confidence band has
+    enough graded history to trust (>= MIN_KELLY_BAND_SAMPLE picks), its
+    actual win rate is a better estimate of the true probability than the
+    number the model asserts, so the caller should size against this instead.
+    Returns None -- "use the model's own number" -- whenever there isn't
+    enough history yet, so an early or thin build changes nothing.
+    """
+    if confidence_pct is None or confidence_pct < 50:
+        return None
+    reliability = _get_evaluation_report().get("reliability") or []
+    for bucket in reliability:
+        try:
+            lo_str, hi_str = str(bucket.get("range", "")).split("-")
+            lo, hi = float(lo_str), float(hi_str)
+        except (ValueError, AttributeError):
+            continue
+        if not (lo <= confidence_pct < hi):
+            continue
+        picks = bucket.get("picks")
+        actual = bucket.get("actualWinPct")
+        if (
+            isinstance(picks, (int, float))
+            and picks >= MIN_KELLY_BAND_SAMPLE
+            and isinstance(actual, (int, float))
+        ):
+            return max(0.0, min(1.0, actual / 100.0))
+        return None
+    return None
 
 
 def calibrate_probability(
@@ -1934,7 +1996,9 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
     # points of edge do not tell you whether to bet: the same 3-point edge is
     # worth +4.0% per unit at -300 and +10.5% at +250. This does.
     best_odds = _best_price_for_side(game.get("lines") or [], predicted_side)
-    value = assess_price(best_prob, best_odds)
+    value = assess_price(
+        best_prob, best_odds, kelly_probability=kelly_band_probability(confidence)
+    )
 
     result: dict[str, Any] = {
         "predictedWinner": predicted_winner,

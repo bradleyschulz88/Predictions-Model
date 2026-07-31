@@ -132,12 +132,22 @@ def assess_price(
     american_odds: float | None,
     *,
     kelly_multiplier: float = 0.25,
+    kelly_probability: float | None = None,
 ) -> dict[str, Any] | None:
     """Everything worth knowing about backing one side at one price.
 
     ``kelly_multiplier`` defaults to quarter Kelly: the model's probabilities
     are estimates with real error bars, and full Kelly on an overestimated edge
     is how bankrolls die.
+
+    ``kelly_probability`` sizes the stake only -- it never touches the
+    displayed confidence, edge or EV, which stay anchored to what the model
+    actually said. Pass it when there is a graded calibration band for this
+    exact confidence level: the measured win rate at that level is a better
+    estimate of the true probability than the model's own number, which is
+    exactly the case where stake size should move even though the headline
+    number does not. Omit it (the default) to size off the model's stated
+    probability, unchanged.
     """
     if probability is None or american_odds is None:
         return None
@@ -149,8 +159,9 @@ def assess_price(
         return None
 
     value = expected_value(probability, odds)
-    full_kelly = kelly_fraction(probability, odds)
     break_even = break_even_probability(odds)
+    kelly_prob = probability if kelly_probability is None else kelly_probability
+    full_kelly = kelly_fraction(kelly_prob, odds)
 
     return {
         "odds": int(odds),
@@ -161,5 +172,8 @@ def assess_price(
         "edgePct": round((probability - break_even) * 100, 1),
         "evPct": round(value * 100, 2),
         "kellyPct": round(full_kelly * kelly_multiplier * 100, 2),
+        # What the stake was actually sized against -- equal to modelPct
+        # unless a calibration band overrode it.
+        "kellyProbabilityPct": round(kelly_prob * 100, 1),
         "positive": value > 0,
     }

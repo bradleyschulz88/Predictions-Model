@@ -132,6 +132,25 @@ class AssessPriceTests(unittest.TestCase):
     def test_unparseable_odds_yield_nothing(self) -> None:
         self.assertIsNone(assess_price(0.6, "evens"))
 
+    def test_kelly_probability_overrides_only_the_stake(self) -> None:
+        """A calibration band saying this confidence level is really a coin
+        flip should shrink the stake without touching the displayed number."""
+        result = assess_price(0.85, -110, kelly_probability=0.52)
+        self.assertEqual(result["modelPct"], 85.0, "the headline number is unmoved")
+        self.assertEqual(result["kellyProbabilityPct"], 52.0)
+        self.assertLess(result["kellyPct"], assess_price(0.85, -110)["kellyPct"])
+
+    def test_kelly_probability_can_raise_the_stake_too(self) -> None:
+        """Calibration cuts both ways -- a band that has outperformed its own
+        number should be allowed to stake more, not just less."""
+        baseline = assess_price(0.60, -110)["kellyPct"]
+        boosted = assess_price(0.60, -110, kelly_probability=0.75)["kellyPct"]
+        self.assertGreater(boosted, baseline)
+
+    def test_no_override_sizes_off_the_model_probability(self) -> None:
+        result = assess_price(0.65, -155)
+        self.assertEqual(result["kellyProbabilityPct"], result["modelPct"])
+
 
 if __name__ == "__main__":
     unittest.main()

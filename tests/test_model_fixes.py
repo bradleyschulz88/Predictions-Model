@@ -18,6 +18,7 @@ from mlb_predictions import (  # noqa: E402
     extract_spread_line,
     extract_spread_price,
     extract_total_price,
+    kelly_band_probability,
 )
 from shared_utils import win_pct_from_record  # noqa: E402
 
@@ -72,6 +73,48 @@ class SidePriceTests(unittest.TestCase):
     def test_spread_price_ignores_non_spread_lines(self) -> None:
         lines = [{"viewType": "Total", "currentLine": {"home": "-1.5 (+105)"}}]
         self.assertIsNone(extract_spread_price(lines, "home"))
+
+
+class KellyBandProbabilityTests(unittest.TestCase):
+    """Kelly stake sizing should defer to the graded record for a confidence
+    level once there is enough of one, and otherwise leave the model alone."""
+
+    def _report(self, reliability: list[dict]) -> dict:
+        return {"reliability": reliability}
+
+    def test_a_reliable_band_overrides_with_its_actual_win_rate(self) -> None:
+        report = self._report(
+            [{"range": "85-90", "picks": 40, "actualWinPct": 52.9, "avgPredictedPct": 87.9}]
+        )
+        with mock.patch.object(mlb_predictions, "_get_evaluation_report", return_value=report):
+            self.assertAlmostEqual(kelly_band_probability(87.0), 0.529)
+
+    def test_a_thin_band_defers_to_the_model(self) -> None:
+        """Fewer picks than MIN_KELLY_BAND_SAMPLE is noise, not signal."""
+        report = self._report(
+            [{"range": "85-90", "picks": 4, "actualWinPct": 25.0}]
+        )
+        with mock.patch.object(mlb_predictions, "_get_evaluation_report", return_value=report):
+            self.assertIsNone(kelly_band_probability(87.0))
+
+    def test_no_matching_bucket_defers_to_the_model(self) -> None:
+        report = self._report([{"range": "55-60", "picks": 100, "actualWinPct": 58.0}])
+        with mock.patch.object(mlb_predictions, "_get_evaluation_report", return_value=report):
+            self.assertIsNone(kelly_band_probability(87.0))
+
+    def test_confidence_below_half_is_not_looked_up(self) -> None:
+        """The reliability curve is folded onto the picked side, so it never
+        carries data below 50% -- there is nothing to match against."""
+        report = self._report([{"range": "55-60", "picks": 100, "actualWinPct": 58.0}])
+        with mock.patch.object(mlb_predictions, "_get_evaluation_report", return_value=report):
+            self.assertIsNone(kelly_band_probability(40.0))
+
+    def test_missing_report_defers_to_the_model(self) -> None:
+        with mock.patch.object(mlb_predictions, "_get_evaluation_report", return_value={}):
+            self.assertIsNone(kelly_band_probability(87.0))
+
+    def test_none_confidence_defers_to_the_model(self) -> None:
+        self.assertIsNone(kelly_band_probability(None))
 
 
 class LastFiveSentinelTests(unittest.TestCase):

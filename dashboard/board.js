@@ -394,6 +394,12 @@ function heroFor(play) {
   hero.appendChild(right);
   wrap.appendChild(hero);
 
+  // Stake sizing defers to the calibration band once it has enough graded
+  // picks to trust (see kelly_band_probability) -- when that overrode the
+  // model's own number, kellyProbabilityPct no longer matches confidence.
+  const bandSized = play.kellyProbabilityPct != null &&
+    Math.abs(play.kellyProbabilityPct - play.confidence) >= 0.5;
+
   const meta = el("div", "metagrid");
   meta.innerHTML =
     /* Shown as a percentage of bankroll, which is literally what kellyPct is.
@@ -403,7 +409,11 @@ function heroFor(play) {
        a bankroll fraction as "0.05u" invited exactly that confusion. */
     `<div class="m"><div class="lbl">Stake, &frac14; Kelly</div><div class="v">` +
       `${play.kellyPct == null ? "—" : pct(play.kellyPct)}` +
-      `<span style="color:var(--muted);font-size:13px"> of bankroll</span></div></div>` +
+      `<span style="color:var(--muted);font-size:13px"> of bankroll</span></div>` +
+      (bandSized
+        ? `<div style="font-size:11px;color:var(--warn);margin-top:2px">sized off the ${pct(play.kellyProbabilityPct)} band, not the ${pct(play.confidence)} headline</div>`
+        : "") +
+      `</div>` +
     `<div class="m"><div class="lbl">Price</div><div class="v">${american(play.odds)}</div></div>` +
     `<div class="m"><div class="lbl">Calibration band</div><div class="v">${calibrationShort(play.confidence)}</div></div>`;
   wrap.appendChild(meta);
@@ -593,6 +603,9 @@ function toPlay(game, league, label) {
     marketPct: marketPct == null ? null : marketPct,
     evPct: value.evPct == null ? null : value.evPct,
     kellyPct: value.kellyPct,
+    // Equal to modelPct unless a reliable calibration band overrode the
+    // stake sizing -- see kelly_band_probability in mlb_predictions.py.
+    kellyProbabilityPct: value.kellyProbabilityPct,
     odds: value.odds,
     breakEvenPct: value.breakEvenPct,
     published: isPublished(prediction, league),
