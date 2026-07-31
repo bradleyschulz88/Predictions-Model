@@ -142,6 +142,44 @@ class FeatureCollapseTests(unittest.TestCase):
         self.assertAlmostEqual(centre, 0.04)
 
 
+class PitchingFipFeatureTests(unittest.TestCase):
+    """pitchingFipDiff: a FIP-based alternative to the ERA-based pitchingDiff,
+    queued alongside the rest of CANDIDATE_FEATURES rather than shipped --
+    see the comment above CANDIDATE_FEATURES for why it has no real graded
+    coverage yet even though the fetch that feeds it is now fixed."""
+
+    def test_home_minus_away_fip_favours_the_better_home_starter(self) -> None:
+        values = build_feature_dict({
+            "mlbPitching": {"homePitcherFip": 3.00, "awayPitcherFip": 4.20},
+        })
+        self.assertAlmostEqual(values["pitchingFipDiff"], 1.20)
+
+    def test_negative_when_the_away_starter_is_better(self) -> None:
+        values = build_feature_dict({
+            "mlbPitching": {"homePitcherFip": 4.50, "awayPitcherFip": 3.10},
+        })
+        self.assertLess(values["pitchingFipDiff"], 0)
+
+    def test_missing_either_side_yields_none(self) -> None:
+        self.assertIsNone(
+            build_feature_dict({"mlbPitching": {"homePitcherFip": 3.5}})["pitchingFipDiff"]
+        )
+        self.assertIsNone(build_feature_dict({"mlbPitching": {}})["pitchingFipDiff"])
+
+    def test_missing_pitching_block_yields_none(self) -> None:
+        self.assertIsNone(build_feature_dict({})["pitchingFipDiff"])
+
+    def test_independent_of_the_era_based_candidate(self) -> None:
+        """The two pitchingDiff variants read different keys, so a game with
+        ERA but no FIP yet (the entire graded log, today) scores one and not
+        the other -- neither one silently inherits the other's value."""
+        values = build_feature_dict({
+            "mlbPitching": {"homePitcherApiEra": 3.0, "awayPitcherApiEra": 4.0},
+        })
+        self.assertIsNotNone(values["pitchingDiff"])
+        self.assertIsNone(values["pitchingFipDiff"])
+
+
 class RowBuildingTests(unittest.TestCase):
     def test_missing_feature_contributes_nothing(self) -> None:
         row = to_row({"strengthDiff": None}, ("strengthDiff",), {"strengthDiff": 0.5}, {"strengthDiff": 0.2})
@@ -267,6 +305,90 @@ class AblationRecheckTests(unittest.TestCase):
             payload = model_fit.ablate_and_write(data_dir)
             self.assertEqual(payload["nSamples"], 0, "no predictions_log.json in an empty dir")
             self.assertEqual(payload["rows"], [])
+
+
+class PitchingFipSignificanceTests(unittest.TestCase):
+    """The ablation IS the significance check this codebase uses -- a
+    candidate only ships once it beats its own absence out of sample. Today's
+    graded log has zero pitchingFipDiff coverage (see the comment above
+    CANDIDATE_FEATURES), so ablate() correctly shows it as neutral -- that is
+    not proof the check itself works. This constructs data where the FIP
+    candidate carries a real, strong signal beyond what pitchingDiff and the
+    market already have, and confirms the exact same walk-forward comparison
+    that runs in CI would actually detect it and prefer it. If it could not,
+    "test before promoting" would be a check with nothing behind it.
+    """
+
+    def _samples_with_real_fip_signal(self, count: int = 400, seed: int = 7) -> list[Sample]:
+        random.seed(seed)
+        samples = []
+        for index in range(count):
+            strength = random.gauss(0.0, 0.1)
+            market = strength * 4.0 + random.gauss(0.0, 0.2)
+            # pitchingDiff (ERA) is pure noise here -- it should not help,
+            # mirroring the real-world finding that it is redundant with the
+            # market. pitchingFipDiff carries the actual extra signal.
+            era_noise = random.gauss(0.0, 1.0)
+            fip_signal = random.gauss(0.0, 1.0)
+            logit_true = 3.0 * strength + 1.0 * market + 0.9 * fip_signal
+            prob = sigmoid(logit_true)
+            label = 1 if random.random() < prob else 0
+            samples.append(
+                Sample(
+                    values={
+                        "strengthDiff": strength,
+                        "marketLogit": market,
+                        "pitchingDiff": era_noise,
+                        "pitchingFipDiff": fip_signal,
+                    },
+                    label=label,
+                    league="mlb",
+                    date=f"2026-{(index % 12) + 1:02d}-{(index % 28) + 1:02d}",
+                )
+            )
+        return samples
+
+    def test_a_real_signal_would_beat_the_set_without_it(self) -> None:
+        samples = self._samples_with_real_fip_signal()
+        with_era_only = model_fit.walk_forward_scores(
+            samples, l2=3.0, anchored_features=("strengthDiff", "marketLogit", "pitchingDiff"))
+        with_fip = model_fit.walk_forward_scores(
+            samples, l2=3.0,
+            anchored_features=("strengthDiff", "marketLogit", "pitchingDiff", "pitchingFipDiff"))
+        self.assertLess(
+            with_fip["logLoss"], with_era_only["logLoss"] - 0.01,
+            "a genuinely predictive pitchingFipDiff must measurably improve "
+            "walk-forward log loss, or the significance check is not real",
+        )
+
+    def test_pure_noise_would_not_beat_it(self) -> None:
+        """The other half of the check: it must also correctly decline a
+        candidate with no real signal, which is today's actual situation."""
+        random.seed(11)
+        samples = []
+        for index in range(400):
+            strength = random.gauss(0.0, 0.1)
+            market = strength * 4.0 + random.gauss(0.0, 0.2)
+            label = 1 if random.random() < sigmoid(3.0 * strength + 1.0 * market) else 0
+            samples.append(
+                Sample(
+                    values={
+                        "strengthDiff": strength,
+                        "marketLogit": market,
+                        "pitchingDiff": random.gauss(0.0, 1.0),
+                        "pitchingFipDiff": random.gauss(0.0, 1.0),  # unrelated to label
+                    },
+                    label=label,
+                    league="mlb",
+                    date=f"2026-{(index % 12) + 1:02d}-{(index % 28) + 1:02d}",
+                )
+            )
+        with_era_only = model_fit.walk_forward_scores(
+            samples, l2=3.0, anchored_features=("strengthDiff", "marketLogit", "pitchingDiff"))
+        with_fip = model_fit.walk_forward_scores(
+            samples, l2=3.0,
+            anchored_features=("strengthDiff", "marketLogit", "pitchingDiff", "pitchingFipDiff"))
+        self.assertGreaterEqual(with_fip["logLoss"], with_era_only["logLoss"] - 0.005)
 
 
 class DifferentialShrinkageTests(unittest.TestCase):
