@@ -258,9 +258,9 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 # graded, which none of them ever has been -- the totals
                 # heuristic has been shown on the board since the start without
                 # a single scored result behind it.
-                "total": _side_market(prediction.get("total"), ("line", "pickSide")),
+                "total": _side_market(prediction.get("total"), ("line", "pickSide", "odds")),
                 "spread": _side_market(
-                    prediction.get("spread"), ("line", "pickSide", "market")
+                    prediction.get("spread"), ("line", "pickSide", "market", "odds")
                 ),
                 "recordedAt": payload.get("fetchedAt"),
             }
@@ -270,29 +270,54 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
 
 
 def _market_summary(results: list[dict[str, Any]], key: str) -> dict[str, Any]:
-    """Win/loss/push record for one side market.
+    """Win/loss/push record for one side market, with ROI once any pick in it
+    carries a logged price.
 
     Hit rate excludes pushes, because a returned stake is not a result. Counting
     pushes as half a win -- the other common convention -- would quietly lift a
     break-even record above break-even.
+
+    Units follow the same convention the per-league moneyline summary already
+    uses: an unpriced graded pick contributes zero to the total rather than
+    being excluded from the denominator, so ROI still reads as "return per
+    graded pick" while most of them carry no price yet -- these markets have a
+    price only when ESPN's core odds supplied one; SBR has nowhere to carry it
+    at all. If literally none of them do, roiPct stays None with a note
+    instead of reporting a misleading 0.0%.
     """
     graded = [item[key] for item in results if isinstance(item.get(key), dict)]
     wins = sum(1 for row in graded if row.get("outcome") == "win")
     losses = sum(1 for row in graded if row.get("outcome") == "loss")
     pushes = sum(1 for row in graded if row.get("outcome") == "push")
     decided = wins + losses
+    priced = sum(1 for row in graded if row.get("odds") is not None)
+    units = round(sum(float(row.get("units") or 0.0) for row in graded), 3)
 
-    return {
+    summary: dict[str, Any] = {
         "graded": len(graded),
         "wins": wins,
         "losses": losses,
         "pushes": pushes,
         "pct": round(wins / decided * 100, 1) if decided else None,
-        # These picks are not priced, so a hit rate is all that can be claimed.
         # Break-even at the usual -110 is 52.4%.
         "breakEvenPct": 52.4,
-        "note": "Hit rate only; these markets carry no logged price, so ROI is not measurable.",
+        "priced": priced,
+        "unpriced": len(graded) - priced,
     }
+    if priced:
+        summary["units"] = units
+        summary["roiPct"] = round(units / len(graded) * 100, 1) if graded else None
+        summary["note"] = (
+            f"ROI is over all {len(graded)} graded picks; {len(graded) - priced} of them "
+            "carry no logged price and count as zero return."
+            if priced < len(graded)
+            else "Hit rate and ROI both cover the full graded record."
+        )
+    else:
+        summary["units"] = 0.0
+        summary["roiPct"] = None
+        summary["note"] = "Hit rate only; these markets carry no logged price, so ROI is not measurable."
+    return summary
 
 
 def _side_market(block: dict[str, Any] | None, keys: tuple[str, ...]) -> dict[str, Any] | None:
@@ -419,7 +444,24 @@ def grade_total(pick: dict[str, Any] | None, home_score: Any, away_score: Any) -
     else:
         outcome = "loss"
 
-    return {"line": line, "pickSide": side, "actual": actual, "outcome": outcome}
+    # None whenever the pick has no logged price -- SBR carries no odds for
+    # this market at all, so most graded totals will not have one yet. A push
+    # returns its stake, not a profit or a loss, so it never prices a unit.
+    odds = pick.get("odds")
+    units = (
+        american_odds_profit(odds, outcome == "win")
+        if odds is not None and outcome != "push"
+        else None
+    )
+
+    return {
+        "line": line,
+        "pickSide": side,
+        "actual": actual,
+        "outcome": outcome,
+        "odds": odds,
+        "units": units,
+    }
 
 
 def grade_spread(
@@ -453,12 +495,21 @@ def grade_spread(
     else:
         outcome = "loss"
 
+    odds = pick.get("odds")
+    units = (
+        american_odds_profit(odds, outcome == "win")
+        if odds is not None and outcome != "push"
+        else None
+    )
+
     return {
         "line": line,
         "pickSide": side,
         "margin": margin,
         "market": pick.get("market") or "spread",
         "outcome": outcome,
+        "odds": odds,
+        "units": units,
     }
 
 

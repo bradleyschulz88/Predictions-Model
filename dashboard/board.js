@@ -769,12 +769,16 @@ function whyPanel(play) {
       if (!m) return "";
       const line = m.line ?? m.total ?? null;
       const pick = m.pickSide || m.pick || null;
-      return `<div class="k"><div class="kv">${esc(pick || "—")}${line == null ? "" : " " + line}</div>` +
+      const price = m.odds == null ? "" : ` (${american(m.odds)})`;
+      return `<div class="k"><div class="kv">${esc(pick || "—")}${line == null ? "" : " " + line}${price}</div>` +
         `<div class="kk lbl">${title}</div></div>`;
     };
+    // ESPN core odds embed a price for these markets; SBR never does, so
+    // whether a price is here at all depends on which source answered.
+    const anyPriced = (play.total && play.total.odds != null) || (play.spread && play.spread.odds != null);
     right.appendChild(el("div", "",
       `<div class="subh" style="margin:15px 0 8px"><h4>Side markets</h4>` +
-        `<span class="note">hit rate only — no price is logged for these</span></div>` +
+        `<span class="note">${anyPriced ? "priced where ESPN core odds embedded one" : "hit rate only — no price logged for these"}</span></div>` +
       `<div class="ctx">${side(play.total, "Total")}${side(play.spread, "Spread / runline")}</div>`));
   }
 
@@ -1126,10 +1130,20 @@ function cardsPanel(A, E) {
   const wf = E?.fittedWalkForward;
   if (wf) cards.appendChild(card("Walk-forward, out of sample", wf.logLoss.toFixed(4),
     `${wf.folds} folds, n=${wf.n}. Every build fails if this regresses against the checked-in baseline.`));
-  if (sum.totals?.graded) cards.appendChild(card("Totals", `${sum.totals.wins}-${sum.totals.losses}`,
-    `${pct(sum.totals.pct)} on ${sum.totals.graded} graded. No price logged, so hit rate only.`));
-  if (sum.spreads?.graded) cards.appendChild(card("Spreads / runline", `${sum.spreads.wins}-${sum.spreads.losses}`,
-    `${pct(sum.spreads.pct)} on ${sum.spreads.graded} graded, against a ${pct(sum.spreads.breakEvenPct)} break-even.`));
+  /* Totals/spreads only carry a price when ESPN core odds embedded one --
+     SBR has nowhere to put it -- so the card reads "hit rate only" until
+     that happens, then switches to real ROI, mirroring _market_summary. */
+  const marketCard = (title, m) => {
+    if (!m?.graded) return null;
+    const record = `${m.wins}-${m.losses}` + (m.pushes ? `-${m.pushes}` : "");
+    const roi = m.priced ? `${sgn(m.roiPct, 1)}% ROI. ` : "";
+    return card(title, record, `${pct(m.pct)} on ${m.graded} graded. ${roi}${m.note}`,
+      m.priced && m.roiPct != null ? (m.roiPct > 0 ? "var(--good)" : m.roiPct < 0 ? "var(--bad)" : undefined) : undefined);
+  };
+  const totalsCard = marketCard("Totals", sum.totals);
+  if (totalsCard) cards.appendChild(totalsCard);
+  const spreadsCard = marketCard("Spreads / runline", sum.spreads);
+  if (spreadsCard) cards.appendChild(spreadsCard);
   const dv = E?.divergence;
   if (dv) {
     cards.appendChild(card("Divergence from market", dv.medianGapPct.toFixed(1) + "pts",
