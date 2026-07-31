@@ -97,6 +97,7 @@ const S = {
   accuracy: null,
   evaluation: null,
   weights: null,
+  ablation: null,
   manifest: null,
   slates: {},          // `${league}:${date}` -> payload
   sport: null,
@@ -1170,6 +1171,58 @@ function cardsPanel(A, E) {
   return cards;
 }
 
+/* Whether a queued candidate feature (h2h, handedness, bullpen, elo, ...)
+   now beats the shipped set. Rebuilt on the same cadence as everything else
+   in data/, so this is a rerun on a schedule rather than something someone
+   has to remember to check by running model_fit.py --ablate by hand. */
+function ablationPanel(ablation) {
+  const p = el("div", "panel");
+  p.appendChild(el("div", "phead",
+    `<h2>Queued candidate features</h2><span class="n">rechecked every build, not from memory</span>`));
+  const box = el("div");
+  box.style.padding = "4px 16px 16px";
+  const rows = ablation?.rows || [];
+  if (!rows.length) {
+    box.appendChild(el("div", "loading",
+      "data/ablation.json is unavailable or too little has graded yet, so there is nothing to recheck against."));
+    p.appendChild(box);
+    return p;
+  }
+  const shippedRow = rows[ablation.shippedSize - 1] || rows[rows.length - 1];
+  const queued = rows.slice(ablation.shippedSize);
+  const when = new Date(ablation.generatedAt).toLocaleString(undefined,
+    { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  box.appendChild(el("p", "",
+    `As of ${esc(when)}, walk-forward on ${ablation.nSamples} graded games. Shipped: ` +
+    `<b class="num" style="color:var(--ink)">${esc(shippedRow.features.join(" + "))}</b> at ` +
+    `<b class="num" style="color:var(--ink)">${shippedRow.logLoss.toFixed(4)}</b> log loss (n=${shippedRow.n}).`));
+  box.lastChild.style.cssText = "font-size:12.5px;color:var(--muted);margin:0 0 12px";
+
+  if (!queued.length) {
+    box.appendChild(el("div", "loading", "Every candidate feature this build knows how to test is already shipped."));
+  } else {
+    const ctx = el("div", "ctx");
+    queued.forEach((row) => {
+      const added = row.features[row.features.length - 1];
+      const delta = row.logLoss - shippedRow.logLoss;
+      const beats = delta < 0;
+      const k = el("div", "k");
+      k.innerHTML =
+        `<div class="kv" style="color:${beats ? "var(--good)" : "var(--muted)"}">${beats ? "" : "+"}${delta.toFixed(4)}</div>` +
+        `<div class="kk lbl">${esc(added)}</div>`;
+      ctx.appendChild(k);
+    });
+    box.appendChild(ctx);
+    box.appendChild(el("p", "",
+      "Log loss added on top of the shipped set, cumulative through that feature -- lower is better, and none of " +
+      "these ship until one actually beats it out of sample. A positive number here is not a bug; it is the record " +
+      "saying this candidate is not earning its place yet."));
+    box.lastChild.style.cssText = "font-size:12px;color:var(--muted);margin:13px 0 0";
+  }
+  p.appendChild(box);
+  return p;
+}
+
 /* ============================================================ VIEW: DIG */
 function renderDig() {
   const O = S.overview;
@@ -1192,6 +1245,8 @@ function renderDig() {
     `<p>Built for the handoff from this model to your own research: for each pick worth backing, what the model actually had, ` +
     `what it could not see, and the checks that would move the number. Everything is derived from the real coverage flags on ` +
     `each game rather than a generic checklist.</p></div></div>`));
+
+  host.appendChild(ablationPanel(S.ablation));
 
   if (!pool.length) {
     host.appendChild(el("div", "panel", `<div class="loading">Nothing on the board to brief.</div>`));
@@ -1426,11 +1481,15 @@ function wireNav() {
 /* =================================================================== boot */
 async function boot() {
   wireNav();
-  const [overview, accuracy, evaluation, weights, manifest] = await Promise.all([
+  const [overview, accuracy, evaluation, weights, ablation, manifest] = await Promise.all([
     getJson("data/overview.json").catch((e) => { S.failures.push("overview.json"); return null; }),
     getJson("data/accuracy.json").catch(() => { S.failures.push("accuracy.json"); return null; }),
     getJson("data/evaluation.json").catch(() => { S.failures.push("evaluation.json"); return null; }),
     getJson("data/model_weights.json").catch(() => { S.failures.push("model_weights.json"); return null; }),
+    // Whether a queued candidate feature (h2h, handedness, bullpen, elo, ...)
+    // now beats the shipped set. Absent on a build that predates it -- the
+    // Dig panel says so rather than showing a stale or fabricated table.
+    getJson("data/ablation.json").catch(() => null),
     // Not fetched with the others' bare `catch(() => null)` because losing
     // this file has a specific, easy-to-miss consequence: the Sports view
     // silently degrades to today-only with no prev/next and no chips, and
@@ -1443,6 +1502,7 @@ async function boot() {
   S.accuracy = accuracy;
   S.evaluation = evaluation;
   S.weights = weights;
+  S.ablation = ablation;
   S.manifest = manifest;
 
   $("#foot").innerHTML = accuracy

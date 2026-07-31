@@ -22,6 +22,7 @@ venv/
 #   model_weights.json     from model_fit.py
 #   evaluation.json        from scripts/backtest_model.py --evaluate
 #   calibration.json       from scripts/backtest_model.py --write
+#   ablation.json          from model_fit.py --ablate --write
 #   elo_ratings.json       from elo.py, replayed off accuracy.json
 #   manifest.json          from build_pages_data.py
 #   overview.json          the landing page, rebuilt from the day's payloads
@@ -35,6 +36,7 @@ venv/
 docs/data/model_weights.json
 docs/data/evaluation.json
 docs/data/calibration.json
+docs/data/ablation.json
 docs/data/elo_ratings.json
 docs/data/manifest.json
 docs/data/overview.json

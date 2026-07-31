@@ -75,6 +75,13 @@ jobs:
           python scripts/backtest_model.py --evaluate --write
           python scripts/check_regression.py
 
+      # Informational only: whether a queued candidate (h2h, handedness,
+      # bullpen, elo, ...) now beats the shipped feature set as more games
+      # grade. This used to mean someone remembering to run --ablate by hand;
+      # now it reruns every build and the dashboard reads the result.
+      - name: Recheck queued candidate features
+        run: python model_fit.py --ablate --write
+
       - name: Build dashboard JSON
         env:
           # Optional. When the secret is absent this is empty, injury severity

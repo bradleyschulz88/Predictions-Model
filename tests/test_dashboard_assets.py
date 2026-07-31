@@ -169,5 +169,40 @@ class FailureBannerTests(unittest.TestCase):
             "innerHTML clear will wipe the banner out immediately")
 
 
+class AblationRecheckWiringTests(unittest.TestCase):
+    """The queued-candidate ablation (h2h, handedness, bullpen, elo, ...) used
+    to mean someone remembering to run `model_fit.py --ablate` by hand and
+    reading a terminal table. It has to actually be rebuilt on a schedule and
+    read on the dashboard, or "visible on a schedule" is just a comment."""
+
+    def setUp(self) -> None:
+        self.js = (DASHBOARD / "board.js").read_text(encoding="utf-8")
+        self.workflow = WORKFLOW.read_text(encoding="utf-8")
+
+    def test_the_build_reruns_the_ablation_every_time(self) -> None:
+        self.assertIn("model_fit.py --ablate --write", self.workflow)
+
+    def test_the_recheck_step_runs_after_the_refit_that_feeds_it(self) -> None:
+        refit = self.workflow.index("Refit model and gate on quality")
+        recheck = self.workflow.index("model_fit.py --ablate --write")
+        self.assertLess(refit, recheck)
+
+    def test_the_dashboard_fetches_the_ablation_report(self) -> None:
+        self.assertIn('getJson("data/ablation.json")', self.js)
+        self.assertIn("S.ablation = ablation", self.js)
+
+    def test_the_dig_view_renders_it(self) -> None:
+        render_call = self.js.index("function renderDig()")
+        body = self.js[render_call:]
+        self.assertIn("ablationPanel(S.ablation)", body)
+
+    def test_a_missing_report_does_not_crash_the_panel(self) -> None:
+        """A build from before this shipped, or one with too little graded
+        data, must degrade to a message rather than throwing on rows[-1]."""
+        panel = self.js[self.js.index("function ablationPanel("):self.js.index("function renderDig()")]
+        self.assertIn("ablation?.rows", panel)
+        self.assertIn("if (!rows.length)", panel)
+
+
 if __name__ == "__main__":
     unittest.main()

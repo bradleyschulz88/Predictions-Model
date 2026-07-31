@@ -238,6 +238,37 @@ class WalkForwardTests(unittest.TestCase):
         self.assertEqual(ordered_dates, sorted(ordered_dates))
 
 
+class AblationRecheckTests(unittest.TestCase):
+    """The queued-candidate table (h2h, handedness, bullpen, elo, ...) has to
+    be re-run for the dashboard to show it, not just printed to a terminal
+    someone has to remember to open."""
+
+    def test_writes_a_row_per_nested_feature_set(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            data_dir = Path(tmp)
+            payload = model_fit.ablate_and_write(data_dir, samples=_make_samples(200))
+            self.assertTrue((data_dir / model_fit.ABLATION_FILE).is_file())
+            self.assertEqual(len(payload["rows"]), len(model_fit.CANDIDATE_FEATURES))
+            self.assertEqual(payload["rows"][0]["features"], ["strengthDiff"])
+            self.assertEqual(payload["shippedSize"], len(model_fit.ANCHORED_FEATURES))
+            self.assertEqual(payload["nSamples"], 200)
+
+    def test_written_file_round_trips_as_json(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            data_dir = Path(tmp)
+            model_fit.ablate_and_write(data_dir, samples=_make_samples(200))
+            on_disk = json.loads((data_dir / model_fit.ABLATION_FILE).read_text(encoding="utf-8"))
+            self.assertIn("generatedAt", on_disk)
+            self.assertEqual(len(on_disk["rows"]), len(model_fit.CANDIDATE_FEATURES))
+
+    def test_reads_samples_from_the_log_when_none_are_given(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            data_dir = Path(tmp)
+            payload = model_fit.ablate_and_write(data_dir)
+            self.assertEqual(payload["nSamples"], 0, "no predictions_log.json in an empty dir")
+            self.assertEqual(payload["rows"], [])
+
+
 class DifferentialShrinkageTests(unittest.TestCase):
     """strengthDiff and marketLogit getting their own ridge penalty.
 
