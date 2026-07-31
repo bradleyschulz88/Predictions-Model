@@ -41,7 +41,7 @@ ABLATION_FILE = "ablation.json"
 # has already priced it, so once marketLogit is in the model, adding starter and
 # bullpen ERA on top is redundant rather than additive.
 #
-# Four candidates carry an ASTERISK and are NOT fairly tested above:
+# Five candidates carry an ASTERISK and are NOT fairly tested above:
 #
 #   restDiff, b2bDiff -- between 2026-07-23 and 2026-07-28 apply_predictions
 #     re-ran enrichment per game without a schedule context, overwriting every
@@ -52,6 +52,19 @@ ABLATION_FILE = "ablation.json"
 #   injurySeverityDiff -- added 2026-07-28 and present on zero graded games, so
 #     it is imputed to the mean throughout and contributes exactly nothing. The
 #     ablation showing it as neutral is measuring its absence, not the feature.
+#
+#   pitchingFipDiff -- FIP-based starter run-prevention, home minus away (see
+#     _pitching_diff_fip). data_providers/mlb_pitcher.py was asking the MLB
+#     Stats API for FIP under the "season" stat type, which cannot return it --
+#     that field only exists under "sabermetrics" -- so this logged None on
+#     every one of 872 graded games, the same always-absent signature already
+#     caught for handedness/h2h/bullpen in test_matchup_context.py. Fixed to
+#     query the right stat type; still starts from zero coverage, so it needs
+#     the same weeks of fresh history as everything else on this list before
+#     ablation can say anything real about it. _pitching_diff (ERA) already
+#     loses once marketLogit is in the model (see above) -- the honest prior
+#     is that FIP loses for the identical reason, since the market has priced
+#     the starter too, but that is a hypothesis to test, not a promotion.
 #
 #   videoIntelDiff -- pre-game team news extracted from subscribed YouTube
 #     channels (youtube_intel.py). Also present on zero graded games until the
@@ -109,6 +122,7 @@ CANDIDATE_FEATURES = (
     "strengthDiff",
     "marketLogit",
     "pitchingDiff",
+    "pitchingFipDiff",
     "restDiff",
     "injuryDiff",
     "injurySeverityDiff",
@@ -338,6 +352,7 @@ def build_feature_dict(
         "strengthDiff": strength,
         "marketLogit": market_logit,
         "pitchingDiff": _pitching_diff(features),
+        "pitchingFipDiff": _pitching_diff_fip(features),
         "restDiff": rest_diff,
         "injuryDiff": away_injury - home_injury,
         "injurySeverityDiff": severity_diff,
@@ -374,8 +389,9 @@ def _pitching_diff(features: dict[str, Any]) -> float | None:
     """Run-prevention edge in ERA units, home minus away.
 
     MLB-only, and None elsewhere so it contributes nothing to other leagues.
-    Uses ERA rather than FIP because FIP is absent from the logged history while
-    starter and bullpen ERA are present on 97-100% of games.
+    Uses ERA rather than FIP because starter and bullpen ERA are present on
+    97-100% of games, where FIP -- see _pitching_diff_fip -- is only just
+    starting to be logged at all.
     """
     pitching = features.get("mlbPitching")
     if not isinstance(pitching, dict):
@@ -401,6 +417,34 @@ def _pitching_diff(features: dict[str, Any]) -> float | None:
         return None
     weight_total = sum(weight for _, weight in parts)
     return sum(value * weight for value, weight in parts) / weight_total
+
+
+def _pitching_diff_fip(features: dict[str, Any]) -> float | None:
+    """Starter run-prevention edge in FIP units, home minus away.
+
+    FIP (fielding-independent pitching) prices only strikeouts, walks and
+    home runs -- the outcomes a pitcher controls without their defense behind
+    them -- where ERA also carries whatever that day's fielders and luck did.
+    It is the standard sabermetric alternative for exactly that reason.
+
+    Starters only: team FIP is not fetched for the bullpen, so this does not
+    blend in an ERA-only relief term the way _pitching_diff does. A separate
+    candidate rather than a replacement for it -- data_providers/mlb_pitcher.py
+    only just started actually retrieving FIP (it was querying a stat type
+    that cannot return it, silently, on every graded game so far), so this
+    has no real coverage yet and CANDIDATE_FEATURES documents it accordingly.
+    Judge it against its own absence once some weeks of games have graded
+    with the data actually present, the same way every other queued
+    candidate here is judged.
+    """
+    pitching = features.get("mlbPitching")
+    if not isinstance(pitching, dict):
+        return None
+    home_fip = _first_number(pitching.get("homePitcherFip"))
+    away_fip = _first_number(pitching.get("awayPitcherFip"))
+    if home_fip is None or away_fip is None:
+        return None
+    return away_fip - home_fip
 
 
 def measure_split_diff_centre(features_list: Sequence[dict[str, Any]]) -> float:

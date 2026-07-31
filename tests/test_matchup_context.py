@@ -247,6 +247,60 @@ class DeadFeatureRegressionTests(unittest.TestCase):
         self.assertEqual(matchup.handedness_diff(game), 1.0)
 
 
+class PitcherFipTests(unittest.TestCase):
+    """FIP was the fourth always-None candidate, and the quietest: a real
+    build logged 0 FIP values across 872 graded games while ERA filled in on
+    97-100% of them, using the same _pitcher_season_stats call. The "season"
+    stat type's pitching object never carries fip -- only "sabermetrics"
+    does -- so the single request this used to make could not have returned
+    it no matter how many games ran."""
+
+    def test_fip_is_read_from_the_sabermetrics_stat_type_not_season(self) -> None:
+        """The season payload here deliberately carries no fip field at all,
+        matching what the real API returns for stats=season -- if the
+        implementation still read fip off that response the way the old
+        single-request version tried to, this would come back None."""
+        from data_providers.mlb_pitcher import _pitcher_season_stats
+
+        season = {"stats": [{"splits": [{"stat": {"era": "3.10"}}]}]}
+        sabermetrics = {"stats": [{"splits": [{"stat": {"fip": "3.45"}}]}]}
+        with patch("data_providers.mlb_pitcher._fetch_api", side_effect=[season, sabermetrics]):
+            result = _pitcher_season_stats(543037)
+        self.assertEqual(result, {"era": 3.10, "fip": 3.45})
+
+    def test_a_failed_sabermetrics_call_still_returns_era(self) -> None:
+        """The two stat types are fetched separately so a sabermetrics outage
+        costs only fip, not the era value the first call already had."""
+        from data_providers.mlb_pitcher import _pitcher_season_stats
+
+        season = {"stats": [{"splits": [{"stat": {"era": "3.10"}}]}]}
+        with patch(
+            "data_providers.mlb_pitcher._fetch_api",
+            side_effect=[season, RuntimeError("sabermetrics down")],
+        ):
+            result = _pitcher_season_stats(543037)
+        self.assertEqual(result, {"era": 3.10, "fip": None})
+
+    def test_fip_reaches_the_pitching_context_the_feature_reads(self) -> None:
+        """The lookup is useless unless it lands where pitchingFipDiff looks."""
+        from data_providers.mlb_pitcher import enrich_mlb_pitching_context
+
+        game = {
+            "league": "mlb", "homeTeam": "Dodgers", "awayTeam": "Padres",
+            "homePitcher": {"name": "A"}, "awayPitcher": {"name": "B"},
+        }
+        with patch("data_providers.mlb_pitcher._resolve_pitcher_id", side_effect=[1, 2]), \
+             patch("data_providers.mlb_pitcher._pitcher_season_stats",
+                   side_effect=[{"era": 3.0, "fip": 3.2}, {"era": 4.0, "fip": 4.4}]), \
+             patch("data_providers.mlb_pitcher._pitcher_recent_start_era", return_value=None), \
+             patch("data_providers.mlb_pitcher._resolve_team_id", return_value=None), \
+             patch("data_providers.mlb_pitcher._pitcher_hand", return_value=None):
+            context = enrich_mlb_pitching_context(game)
+
+        self.assertEqual(context["homePitcherFip"], 3.2)
+        self.assertEqual(context["awayPitcherFip"], 4.4)
+
+
 class HeadToHeadResolutionTests(unittest.TestCase):
     """h2hDiff was None on all 120 rows of a real build.
 

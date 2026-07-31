@@ -97,6 +97,18 @@ def _team_bullpen_era(team_name: str | None, *, verify_ssl: bool = True) -> floa
 
 
 def _pitcher_season_stats(player_id: int, *, verify_ssl: bool = True) -> dict[str, float | None]:
+    """Season ERA and FIP for one pitcher.
+
+    These come from two different stat *types* on this API, not one -- the
+    "season" type's pitching stat object carries era, whip, wins and the rest
+    of the traditional line, but never fip. That field only exists under the
+    "sabermetrics" type. Requesting just "season" (as this used to) means
+    `stat.get("fip")` is always None: not missing data, a query that can
+    never return the field at all. A real build confirmed it -- 0 of 872
+    graded games logged a FIP for either side, the exact always-absent
+    signature the DeadFeatureRegressionTests class in test_matchup_context.py
+    already catches for handedness, h2h and bullpen.
+    """
     payload = _fetch_api(
         f"/api/v1/people/{player_id}/stats",
         {"stats": "season", "group": "pitching"},
@@ -104,12 +116,24 @@ def _pitcher_season_stats(player_id: int, *, verify_ssl: bool = True) -> dict[st
         verify_ssl=verify_ssl,
     )
     era = None
-    fip = None
     for group in payload.get("stats") or []:
         for split in group.get("splits") or []:
-            stat = split.get("stat") or {}
-            era = era if era is not None else to_float(stat.get("era"))
-            fip = fip if fip is not None else to_float(stat.get("fip"))
+            era = era if era is not None else to_float((split.get("stat") or {}).get("era"))
+
+    fip = None
+    try:
+        saber = _fetch_api(
+            f"/api/v1/people/{player_id}/stats",
+            {"stats": "sabermetrics", "group": "pitching"},
+            cache_key=f"mlb:pitcher:sabermetrics:{player_id}",
+            verify_ssl=verify_ssl,
+        )
+    except Exception:
+        saber = {}
+    for group in saber.get("stats") or []:
+        for split in group.get("splits") or []:
+            fip = fip if fip is not None else to_float((split.get("stat") or {}).get("fip"))
+
     return {"era": era, "fip": fip}
 
 
