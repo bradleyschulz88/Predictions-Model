@@ -186,7 +186,7 @@ def fit_logistic(
     rows: Sequence[Sequence[float]],
     labels: Sequence[int],
     *,
-    l2: float = 1.0,
+    l2: float | Sequence[float] = 1.0,
     max_iterations: int = 50,
     tolerance: float = 1e-7,
 ) -> list[float]:
@@ -194,10 +194,28 @@ def fit_logistic(
 
     The intercept is left unpenalised so regularisation shrinks effects toward
     zero without dragging the base rate away from the data.
+
+    ``l2`` is either one ridge strength shared by every feature, or a sequence
+    of per-feature strengths (length = width - 1, in row order, excluding the
+    intercept). A shared scalar cannot express "trust this input more before
+    seeing a single game" -- it shrinks every coefficient by the same
+    proportion, which just preserves whatever split the unpenalised data
+    implies. A per-feature penalty is a Gaussian prior with its own precision
+    on each coefficient: tighter (more shrinkage) on a feature more likely to
+    be noise, looser on one already known to be reliable.
     """
     if not rows:
         return []
     width = len(rows[0])
+    if isinstance(l2, (int, float)):
+        penalties = [0.0] + [float(l2)] * (width - 1)
+    else:
+        penalties = [0.0] + [float(value) for value in l2]
+        if len(penalties) != width:
+            raise ValueError(
+                f"l2 has {len(penalties) - 1} per-feature entries but the rows have "
+                f"{width - 1} features"
+            )
     weights = [0.0] * width
 
     for _ in range(max_iterations):
@@ -216,7 +234,7 @@ def fit_logistic(
                     hessian[i][j] += row_i_var * row[j]
 
         for i in range(width):
-            penalty = 0.0 if i == 0 else l2
+            penalty = penalties[i]
             gradient[i] -= penalty * weights[i]
             hessian[i][i] += penalty
 
@@ -657,8 +675,23 @@ def _load_json(path: Path, default: Any) -> Any:
         return default
 
 
+def _l2_vector(l2: float | dict[str, float], feature_names: Sequence[str]) -> float | list[float]:
+    """Resolve a per-feature penalty dict into fit_logistic's expected vector.
+
+    A dict scopes naturally to whichever block is being fit: the standalone
+    block only has strengthDiff, so a dict built for the anchored pair still
+    resolves correctly there -- marketLogit's entry is simply unused. Any
+    feature not named in the dict falls back to "_default", so adding a new
+    candidate feature later does not require touching every caller.
+    """
+    if isinstance(l2, (int, float)):
+        return l2
+    default = l2.get("_default", 1.0)
+    return [l2.get(name, default) for name in feature_names]
+
+
 def _fit_block(
-    samples: Sequence[Sample], feature_names: Sequence[str], *, l2: float
+    samples: Sequence[Sample], feature_names: Sequence[str], *, l2: float | dict[str, float]
 ) -> dict[str, Any] | None:
     if len(samples) < len(feature_names) * 5:
         return None
@@ -666,7 +699,7 @@ def _fit_block(
     means, scales = standardisation(values, feature_names)
     rows = [to_row(sample.values, feature_names, means, scales) for sample in samples]
     labels = [sample.label for sample in samples]
-    weights = fit_logistic(rows, labels, l2=l2)
+    weights = fit_logistic(rows, labels, l2=_l2_vector(l2, feature_names))
     if not weights:
         return None
     return {
@@ -716,7 +749,7 @@ def _league_intercepts(
 def fit_from_observations(
     samples: Sequence[Sample],
     *,
-    l2: float = 1.0,
+    l2: float | dict[str, float] = 1.0,
     split_diff_centre: float = DEFAULT_SPLIT_DIFF_CENTRE,
     anchored_features: Sequence[str] = ANCHORED_FEATURES,
     standalone_features: Sequence[str] = STANDALONE_FEATURES,
@@ -744,7 +777,7 @@ def fit_from_observations(
 def walk_forward_scores(
     samples: Sequence[Sample],
     *,
-    l2: float = 1.0,
+    l2: float | dict[str, float] = 1.0,
     folds: int = 5,
     anchored_features: Sequence[str] = ANCHORED_FEATURES,
     standalone_features: Sequence[str] = STANDALONE_FEATURES,
@@ -812,6 +845,65 @@ def choose_l2(
     return best_l2
 
 
+# Candidate ridge strengths either side of the shared-scalar search above.
+# strengthDiff's own candidates run wider and heavier: it is an average of
+# three season-aggregate stats standing in for a single "true" quality signal,
+# so more shrinkage toward zero is the reasonable prior. marketLogit's run
+# lighter: a de-vigged closing price is already close to the best available
+# estimate, so the fit should have to work to justify pulling it toward zero
+# at all.
+STRENGTH_L2_CANDIDATES: tuple[float, ...] = (3.0, 10.0, 30.0, 100.0)
+MARKET_L2_CANDIDATES: tuple[float, ...] = (0.1, 0.3, 1.0, 3.0, 10.0)
+
+
+def choose_anchored_penalties(
+    samples: Sequence[Sample],
+    *,
+    strength_candidates: Iterable[float] = STRENGTH_L2_CANDIDATES,
+    market_candidates: Iterable[float] = MARKET_L2_CANDIDATES,
+    default_l2: float = 10.0,
+) -> dict[str, float]:
+    """Pick separate ridge strengths for strengthDiff and marketLogit.
+
+    choose_l2 shares one penalty across every feature, which shrinks every
+    coefficient by the same proportion and therefore preserves whatever split
+    the unpenalised data implies -- on this project's graded history that
+    split lands close to even (51.7% strengthDiff / 48.3% marketLogit by
+    relative weight) despite the de-vigged market alone beating the blended
+    model's log loss on every game both have priced. A shared scalar has no
+    way to express "trust one of these more before seeing a single game";
+    that has to be an asymmetric prior, which unequal per-feature ridge
+    strength is -- a Gaussian prior on each coefficient with its own
+    precision, centred at zero, tighter on the input more likely to be noise.
+
+    Still chosen by walk-forward, not by asserting a ratio: the candidate
+    grids above encode the prior that strengthDiff should generally be
+    shrunk harder, but the actual pair is whichever one measures best out of
+    sample, the same discipline choose_l2 already applies to a single
+    scalar.
+    """
+    best = {"strengthDiff": default_l2, "marketLogit": default_l2}
+    best_loss = float("inf")
+    for strength_l2 in strength_candidates:
+        for market_l2 in market_candidates:
+            l2_map = {
+                "strengthDiff": strength_l2,
+                "marketLogit": market_l2,
+                "_default": default_l2,
+            }
+            scores = walk_forward_scores(
+                samples,
+                l2=l2_map,
+                anchored_features=ANCHORED_FEATURES,
+                standalone_features=STANDALONE_FEATURES,
+            )
+            loss = scores.get("logLoss")
+            if loss is not None and loss < best_loss:
+                best_loss = loss
+                best = {"strengthDiff": strength_l2, "marketLogit": market_l2}
+    return best
+
+
 def ablate(samples: Sequence[Sample]) -> list[dict[str, Any]]:
     """Walk-forward score of each nested feature set, best ridge per set.
 
@@ -840,21 +932,36 @@ def ablate(samples: Sequence[Sample]) -> list[dict[str, Any]]:
 
 
 def fit_and_write(data_dir: Path, *, l2: float | None = None) -> dict[str, Any]:
-    """Fit from the graded log and persist weights next to the other data files."""
+    """Fit from the graded log and persist weights next to the other data files.
+
+    An explicit ``--l2`` stays a plain shared scalar, for anyone comparing
+    against the old behaviour. Left to choose for itself, the fit now picks
+    strengthDiff and marketLogit their own ridge strengths rather than one
+    shared penalty -- see choose_anchored_penalties for why a shared scalar
+    could not express the asymmetry the data already shows.
+    """
     samples, centre = samples_from_log(data_dir)
     if not samples:
         raise SystemExit("No graded samples found; cannot fit.")
 
-    chosen_l2 = choose_l2(samples) if l2 is None else l2
+    chosen_l2 = choose_anchored_penalties(samples) if l2 is None else l2
     payload = fit_from_observations(samples, l2=chosen_l2, split_diff_centre=centre)
     payload["walkForward"] = walk_forward_scores(samples, l2=chosen_l2)
     (data_dir / WEIGHTS_FILE).write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return payload
 
 
+def _format_l2(l2: float | dict[str, float]) -> str:
+    if isinstance(l2, (int, float)):
+        return str(l2)
+    parts = ", ".join(f"{name}={value}" for name, value in l2.items() if name != "_default")
+    return f"{{{parts}}}"
+
+
 def _describe(payload: dict[str, Any]) -> None:
     print(f"Fitted on {payload['metadata']['nTotal']} graded games"
-          f" ({payload['metadata']['nWithMarket']} with odds), l2={payload['metadata']['l2']}")
+          f" ({payload['metadata']['nWithMarket']} with odds),"
+          f" l2={_format_l2(payload['metadata']['l2'])}")
     print(f"Split-diff centre (home-field baked into splits): {payload['splitDiffCentre']:+.4f}\n")
 
     for name in ("anchored", "standalone"):
@@ -934,7 +1041,7 @@ def main() -> int:
 
     if args.dry_run:
         samples, centre = samples_from_log(args.data_dir)
-        chosen = choose_l2(samples) if args.l2 is None else args.l2
+        chosen = choose_anchored_penalties(samples) if args.l2 is None else args.l2
         payload = fit_from_observations(samples, l2=chosen, split_diff_centre=centre)
         payload["walkForward"] = walk_forward_scores(samples, l2=chosen)
     else:
