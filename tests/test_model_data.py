@@ -13,7 +13,7 @@ from data_providers.schedule_advanced import (
     fetch_rolling_schedule_games,
     schedule_flags_logit_adjustment,
 )
-from scripts.backtest_model import summarize_predictions, write_calibration_report
+from scripts.backtest_model import _fitted_walk_forward, summarize_predictions, write_calibration_report
 
 
 class ScheduleAdvancedTests(unittest.TestCase):
@@ -126,6 +126,59 @@ class RollingScheduleTests(unittest.TestCase):
         self.assertIn("99", event_ids)
         self.assertIn("1", event_ids)
         clear_rolling_schedule_cache()
+
+
+class FittedWalkForwardTests(unittest.TestCase):
+    """_fitted_walk_forward reads the shipped model's own l2 to reproduce its
+    score honestly. model_fit.py's differential shrinkage made that l2 a dict
+    ({"strengthDiff": ..., "marketLogit": ...}) rather than always a float --
+    this pins that a shipped dict-valued l2 does not crash the evaluation
+    report, which is exactly what a bare float(l2) call would do."""
+
+    def test_a_dict_valued_shipped_l2_does_not_raise(self) -> None:
+        from unittest.mock import MagicMock, patch
+
+        import model_fit
+
+        fake_model = MagicMock()
+        fake_model.metadata = {"l2": {"strengthDiff": 30.0, "marketLogit": 1.0}}
+
+        samples = [
+            model_fit.Sample(
+                values={"strengthDiff": 0.1, "marketLogit": 0.2},
+                label=1,
+                league="mlb",
+                date=f"2026-06-{day:02d}",
+            )
+            for day in range(1, 29)
+        ] * 2  # enough rows for walk_forward_scores to attempt folds
+
+        with patch("scripts.backtest_model.model_fit.load_model", return_value=fake_model), \
+             patch("scripts.backtest_model.model_fit.samples_from_log", return_value=(samples, 0.0)):
+            result = _fitted_walk_forward(Path("unused"))
+
+        self.assertEqual(result.get("l2"), {"strengthDiff": 30.0, "marketLogit": 1.0})
+
+    def test_falls_back_to_1_0_when_no_model_is_shipped(self) -> None:
+        from unittest.mock import patch
+
+        import model_fit
+
+        samples = [
+            model_fit.Sample(
+                values={"strengthDiff": 0.1, "marketLogit": 0.2},
+                label=1,
+                league="mlb",
+                date=f"2026-06-{day:02d}",
+            )
+            for day in range(1, 29)
+        ] * 2
+
+        with patch("scripts.backtest_model.model_fit.load_model", return_value=None), \
+             patch("scripts.backtest_model.model_fit.samples_from_log", return_value=(samples, 0.0)):
+            result = _fitted_walk_forward(Path("unused"))
+
+        self.assertEqual(result.get("l2"), 1.0)
 
 
 if __name__ == "__main__":

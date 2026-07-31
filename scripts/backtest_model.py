@@ -258,9 +258,12 @@ def _fitted_walk_forward(data_dir: Path) -> dict[str, Any]:
         return {}
 
     # Score at the ridge strength the shipped weights were fitted with, so the
-    # reported number describes the model that is actually live.
+    # reported number describes the model that is actually live. l2 can be a
+    # plain scalar or a per-feature dict (strengthDiff and marketLogit now get
+    # their own penalty) -- walk_forward_scores accepts either, so this must
+    # not force it through float() and crash the moment a dict ships.
     shipped = model_fit.load_model(data_dir)
-    l2 = float((shipped.metadata.get("l2") if shipped else None) or 1.0)
+    l2 = (shipped.metadata.get("l2") if shipped else None) or 1.0
 
     scores = model_fit.walk_forward_scores(samples, l2=l2)
     scores["features"] = list(model_fit.ANCHORED_FEATURES)

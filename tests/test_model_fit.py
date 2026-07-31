@@ -86,6 +86,31 @@ class LogisticFitTests(unittest.TestCase):
     def test_empty_input_returns_empty(self) -> None:
         self.assertEqual(fit_logistic([], []), [])
 
+    def test_per_feature_l2_shrinks_only_the_penalised_column(self) -> None:
+        """A sequence of per-feature penalties must not just average out to
+        the same fit as a scalar -- the whole point is that two features can
+        be shrunk by different amounts."""
+        random.seed(13)
+        rows, labels = [], []
+        for _ in range(600):
+            x1 = random.gauss(0.0, 1.0)
+            x2 = random.gauss(0.0, 1.0)
+            rows.append([1.0, x1, x2])
+            labels.append(1 if random.random() < sigmoid(0.3 + 1.5 * x1 + 1.5 * x2) else 0)
+
+        uniform = fit_logistic(rows, labels, l2=20.0)
+        # Same total penalty "budget" style magnitude, but loaded entirely
+        # onto the first feature. Its coefficient must shrink harder than the
+        # uniform fit's, and the second feature -- penalised far less here --
+        # must end up larger than its uniform counterpart.
+        differential = fit_logistic(rows, labels, l2=[80.0, 1.0])
+        self.assertLess(abs(differential[1]), abs(uniform[1]))
+        self.assertGreater(abs(differential[2]), abs(uniform[2]))
+
+    def test_per_feature_l2_wrong_length_raises(self) -> None:
+        with self.assertRaises(ValueError):
+            fit_logistic([[1.0, 2.0, 3.0]], [1], l2=[1.0])
+
 
 class FeatureCollapseTests(unittest.TestCase):
     def test_averages_available_strength_measures(self) -> None:
@@ -211,6 +236,92 @@ class WalkForwardTests(unittest.TestCase):
         samples = sorted(_make_samples(400), key=lambda s: s.date)
         ordered_dates = [sample.date for sample in samples]
         self.assertEqual(ordered_dates, sorted(ordered_dates))
+
+
+class DifferentialShrinkageTests(unittest.TestCase):
+    """strengthDiff and marketLogit getting their own ridge penalty.
+
+    A plain shared L2 shrinks every coefficient by the same proportion, which
+    preserves whatever split the unpenalised fit implies -- and on the real
+    graded log that split lands close to even despite the market alone
+    beating the blended model on every priced game. These pin the mechanics:
+    a dict resolves to the right per-feature penalty, it round-trips through
+    JSON, and choosing it is still walk-forward-driven rather than assuming a
+    ratio.
+    """
+
+    def test_l2_vector_resolves_named_and_default_penalties(self) -> None:
+        vector = model_fit._l2_vector(
+            {"strengthDiff": 30.0, "marketLogit": 1.0, "_default": 5.0},
+            ("marketLogit", "strengthDiff", "restDiff"),
+        )
+        self.assertEqual(vector, [1.0, 30.0, 5.0])
+
+    def test_l2_vector_passes_a_scalar_through_unchanged(self) -> None:
+        self.assertEqual(model_fit._l2_vector(7.0, ("strengthDiff",)), 7.0)
+
+    def test_fit_block_stores_the_dict_as_given(self) -> None:
+        samples = _make_samples(300)
+        block = model_fit._fit_block(
+            samples, ("strengthDiff", "marketLogit"),
+            l2={"strengthDiff": 30.0, "marketLogit": 1.0},
+        )
+        assert block is not None
+        self.assertEqual(block["l2"], {"strengthDiff": 30.0, "marketLogit": 1.0})
+
+    def test_fit_from_observations_accepts_a_dict_for_both_blocks(self) -> None:
+        """The standalone block only has strengthDiff -- the same dict, built
+        for the anchored pair, must still resolve correctly there rather than
+        raising or silently mis-keying."""
+        l2_map = {"strengthDiff": 30.0, "marketLogit": 1.0, "_default": 10.0}
+        payload = fit_from_observations(_make_samples(300), l2=l2_map)
+        # Both blocks receive the same dict; each resolves only the entries
+        # relevant to its own feature list when actually fitting.
+        self.assertEqual(payload["anchored"]["l2"], l2_map)
+        self.assertEqual(payload["standalone"]["l2"], l2_map)
+        model = LogisticModel(payload)
+        prob = model.predict_from_values({"strengthDiff": 0.1}, "mlb")
+        self.assertIsNotNone(prob)
+
+    def test_choosing_penalties_returns_both_keys(self) -> None:
+        chosen = model_fit.choose_anchored_penalties(
+            _make_samples(400),
+            strength_candidates=(3.0, 30.0),
+            market_candidates=(1.0, 10.0),
+        )
+        self.assertIn("strengthDiff", chosen)
+        self.assertIn("marketLogit", chosen)
+        self.assertIn(chosen["strengthDiff"], (3.0, 30.0))
+        self.assertIn(chosen["marketLogit"], (1.0, 10.0))
+
+    def test_a_dict_l2_survives_a_json_round_trip(self) -> None:
+        """model_weights.json is read back by LogisticModel; the l2 field is
+        metadata only, but it must not corrupt the round trip."""
+        payload = fit_from_observations(
+            _make_samples(300), l2={"strengthDiff": 30.0, "marketLogit": 1.0}
+        )
+        restored = LogisticModel(json.loads(json.dumps(payload)))
+        original = LogisticModel(payload)
+        values = {"strengthDiff": 0.05, "marketLogit": 0.3}
+        self.assertAlmostEqual(
+            original.predict_from_values(values, "mlb"),
+            restored.predict_from_values(values, "mlb"),
+        )
+
+    def test_walk_forward_scores_accepts_a_dict_l2(self) -> None:
+        """This is the exact path scripts/backtest_model.py calls with the
+        shipped model's own metadata l2 -- it must not require a float()."""
+        scores = walk_forward_scores(
+            _make_samples(400), l2={"strengthDiff": 30.0, "marketLogit": 1.0}, folds=4
+        )
+        self.assertGreater(scores["n"], 0)
+
+    def test_format_l2_reads_naturally_for_both_shapes(self) -> None:
+        self.assertEqual(model_fit._format_l2(3.0), "3.0")
+        formatted = model_fit._format_l2({"strengthDiff": 30.0, "marketLogit": 1.0, "_default": 10.0})
+        self.assertIn("strengthDiff=30.0", formatted)
+        self.assertIn("marketLogit=1.0", formatted)
+        self.assertNotIn("_default", formatted)
 
 
 class HomeFieldTests(unittest.TestCase):
