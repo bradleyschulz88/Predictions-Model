@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import json
 import unittest
+from unittest import mock
 
 from offline import OfflineTestCase
 from pathlib import Path
 
+import mlb_predictions
 from espn_client import parse_scoreboard
 from mlb_data import fetch_dashboard_data
 from mlb_predictions import (
@@ -92,6 +94,44 @@ class PredictionModelTests(OfflineTestCase):
         self.assertIn("features", prediction)
         self.assertEqual(prediction["features"]["league"], "mlb")
         self.assertIn("recordDiff", prediction["features"])
+
+    def test_kelly_stake_defers_to_a_reliable_calibration_band(self) -> None:
+        """End to end: a confidence band the graded record says is really a
+        coin flip should shrink the published stake, not just the number
+        computed directly against kelly_band_probability in isolation."""
+        game = {
+            "league": "mlb",
+            "homeTeam": "Home",
+            "awayTeam": "Away",
+            "homeRecord": "45-15",
+            "awayRecord": "15-45",
+            "enrichment": {},
+            "lines": [
+                {"viewType": "MoneyLine", "currentLine": {"home": "-150", "away": "+130"}},
+            ],
+        }
+        baseline = predict_game(game)
+        self.assertIsNotNone(baseline["value"], "a moneyline was supplied")
+        self.assertGreater(baseline["value"]["kellyPct"], 0, "needs a real stake to shrink")
+
+        band = round(baseline["confidence"] // 5 * 5)
+        report = {
+            "reliability": [
+                {
+                    "range": f"{band}-{band + 5}",
+                    "picks": 50,
+                    "actualWinPct": 51.0,
+                    "avgPredictedPct": baseline["confidence"],
+                }
+            ]
+        }
+        with mock.patch.object(mlb_predictions, "_get_evaluation_report", return_value=report):
+            banded = predict_game(game)
+
+        self.assertEqual(banded["confidence"], baseline["confidence"], "the headline is unmoved")
+        self.assertEqual(banded["value"]["modelPct"], baseline["value"]["modelPct"])
+        self.assertAlmostEqual(banded["value"]["kellyProbabilityPct"], 51.0)
+        self.assertLess(banded["value"]["kellyPct"], baseline["value"]["kellyPct"])
 
 
 if __name__ == "__main__":
