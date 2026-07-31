@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-31T22:57:09.284143+00:00",
+  "updatedAt": "2026-07-31T23:59:26.519474+00:00",
   "summary": {
     "last7Days": {
       "correct": 289,
@@ -7,7 +7,7 @@
       "pct": 62.2,
       "units": 9.754,
       "roiPct": 2.1,
-      "pending": 49,
+      "pending": 47,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 60.4,
       "units": 13.113,
       "roiPct": 1.8,
-      "pending": 49,
-      "voided": 12
+      "pending": 47,
+      "voided": 14
     },
     "byLeague": {
       "mlb": {
@@ -3887,46 +3887,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Los Angeles Dodgers to win",
       "confidence": 69.7,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-31",
-      "published": true
-    },
-    {
-      "eventId": "401816337",
-      "league": "mlb",
-      "scheduleDate": "2026-07-31",
-      "matchup": "St. Louis Cardinals @ Toronto Blue Jays",
-      "predicted": "Toronto Blue Jays",
-      "predictedSide": "home",
-      "outcomeLabel": "Toronto Blue Jays to win",
-      "confidence": 63.0,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-07-31",
-      "published": true
-    },
-    {
-      "eventId": "401816333",
-      "league": "mlb",
-      "scheduleDate": "2026-07-31",
-      "matchup": "Chicago White Sox @ Tampa Bay Rays",
-      "predicted": "Tampa Bay Rays",
-      "predictedSide": "home",
-      "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 70.6,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -21182,7 +21142,7 @@
       "outcomeLabel": "Tampa Bay Rays to win",
       "confidence": 70.6,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -21190,7 +21150,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816338": {
       "eventId": "401816338",
@@ -21202,7 +21163,7 @@
       "outcomeLabel": "Atlanta Braves to win",
       "confidence": 72.3,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -21210,7 +21171,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": false
+      "published": false,
+      "voidReason": "voided"
     },
     "401816341": {
       "eventId": "401816341",
@@ -21482,7 +21444,7 @@
       "outcomeLabel": "Cleveland Guardians to win",
       "confidence": 57.6,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -21490,7 +21452,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": false
+      "published": false,
+      "voidReason": "voided"
     },
     "401816335": {
       "eventId": "401816335",
@@ -21502,7 +21465,7 @@
       "outcomeLabel": "Baltimore Orioles to win",
       "confidence": 59.0,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -21510,7 +21473,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": false
+      "published": false,
+      "voidReason": "voided"
     },
     "401816340": {
       "eventId": "401816340",
@@ -21932,7 +21896,7 @@
       "outcomeLabel": "Toronto Blue Jays to win",
       "confidence": 63.0,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -21940,7 +21904,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-07-31",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816352": {
       "eventId": "401816352",
@@ -23543,14 +23508,15 @@
       "openingSide": "away",
       "published": false,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-07-31"
+      "date": "2026-07-31",
+      "voidReason": "voided"
     },
     "401816349": {
       "eventId": "401816349",
