@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-01T12:37:21.978559+00:00",
+  "updatedAt": "2026-08-01T14:25:40.842674+00:00",
   "summary": {
     "last7Days": {
       "correct": 286,
@@ -7,7 +7,7 @@
       "pct": 61.9,
       "units": 4.753,
       "roiPct": 1.0,
-      "pending": 44,
+      "pending": 45,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 60.3,
       "units": 10.267,
       "roiPct": 1.4,
-      "pending": 44,
+      "pending": 45,
       "voided": 11
     },
     "byLeague": {
@@ -4061,6 +4061,26 @@
       "predictedSide": "home",
       "outcomeLabel": "Tampa Bay Rays to win",
       "confidence": 73.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-01",
+      "published": true
+    },
+    {
+      "eventId": "401816347",
+      "league": "mlb",
+      "scheduleDate": "2026-08-01",
+      "matchup": "Arizona Diamondbacks @ Cleveland Guardians",
+      "predicted": "Arizona Diamondbacks",
+      "predictedSide": "away",
+      "outcomeLabel": "Arizona Diamondbacks to win",
+      "confidence": 57.1,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -22403,7 +22423,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-01",
-      "published": false
+      "published": true
     },
     "401816351": {
       "eventId": "401816351",
