@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-01T16:53:27.986973+00:00",
+  "updatedAt": "2026-08-01T17:56:01.670259+00:00",
   "summary": {
     "last7Days": {
       "correct": 286,
@@ -17,7 +17,7 @@
       "units": 10.267,
       "roiPct": 1.4,
       "pending": 46,
-      "voided": 11
+      "voided": 12
     },
     "byLeague": {
       "afl": {
@@ -3913,26 +3913,6 @@
       "published": true
     },
     {
-      "eventId": "401857105",
-      "league": "wnba",
-      "scheduleDate": "2026-08-01",
-      "matchup": "Las Vegas Aces @ Chicago Sky",
-      "predicted": "Las Vegas Aces",
-      "predictedSide": "away",
-      "outcomeLabel": "Las Vegas Aces to win",
-      "confidence": 68.3,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-01",
-      "published": true
-    },
-    {
       "eventId": "401816361",
       "league": "mlb",
       "scheduleDate": "2026-08-01",
@@ -4021,6 +4001,26 @@
       "predictedSide": "home",
       "outcomeLabel": "Atlanta Braves to win",
       "confidence": 68.9,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-01",
+      "published": true
+    },
+    {
+      "eventId": "401816352",
+      "league": "mlb",
+      "scheduleDate": "2026-08-01",
+      "matchup": "St. Louis Cardinals @ Toronto Blue Jays",
+      "predicted": "Toronto Blue Jays",
+      "predictedSide": "home",
+      "outcomeLabel": "Toronto Blue Jays to win",
+      "confidence": 58.3,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -22225,7 +22225,7 @@
       "outcomeLabel": "Las Vegas Aces to win",
       "confidence": 68.3,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -22233,7 +22233,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-01",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401857106": {
       "eventId": "401857106",
@@ -22393,7 +22394,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-01",
-      "published": false
+      "published": true
     },
     "401816328": {
       "eventId": "401816328",
