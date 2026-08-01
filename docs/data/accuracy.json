@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-01T15:40:45.971409+00:00",
+  "updatedAt": "2026-08-01T16:53:27.986973+00:00",
   "summary": {
     "last7Days": {
       "correct": 286,
@@ -7,7 +7,7 @@
       "pct": 61.9,
       "units": 4.753,
       "roiPct": 1.0,
-      "pending": 45,
+      "pending": 46,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 60.3,
       "units": 10.267,
       "roiPct": 1.4,
-      "pending": 45,
+      "pending": 46,
       "voided": 11
     },
     "byLeague": {
@@ -3755,6 +3755,26 @@
       "predictedSide": "away",
       "outcomeLabel": "Detroit Tigers to win",
       "confidence": 66.8,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-02",
+      "published": true
+    },
+    {
+      "eventId": "401816369",
+      "league": "mlb",
+      "scheduleDate": "2026-08-02",
+      "matchup": "New York Yankees @ Chicago Cubs",
+      "predicted": "New York Yankees",
+      "predictedSide": "away",
+      "outcomeLabel": "New York Yankees to win",
+      "confidence": 64.7,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -22503,7 +22523,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": false
+      "published": true
     },
     "401816371": {
       "eventId": "401816371",
