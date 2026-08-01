@@ -1,25 +1,38 @@
 {
-  "updatedAt": "2026-08-01T09:53:04.198727+00:00",
+  "updatedAt": "2026-08-01T11:16:34.143408+00:00",
   "summary": {
     "last7Days": {
-      "correct": 285,
-      "total": 460,
+      "correct": 286,
+      "total": 461,
       "pct": 62.0,
       "units": 4.753,
       "roiPct": 1.0,
-      "pending": 46,
+      "pending": 45,
       "voided": 0
     },
     "allTime": {
-      "correct": 451,
-      "total": 747,
+      "correct": 452,
+      "total": 748,
       "pct": 60.4,
       "units": 10.267,
       "roiPct": 1.4,
-      "pending": 46,
-      "voided": 11
+      "pending": 45,
+      "voided": 12
     },
     "byLeague": {
+      "afl": {
+        "correct": 30,
+        "total": 39,
+        "pct": 76.9,
+        "units": 0.0,
+        "roiPct": null,
+        "pending": 0,
+        "voided": 0,
+        "priced": 0,
+        "unpriced": 39,
+        "pricedPct": 0.0,
+        "roiNote": "No odds available for this league; ROI is not measurable."
+      },
       "mlb": {
         "correct": 192,
         "total": 331,
@@ -31,19 +44,6 @@
         "priced": 291,
         "unpriced": 40,
         "pricedPct": 87.9
-      },
-      "afl": {
-        "correct": 29,
-        "total": 38,
-        "pct": 76.3,
-        "units": 0.0,
-        "roiPct": null,
-        "pending": 0,
-        "voided": 0,
-        "priced": 0,
-        "unpriced": 38,
-        "pricedPct": 0.0,
-        "roiNote": "No odds available for this league; ROI is not measurable."
       },
       "wnba": {
         "correct": 53,
@@ -71,7 +71,7 @@
       }
     },
     "streak": {
-      "current": 3,
+      "current": 2,
       "type": "loss",
       "bestWin": 6,
       "bestLoss": 4
@@ -110,6 +110,36 @@
     }
   },
   "recentResults": [
+    {
+      "eventId": "1133661",
+      "league": "afl",
+      "scheduleDate": "2026-08-01",
+      "matchup": "GWS GIANTS @ Port Adelaide",
+      "predicted": "GWS GIANTS",
+      "predictedSide": "away",
+      "outcomeLabel": "GWS GIANTS to win",
+      "confidence": 56.6,
+      "rawConfidence": 56.6,
+      "rawHomeWinPct": 43.4,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
+      "published": true,
+      "clvPct": null,
+      "status": "graded",
+      "actual": "GWS GIANTS",
+      "correct": true,
+      "units": null,
+      "homeScore": "63",
+      "awayScore": "75",
+      "gradedAt": "2026-08-01T11:16:07.061304+00:00",
+      "date": "2026-08-01",
+      "totalResult": null,
+      "spreadResult": null
+    },
     {
       "eventId": "401816344",
       "league": "mlb",
@@ -3033,28 +3063,6 @@
       "published": true,
       "totalResult": null,
       "spreadResult": null
-    },
-    {
-      "eventId": "401816247",
-      "league": "mlb",
-      "scheduleDate": "2026-07-24",
-      "matchup": "Houston Astros @ Chicago White Sox",
-      "predicted": "Chicago White Sox",
-      "predictedSide": "home",
-      "outcomeLabel": "Chicago White Sox to win",
-      "confidence": 68.9,
-      "pickOdds": -135,
-      "status": "graded",
-      "actual": "Houston Astros",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "5",
-      "awayScore": "9",
-      "gradedAt": "2026-07-25T05:00:42.075851+00:00",
-      "date": "2026-07-24",
-      "published": true,
-      "totalResult": null,
-      "spreadResult": null
     }
   ],
   "pendingPicks": [
@@ -4065,26 +4073,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Tampa Bay Rays to win",
       "confidence": 73.4,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-01",
-      "published": true
-    },
-    {
-      "eventId": "1133654",
-      "league": "afl",
-      "scheduleDate": "2026-08-01",
-      "matchup": "Brisbane Lions @ Carlton",
-      "predicted": "Brisbane Lions",
-      "predictedSide": "away",
-      "outcomeLabel": "Brisbane Lions to win",
-      "confidence": 80.3,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -21797,17 +21785,27 @@
       "predicted": "GWS GIANTS",
       "predictedSide": "away",
       "outcomeLabel": "GWS GIANTS to win",
-      "confidence": 58.3,
+      "confidence": 56.6,
+      "rawConfidence": 56.6,
+      "rawHomeWinPct": 43.4,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
+      "openingOdds": null,
+      "openingSide": "away",
+      "published": true,
+      "clvPct": null,
+      "status": "graded",
+      "actual": "GWS GIANTS",
+      "correct": true,
       "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
+      "homeScore": "63",
+      "awayScore": "75",
+      "gradedAt": "2026-08-01T11:16:07.061304+00:00",
       "date": "2026-08-01",
-      "published": false
+      "totalResult": null,
+      "spreadResult": null
     },
     "1133654": {
       "eventId": "1133654",
@@ -21819,7 +21817,7 @@
       "outcomeLabel": "Brisbane Lions to win",
       "confidence": 80.3,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -21827,7 +21825,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-01",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816332": {
       "eventId": "401816332",
