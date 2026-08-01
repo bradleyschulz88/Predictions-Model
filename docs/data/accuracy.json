@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-01T17:56:01.670259+00:00",
+  "updatedAt": "2026-08-01T18:57:10.686561+00:00",
   "summary": {
     "last7Days": {
       "correct": 286,
@@ -7,7 +7,7 @@
       "pct": 61.9,
       "units": 4.753,
       "roiPct": 1.0,
-      "pending": 46,
+      "pending": 48,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 60.3,
       "units": 10.267,
       "roiPct": 1.4,
-      "pending": 46,
+      "pending": 48,
       "voided": 12
     },
     "byLeague": {
@@ -3767,6 +3767,26 @@
       "published": true
     },
     {
+      "eventId": "401816372",
+      "league": "mlb",
+      "scheduleDate": "2026-08-02",
+      "matchup": "Boston Red Sox @ Los Angeles Dodgers",
+      "predicted": "Los Angeles Dodgers",
+      "predictedSide": "home",
+      "outcomeLabel": "Los Angeles Dodgers to win",
+      "confidence": 70.3,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-02",
+      "published": true
+    },
+    {
       "eventId": "401816369",
       "league": "mlb",
       "scheduleDate": "2026-08-02",
@@ -3805,6 +3825,34 @@
       "gradedAt": null,
       "date": "2026-08-02",
       "published": true
+    },
+    {
+      "eventId": "401816365",
+      "league": "mlb",
+      "scheduleDate": "2026-08-02",
+      "matchup": "Philadelphia Phillies @ Baltimore Orioles",
+      "predicted": "Philadelphia Phillies",
+      "predictedSide": "away",
+      "outcomeLabel": "Philadelphia Phillies to win",
+      "confidence": 51.7,
+      "rawConfidence": 51.7,
+      "rawHomeWinPct": 48.3,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-02"
     },
     {
       "eventId": "401816364",
@@ -22604,7 +22652,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": false
+      "published": true
     },
     "401857107": {
       "eventId": "401857107",
@@ -24061,7 +24109,7 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "away",
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
