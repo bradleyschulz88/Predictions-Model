@@ -1,25 +1,37 @@
 {
-  "updatedAt": "2026-08-01T18:57:10.686561+00:00",
+  "updatedAt": "2026-08-01T20:08:33.710026+00:00",
   "summary": {
     "last7Days": {
       "correct": 286,
-      "total": 462,
-      "pct": 61.9,
-      "units": 4.753,
-      "roiPct": 1.0,
+      "total": 463,
+      "pct": 61.8,
+      "units": 3.753,
+      "roiPct": 0.8,
       "pending": 48,
       "voided": 0
     },
     "allTime": {
       "correct": 452,
-      "total": 749,
+      "total": 750,
       "pct": 60.3,
-      "units": 10.267,
-      "roiPct": 1.4,
+      "units": 9.267,
+      "roiPct": 1.2,
       "pending": 48,
-      "voided": 12
+      "voided": 11
     },
     "byLeague": {
+      "wnba": {
+        "correct": 53,
+        "total": 72,
+        "pct": 73.6,
+        "units": 0.517,
+        "roiPct": 0.7,
+        "pending": 0,
+        "voided": 0,
+        "priced": 14,
+        "unpriced": 58,
+        "pricedPct": 19.4
+      },
       "afl": {
         "correct": 30,
         "total": 40,
@@ -45,18 +57,6 @@
         "unpriced": 40,
         "pricedPct": 87.9
       },
-      "wnba": {
-        "correct": 53,
-        "total": 71,
-        "pct": 74.6,
-        "units": 1.517,
-        "roiPct": 2.1,
-        "pending": 0,
-        "voided": 0,
-        "priced": 13,
-        "unpriced": 58,
-        "pricedPct": 18.3
-      },
       "worldcup": {
         "correct": 11,
         "total": 20,
@@ -71,45 +71,90 @@
       }
     },
     "streak": {
-      "current": 1,
-      "type": "loss",
+      "current": 6,
+      "type": "win",
       "bestWin": 6,
       "bestLoss": 4
     },
     "closingLineValue": {
-      "picks": 59,
-      "avgPct": 0.07,
-      "beatCloseP": 45.8,
+      "picks": 60,
+      "avgPct": 0.02,
+      "beatCloseP": 45.0,
       "note": "Closing line value predicts long-run profitability better than win rate."
     },
     "totals": {
-      "graded": 18,
+      "graded": 19,
       "wins": 14,
-      "losses": 4,
+      "losses": 5,
       "pushes": 0,
-      "pct": 77.8,
+      "pct": 73.7,
       "breakEvenPct": 52.4,
-      "priced": 8,
+      "priced": 9,
       "unpriced": 10,
-      "units": 1.623,
-      "roiPct": 9.0,
-      "note": "ROI is over all 18 graded picks; 10 of them carry no logged price and count as zero return."
+      "units": 0.623,
+      "roiPct": 3.3,
+      "note": "ROI is over all 19 graded picks; 10 of them carry no logged price and count as zero return."
     },
     "spreads": {
-      "graded": 18,
+      "graded": 19,
       "wins": 12,
-      "losses": 6,
+      "losses": 7,
       "pushes": 0,
-      "pct": 66.7,
+      "pct": 63.2,
       "breakEvenPct": 52.4,
-      "priced": 6,
+      "priced": 7,
       "unpriced": 12,
-      "units": 3.51,
-      "roiPct": 19.5,
-      "note": "ROI is over all 18 graded picks; 12 of them carry no logged price and count as zero return."
+      "units": 2.51,
+      "roiPct": 13.2,
+      "note": "ROI is over all 19 graded picks; 12 of them carry no logged price and count as zero return."
     }
   },
   "recentResults": [
+    {
+      "eventId": "401857105",
+      "league": "wnba",
+      "scheduleDate": "2026-08-01",
+      "matchup": "Las Vegas Aces @ Chicago Sky",
+      "predicted": "Las Vegas Aces",
+      "predictedSide": "away",
+      "outcomeLabel": "Las Vegas Aces to win",
+      "confidence": 74.9,
+      "rawConfidence": 74.9,
+      "rawHomeWinPct": 25.1,
+      "probabilityMethod": "fitted",
+      "evPct": 7.44,
+      "kellyPct": 0.0,
+      "pickOdds": -230,
+      "openingOdds": -259,
+      "openingSide": "away",
+      "published": true,
+      "clvPct": -2.45,
+      "status": "graded",
+      "actual": "Chicago Sky",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "84",
+      "awayScore": "83",
+      "gradedAt": "2026-08-01T20:08:33.511370+00:00",
+      "date": "2026-08-01",
+      "totalResult": {
+        "line": 183.5,
+        "pickSide": "over",
+        "actual": 167,
+        "outcome": "loss",
+        "odds": -108,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 5.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "spread",
+        "outcome": "loss",
+        "odds": -110,
+        "units": -1.0
+      }
+    },
     {
       "eventId": "1133654",
       "league": "afl",
@@ -3049,28 +3094,6 @@
       "published": true,
       "totalResult": null,
       "spreadResult": null
-    },
-    {
-      "eventId": "401816244",
-      "league": "mlb",
-      "scheduleDate": "2026-07-24",
-      "matchup": "Athletics @ Minnesota Twins",
-      "predicted": "Minnesota Twins",
-      "predictedSide": "home",
-      "outcomeLabel": "Minnesota Twins to win",
-      "confidence": 75.8,
-      "pickOdds": null,
-      "status": "graded",
-      "actual": "Athletics",
-      "correct": false,
-      "units": null,
-      "homeScore": "0",
-      "awayScore": "2",
-      "gradedAt": "2026-07-25T05:00:42.075877+00:00",
-      "date": "2026-07-24",
-      "published": true,
-      "totalResult": null,
-      "spreadResult": null
     }
   ],
   "pendingPicks": [
@@ -3472,6 +3495,26 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-04",
+      "published": true
+    },
+    {
+      "eventId": "401857113",
+      "league": "wnba",
+      "scheduleDate": "2026-08-03",
+      "matchup": "Phoenix Mercury @ Chicago Sky",
+      "predicted": "Phoenix Mercury",
+      "predictedSide": "away",
+      "outcomeLabel": "Phoenix Mercury to win",
+      "confidence": 59.9,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-03",
       "published": true
     },
     {
@@ -4049,26 +4092,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Atlanta Braves to win",
       "confidence": 68.9,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-01",
-      "published": true
-    },
-    {
-      "eventId": "401816352",
-      "league": "mlb",
-      "scheduleDate": "2026-08-01",
-      "matchup": "St. Louis Cardinals @ Toronto Blue Jays",
-      "predicted": "Toronto Blue Jays",
-      "predictedSide": "home",
-      "outcomeLabel": "Toronto Blue Jays to win",
-      "confidence": 58.3,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -22271,18 +22294,42 @@
       "predicted": "Las Vegas Aces",
       "predictedSide": "away",
       "outcomeLabel": "Las Vegas Aces to win",
-      "confidence": 68.3,
-      "pickOdds": null,
-      "status": "voided",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-01",
+      "confidence": 74.9,
+      "rawConfidence": 74.9,
+      "rawHomeWinPct": 25.1,
+      "probabilityMethod": "fitted",
+      "evPct": 7.44,
+      "kellyPct": 0.0,
+      "pickOdds": -230,
+      "openingOdds": -259,
+      "openingSide": "away",
       "published": true,
-      "voidReason": "voided"
+      "clvPct": -2.45,
+      "status": "graded",
+      "actual": "Chicago Sky",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "84",
+      "awayScore": "83",
+      "gradedAt": "2026-08-01T20:08:33.511370+00:00",
+      "date": "2026-08-01",
+      "totalResult": {
+        "line": 183.5,
+        "pickSide": "over",
+        "actual": 167,
+        "outcome": "loss",
+        "odds": -108,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 5.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "spread",
+        "outcome": "loss",
+        "odds": -110,
+        "units": -1.0
+      }
     },
     "401857106": {
       "eventId": "401857106",
@@ -22434,7 +22481,7 @@
       "outcomeLabel": "Toronto Blue Jays to win",
       "confidence": 58.3,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -22442,7 +22489,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-01",
-      "published": true
+      "published": false,
+      "voidReason": "voided"
     },
     "401816328": {
       "eventId": "401816328",
@@ -22992,7 +23040,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-03",
-      "published": false
+      "published": true
     },
     "401816284": {
       "eventId": "401816284",
