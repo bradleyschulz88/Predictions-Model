@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-02T17:59:03.001548+00:00",
+  "updatedAt": "2026-08-02T18:58:08.295393+00:00",
   "summary": {
     "last7Days": {
       "correct": 288,
@@ -7,7 +7,7 @@
       "pct": 62.5,
       "units": 8.726,
       "roiPct": 1.9,
-      "pending": 50,
+      "pending": 48,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 60.7,
       "units": 13.064,
       "roiPct": 1.7,
-      "pending": 50,
-      "voided": 15
+      "pending": 48,
+      "voided": 16
     },
     "byLeague": {
       "afl": {
@@ -4421,52 +4421,6 @@
       "outcomeLabel": "Los Angeles Dodgers to win",
       "confidence": 70.3,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-02",
-      "published": true
-    },
-    {
-      "eventId": "401816370",
-      "league": "mlb",
-      "scheduleDate": "2026-08-02",
-      "matchup": "Texas Rangers @ Houston Astros",
-      "predicted": "Texas Rangers",
-      "predictedSide": "away",
-      "outcomeLabel": "Texas Rangers to win",
-      "confidence": 57.0,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-02",
-      "published": true
-    },
-    {
-      "eventId": "401816363",
-      "league": "mlb",
-      "scheduleDate": "2026-08-02",
-      "matchup": "Chicago White Sox @ Tampa Bay Rays",
-      "predicted": "Tampa Bay Rays",
-      "predictedSide": "home",
-      "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 63.1,
-      "rawConfidence": 63.1,
-      "rawHomeWinPct": 63.1,
-      "probabilityMethod": "fitted",
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
       "status": "pending",
       "actual": null,
       "correct": null,
@@ -23086,7 +23040,7 @@
       "outcomeLabel": "Pittsburgh Pirates to win",
       "confidence": 66.6,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -23094,7 +23048,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": false
+      "published": false,
+      "voidReason": "voided"
     },
     "401816369": {
       "eventId": "401816369",
@@ -23106,7 +23061,7 @@
       "outcomeLabel": "New York Yankees to win",
       "confidence": 64.7,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -23114,7 +23069,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": false
+      "published": false,
+      "voidReason": "voided"
     },
     "401816371": {
       "eventId": "401816371",
@@ -23328,7 +23284,7 @@
       "outcomeLabel": "Texas Rangers to win",
       "confidence": 57.0,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -23336,7 +23292,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": true
+      "published": false,
+      "voidReason": "voided"
     },
     "401816378": {
       "eventId": "401816378",
@@ -23606,7 +23563,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -23614,7 +23571,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816374": {
       "eventId": "401816374",
