@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-02T15:38:19.100963+00:00",
+  "updatedAt": "2026-08-02T16:53:18.038304+00:00",
   "summary": {
     "last7Days": {
       "correct": 288,
@@ -16,7 +16,7 @@
       "pct": 60.7,
       "units": 13.064,
       "roiPct": 1.7,
-      "pending": 52,
+      "pending": 53,
       "voided": 11
     },
     "byLeague": {
@@ -4060,6 +4060,26 @@
       "published": true
     },
     {
+      "eventId": "401857113",
+      "league": "wnba",
+      "scheduleDate": "2026-08-03",
+      "matchup": "Phoenix Mercury @ Chicago Sky",
+      "predicted": "Phoenix Mercury",
+      "predictedSide": "away",
+      "outcomeLabel": "Phoenix Mercury to win",
+      "confidence": 59.9,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-03",
+      "published": true
+    },
+    {
       "eventId": "401857112",
       "league": "wnba",
       "scheduleDate": "2026-08-03",
@@ -4450,34 +4470,6 @@
       "gradedAt": null,
       "date": "2026-08-02",
       "published": true
-    },
-    {
-      "eventId": "401816365",
-      "league": "mlb",
-      "scheduleDate": "2026-08-02",
-      "matchup": "Philadelphia Phillies @ Baltimore Orioles",
-      "predicted": "Philadelphia Phillies",
-      "predictedSide": "away",
-      "outcomeLabel": "Philadelphia Phillies to win",
-      "confidence": 51.7,
-      "rawConfidence": 51.7,
-      "rawHomeWinPct": 48.3,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-02"
     }
   ],
   "picksByEventId": {
@@ -23535,7 +23527,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-03",
-      "published": false
+      "published": true
     },
     "401816284": {
       "eventId": "401816284",
