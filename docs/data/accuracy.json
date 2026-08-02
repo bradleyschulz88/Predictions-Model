@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-02T16:53:18.038304+00:00",
+  "updatedAt": "2026-08-02T17:59:03.001548+00:00",
   "summary": {
     "last7Days": {
       "correct": 288,
@@ -16,8 +16,8 @@
       "pct": 60.7,
       "units": 13.064,
       "roiPct": 1.7,
-      "pending": 53,
-      "voided": 11
+      "pending": 50,
+      "voided": 15
     },
     "byLeague": {
       "afl": {
@@ -4452,15 +4452,21 @@
       "published": true
     },
     {
-      "eventId": "401816368",
+      "eventId": "401816363",
       "league": "mlb",
       "scheduleDate": "2026-08-02",
-      "matchup": "Washington Nationals @ Atlanta Braves",
-      "predicted": "Atlanta Braves",
+      "matchup": "Chicago White Sox @ Tampa Bay Rays",
+      "predicted": "Tampa Bay Rays",
       "predictedSide": "home",
-      "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 69.2,
+      "outcomeLabel": "Tampa Bay Rays to win",
+      "confidence": 63.1,
+      "rawConfidence": 63.1,
+      "rawHomeWinPct": 63.1,
+      "probabilityMethod": "fitted",
       "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "home",
+      "clvPct": null,
       "status": "pending",
       "actual": null,
       "correct": null,
@@ -23059,7 +23065,7 @@
       "outcomeLabel": "Atlanta Braves to win",
       "confidence": 69.2,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -23067,7 +23073,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816366": {
       "eventId": "401816366",
@@ -23279,7 +23286,7 @@
       "outcomeLabel": "Miami Marlins to win",
       "confidence": 57.2,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -23287,7 +23294,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816367": {
       "eventId": "401816367",
@@ -23299,7 +23307,7 @@
       "outcomeLabel": "St. Louis Cardinals to win",
       "confidence": 72.2,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -23307,7 +23315,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": false
+      "published": false,
+      "voidReason": "voided"
     },
     "401816370": {
       "eventId": "401816370",
@@ -24650,14 +24659,15 @@
       "openingSide": "away",
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-02"
+      "date": "2026-08-02",
+      "voidReason": "voided"
     },
     "401816362": {
       "eventId": "401816362",
@@ -24676,16 +24686,17 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "away",
-      "published": false,
+      "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-02"
+      "date": "2026-08-02",
+      "voidReason": "voided"
     },
     "401816375": {
       "eventId": "401816375",
