@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-02T04:52:34.652937+00:00",
+  "updatedAt": "2026-08-02T07:31:26.911708+00:00",
   "summary": {
     "last7Days": {
       "correct": 286,
@@ -16,8 +16,8 @@
       "pct": 60.6,
       "units": 13.064,
       "roiPct": 1.7,
-      "pending": 52,
-      "voided": 11
+      "pending": 51,
+      "voided": 13
     },
     "byLeague": {
       "mlb": {
@@ -4262,6 +4262,26 @@
       "published": true
     },
     {
+      "eventId": "401857108",
+      "league": "wnba",
+      "scheduleDate": "2026-08-02",
+      "matchup": "Los Angeles Sparks @ Portland Fire",
+      "predicted": "Portland Fire",
+      "predictedSide": "home",
+      "outcomeLabel": "Portland Fire to win",
+      "confidence": 62.4,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-02",
+      "published": true
+    },
+    {
       "eventId": "401857107",
       "league": "wnba",
       "scheduleDate": "2026-08-02",
@@ -4425,32 +4445,6 @@
       "outcomeLabel": "Miami Marlins to win",
       "confidence": 57.2,
       "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-02",
-      "published": true
-    },
-    {
-      "eventId": "401816363",
-      "league": "mlb",
-      "scheduleDate": "2026-08-02",
-      "matchup": "Chicago White Sox @ Tampa Bay Rays",
-      "predicted": "Tampa Bay Rays",
-      "predictedSide": "home",
-      "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 63.1,
-      "rawConfidence": 63.1,
-      "rawHomeWinPct": 63.1,
-      "probabilityMethod": "fitted",
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
       "status": "pending",
       "actual": null,
       "correct": null,
@@ -22777,18 +22771,27 @@
       "predicted": "West Coast Eagles",
       "predictedSide": "away",
       "outcomeLabel": "West Coast Eagles to win",
-      "confidence": 57.7,
+      "confidence": 50.3,
+      "rawConfidence": 50.3,
+      "rawHomeWinPct": 49.7,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
       "pickOdds": null,
-      "status": "voided",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-02",
+      "openingOdds": null,
+      "openingSide": "away",
       "published": false,
-      "voidReason": "voided"
+      "clvPct": null,
+      "status": "graded",
+      "actual": "Richmond",
+      "correct": false,
+      "units": null,
+      "homeScore": "84",
+      "awayScore": "73",
+      "gradedAt": "2026-08-02T07:31:09.964686+00:00",
+      "date": "2026-08-02",
+      "totalResult": null,
+      "spreadResult": null
     },
     "1133657": {
       "eventId": "1133657",
@@ -22800,7 +22803,7 @@
       "outcomeLabel": "Melbourne to win",
       "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -22808,7 +22811,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "1133656": {
       "eventId": "1133656",
@@ -22820,7 +22824,7 @@
       "outcomeLabel": "Adelaide Crows to win",
       "confidence": 82.4,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -22828,7 +22832,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816331": {
       "eventId": "401816331",
@@ -23188,7 +23193,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": false
+      "published": true
     },
     "401857109": {
       "eventId": "401857109",
