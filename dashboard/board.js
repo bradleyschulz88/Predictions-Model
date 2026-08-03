@@ -385,6 +385,13 @@ function renderBoard() {
   host.appendChild(suggestions("board"));
 }
 
+/* The wager to place. Falls back to the moneyline winner when nothing on the
+   game is priced, which is the only case where there is no bet to name. */
+function betHeadline(play) {
+  if (play.betLabel && play.betMarket && play.betMarket !== "moneyline") return play.betLabel;
+  return play.pick || "";
+}
+
 function heroFor(play) {
   const wrap = el("div");
   const hero = el("div", "hero");
@@ -402,7 +409,15 @@ function heroFor(play) {
       (when ? `<span class="chip">${esc(when)}</span>` : "") +
     `</div>` +
     `<div class="match">${esc(play.matchup || "")}</div>` +
-    `<h3 class="pick">${esc(play.pick || "")}</h3>` +
+    // The headline is the bet, not the winner. Once the board ranks on the
+    // best available market, printing the moneyline team above a total's EV
+    // and price would attribute one market's edge to another.
+    `<h3 class="pick">${esc(betHeadline(play))}</h3>` +
+    (play.betMarket && play.betMarket !== "moneyline"
+      ? `<div style="font-size:12.5px;color:var(--muted);margin:-4px 0 8px">` +
+        `${esc(MARKET_LABEL[play.betMarket] || play.betMarket)} — the best-priced bet on this game. ` +
+        `Model likes ${esc(play.pick || "")} to win at ${pct(play.confidence)}.</div>`
+      : "") +
     `<div class="rail2">` +
       `<div class="barrow"><span class="lbl">Model</span><div class="bar m">` +
         `<i style="width:${Math.max(0, Math.min(100, play.confidence || 0))}%"></i>` +
@@ -654,6 +669,10 @@ function toPlay(game, league, label) {
     enrichment: game.enrichment || {},
     total: prediction.total || null,
     spread: prediction.spread || null,
+    // Every priced market ranked, and which one is worth backing.
+    bestBet: prediction.bestBet || null,
+    betMarket: (prediction.bestBet?.pick || {}).market || null,
+    betLabel: (prediction.bestBet?.pick || {}).pick || null,
     statusLabel: game.statusLabel || (game.isFinal ? "Final" : null),
     isFinal: !!game.isFinal,
   };
@@ -687,7 +706,10 @@ function gameRow(play) {
       (fades === true ? `<span class="chip warn">Against the favourite</span>` : "") +
       (gap == null ? "" : `<span class="chip">${sgn(gap)}pts vs market</span>`) +
     `</div></div>` +
-    `<div class="pk"><span class="who">${esc(play.pick || "")}</span>` +
+    `<div class="pk"><span class="who">${esc(betHeadline(play))}</span>` +
+      (play.betMarket && play.betMarket !== "moneyline"
+        ? `<span class="chip" style="margin-left:6px">${esc(MARKET_LABEL[play.betMarket] || play.betMarket)}</span>`
+        : "") +
       `<div class="rail2" style="margin-top:6px">` +
         `<div class="bar m" style="height:9px"><i style="width:${Math.max(0, Math.min(100, play.confidence || 0))}%"></i></div>` +
         `<div class="bar k" style="height:9px"><i style="width:${play.marketPct == null ? 0 : Math.max(0, Math.min(100, play.marketPct))}%"></i></div>` +
@@ -702,6 +724,91 @@ function gameRow(play) {
   row.appendChild(head);
   row.appendChild(whyPanel(play));
   return row;
+}
+
+const MARKET_LABEL = { moneyline: "Moneyline", total: "Total", spread: "Spread / runline" };
+
+/* Which of the three markets to actually back.
+ *
+ * The card used to name one bet -- the moneyline -- and print the total and
+ * spread beside it as inert text with no pick, price or edge, so "is the
+ * moneyline even the best bet here" had no answer on the page. All three are
+ * now priced through the same assess_price, because percentage points of edge
+ * are no more comparable across markets than across prices.
+ *
+ * The winner is gated, not a bare argmax: the moneyline is fitted and
+ * calibrated against every graded game, while the side markets are heuristics
+ * that have only recently started carrying prices at all. An unvalidated
+ * market still shows its edge -- hiding it would be its own dishonesty -- but
+ * it cannot take the headline on the strength of a number nothing has checked.
+ */
+function marketsPanel(play) {
+  const best = play.bestBet;
+  const options = best?.options || [];
+  if (!options.length) {
+    // No priced market at all. Fall back to naming whatever picks exist, so a
+    // game with a total but no odds still shows it.
+    const bare = [["total", play.total], ["spread", play.spread]]
+      .filter(([, m]) => m)
+      .map(([k, m]) => `<div class="k"><div class="kv">${esc(m.pick || m.pickSide || "—")}</div>` +
+        `<div class="kk lbl">${MARKET_LABEL[k]}</div></div>`).join("");
+    if (!bare) return null;
+    const p = el("div", "");
+    p.innerHTML = `<div class="subh" style="margin:15px 0 8px"><h4>Other markets</h4>` +
+      `<span class="note">no price reached the build, so no edge to compare</span></div>` +
+      `<div class="ctx">${bare}</div>`;
+    return p;
+  }
+
+  const headline = best.pick;
+  const rows = options.map((o) => {
+    const isBest = headline && o.market === headline.market;
+    const good = o.evPct > 0;
+    return `<tr style="${isBest ? "background:color-mix(in srgb, var(--good) 9%, transparent)" : ""}">` +
+      `<td style="padding:7px 9px;white-space:nowrap">` +
+        (isBest ? `<span class="chip good" style="margin-right:6px">Back this</span>` : "") +
+        `<b>${esc(MARKET_LABEL[o.market] || o.market)}</b>` +
+        (o.validated ? "" : `<span class="chip warn" style="margin-left:6px">unproven</span>`) +
+      `</td>` +
+      // board.css sets `th, td { text-align:right }` with only :first-child
+      // left, so this needs saying explicitly or the column's values sit
+      // right-aligned under a left-aligned heading.
+      `<td style="padding:7px 9px;text-align:left">${esc(o.pick || "—")}</td>` +
+      `<td class="num" style="padding:7px 9px;text-align:right">${american(o.odds)}</td>` +
+      `<td class="num" style="padding:7px 9px;text-align:right">${pct(o.confidence)}</td>` +
+      `<td class="num" style="padding:7px 9px;text-align:right;color:${good ? "var(--good)" : "var(--bad)"}">` +
+        `${sgn(o.evPct)}%</td></tr>`;
+  }).join("");
+
+  const held = best.heldBack;
+  let note;
+  if (!headline) {
+    note = "No market on this game clears zero expected value, so there is nothing here worth backing. " +
+      "That is a decision, not a gap.";
+  } else if (held) {
+    note = `${MARKET_LABEL[held.market]} shows the bigger edge at ${sgn(held.evPct)}%, but it has only ` +
+      `${plural(held.gradedPriced ?? 0, "priced graded pick", "priced graded picks")} behind it — not enough to ` +
+      `back ahead of the moneyline, which is fitted and calibrated against every graded game. It is shown ` +
+      `because the edge is real data, not because it is a recommendation.`;
+  } else {
+    note = "All priced markets on this game, ranked by expected value per unit staked — the only figure " +
+      "comparable across different prices.";
+  }
+
+  const p = el("div", "");
+  p.innerHTML =
+    `<div class="subh" style="margin:15px 0 8px"><h4>Which bet</h4>` +
+      `<span class="note">ranked by edge, gated by record</span></div>` +
+    `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px">` +
+      `<thead><tr style="color:var(--muted);font-size:11px;letter-spacing:.06em">` +
+        `<th style="text-align:left;padding:0 9px 5px">MARKET</th>` +
+        `<th style="text-align:left;padding:0 9px 5px">PICK</th>` +
+        `<th style="text-align:right;padding:0 9px 5px">PRICE</th>` +
+        `<th style="text-align:right;padding:0 9px 5px">MODEL</th>` +
+        `<th style="text-align:right;padding:0 9px 5px">EDGE</th>` +
+      `</tr></thead><tbody>${rows}</tbody></table></div>` +
+    `<p style="font-size:12px;color:var(--muted);margin:10px 0 0">${esc(note)}</p>`;
+  return p;
 }
 
 function whyPanel(play) {
@@ -822,23 +929,6 @@ function whyPanel(play) {
       `</div>`));
   }
 
-  if (play.total || play.spread) {
-    const side = (m, title) => {
-      if (!m) return "";
-      const line = m.line ?? m.total ?? null;
-      const pick = m.pickSide || m.pick || null;
-      const price = m.odds == null ? "" : ` (${american(m.odds)})`;
-      return `<div class="k"><div class="kv">${esc(pick || "—")}${line == null ? "" : " " + line}${price}</div>` +
-        `<div class="kk lbl">${title}</div></div>`;
-    };
-    // ESPN core odds embed a price for these markets; SBR never does, so
-    // whether a price is here at all depends on which source answered.
-    const anyPriced = (play.total && play.total.odds != null) || (play.spread && play.spread.odds != null);
-    right.appendChild(el("div", "",
-      `<div class="subh" style="margin:15px 0 8px"><h4>Side markets</h4>` +
-        `<span class="note">${anyPriced ? "priced where ESPN core odds embedded one" : "hit rate only — no price logged for these"}</span></div>` +
-      `<div class="ctx">${side(play.total, "Total")}${side(play.spread, "Spread / runline")}</div>`));
-  }
 
   const cov = f.dataCoverage || {};
   const covNames = {
@@ -860,6 +950,13 @@ function whyPanel(play) {
   why.appendChild(left);
   why.appendChild(right);
   body.appendChild(why);
+
+  // Full width, below the two columns, rather than inside the narrow context
+  // sidebar. It is the actual recommendation now, not sidebar trivia -- and a
+  // five-column table in that column pushed the model and edge figures off the
+  // right edge, hiding the two numbers the whole panel exists to show.
+  const markets = marketsPanel(play);
+  if (markets) body.appendChild(markets);
   return body;
 }
 

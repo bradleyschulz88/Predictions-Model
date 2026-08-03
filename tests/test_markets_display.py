@@ -106,10 +106,33 @@ class RunlineTests(unittest.TestCase):
         result = predict_runline(_game(), LINES, prediction)
         self.assertLess(result["homePct"], 70.0)
 
-    def test_carries_no_invented_confidence(self) -> None:
+    def test_confidence_is_the_picked_sides_cover_chance(self) -> None:
+        """Derived, not invented -- and not left blank either.
+
+        This was None, which meant a runline could never be priced and so could
+        never be ranked against the moneyline. The number was already being
+        computed for homePct/awayPct and quoted in the detail text; it just was
+        not exposed. It stays `unvalidated` because it comes from the measured
+        70.8% clear rate rather than from calibration against its own record.
+        """
         result = predict_runline(_game(), LINES, {"probabilities": {"true": {"home": 0.6, "away": 0.4}}})
-        self.assertIsNone(result["confidence"])
+        self.assertAlmostEqual(
+            result["confidence"], max(result["homePct"], result["awayPct"])
+        )
         self.assertTrue(result["unvalidated"])
+
+    def test_runline_carries_a_price_so_it_can_be_ranked(self) -> None:
+        """MLB runlines go through predict_runline rather than predict_spread,
+        so with no odds here every MLB runline was unpriced -- 47 of the 56
+        graded spread picks, which left that market's ROI resting on nine."""
+        priced = [{"viewType": "Spread", "currentLine": {"home": "-1.5 (+105)", "away": "+1.5 (-125)"}}]
+        result = predict_runline(_game(), priced, {"probabilities": {"true": {"home": 0.7, "away": 0.3}}})
+        self.assertEqual(result["odds"], 105 if result["pickSide"] == "home" else -125)
+
+    def test_an_sbr_line_still_has_no_price(self) -> None:
+        bare = [{"viewType": "Spread", "currentLine": {"home": "-1.5", "away": "+1.5"}}]
+        result = predict_runline(_game(), bare, {"probabilities": {"true": {"home": 0.7, "away": 0.3}}})
+        self.assertIsNone(result["odds"])
 
     def test_not_applied_outside_baseball(self) -> None:
         prediction = {"probabilities": {"true": {"home": 0.6, "away": 0.4}}}
@@ -230,3 +253,178 @@ class GradingRobustnessTests(unittest.TestCase):
         for score in (float("inf"), float("-inf"), float("nan")):
             self.assertIsNone(grade_total({"line": 8.5, "pickSide": "over"}, score, 4))
             self.assertIsNone(grade_spread({"line": -1.5, "pickSide": "home"}, score, 4))
+
+
+class BestBetSelectionTests(unittest.TestCase):
+    """Which of the three markets to actually back.
+
+    The card used to give one recommendation -- the moneyline -- and render the
+    total and spread as inert text with no pick, price or edge, so the question
+    "is the moneyline even the best bet here" had no answer on the page.
+    Ranking them needs every market priced through the same assess_price, since
+    percentage points of edge are no more comparable across markets than across
+    prices.
+
+    The ranking is gated rather than a bare argmax. The moneyline is fitted and
+    calibrated against every graded game; the side markets are heuristics that
+    have only just started carrying prices. An unvalidated market may show a
+    bigger edge, but it may not headline on the strength of it.
+    """
+
+    def _prediction(self, *, ml_ev, total_ev=None, spread_ev=None):
+        """A prediction whose markets carry exactly the EVs asked for."""
+        def block(ev, odds=-110):
+            return {"pick": "X", "confidence": 60.0, "odds": odds,
+                    "value": {"evPct": ev, "odds": odds, "kellyPct": 1.0, "breakEvenPct": 52.4}}
+        prediction = {"outcomeLabel": "Home to win", "confidence": 70.0,
+                      "value": {"evPct": ml_ev, "odds": -150, "kellyPct": 2.0, "breakEvenPct": 60.0}}
+        if total_ev is not None:
+            prediction["total"] = block(total_ev)
+        if spread_ev is not None:
+            prediction["spread"] = block(spread_ev)
+        return prediction
+
+    def _validated(self, **flags):
+        """Patch the gate so these tests pin the ranking logic, not the day's
+        graded record -- which moves every build."""
+        return patch.object(
+            mlb_predictions, "market_is_validated",
+            side_effect=lambda market: flags.get(market, market == "moneyline"),
+        )
+
+    def test_no_priced_market_means_no_best_bet(self) -> None:
+        self.assertIsNone(mlb_predictions.select_best_bet({"confidence": 70.0}))
+
+    def test_every_priced_market_is_ranked_by_ev(self) -> None:
+        prediction = self._prediction(ml_ev=4.0, total_ev=9.0, spread_ev=-2.0)
+        with self._validated(total=True, spread=True):
+            best = mlb_predictions.select_best_bet(prediction)
+        self.assertEqual([o["market"] for o in best["options"]], ["total", "moneyline", "spread"])
+
+    def test_a_validated_side_market_can_win_the_headline(self) -> None:
+        """The gate is not an off switch: a market that has earned it wins."""
+        prediction = self._prediction(ml_ev=4.0, total_ev=9.0)
+        with self._validated(total=True):
+            best = mlb_predictions.select_best_bet(prediction)
+        self.assertEqual(best["pick"]["market"], "total")
+        self.assertIsNone(best["heldBack"])
+
+    def test_an_unvalidated_market_cannot_headline_on_a_bigger_edge(self) -> None:
+        prediction = self._prediction(ml_ev=4.0, spread_ev=30.0)
+        with self._validated(spread=False):
+            best = mlb_predictions.select_best_bet(prediction)
+        self.assertEqual(best["pick"]["market"], "moneyline")
+        self.assertEqual(best["heldBack"]["market"], "spread",
+                         "the bigger edge must still be reported, not silently dropped")
+
+    def test_a_held_back_market_is_still_ranked_and_visible(self) -> None:
+        """Hiding it would be its own dishonesty -- the edge is real data."""
+        prediction = self._prediction(ml_ev=4.0, spread_ev=30.0)
+        with self._validated(spread=False):
+            best = mlb_predictions.select_best_bet(prediction)
+        spread = next(o for o in best["options"] if o["market"] == "spread")
+        self.assertEqual(spread["evPct"], 30.0)
+        self.assertFalse(spread["validated"])
+
+    def test_negative_ev_never_headlines(self) -> None:
+        prediction = self._prediction(ml_ev=-3.0, total_ev=-8.0)
+        with self._validated(total=True):
+            best = mlb_predictions.select_best_bet(prediction)
+        self.assertIsNone(best["pick"], "a losing bet is not a recommendation")
+        self.assertEqual(len(best["options"]), 2, "but both are still shown")
+
+    def test_the_moneyline_is_always_eligible(self) -> None:
+        self.assertTrue(mlb_predictions.market_is_validated("moneyline"))
+
+    def test_a_side_market_needs_priced_history_not_merely_graded(self) -> None:
+        """An unpriced pick returns nothing, so it is no evidence that betting
+        the market pays -- only the priced count can open the gate."""
+        report = {"summary": {"spreads": {"graded": 500, "priced": 9}}}
+        with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
+            self.assertEqual(mlb_predictions.market_priced_history("spread"), 9)
+            self.assertFalse(mlb_predictions.market_is_validated("spread"))
+
+    def test_enough_priced_history_opens_the_gate(self) -> None:
+        report = {"summary": {"totals": {"graded": 60, "priced": mlb_predictions.MIN_MARKET_HISTORY}}}
+        with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
+            self.assertTrue(mlb_predictions.market_is_validated("total"))
+
+    def test_a_missing_record_gates_everything_off(self) -> None:
+        """Absent evidence is not evidence of safety."""
+        with patch.object(mlb_predictions, "_get_accuracy_report", return_value={}):
+            self.assertFalse(mlb_predictions.market_is_validated("total"))
+            self.assertFalse(mlb_predictions.market_is_validated("spread"))
+
+    def test_an_unpriced_market_is_not_ranked_at_all(self) -> None:
+        """No price means no expected value, so there is nothing to compare."""
+        prediction = self._prediction(ml_ev=4.0)
+        prediction["total"] = {"pick": "Over 8.5", "confidence": 58.0, "odds": None}
+        with self._validated(total=True):
+            best = mlb_predictions.select_best_bet(prediction)
+        self.assertEqual([o["market"] for o in best["options"]], ["moneyline"])
+
+
+class BoardRanksOnBestMarketTests(unittest.TestCase):
+    """"Best play on the board" has to mean the best available bet.
+
+    build_overview ranked every game by its moneyline EV, so a game whose total
+    was the better wager was ranked by a number that was not the bet on offer --
+    and the card then showed that moneyline EV beside a total nobody had priced.
+    """
+
+    def _game(self, event_id, matchup, ml_ev, total_ev):
+        return {
+            "eventId": event_id, "matchup": matchup, "homeTeam": "H", "awayTeam": "A",
+            "prediction": {
+                "predictedWinner": "H", "predictedSide": "home", "confidence": 70.0,
+                "outcomeLabel": "H to win", "published": True,
+                "value": {"evPct": ml_ev, "odds": -150, "kellyPct": 1.0, "breakEvenPct": 60.0},
+                "total": {"pick": "Over 8.5", "confidence": 58.0, "odds": -108,
+                          "value": {"evPct": total_ev, "odds": -108, "kellyPct": 2.0,
+                                    "breakEvenPct": 51.9}},
+            },
+        }
+
+    def _overview(self, games):
+        from scripts.build_pages_data import build_overview
+
+        with patch.object(mlb_predictions, "market_is_validated", side_effect=lambda m: True):
+            for game in games:
+                game["prediction"]["bestBet"] = mlb_predictions.select_best_bet(game["prediction"])
+        return build_overview({"mlb": {"leagueLabel": "MLB", "games": games, "gameCount": len(games)}})
+
+    def test_a_strong_total_outranks_a_stronger_moneyline_elsewhere(self) -> None:
+        overview = self._overview([
+            self._game("a", "Weak ML strong total", 2.0, 11.0),
+            self._game("b", "Strong ML weak total", 7.0, 1.0),
+        ])
+        order = [(p["matchup"], p["betMarket"]) for p in overview["worthBacking"]]
+        self.assertEqual(order[0], ("Weak ML strong total", "total"))
+        self.assertEqual(order[1], ("Strong ML weak total", "moneyline"))
+
+    def test_the_ranked_number_is_the_bet_on_offer(self) -> None:
+        """Ranking by one number and displaying another is the original bug."""
+        play = self._overview([self._game("a", "M", 2.0, 11.0)])["worthBacking"][0]
+        self.assertAlmostEqual(play["evPct"], 11.0)
+        self.assertEqual(play["odds"], -108, "the price shown must be the total's")
+        self.assertEqual(play["betLabel"], "Over 8.5")
+
+    def test_the_moneyline_number_is_still_available(self) -> None:
+        """Losing it would make the model-vs-market rail unreadable."""
+        play = self._overview([self._game("a", "M", 2.0, 11.0)])["worthBacking"][0]
+        self.assertAlmostEqual(play["moneylineEvPct"], 2.0)
+        self.assertEqual(play["pick"], "H", "the matchup rail is still a moneyline comparison")
+
+    def test_a_moneyline_headline_leaves_betmarket_consistent(self) -> None:
+        play = self._overview([self._game("a", "M", 7.0, 1.0)])["worthBacking"][0]
+        self.assertEqual(play["betMarket"], "moneyline")
+        self.assertAlmostEqual(play["evPct"], play["moneylineEvPct"])
+
+    def test_a_game_with_no_priced_market_is_still_unpriced(self) -> None:
+        game = self._game("a", "M", 2.0, 11.0)
+        game["prediction"]["value"] = {}
+        game["prediction"]["total"]["odds"] = None
+        game["prediction"]["total"].pop("value")
+        overview = self._overview([game])
+        self.assertEqual(len(overview["unpriced"]), 1)
+        self.assertIsNone(overview["unpriced"][0]["evPct"])

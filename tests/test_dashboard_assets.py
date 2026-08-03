@@ -263,3 +263,56 @@ class BorrowedCalibrationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class WhichBetPanelTests(unittest.TestCase):
+    """The card named one bet and printed the other two markets as inert text
+    with no pick, price or edge, so "is the moneyline even the best bet here"
+    had no answer on the page. The panel that replaces it has to rank all
+    priced markets, mark the winner, and be honest about the gate."""
+
+    def setUp(self) -> None:
+        self.js = (DASHBOARD / "board.js").read_text(encoding="utf-8")
+
+    def test_the_panel_exists_and_replaces_the_inert_box(self) -> None:
+        self.assertIn("function marketsPanel(play)", self.js)
+        self.assertNotIn("hit rate only — no price logged for these", self.js,
+                         "the old inert side-markets box should be gone")
+
+    def test_it_renders_full_width_not_in_the_context_sidebar(self) -> None:
+        """A five-column table in the narrow right column pushed the model and
+        edge figures off screen -- the two numbers the panel exists to show."""
+        body_append = self.js.index("body.appendChild(why);")
+        tail = self.js[body_append:body_append + 500]
+        self.assertIn("body.appendChild(markets)", tail)
+
+    def test_the_backed_market_is_marked(self) -> None:
+        self.assertIn("Back this", self.js)
+
+    def test_an_unvalidated_market_is_marked_but_not_hidden(self) -> None:
+        """Hiding a real edge would be its own dishonesty."""
+        self.assertIn("unproven", self.js)
+        self.assertIn("o.validated", self.js)
+
+    def test_a_held_back_market_is_explained(self) -> None:
+        self.assertIn("best.heldBack", self.js)
+        self.assertIn("priced graded pick", self.js)
+
+    def test_the_headline_is_the_bet_not_the_winner(self) -> None:
+        """Once the board ranks on best market, printing the moneyline team
+        above a total's price attributes one market's edge to another."""
+        self.assertIn("function betHeadline(play)", self.js)
+        self.assertIn("betHeadline(play)", self.js)
+
+    def test_the_play_carries_the_best_bet_through(self) -> None:
+        self.assertIn("bestBet: prediction.bestBet", self.js)
+        self.assertIn("betMarket:", self.js)
+
+    def test_the_pick_column_states_its_alignment(self) -> None:
+        """board.css sets `th, td { text-align:right }` with only :first-child
+        left, so without this the values sit right-aligned under a left-aligned
+        heading."""
+        self.assertIn('padding:7px 9px;text-align:left', self.js)
+
+    def test_no_priced_market_still_names_what_picks_exist(self) -> None:
+        self.assertIn("no price reached the build", self.js)

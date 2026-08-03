@@ -103,6 +103,9 @@ def _play_from_game(league_id: str, label: str, game: dict) -> dict:
     elif side == "draw":
         market_pct = consensus.get("drawPct")
 
+    best_bet = prediction.get("bestBet") or {}
+    headline = best_bet.get("pick")
+
     return {
         "league": league_id,
         "leagueLabel": label,
@@ -121,10 +124,24 @@ def _play_from_game(league_id: str, label: str, game: dict) -> dict:
         "marketPct": market_pct,
         # None when the game is unpriced; there is no EV without a price.
         "value": value or None,
-        "evPct": value.get("evPct"),
-        "kellyPct": value.get("kellyPct"),
-        "odds": value.get("odds"),
-        "breakEvenPct": value.get("breakEvenPct"),
+        # Every priced market on this game ranked by EV, and which one is worth
+        # backing -- see mlb_predictions.select_best_bet.
+        "bestBet": best_bet or None,
+        # The bet itself, when it is not the moneyline. The fields above stay
+        # moneyline-shaped because the model-vs-market rail is a moneyline
+        # comparison; these say what to actually place.
+        "betMarket": headline.get("market") if headline else None,
+        "betLabel": headline.get("pick") if headline else None,
+        # Ranked on the best available bet rather than always the moneyline.
+        # Leading the board with a game's moneyline EV while its total was the
+        # better bet ranked it by a number that was not the wager on offer.
+        "evPct": headline.get("evPct") if headline else value.get("evPct"),
+        "kellyPct": headline.get("kellyPct") if headline else value.get("kellyPct"),
+        "odds": headline.get("odds") if headline else value.get("odds"),
+        "breakEvenPct": headline.get("breakEvenPct") if headline else value.get("breakEvenPct"),
+        # Kept separately so the card can still show what the moneyline alone
+        # was worth, even when another market won the headline.
+        "moneylineEvPct": value.get("evPct"),
     }
 
 

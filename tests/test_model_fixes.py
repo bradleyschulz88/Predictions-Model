@@ -19,6 +19,7 @@ from mlb_predictions import (  # noqa: E402
     extract_spread_price,
     extract_total_price,
     kelly_band_probability,
+    predict_spread,
 )
 from shared_utils import win_pct_from_record, win_pct_or_none  # noqa: E402
 
@@ -370,10 +371,60 @@ class SpreadModelTests(unittest.TestCase):
         self.assertIsNone(self._spread(0.7, league="mlb"))
         self.assertIsNone(self._spread(0.7, league="epl"))
 
-    def test_carries_no_invented_confidence(self) -> None:
-        result = self._spread(0.7)
-        self.assertIsNone(result["confidence"])
+    def test_cover_probability_comes_from_the_same_margin_model(self) -> None:
+        """A spread with no probability cannot be priced, so it could never be
+        ranked against the moneyline. It is derived rather than invented:
+        modelLine is -inv_cdf(p_home)*sigma, so P(home covers L) is
+        Phi((L - modelLine)/sigma) from that same normal.
+        """
+        # 0.7 against a -6.5 line lands inside the "No lean" band, which
+        # legitimately has no probability -- use a gap that takes a side.
+        result = self._spread(0.8)
+        self.assertEqual(result["pickSide"], "home")
+        self.assertIsNotNone(result["confidence"])
+        self.assertGreater(result["confidence"], 50.0, "the picked side is the likelier one")
+        # Still not a calibrated number, and nothing downstream may treat it as one.
         self.assertTrue(result["unvalidated"])
+
+    def test_at_a_pick_em_line_it_agrees_exactly_with_the_moneyline(self) -> None:
+        """The strongest available check on the derivation.
+
+        At a line of 0 there is no handicap, so covering and winning are the
+        same event -- the spread model and the moneyline model must return the
+        same number. A sign error or a stray sigma would break this and nothing
+        else would notice.
+        """
+        for home_prob in (0.62, 0.70, 0.85):
+            result = predict_spread(
+                {"league": "nba", "homeTeam": "H", "awayTeam": "A"},
+                [{"viewType": "Spread", "currentLine": {"home": "0", "away": "0"}}],
+                {"probabilities": {"true": {"home": home_prob, "away": 1 - home_prob}}},
+            )
+            self.assertEqual(result["pickSide"], "home")
+            self.assertAlmostEqual(result["confidence"], round(home_prob * 100, 1), places=1)
+
+    def test_a_favourite_covers_a_small_line_more_often_than_a_huge_one(self) -> None:
+        def cover(line: float) -> float:
+            r = predict_spread(
+                {"league": "nba", "homeTeam": "H", "awayTeam": "A"},
+                [{"viewType": "Spread", "currentLine": {"home": str(line), "away": str(-line)}}],
+                {"probabilities": {"true": {"home": 0.85, "away": 0.15}}},
+            )
+            # Express both as "chance the home side covers" regardless of pick.
+            return r["confidence"] if r["pickSide"] == "home" else 100.0 - r["confidence"]
+
+        self.assertGreater(cover(-2.5), cover(-9.5))
+        self.assertGreater(cover(-9.5), cover(-15.5))
+
+    def test_a_push_pick_carries_no_probability(self) -> None:
+        """"No lean" is not a position, so it has nothing to be confident about."""
+        result = predict_spread(
+            {"league": "nba", "homeTeam": "H", "awayTeam": "A"},
+            [{"viewType": "Spread", "currentLine": {"home": "0", "away": "0"}}],
+            {"probabilities": {"true": {"home": 0.5, "away": 0.5}}},
+        )
+        self.assertEqual(result["pickSide"], "push")
+        self.assertIsNone(result["confidence"])
 
     def test_missing_probabilities_yield_no_pick(self) -> None:
         from mlb_predictions import predict_spread
