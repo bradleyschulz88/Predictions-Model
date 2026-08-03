@@ -124,6 +124,39 @@ def compute_rest_days(games: list[dict[str, Any]], team_name: str | None, curren
     return max(0, delta.days)
 
 
+# Typical team points-per-game band per league, used to put the scoring term on
+# the same 0-1 scale as win percentage before they are averaged together.
+#
+# One shared divisor used to serve all four of these leagues, and it was
+# basketball-sized. NFL clubs score about 22 a game, so dividing by 130 mapped
+# the entire league into 0.115-0.231 -- a 0.115 spread against win percentage's
+# full 1.0 -- and the term became a near-constant that diluted the real signal
+# rather than adding to it. Measured on the same underlying quality gap (.700
+# against .300), powerDiff came out 0.40 for MLB but only ~0.30 for these four,
+# so strengthDiff was not comparable across leagues while the fit gives it a
+# single shared coefficient.
+#
+# Bands are the ordinary spread of team scoring averages, not record extremes;
+# anything outside clamps, which is the intended behaviour for an outlier.
+LEAGUE_SCORING_BAND = {
+    "nba": (105.0, 125.0),
+    "wnba": (72.0, 92.0),
+    "nfl": (15.0, 30.0),
+    "afl": (70.0, 100.0),
+}
+
+
+def _scoring_strength(league: str, points_per_game: float) -> float | None:
+    """Points per game as a 0-1 score against that league's own scoring band."""
+    band = LEAGUE_SCORING_BAND.get(league)
+    if band is None:
+        return None
+    low, high = band
+    if high <= low:
+        return None
+    return max(0.0, min(1.0, (float(points_per_game) - low) / (high - low)))
+
+
 def compute_power_rating(
     *,
     league: str,
@@ -154,9 +187,11 @@ def compute_power_rating(
             defense = max(0.0, min(1.0, (3.0 - goals_against_per_game) / 2.0))
             parts.append((attack, 0.20))
             parts.append((defense, 0.15))
-    elif league in {"nba", "wnba", "nfl", "afl"}:
+    elif league in LEAGUE_SCORING_BAND:
         if goals_for_per_game is not None:
-            parts.append((max(0.0, min(1.0, goals_for_per_game / 130.0)), 0.15))
+            scoring = _scoring_strength(league, goals_for_per_game)
+            if scoring is not None:
+                parts.append((scoring, 0.15))
 
     if not parts:
         return None
