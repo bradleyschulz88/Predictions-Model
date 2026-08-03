@@ -1,34 +1,34 @@
 {
-  "updatedAt": "2026-08-02T23:31:24.764872+00:00",
+  "updatedAt": "2026-08-03T00:24:30.099556+00:00",
   "summary": {
     "last7Days": {
-      "correct": 295,
-      "total": 470,
+      "correct": 296,
+      "total": 471,
       "pct": 62.8,
-      "units": 11.493,
-      "roiPct": 2.4,
+      "units": 12.207,
+      "roiPct": 2.6,
       "pending": 38,
       "voided": 0
     },
     "allTime": {
-      "correct": 471,
-      "total": 773,
-      "pct": 60.9,
-      "units": 15.831,
-      "roiPct": 2.0,
+      "correct": 472,
+      "total": 774,
+      "pct": 61.0,
+      "units": 16.545,
+      "roiPct": 2.1,
       "pending": 38,
       "voided": 11
     },
     "byLeague": {
       "mlb": {
-        "correct": 203,
-        "total": 341,
-        "pct": 59.5,
-        "units": 10.115,
-        "roiPct": 3.0,
+        "correct": 204,
+        "total": 342,
+        "pct": 59.6,
+        "units": 10.829,
+        "roiPct": 3.2,
         "pending": 0,
         "voided": 0,
-        "priced": 300,
+        "priced": 301,
         "unpriced": 41,
         "pricedPct": 88.0
       },
@@ -71,7 +71,7 @@
       }
     },
     "streak": {
-      "current": 3,
+      "current": 2,
       "type": "win",
       "bestWin": 6,
       "bestLoss": 4
@@ -83,30 +83,30 @@
       "note": "Closing line value predicts long-run profitability better than win rate."
     },
     "totals": {
-      "graded": 23,
-      "wins": 18,
-      "losses": 5,
-      "pushes": 0,
-      "pct": 78.3,
+      "graded": 56,
+      "wins": 33,
+      "losses": 21,
+      "pushes": 2,
+      "pct": 61.1,
       "breakEvenPct": 52.4,
-      "priced": 13,
+      "priced": 46,
       "unpriced": 10,
-      "units": 4.254,
-      "roiPct": 18.5,
-      "note": "ROI is over all 23 graded picks; 10 of them carry no logged price and count as zero return."
+      "units": 1.902,
+      "roiPct": 3.4,
+      "note": "ROI is over all 56 graded picks; 10 of them carry no logged price and count as zero return."
     },
     "spreads": {
-      "graded": 23,
-      "wins": 15,
-      "losses": 8,
+      "graded": 56,
+      "wins": 38,
+      "losses": 18,
       "pushes": 0,
-      "pct": 65.2,
+      "pct": 67.9,
       "breakEvenPct": 52.4,
       "priced": 9,
-      "unpriced": 14,
+      "unpriced": 47,
       "units": 2.419,
-      "roiPct": 10.5,
-      "note": "ROI is over all 23 graded picks; 14 of them carry no logged price and count as zero return."
+      "roiPct": 4.3,
+      "note": "ROI is over all 56 graded picks; 47 of them carry no logged price and count as zero return."
     }
   },
   "recentResults": [
@@ -137,8 +137,68 @@
       "awayScore": "4",
       "gradedAt": "2026-08-02T23:31:10.982818+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 9,
+        "outcome": "loss",
+        "odds": -114,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
+    },
+    {
+      "eventId": "401816375",
+      "league": "mlb",
+      "scheduleDate": "2026-08-02",
+      "matchup": "Minnesota Twins @ Seattle Mariners",
+      "predicted": "Seattle Mariners",
+      "predictedSide": "home",
+      "outcomeLabel": "Seattle Mariners to win",
+      "confidence": 54.9,
+      "rawConfidence": 54.9,
+      "rawHomeWinPct": 54.9,
+      "probabilityMethod": "fitted",
+      "evPct": -4.15,
+      "kellyPct": 0.0,
+      "pickOdds": -140,
+      "openingOdds": -143,
+      "openingSide": "away",
+      "published": true,
+      "clvPct": null,
+      "status": "graded",
+      "actual": "Seattle Mariners",
+      "correct": true,
+      "units": 0.714,
+      "homeScore": "7",
+      "awayScore": "6",
+      "gradedAt": "2026-08-02T23:31:10.982802+00:00",
+      "date": "2026-08-02",
+      "totalResult": {
+        "line": 7.0,
+        "pickSide": "over",
+        "actual": 13,
+        "outcome": "win",
+        "odds": -113,
+        "units": 0.885
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816373",
@@ -212,8 +272,23 @@
       "awayScore": "0",
       "gradedAt": "2026-08-02T22:29:21.529228+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.5,
+        "pickSide": "under",
+        "actual": 3,
+        "outcome": "win",
+        "odds": -118,
+        "units": 0.847
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 3,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816362",
@@ -242,8 +317,23 @@
       "awayScore": "0",
       "gradedAt": "2026-08-02T22:29:21.529183+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 5,
+        "outcome": "win",
+        "odds": -118,
+        "units": 0.847
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 5,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816365",
@@ -272,8 +362,23 @@
       "awayScore": "8",
       "gradedAt": "2026-08-02T22:29:21.529161+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 8,
+        "outcome": "push",
+        "odds": -112,
+        "units": null
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -8,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816364",
@@ -302,8 +407,23 @@
       "awayScore": "2",
       "gradedAt": "2026-08-02T21:18:35.828040+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "under",
+        "actual": 2,
+        "outcome": "win",
+        "odds": -105,
+        "units": 0.952
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -2,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816363",
@@ -332,8 +452,23 @@
       "awayScore": "9",
       "gradedAt": "2026-08-02T21:18:35.828023+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.5,
+        "pickSide": "over",
+        "actual": 10,
+        "outcome": "win",
+        "odds": -105,
+        "units": 0.952
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -8,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401857107",
@@ -407,8 +542,23 @@
       "awayScore": "2",
       "gradedAt": "2026-08-02T20:09:14.907284+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "over",
+        "actual": 6,
+        "outcome": "loss",
+        "odds": -106,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 2,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "1133656",
@@ -542,8 +692,23 @@
       "awayScore": "3",
       "gradedAt": "2026-08-02T04:52:22.085659+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "over",
+        "actual": 4,
+        "outcome": "loss",
+        "odds": -108,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -2,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816357",
@@ -572,8 +737,23 @@
       "awayScore": "3",
       "gradedAt": "2026-08-02T04:52:22.085651+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.0,
+        "pickSide": "under",
+        "actual": 5,
+        "outcome": "win",
+        "odds": -105,
+        "units": 0.952
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816361",
@@ -602,8 +782,23 @@
       "awayScore": "5",
       "gradedAt": "2026-08-02T04:52:22.085638+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "over",
+        "actual": 11,
+        "outcome": "win",
+        "odds": -101,
+        "units": 0.99
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816353",
@@ -632,8 +827,23 @@
       "awayScore": "3",
       "gradedAt": "2026-08-02T04:52:22.085615+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.5,
+        "pickSide": "over",
+        "actual": 11,
+        "outcome": "win",
+        "odds": -113,
+        "units": 0.885
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 5,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816347",
@@ -662,8 +872,23 @@
       "awayScore": "12",
       "gradedAt": "2026-08-02T04:52:22.085606+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 20,
+        "outcome": "loss",
+        "odds": -105,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -4,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816350",
@@ -692,8 +917,23 @@
       "awayScore": "5",
       "gradedAt": "2026-08-02T04:52:22.085560+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 5,
+        "outcome": "win",
+        "odds": -105,
+        "units": 0.952
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -5,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816351",
@@ -722,8 +962,23 @@
       "awayScore": "4",
       "gradedAt": "2026-08-02T04:52:22.085534+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "over",
+        "actual": 5,
+        "outcome": "loss",
+        "odds": -115,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -3,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816360",
@@ -752,8 +1007,23 @@
       "awayScore": "3",
       "gradedAt": "2026-08-01T23:29:07.572891+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.0,
+        "pickSide": "over",
+        "actual": 7,
+        "outcome": "push",
+        "odds": -115,
+        "units": null
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816348",
@@ -782,8 +1052,23 @@
       "awayScore": "0",
       "gradedAt": "2026-08-01T22:30:11.160607+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.5,
+        "pickSide": "over",
+        "actual": 1,
+        "outcome": "loss",
+        "odds": -102,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816352",
@@ -812,8 +1097,23 @@
       "awayScore": "1",
       "gradedAt": "2026-08-01T22:30:11.160577+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "over",
+        "actual": 6,
+        "outcome": "loss",
+        "odds": -112,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 4,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401857106",
@@ -992,8 +1292,23 @@
       "awayScore": "6",
       "gradedAt": "2026-08-01T07:46:17.910389+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "over",
+        "actual": 8,
+        "outcome": "loss",
+        "odds": -108,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -4,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "1133658",
@@ -1127,8 +1442,23 @@
       "awayScore": "5",
       "gradedAt": "2026-08-01T05:21:06.808763+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.5,
+        "pickSide": "under",
+        "actual": 8,
+        "outcome": "loss",
+        "odds": -107,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -2,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816342",
@@ -1157,8 +1487,23 @@
       "awayScore": "9",
       "gradedAt": "2026-08-01T05:21:06.808745+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 13,
+        "outcome": "loss",
+        "odds": -111,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -5,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816346",
@@ -1187,8 +1532,23 @@
       "awayScore": "0",
       "gradedAt": "2026-08-01T05:21:06.808726+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "under",
+        "actual": 7,
+        "outcome": "win",
+        "odds": -109,
+        "units": 0.917
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 7,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816343",
@@ -1352,8 +1712,23 @@
       "awayScore": "6",
       "gradedAt": "2026-08-01T01:58:13.701653+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "under",
+        "actual": 7,
+        "outcome": "win",
+        "odds": -119,
+        "units": 0.84
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -5,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816337",
@@ -1382,8 +1757,23 @@
       "awayScore": "1",
       "gradedAt": "2026-08-01T01:58:13.701618+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.5,
+        "pickSide": "under",
+        "actual": 4,
+        "outcome": "win",
+        "odds": -118,
+        "units": 0.847
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 2,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816336",
@@ -1412,8 +1802,23 @@
       "awayScore": "7",
       "gradedAt": "2026-08-01T01:58:13.701567+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "over",
+        "actual": 15,
+        "outcome": "win",
+        "odds": -104,
+        "units": 0.962
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816339",
@@ -1442,8 +1847,23 @@
       "awayScore": "2",
       "gradedAt": "2026-07-31T21:37:46.302134+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "over",
+        "actual": 2,
+        "outcome": "loss",
+        "odds": 101,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -2,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "1133662",
@@ -1592,8 +2012,23 @@
       "awayScore": "2",
       "gradedAt": "2026-07-31T05:36:37.678893+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "over",
+        "actual": 8,
+        "outcome": "loss",
+        "odds": -118,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 4,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816331",
@@ -1622,8 +2057,23 @@
       "awayScore": "4",
       "gradedAt": "2026-07-31T05:36:37.678883+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 5,
+        "outcome": "win",
+        "odds": -102,
+        "units": 0.98
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -3,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816329",
@@ -1697,8 +2147,23 @@
       "awayScore": "2",
       "gradedAt": "2026-07-31T05:36:37.678845+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 10.0,
+        "pickSide": "over",
+        "actual": 5,
+        "outcome": "loss",
+        "odds": -103,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401857099",
@@ -1772,8 +2237,23 @@
       "awayScore": "4",
       "gradedAt": "2026-07-31T02:02:27.605767+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 10.0,
+        "pickSide": "over",
+        "actual": 9,
+        "outcome": "loss",
+        "odds": -113,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816326",
@@ -1802,8 +2282,23 @@
       "awayScore": "4",
       "gradedAt": "2026-07-30T21:42:52.858303+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "under",
+        "actual": 6,
+        "outcome": "win",
+        "odds": -119,
+        "units": 0.84
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -2,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816327",
@@ -1832,8 +2327,23 @@
       "awayScore": "3",
       "gradedAt": "2026-07-30T20:14:48.796980+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "over",
+        "actual": 7,
+        "outcome": "loss",
+        "odds": -114,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "401816324",
@@ -1862,8 +2372,23 @@
       "awayScore": "2",
       "gradedAt": "2026-07-30T20:14:48.796956+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "over",
+        "actual": 5,
+        "outcome": "loss",
+        "odds": -105,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     {
       "eventId": "1133655",
@@ -3316,28 +3841,6 @@
       "published": true,
       "totalResult": null,
       "spreadResult": null
-    },
-    {
-      "eventId": "401816268",
-      "league": "mlb",
-      "scheduleDate": "2026-07-26",
-      "matchup": "Cleveland Guardians @ Tampa Bay Rays",
-      "predicted": "Tampa Bay Rays",
-      "predictedSide": "home",
-      "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 65.5,
-      "pickOdds": -118,
-      "status": "graded",
-      "actual": "Tampa Bay Rays",
-      "correct": true,
-      "units": 0.847,
-      "homeScore": "1",
-      "awayScore": "0",
-      "gradedAt": "2026-07-26T19:02:10.645628+00:00",
-      "date": "2026-07-26",
-      "published": true,
-      "totalResult": null,
-      "spreadResult": null
     }
   ],
   "pendingPicks": [
@@ -4232,6 +4735,26 @@
       "published": true
     },
     {
+      "eventId": "401816378",
+      "league": "mlb",
+      "scheduleDate": "2026-08-03",
+      "matchup": "Washington Nationals @ Philadelphia Phillies",
+      "predicted": "Washington Nationals",
+      "predictedSide": "away",
+      "outcomeLabel": "Washington Nationals to win",
+      "confidence": 58.7,
+      "pickOdds": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-03",
+      "published": true
+    },
+    {
       "eventId": "401816377",
       "league": "mlb",
       "scheduleDate": "2026-08-03",
@@ -4280,26 +4803,6 @@
       "predictedSide": "home",
       "outcomeLabel": "Dallas Wings to win",
       "confidence": 72.1,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-02",
-      "published": true
-    },
-    {
-      "eventId": "401816372",
-      "league": "mlb",
-      "scheduleDate": "2026-08-02",
-      "matchup": "Boston Red Sox @ Los Angeles Dodgers",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "home",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 70.3,
       "pickOdds": null,
       "status": "pending",
       "actual": null,
@@ -21101,8 +21604,23 @@
       "awayScore": "2",
       "gradedAt": "2026-07-30T20:14:48.796956+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "over",
+        "actual": 5,
+        "outcome": "loss",
+        "odds": -105,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816326": {
       "eventId": "401816326",
@@ -21131,8 +21649,23 @@
       "awayScore": "4",
       "gradedAt": "2026-07-30T21:42:52.858303+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "under",
+        "actual": 6,
+        "outcome": "win",
+        "odds": -119,
+        "units": 0.84
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -2,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816325": {
       "eventId": "401816325",
@@ -21161,8 +21694,23 @@
       "awayScore": "4",
       "gradedAt": "2026-07-31T02:02:27.605767+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 10.0,
+        "pickSide": "over",
+        "actual": 9,
+        "outcome": "loss",
+        "odds": -113,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816322": {
       "eventId": "401816322",
@@ -21191,8 +21739,23 @@
       "awayScore": "2",
       "gradedAt": "2026-07-31T05:36:37.678813+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.0,
+        "pickSide": "under",
+        "actual": 6,
+        "outcome": "win",
+        "odds": -106,
+        "units": 0.943
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 2,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816323": {
       "eventId": "401816323",
@@ -21221,8 +21784,23 @@
       "awayScore": "2",
       "gradedAt": "2026-07-31T05:36:37.678845+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 10.0,
+        "pickSide": "over",
+        "actual": 5,
+        "outcome": "loss",
+        "odds": -103,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816329": {
       "eventId": "401816329",
@@ -21461,8 +22039,23 @@
       "awayScore": "3",
       "gradedAt": "2026-07-30T20:14:48.796980+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "over",
+        "actual": 7,
+        "outcome": "loss",
+        "odds": -114,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816315": {
       "eventId": "401816315",
@@ -21521,8 +22114,23 @@
       "awayScore": "2",
       "gradedAt": "2026-07-31T21:37:46.302134+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "over",
+        "actual": 2,
+        "outcome": "loss",
+        "odds": 101,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -2,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816336": {
       "eventId": "401816336",
@@ -21551,8 +22159,23 @@
       "awayScore": "7",
       "gradedAt": "2026-08-01T01:58:13.701567+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "over",
+        "actual": 15,
+        "outcome": "win",
+        "odds": -104,
+        "units": 0.962
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816333": {
       "eventId": "401816333",
@@ -21581,8 +22204,23 @@
       "awayScore": "6",
       "gradedAt": "2026-08-01T01:58:13.701653+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "under",
+        "actual": 7,
+        "outcome": "win",
+        "odds": -119,
+        "units": 0.84
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -5,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816338": {
       "eventId": "401816338",
@@ -21611,8 +22249,23 @@
       "awayScore": "2",
       "gradedAt": "2026-08-01T01:58:13.701674+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "under",
+        "actual": 8,
+        "outcome": "win",
+        "odds": -106,
+        "units": 0.943
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 4,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816341": {
       "eventId": "401816341",
@@ -21641,8 +22294,23 @@
       "awayScore": "1",
       "gradedAt": "2026-08-01T05:21:06.808689+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 11.0,
+        "pickSide": "under",
+        "actual": 4,
+        "outcome": "win",
+        "odds": -110,
+        "units": 0.909
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 2,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816344": {
       "eventId": "401816344",
@@ -21671,8 +22339,23 @@
       "awayScore": "6",
       "gradedAt": "2026-08-01T07:46:17.910389+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "over",
+        "actual": 8,
+        "outcome": "loss",
+        "odds": -108,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -4,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816343": {
       "eventId": "401816343",
@@ -21746,8 +22429,23 @@
       "awayScore": "0",
       "gradedAt": "2026-08-01T05:21:06.808726+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "under",
+        "actual": 7,
+        "outcome": "win",
+        "odds": -109,
+        "units": 0.917
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 7,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816342": {
       "eventId": "401816342",
@@ -21776,8 +22474,23 @@
       "awayScore": "9",
       "gradedAt": "2026-08-01T05:21:06.808745+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 13,
+        "outcome": "loss",
+        "odds": -111,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -5,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816345": {
       "eventId": "401816345",
@@ -21806,8 +22519,23 @@
       "awayScore": "5",
       "gradedAt": "2026-08-01T05:21:06.808763+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.5,
+        "pickSide": "under",
+        "actual": 8,
+        "outcome": "loss",
+        "odds": -107,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -2,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401857102": {
       "eventId": "401857102",
@@ -22091,8 +22819,23 @@
       "awayScore": "4",
       "gradedAt": "2026-08-01T01:58:13.701636+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "under",
+        "actual": 5,
+        "outcome": "win",
+        "odds": -102,
+        "units": 0.98
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -3,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816335": {
       "eventId": "401816335",
@@ -22121,8 +22864,23 @@
       "awayScore": "4",
       "gradedAt": "2026-08-01T01:58:13.701601+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "over",
+        "actual": 10,
+        "outcome": "win",
+        "odds": -105,
+        "units": 0.952
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 2,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816340": {
       "eventId": "401816340",
@@ -22151,8 +22909,23 @@
       "awayScore": "2",
       "gradedAt": "2026-08-01T05:21:06.808648+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.5,
+        "pickSide": "under",
+        "actual": 13,
+        "outcome": "loss",
+        "odds": -111,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 9,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816297": {
       "eventId": "401816297",
@@ -22211,8 +22984,23 @@
       "awayScore": "2",
       "gradedAt": "2026-07-31T05:36:37.678893+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "over",
+        "actual": 8,
+        "outcome": "loss",
+        "odds": -118,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 4,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816348": {
       "eventId": "401816348",
@@ -22241,8 +23029,23 @@
       "awayScore": "0",
       "gradedAt": "2026-08-01T22:30:11.160607+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.5,
+        "pickSide": "over",
+        "actual": 1,
+        "outcome": "loss",
+        "odds": -102,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816360": {
       "eventId": "401816360",
@@ -22271,8 +23074,23 @@
       "awayScore": "3",
       "gradedAt": "2026-08-01T23:29:07.572891+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.0,
+        "pickSide": "over",
+        "actual": 7,
+        "outcome": "push",
+        "odds": -115,
+        "units": null
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816350": {
       "eventId": "401816350",
@@ -22301,8 +23119,23 @@
       "awayScore": "5",
       "gradedAt": "2026-08-02T04:52:22.085560+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 5,
+        "outcome": "win",
+        "odds": -105,
+        "units": 0.952
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -5,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816355": {
       "eventId": "401816355",
@@ -22331,8 +23164,23 @@
       "awayScore": "4",
       "gradedAt": "2026-08-02T04:52:22.085590+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "over",
+        "actual": 9,
+        "outcome": "win",
+        "odds": -112,
+        "units": 0.893
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816353": {
       "eventId": "401816353",
@@ -22361,8 +23209,23 @@
       "awayScore": "3",
       "gradedAt": "2026-08-02T04:52:22.085615+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.5,
+        "pickSide": "over",
+        "actual": 11,
+        "outcome": "win",
+        "odds": -113,
+        "units": 0.885
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 5,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816354": {
       "eventId": "401816354",
@@ -22391,8 +23254,23 @@
       "awayScore": "2",
       "gradedAt": "2026-08-02T04:52:22.085622+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 6.0,
+        "pickSide": "over",
+        "actual": 7,
+        "outcome": "win",
+        "odds": -117,
+        "units": 0.855
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 3,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816361": {
       "eventId": "401816361",
@@ -22421,8 +23299,23 @@
       "awayScore": "5",
       "gradedAt": "2026-08-02T04:52:22.085638+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "over",
+        "actual": 11,
+        "outcome": "win",
+        "odds": -101,
+        "units": 0.99
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816357": {
       "eventId": "401816357",
@@ -22451,8 +23344,23 @@
       "awayScore": "3",
       "gradedAt": "2026-08-02T04:52:22.085651+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.0,
+        "pickSide": "under",
+        "actual": 5,
+        "outcome": "win",
+        "odds": -105,
+        "units": 0.952
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816359": {
       "eventId": "401816359",
@@ -22481,8 +23389,23 @@
       "awayScore": "3",
       "gradedAt": "2026-08-02T04:52:22.085659+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "over",
+        "actual": 4,
+        "outcome": "loss",
+        "odds": -108,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -2,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816358": {
       "eventId": "401816358",
@@ -22736,8 +23659,23 @@
       "awayScore": "4",
       "gradedAt": "2026-07-31T05:36:37.678883+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 5,
+        "outcome": "win",
+        "odds": -102,
+        "units": 0.98
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -3,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816337": {
       "eventId": "401816337",
@@ -22766,8 +23704,23 @@
       "awayScore": "1",
       "gradedAt": "2026-08-01T01:58:13.701618+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.5,
+        "pickSide": "under",
+        "actual": 4,
+        "outcome": "win",
+        "odds": -118,
+        "units": 0.847
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 2,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816352": {
       "eventId": "401816352",
@@ -22796,8 +23749,23 @@
       "awayScore": "1",
       "gradedAt": "2026-08-01T22:30:11.160577+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "over",
+        "actual": 6,
+        "outcome": "loss",
+        "odds": -112,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 4,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816328": {
       "eventId": "401816328",
@@ -22826,8 +23794,23 @@
       "awayScore": "1",
       "gradedAt": "2026-07-30T21:42:52.858272+00:00",
       "date": "2026-07-30",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.5,
+        "pickSide": "under",
+        "actual": 3,
+        "outcome": "win",
+        "odds": -120,
+        "units": 0.833
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816347": {
       "eventId": "401816347",
@@ -22856,8 +23839,23 @@
       "awayScore": "12",
       "gradedAt": "2026-08-02T04:52:22.085606+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 20,
+        "outcome": "loss",
+        "odds": -105,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -4,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816351": {
       "eventId": "401816351",
@@ -22886,8 +23884,23 @@
       "awayScore": "4",
       "gradedAt": "2026-08-02T04:52:22.085534+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "over",
+        "actual": 5,
+        "outcome": "loss",
+        "odds": -115,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -3,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816368": {
       "eventId": "401816368",
@@ -22916,8 +23929,23 @@
       "awayScore": "2",
       "gradedAt": "2026-08-02T20:09:14.907284+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "over",
+        "actual": 6,
+        "outcome": "loss",
+        "odds": -106,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 2,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816366": {
       "eventId": "401816366",
@@ -22946,8 +23974,23 @@
       "awayScore": "2",
       "gradedAt": "2026-08-02T21:18:35.828061+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "over",
+        "actual": 12,
+        "outcome": "win",
+        "odds": -120,
+        "units": 0.833
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 8,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816369": {
       "eventId": "401816369",
@@ -22976,8 +24019,23 @@
       "awayScore": "2",
       "gradedAt": "2026-08-02T21:18:35.828083+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 6.5,
+        "pickSide": "over",
+        "actual": 3,
+        "outcome": "loss",
+        "odds": -123,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -1,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816371": {
       "eventId": "401816371",
@@ -23006,8 +24064,23 @@
       "awayScore": "1",
       "gradedAt": "2026-08-02T22:29:21.529198+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 11.5,
+        "pickSide": "over",
+        "actual": 9,
+        "outcome": "loss",
+        "odds": -108,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 7,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816373": {
       "eventId": "401816373",
@@ -23081,8 +24154,23 @@
       "awayScore": "4",
       "gradedAt": "2026-08-02T23:31:10.982818+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 9,
+        "outcome": "loss",
+        "odds": -114,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816372": {
       "eventId": "401816372",
@@ -23094,7 +24182,7 @@
       "outcomeLabel": "Los Angeles Dodgers to win",
       "confidence": 70.3,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -23102,7 +24190,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-02",
-      "published": true
+      "published": false,
+      "voidReason": "voided"
     },
     "401857107": {
       "eventId": "401857107",
@@ -23261,8 +24350,23 @@
       "awayScore": "2",
       "gradedAt": "2026-08-02T21:18:35.828040+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "under",
+        "actual": 2,
+        "outcome": "win",
+        "odds": -105,
+        "units": 0.952
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -2,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816367": {
       "eventId": "401816367",
@@ -23291,8 +24395,23 @@
       "awayScore": "5",
       "gradedAt": "2026-08-02T21:18:35.827980+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "over",
+        "actual": 6,
+        "outcome": "loss",
+        "odds": -119,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -4,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816370": {
       "eventId": "401816370",
@@ -23321,8 +24440,23 @@
       "awayScore": "3",
       "gradedAt": "2026-08-02T21:18:35.828073+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "under",
+        "actual": 10,
+        "outcome": "loss",
+        "odds": -107,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 4,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816378": {
       "eventId": "401816378",
@@ -23342,7 +24476,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-03",
-      "published": false
+      "published": true
     },
     "401816377": {
       "eventId": "401816377",
@@ -23603,8 +24737,23 @@
       "awayScore": "9",
       "gradedAt": "2026-08-02T21:18:35.828023+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.5,
+        "pickSide": "over",
+        "actual": 10,
+        "outcome": "win",
+        "odds": -105,
+        "units": 0.952
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": -8,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816374": {
       "eventId": "401816374",
@@ -23633,8 +24782,23 @@
       "awayScore": "0",
       "gradedAt": "2026-08-02T22:29:21.529228+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.5,
+        "pickSide": "under",
+        "actual": 3,
+        "outcome": "win",
+        "odds": -118,
+        "units": 0.847
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 3,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816379": {
       "eventId": "401816379",
@@ -24571,8 +25735,23 @@
       "awayScore": "5",
       "gradedAt": "2026-08-01T01:58:13.701664+00:00",
       "date": "2026-07-31",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.5,
+        "pickSide": "over",
+        "actual": 7,
+        "outcome": "loss",
+        "odds": -105,
+        "units": -1.0
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -3,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816349": {
       "eventId": "401816349",
@@ -24601,8 +25780,23 @@
       "awayScore": "6",
       "gradedAt": "2026-08-01T23:29:07.572865+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "under",
+        "actual": 8,
+        "outcome": "win",
+        "odds": -120,
+        "units": 0.833
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -4,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816356": {
       "eventId": "401816356",
@@ -24631,8 +25825,23 @@
       "awayScore": "6",
       "gradedAt": "2026-08-02T04:52:22.085630+00:00",
       "date": "2026-08-01",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 11.5,
+        "pickSide": "over",
+        "actual": 18,
+        "outcome": "win",
+        "odds": -107,
+        "units": 0.935
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 6,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816365": {
       "eventId": "401816365",
@@ -24661,8 +25870,23 @@
       "awayScore": "8",
       "gradedAt": "2026-08-02T22:29:21.529161+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 8,
+        "outcome": "push",
+        "odds": -112,
+        "units": null
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": -8,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816362": {
       "eventId": "401816362",
@@ -24691,8 +25915,23 @@
       "awayScore": "0",
       "gradedAt": "2026-08-02T22:29:21.529183+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 8.0,
+        "pickSide": "under",
+        "actual": 5,
+        "outcome": "win",
+        "odds": -118,
+        "units": 0.847
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 5,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     },
     "401816375": {
       "eventId": "401816375",
@@ -24711,7 +25950,7 @@
       "pickOdds": -140,
       "openingOdds": -143,
       "openingSide": "away",
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "graded",
       "actual": "Seattle Mariners",
@@ -24721,8 +25960,23 @@
       "awayScore": "6",
       "gradedAt": "2026-08-02T23:31:10.982802+00:00",
       "date": "2026-08-02",
-      "totalResult": null,
-      "spreadResult": null
+      "totalResult": {
+        "line": 7.0,
+        "pickSide": "over",
+        "actual": 13,
+        "outcome": "win",
+        "odds": -113,
+        "units": 0.885
+      },
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "away",
+        "margin": 1,
+        "market": "runline",
+        "outcome": "win",
+        "odds": null,
+        "units": null
+      }
     },
     "401816386": {
       "eventId": "401816386",
