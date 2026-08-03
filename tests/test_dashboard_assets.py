@@ -316,3 +316,46 @@ class WhichBetPanelTests(unittest.TestCase):
 
     def test_no_priced_market_still_names_what_picks_exist(self) -> None:
         self.assertIn("no price reached the build", self.js)
+
+
+class PlayedGameResultTests(unittest.TestCase):
+    """A finished game said "Final" and stopped.
+
+    accuracy.json has carried the final score, whether the moneyline was
+    correct, and the graded outcome of the totals and spread picks since side
+    markets were scored -- keyed by the same eventId the board already had --
+    and board.js had zero references to it. The result is the most useful thing
+    about a played game and it was the one thing not shown.
+    """
+
+    def setUp(self) -> None:
+        self.js = (DASHBOARD / "board.js").read_text(encoding="utf-8")
+
+    def test_the_board_reads_the_graded_record(self) -> None:
+        self.assertIn("function resultFor(eventId)", self.js)
+        self.assertIn("picksByEventId", self.js)
+
+    def test_only_graded_rows_are_treated_as_results(self) -> None:
+        """A pending row has no score and no outcome to report."""
+        self.assertIn('row.status === "graded"', self.js)
+
+    def test_scores_are_coerced_rather_than_trusted(self) -> None:
+        """The scoreboard feed returns them as strings."""
+        self.assertIn("function finalScore(result)", self.js)
+        self.assertIn("Number.isFinite(home)", self.js)
+
+    def test_a_push_is_neither_a_win_nor_a_loss(self) -> None:
+        """Counting a returned stake as a win would flatter the record."""
+        self.assertIn('push: "Push"', self.js)
+
+    def test_the_verdict_follows_the_bet_that_was_recommended(self) -> None:
+        """A card headlining a total must not report won or lost against the
+        moneyline -- that is a different market than the one it advised."""
+        self.assertIn('marketOutcome(result, play.betMarket || "moneyline")', self.js)
+
+    def test_each_market_is_settled_separately(self) -> None:
+        self.assertIn("marketOutcome(result, o.market)", self.js)
+
+    def test_the_result_column_only_exists_once_there_is_one(self) -> None:
+        """An unplayed game must not show an empty column."""
+        self.assertIn('result ? `<th style="text-align:right;padding:0 9px 5px">RESULT</th>` : ""', self.js)

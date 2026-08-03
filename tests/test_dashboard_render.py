@@ -152,6 +152,11 @@ PROBE = """
       }
     }
     measured.hasMarketsTable = !!table;
+    // A played game must say what happened, not only that it happened.
+    measured.headerText = (document.querySelector(".ghead .mu .s") || {}).textContent || "";
+    measured.resultChips = [...document.querySelectorAll("tbody .chip")]
+      .map((c) => c.textContent.trim())
+      .filter((t) => ["Won", "Lost", "Push"].includes(t));
     report(measured);
   } catch (err) {
     errors.push("probe threw: " + err);
@@ -234,7 +239,17 @@ def build_fixture(target: Path) -> None:
                                     "units": 16.5, "roiPct": 2.1},
                         "byLeague": {"wnba": {"total": 71, "pct": 60.0}},
                         **report["summary"]},
-            "picksByEventId": {},
+            # A graded result, so the layout is measured in its hardest state:
+            # the markets table gains a sixth RESULT column once a game has
+            # been played, which is the version most likely to overflow.
+            "picksByEventId": {"g1": {
+                "eventId": "g1", "status": "graded",
+                "homeScore": "104", "awayScore": "92", "correct": True,
+                "totalResult": {"line": 173.5, "pickSide": "over", "actual": 196,
+                                "outcome": "win"},
+                "spreadResult": {"line": -11.5, "pickSide": "home", "margin": 12,
+                                 "outcome": "loss"},
+            }},
         },
     }
     for name in ("evaluation.json", "model_weights.json"):
@@ -337,10 +352,25 @@ class DashboardRenderTests(unittest.TestCase):
         self.assertEqual(self.probe["alignmentMismatches"], [])
 
     def test_the_expected_columns_are_present(self) -> None:
+        """Six once the game is played -- the state most likely to overflow."""
         self.assertEqual(
             [h.upper() for h in self.probe["headers"]],
-            ["MARKET", "PICK", "PRICE", "MODEL", "EDGE"],
+            ["MARKET", "PICK", "PRICE", "MODEL", "EDGE", "RESULT"],
         )
+
+    def test_a_played_game_shows_its_final_score(self) -> None:
+        """"Final" alone is the least interesting true thing about a game.
+
+        The score and the outcome have been sitting in accuracy.json since side
+        markets were graded, keyed by the eventId the board already had, and
+        nothing on the board read it.
+        """
+        self.assertIn("92–104", self.probe["headerText"])
+
+    def test_every_market_is_settled_won_or_lost(self) -> None:
+        """The panel that said which bet to back must also say whether it
+        worked -- and per market, since it ranked all three."""
+        self.assertEqual(sorted(self.probe["resultChips"]), ["Lost", "Won", "Won"])
 
 
 if __name__ == "__main__":
