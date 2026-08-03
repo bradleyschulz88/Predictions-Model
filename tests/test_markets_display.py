@@ -476,3 +476,52 @@ class BoardRanksOnBestMarketTests(unittest.TestCase):
         overview = self._overview([game])
         self.assertEqual(len(overview["unpriced"]), 1)
         self.assertIsNone(overview["unpriced"][0]["evPct"])
+
+
+class PriceCoverageTests(unittest.TestCase):
+    """"No prices" has two causes that look identical on the board.
+
+    A feed that failed today comes back; a league no feed has ever covered does
+    not. AFL is the second kind -- no SportsBookReview board and nothing in
+    ESPN's core odds -- so all 56 of its graded picks are unpriced, permanently.
+    Until now the only record of that was a stdout line that scrolls away in
+    Actions and a comment in espn_odds.py, which makes it a claim rather than a
+    measurement. Recording it per build means it is checked every run, and
+    flips on its own if coverage ever appears.
+    """
+
+    def _coverage(self, league, **stats):
+        from mlb_data import _price_source_coverage
+        from sports_config import get_league
+
+        return _price_source_coverage(get_league(league), stats)
+
+    def test_a_league_with_no_feed_at_all_is_identified(self) -> None:
+        coverage = self._coverage("afl", considered=10, priced=0)
+        self.assertTrue(coverage["noSourceFound"])
+        self.assertFalse(coverage["sbrBoard"])
+
+    def test_it_flips_the_moment_a_price_appears(self) -> None:
+        """The claim has to be falsifiable by the next build, not permanent."""
+        self.assertFalse(self._coverage("afl", considered=10, priced=1)["noSourceFound"])
+
+    def test_a_league_with_an_sbr_board_is_never_sourceless(self) -> None:
+        """MLB going unpriced for a day is an outage, not an absent feed."""
+        self.assertFalse(self._coverage("mlb", considered=40, priced=0)["noSourceFound"])
+
+    def test_a_league_the_core_source_rescued_is_not_sourceless(self) -> None:
+        coverage = self._coverage("wnba", considered=8, priced=6)
+        self.assertFalse(coverage["noSourceFound"])
+        self.assertEqual(coverage["espnCorePriced"], 6)
+
+    def test_nothing_is_recorded_when_there_is_nothing_to_say(self) -> None:
+        """A league with no board that was never even asked has established
+        nothing, so it must not claim a verdict either way."""
+        self.assertIsNone(self._coverage("afl"))
+
+    def test_the_board_distinguishes_the_two_cases(self) -> None:
+        from pathlib import Path
+
+        js = (Path(__file__).resolve().parent.parent / "dashboard" / "board.js").read_text()
+        self.assertIn("priceCoverage?.noSourceFound", js)
+        self.assertIn("No odds feed covers this league", js)

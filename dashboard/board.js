@@ -500,7 +500,14 @@ function leagueTile(L) {
     `<div class="trow"><span class="tname">${esc(String(L.id).toUpperCase())}</span>` +
       `<span class="tsub">${L.pickCount} of ${L.gameCount} published</span>` +
       `<span class="go">&rarr;</span></div>` +
-    (L.pricedCount ? "" : `<div><span class="chip warn">No prices</span></div>`) +
+    // "No prices" has two causes that look the same. Say which one, when the
+    // build actually established it: a league no feed covers is permanently
+    // unpriced, where a feed that failed today will be back.
+    (L.pricedCount
+      ? ""
+      : L.priceCoverage?.noSourceFound
+        ? `<div><span class="chip warn">No odds feed covers this league</span></div>`
+        : `<div><span class="chip warn">No prices</span></div>`) +
     // A league with no graded record of its own is publishing picks whose
     // confidence has never been checked against that sport. Say so here
     // rather than only inside an expanded game card.

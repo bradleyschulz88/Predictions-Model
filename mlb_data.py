@@ -253,6 +253,40 @@ def _report_core_odds(stats: dict[str, Any], date_value: str) -> None:
         )
 
 
+def _price_source_coverage(
+    league_config: Any, core_stats: dict[str, Any]
+) -> dict[str, Any] | None:
+    """Why this league has the prices it has -- or does not have any.
+
+    "No prices" has two causes that look identical on the board: a feed that
+    failed today, and a league no feed has ever covered. AFL is the second
+    kind -- no SportsBookReview board, and ESPN's core odds carry nothing for
+    it -- so every one of its picks is unpriced, permanently, and no amount of
+    waiting will change that.
+
+    Until now the only record of it was a line on stdout that scrolls away in
+    Actions and a comment in espn_odds.py. Recording it per build turns a claim
+    into a measurement: if ESPN ever does start covering a league, this flips
+    on its own, and nobody has to take the comment's word for it.
+    """
+    considered = core_stats.get("considered") or 0
+    if not (getattr(league_config, "supports_sbr_odds", False) or considered):
+        return None
+    return {
+        "sbrBoard": bool(getattr(league_config, "supports_sbr_odds", False)),
+        # Games that reached the last-resort source still lacking any price.
+        "espnCoreTried": considered,
+        "espnCorePriced": core_stats.get("priced") or 0,
+        # True only when a league with no SBR board asked ESPN core and got
+        # nothing back for anything -- the signature of "no source exists".
+        "noSourceFound": bool(
+            not getattr(league_config, "supports_sbr_odds", False)
+            and considered
+            and not (core_stats.get("priced") or 0)
+        ),
+    }
+
+
 def _report_odds_merge(stats: dict[str, Any]) -> None:
     """Say something only when a league that should have prices did not get them.
 
@@ -598,24 +632,29 @@ def fetch_dashboard_data(
     # with spread and total but never a moneyline, and for AFL, which has no
     # SBR board at all -- between them about a third of the graded history has
     # never had a market to anchor to.
-    if include_odds:
-        _optional(
-            "ESPN core odds",
-            lambda: _report_core_odds(
-                fill_missing_moneylines(
-                    games,
-                    league=league,
-                    retries=retries,
-                    retry_delay=retry_delay,
-                    verify_ssl=verify_ssl,
-                ),
-                date_value,
-            ),
+    core_stats: dict[str, Any] = {}
+
+    def _core_odds() -> None:
+        core_stats.update(
+            fill_missing_moneylines(
+                games,
+                league=league,
+                retries=retries,
+                retry_delay=retry_delay,
+                verify_ssl=verify_ssl,
+            )
         )
+        _report_core_odds(core_stats, date_value)
+
+    if include_odds:
+        _optional("ESPN core odds", _core_odds)
 
     payload = build_dashboard_payload_from_espn_games(games, url=url, league=league)
     if degraded:
         payload["degraded"] = degraded
+    coverage = _price_source_coverage(league_config, core_stats)
+    if coverage:
+        payload["priceCoverage"] = coverage
     payload["scheduleDate"] = date_value
     payload["scheduleTimezone"] = get_schedule_timezone(league)
     payload["defaultScheduleDate"] = default_game_date(league)

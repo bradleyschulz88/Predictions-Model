@@ -189,6 +189,10 @@ def build_overview(payloads: dict[str, dict]) -> dict:
                 # reason so the dashboard can tell the two apart.
                 "error": payload.get("error"),
                 "degraded": payload.get("degraded"),
+                # Whether a price source exists for this league at all, so the
+                # board can tell "no feed has ever covered this" apart from
+                # "the feed failed today". They look identical otherwise.
+                "priceCoverage": payload.get("priceCoverage"),
             }
         )
 
