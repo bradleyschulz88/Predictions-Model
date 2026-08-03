@@ -28,7 +28,7 @@ from data_providers.travel import travel_edge
 from data_providers.schedule_advanced import schedule_flags_logit_adjustment
 from data_providers.enrich import enrich_games_with_providers
 from elo import load_ratings, rating_edge
-from market import assess_price, devig_power, devig_proportional
+from market import american_to_decimal, assess_price, devig_power, devig_proportional
 from youtube_intel import intel_edge, load_intel
 from model_core import resolve_probabilities
 from shared_utils import parse_record, win_pct_from_record, win_pct_or_none, format_win_pct
@@ -1323,8 +1323,8 @@ def _best_price_for_side(lines: list[dict[str, Any]], side: str) -> int | None:
     key = {"home": ("home", "homeOdds"), "away": ("away", "awayOdds"), "draw": ("draw", "drawOdds")}.get(side)
     if not key:
         return None
-    best: int | None = None
-    best_decimal = 0.0
+
+    quotes: list[int] = []
     for line in lines or []:
         if "MoneyLine" not in (line.get("viewType") or ""):
             continue
@@ -1332,12 +1332,44 @@ def _best_price_for_side(lines: list[dict[str, Any]], side: str) -> int | None:
         if not isinstance(current, dict):
             continue
         odds = _line_odds_value(current, *key)
-        if odds is None:
-            continue
-        decimal = 1.0 + (100.0 / abs(float(odds)) if float(odds) < 0 else float(odds) / 100.0)
-        if decimal > best_decimal:
-            best, best_decimal = int(odds), decimal
-    return best
+        if odds is not None:
+            quotes.append(int(odds))
+
+    quotes = _usable_quotes(quotes)
+    if not quotes:
+        return None
+    return max(quotes, key=lambda odds: american_to_decimal(odds))
+
+
+# Books disagree by a point or two on a moneyline, not by tens of points. A
+# quote that far from the rest is bad data -- a stale line, a mis-parsed field,
+# or odds matched to the wrong game -- and "best price" will happily pick it,
+# because a garbage price always looks like the best one.
+#
+# This is not hypothetical: one WNBA game carried a +575 quote beside a -153,
+# and the +575 was selected, producing a published EV of +278.9% where the
+# real figure was -7.2%.
+MAX_QUOTE_DISAGREEMENT_PTS = 25.0
+
+
+def _usable_quotes(quotes: list[int]) -> list[int]:
+    """Drop quotes that disagree with the rest of the book beyond all reason.
+
+    With three or more, the median is trustworthy and outliers are dropped
+    against it. With exactly two there is no way to tell which one is wrong,
+    so a wild disagreement discards both: an unpriced game is honest, a
+    confidently wrong price is not.
+    """
+    if len(quotes) < 2:
+        return quotes
+    implied = sorted(american_odds_to_implied(odds) * 100 for odds in quotes)
+    if len(quotes) == 2:
+        return [] if implied[1] - implied[0] > MAX_QUOTE_DISAGREEMENT_PTS else quotes
+    middle = implied[len(implied) // 2]
+    return [
+        odds for odds in quotes
+        if abs(american_odds_to_implied(odds) * 100 - middle) <= MAX_QUOTE_DISAGREEMENT_PTS
+    ]
 
 
 def _home_field_logit(game: dict[str, Any]) -> float:

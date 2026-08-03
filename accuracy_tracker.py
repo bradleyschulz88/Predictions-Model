@@ -10,7 +10,7 @@ from typing import Any
 
 from data_providers.utils import team_match_score
 from espn_client import fetch_scoreboard, parse_scoreboard
-from mlb_predictions import _line_odds_value, american_odds_to_implied
+from mlb_predictions import _best_price_for_side, _line_odds_value, american_odds_to_implied
 from calibration_params import is_publishable_pick
 from schedule_dates import league_schedule_date
 from sports_config import list_league_ids
@@ -46,24 +46,22 @@ def american_odds_profit(odds: int | float, won: bool, stake: float = DEFAULT_ST
 
 
 def extract_pick_american_odds(game: dict[str, Any], predicted_side: str | None) -> int | None:
+    """The price this pick is graded at -- the same one its EV was computed from.
+
+    This used to walk the lines itself and return the FIRST moneyline it found,
+    while the published EV, Kelly stake and board ranking all came from
+    _best_price_for_side, which returns the BEST across every book quoting the
+    game. The two disagreed on 61% of the graded record, always in the same
+    direction: the board advertised an edge at a price the record never booked.
+    A 60% pick shown at -136 as +4.1% EV was graded at -155, where it is -1.3%.
+
+    Delegating rather than reimplementing is the point. Two functions picking
+    "the" price from the same list is what caused the drift, so there is now
+    one, and it carries the outlier guard for both.
+    """
     if predicted_side not in {"home", "away", "draw"}:
         return None
-    key_options = {
-        "home": ("home", "homeOdds"),
-        "away": ("away", "awayOdds"),
-        "draw": ("draw", "drawOdds"),
-    }[predicted_side]
-
-    for line in game.get("lines") or []:
-        if "MoneyLine" not in (line.get("viewType") or ""):
-            continue
-        current = line.get("currentLine") or line.get("openingLine")
-        if not isinstance(current, dict):
-            continue
-        odds = _line_odds_value(current, *key_options)
-        if odds is not None:
-            return int(odds)
-    return None
+    return _best_price_for_side(game.get("lines") or [], predicted_side)
 
 
 def _compute_streak(results: list[dict[str, Any]]) -> dict[str, Any]:

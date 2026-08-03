@@ -152,5 +152,97 @@ class AssessPriceTests(unittest.TestCase):
         self.assertEqual(result["kellyProbabilityPct"], result["modelPct"])
 
 
+
+
+class PriceAgreementTests(unittest.TestCase):
+    """The price the board advertises must be the price the record grades at.
+
+    _best_price_for_side takes the best moneyline across every book quoting a
+    game, and drives EV, Kelly and the board ranking. extract_pick_american_odds
+    used to walk the same lines itself and return the FIRST one it found, which
+    is a different number whenever books disagree. On the graded record the two
+    disagreed 61% of the time, always in the same direction: an edge advertised
+    at a price nobody booked. A 60% pick shown at -136 as +4.1% EV was graded at
+    -155, where it is -1.3%.
+    """
+
+    def _game(self, *home_prices):
+        return {"lines": [
+            {"viewType": "MoneyLine", "currentLine": {"home": str(p), "away": "+100"}}
+            for p in home_prices
+        ]}
+
+    def test_the_two_paths_return_the_same_price(self) -> None:
+        from accuracy_tracker import extract_pick_american_odds
+        from mlb_predictions import _best_price_for_side
+
+        for prices in ((-155, -136), (-110,), (+120, +135, +128)):
+            game = self._game(*prices)
+            self.assertEqual(
+                _best_price_for_side(game["lines"], "home"),
+                extract_pick_american_odds(game, "home"),
+                msg=f"EV and grading disagree on {prices}",
+            )
+
+    def test_grading_takes_the_best_price_not_the_first_listed(self) -> None:
+        from accuracy_tracker import extract_pick_american_odds
+
+        # -136 pays better than -155, and is listed second.
+        self.assertEqual(extract_pick_american_odds(self._game(-155, -136), "home"), -136)
+
+    def test_an_ev_computed_at_the_graded_price_is_the_published_one(self) -> None:
+        """End to end: the number on the card is the number that gets settled."""
+        from accuracy_tracker import extract_pick_american_odds
+        from mlb_predictions import _best_price_for_side
+
+        game = self._game(-155, -136)
+        published = assess_price(0.60, _best_price_for_side(game["lines"], "home"))
+        graded_price = extract_pick_american_odds(game, "home")
+        self.assertAlmostEqual(
+            published["evPct"], expected_value(0.60, graded_price) * 100, places=2,
+        )
+
+
+class OutlierQuoteTests(unittest.TestCase):
+    """Books disagree by a point or two, not by tens of points.
+
+    One WNBA game carried a +575 quote beside a -153. "Best price" picked the
+    +575 and published an EV of +278.9% where the real figure was -7.2%, because
+    a garbage price always looks like the best one.
+    """
+
+    def _lines(self, *prices):
+        return [{"viewType": "MoneyLine", "currentLine": {"home": str(p)}} for p in prices]
+
+    def test_a_normal_spread_of_prices_is_untouched(self) -> None:
+        from mlb_predictions import _best_price_for_side
+
+        self.assertEqual(_best_price_for_side(self._lines(-155, -136), "home"), -136)
+
+    def test_two_wildly_disagreeing_quotes_discard_the_market(self) -> None:
+        """With two, there is no way to tell which is wrong. An unpriced game
+        is honest; a confidently wrong price is not."""
+        from mlb_predictions import _best_price_for_side
+
+        self.assertIsNone(_best_price_for_side(self._lines(-153, 575), "home"))
+
+    def test_with_three_the_median_identifies_the_outlier(self) -> None:
+        from mlb_predictions import _best_price_for_side
+
+        self.assertEqual(_best_price_for_side(self._lines(-150, -145, 575), "home"), -145)
+
+    def test_a_lone_quote_is_kept(self) -> None:
+        """Nothing to compare it against is not the same as knowing it is bad."""
+        from mlb_predictions import _best_price_for_side
+
+        self.assertEqual(_best_price_for_side(self._lines(-155), "home"), -155)
+
+    def test_the_guard_reaches_grading_too(self) -> None:
+        from accuracy_tracker import extract_pick_american_odds
+
+        self.assertIsNone(
+            extract_pick_american_odds({"lines": self._lines(-153, 575)}, "home")
+        )
+
 if __name__ == "__main__":
     unittest.main()
