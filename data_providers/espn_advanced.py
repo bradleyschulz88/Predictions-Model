@@ -120,7 +120,12 @@ def fetch_espn_standings(league: str, *, verify_ssl: bool = True) -> dict[str, d
                 "pointsFor": points_for,
                 "pointsAgainst": points_against,
                 "goalDifference": (points_for - points_against) if points_for is not None and points_against is not None else None,
-                "winPct": wins / games if games else None,
+                # A tie is half a win, matching shared_utils.win_pct_from_record.
+                # Plain wins/games disagreed with it by 2.9pts on an NFL club at
+                # 8-8-1, and the two feed the same fitted strengthDiff -- one via
+                # powerRating, the other via recordDiff. NFL is the only league
+                # here that records ties, so this was dormant until its season.
+                "winPct": (wins + 0.5 * ties) / games if games else None,
                 "pointsPerGame": points_for / games if points_for is not None and games else None,
                 "goalsAgainstPerGame": points_against / games if points_against is not None and games else None,
                 "source": "ESPN",

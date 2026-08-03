@@ -93,6 +93,80 @@ class DerivedMetricsTests(unittest.TestCase):
         weak = compute_power_rating(league="nfl", win_pct=0.625, goals_for_per_game=17.0)
         self.assertGreater(strong - weak, 0.15)
 
+    def test_standings_win_pct_counts_an_nfl_tie_as_half_a_win(self) -> None:
+        """The same club must not get two different win percentages.
+
+        espn_advanced's winPct feeds powerRating; win_pct_from_record feeds
+        recordDiff. Both end up inside the one fitted strengthDiff, so plain
+        wins/games disagreeing with the tie-aware helper by 2.9pts on an 8-8-1
+        club was a real inconsistency -- dormant only because NFL is the sole
+        league here that records ties.
+        """
+        from unittest.mock import patch
+
+        from data_providers.espn_advanced import fetch_espn_standings
+        from shared_utils import win_pct_from_record
+
+        payload = {
+            "children": [
+                {
+                    "standings": {
+                        "entries": [
+                            {
+                                "team": {"displayName": "Tied Club"},
+                                "stats": [
+                                    {"name": "gamesPlayed", "value": 17},
+                                    {"name": "wins", "value": 8},
+                                    {"name": "losses", "value": 8},
+                                    {"name": "ties", "value": 1},
+                                    {"name": "pointsFor", "value": 374},
+                                    {"name": "pointsAgainst", "value": 357},
+                                ],
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+        with patch("data_providers.espn_advanced.fetch_json", return_value=payload):
+            standings = fetch_espn_standings("nfl")
+
+        club = standings["tied club"]
+        self.assertAlmostEqual(
+            club["winPct"], win_pct_from_record("8-8-1", league="nfl"),
+            msg="standings winPct must agree with the record helper",
+        )
+        self.assertAlmostEqual(club["winPct"], 0.5)
+        self.assertAlmostEqual(club["pointsPerGame"], 374 / 17)
+        self.assertAlmostEqual(club["goalsAgainstPerGame"], 357 / 17)
+
+    def test_standings_win_pct_unaffected_without_ties(self) -> None:
+        from unittest.mock import patch
+
+        from data_providers.espn_advanced import fetch_espn_standings
+
+        payload = {
+            "children": [
+                {
+                    "standings": {
+                        "entries": [
+                            {
+                                "team": {"displayName": "No Ties"},
+                                "stats": [
+                                    {"name": "gamesPlayed", "value": 82},
+                                    {"name": "wins", "value": 50},
+                                    {"name": "losses", "value": 32},
+                                ],
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+        with patch("data_providers.espn_advanced.fetch_json", return_value=payload):
+            standings = fetch_espn_standings("nba")
+        self.assertAlmostEqual(standings["no ties"]["winPct"], 50 / 82)
+
     def test_merge_team_profile(self) -> None:
         profile = merge_team_profile(
             league="mlb",
