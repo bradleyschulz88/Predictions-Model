@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-03T11:59:04.242742+00:00",
+  "updatedAt": "2026-08-03T14:21:08.086387+00:00",
   "summary": {
     "last7Days": {
       "correct": 281,
@@ -7,7 +7,7 @@
       "pct": 61.9,
       "units": 3.592,
       "roiPct": 0.8,
-      "pending": 47,
+      "pending": 48,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 61.0,
       "units": 15.814,
       "roiPct": 2.0,
-      "pending": 47,
+      "pending": 48,
       "voided": 11
     },
     "byLeague": {
@@ -3923,6 +3923,34 @@
     }
   ],
   "pendingPicks": [
+    {
+      "eventId": "1133663",
+      "league": "afl",
+      "scheduleDate": "2026-08-07",
+      "matchup": "Hawthorn @ Brisbane Lions",
+      "predicted": "Hawthorn",
+      "predictedSide": "away",
+      "outcomeLabel": "Hawthorn to win",
+      "confidence": 57.8,
+      "rawConfidence": 57.8,
+      "rawHomeWinPct": 42.2,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-07"
+    },
     {
       "eventId": "401879389",
       "league": "mlb",
@@ -27042,6 +27070,34 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-06"
+    },
+    "1133663": {
+      "eventId": "1133663",
+      "league": "afl",
+      "scheduleDate": "2026-08-07",
+      "matchup": "Hawthorn @ Brisbane Lions",
+      "predicted": "Hawthorn",
+      "predictedSide": "away",
+      "outcomeLabel": "Hawthorn to win",
+      "confidence": 57.8,
+      "rawConfidence": 57.8,
+      "rawHomeWinPct": 42.2,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-07"
     }
   },
   "skippedDates": []
