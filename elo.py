@@ -198,7 +198,22 @@ def load_ratings(data_dir: Path | None = None) -> dict[str, Any]:
 
 
 def rating_edge(ratings: dict[str, Any], league: str, home: str | None, away: str | None) -> float | None:
-    """Pre-game rating gap for a fixture, from a stored ratings table."""
+    """Pure pre-game rating gap between two clubs, from a stored ratings table.
+
+    Deliberately excludes home advantage, unlike ``EloTable.pregame_edge``.
+    The two have different jobs: pregame_edge feeds Elo's own expected-score
+    update, where home field belongs, while this feeds the model's eloDiff
+    feature, where it does not.
+
+    Adding it here made eloDiff carry a per-league constant -- +24 rating
+    points for MLB against +60 for NBA, so a 0.36 spread in eloDiff units --
+    that had nothing to do with the two teams playing. Standardisation is
+    global rather than per-league, so that constant survived as a league
+    indicator smuggled into a feature meant to measure team strength, and
+    leagueIntercepts already exists to carry exactly that. The fitted model
+    also carries home field in its own intercept, so including it here
+    counted the same effect twice.
+    """
     table = (ratings.get("leagues") or {}).get(league)
     if not table or not home or not away:
         return None
@@ -206,8 +221,7 @@ def rating_edge(ratings: dict[str, Any], league: str, home: str | None, away: st
     # Only meaningful once both sides have a rating that has actually moved.
     if home not in values or away not in values:
         return None
-    home_advantage = float(table.get("homeAdvantage", DEFAULT_HOME_ADVANTAGE))
-    return float(values[home]) - float(values[away]) + home_advantage
+    return float(values[home]) - float(values[away])
 
 
 def build_and_write(data_dir: Path) -> dict[str, Any]:

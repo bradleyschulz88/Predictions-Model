@@ -204,5 +204,62 @@ class AblationRecheckWiringTests(unittest.TestCase):
         self.assertIn("if (!rows.length)", panel)
 
 
+class BorrowedCalibrationTests(unittest.TestCase):
+    """Every calibration reading on the board comes from one pooled reliability
+    curve built across all leagues at once. That is the right way to build it --
+    no single league has enough graded games for its own curve -- but it means a
+    band reading "n=139" can be almost entirely another sport.
+
+    NBA and NFL are the live case: both open a season with zero graded games
+    here, so until they build a record every calibration number shown against
+    one of their picks is borrowed from baseball. The board has to say so, in
+    every place it presents one, or it is asserting a record that does not
+    exist.
+    """
+
+    def setUp(self) -> None:
+        self.js = (DASHBOARD / "board.js").read_text(encoding="utf-8")
+
+    def test_the_helper_reads_the_leagues_own_graded_count(self) -> None:
+        self.assertIn("function leagueGraded(league)", self.js)
+        self.assertIn("summary?.byLeague", self.js)
+
+    def test_zero_history_and_thin_history_read_differently(self) -> None:
+        """'None yet' and 'not many yet' are different facts."""
+        self.assertIn("function borrowedCalibrationNote(league)", self.js)
+        self.assertIn("borrowed entirely from other leagues", self.js)
+        self.assertIn("mostly other leagues", self.js)
+
+    def test_every_surface_that_shows_a_calibration_number_is_covered(self) -> None:
+        """The four places a band reaches the reader. Missing one puts an
+        unlabelled borrowed number on the page, which is the whole bug."""
+        # 1. the per-game calibration check panel
+        self.assertIn("const borrowed = borrowedCalibrationNote(play.league)", self.js)
+        # 2. the hero's calibration tile, which must know whose record it is
+        self.assertIn("function calibrationShort(confidence, league)", self.js)
+        self.assertIn("calibrationShort(play.confidence, play.league)", self.js)
+        # 3. the Kelly stake note, which now sizes off that band
+        self.assertIn("that band is borrowed from other leagues", self.js)
+        # 4. the Dig checklist
+        self.assertIn('out.push(["unproven league", borrowed])', self.js)
+
+    def test_the_league_tile_flags_it_before_you_open_a_game(self) -> None:
+        self.assertIn("No graded record yet", self.js)
+        self.assertIn("leagueGraded(L.id) === 0", self.js)
+
+    def test_the_threshold_is_named_not_inlined(self) -> None:
+        match = re.search(r"MIN_LEAGUE_HISTORY\s*=\s*([0-9]+)", self.js)
+        self.assertIsNotNone(match, "board.js must state its own history bar")
+        self.assertEqual(int(match.group(1)), 30)
+
+    def test_a_league_with_its_own_record_gets_no_warning(self) -> None:
+        """Guards the guard: the note must be conditional, not always-on.
+
+        An unconditional warning is the same failure as no warning -- it stops
+        carrying information and trains the reader to skip it.
+        """
+        self.assertIn("if (graded >= MIN_LEAGUE_HISTORY) return null;", self.js)
+
+
 if __name__ == "__main__":
     unittest.main()
