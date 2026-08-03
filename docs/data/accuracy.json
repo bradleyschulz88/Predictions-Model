@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-03T05:00:44.811190+00:00",
+  "updatedAt": "2026-08-03T05:57:26.824101+00:00",
   "summary": {
     "last7Days": {
       "correct": 281,
@@ -84,29 +84,39 @@
     },
     "totals": {
       "graded": 59,
+      "decided": 57,
       "wins": 34,
       "losses": 23,
       "pushes": 2,
       "pct": 59.6,
-      "breakEvenPct": 52.4,
+      "stdErrPct": 6.5,
+      "breakEvenPct": 52.2,
+      "beatsBreakEven": false,
       "priced": 49,
       "unpriced": 10,
       "units": 0.811,
       "roiPct": 1.4,
-      "note": "ROI is over all 59 graded picks; 10 of them carry no logged price and count as zero return."
+      "pricedUnits": 0.811,
+      "pricedRoiPct": 1.7,
+      "note": "ROI is over all 59 graded picks; 10 of them carry no logged price and count as zero return. Over the 49 priced picks alone the return is +1.7%."
     },
     "spreads": {
       "graded": 59,
+      "decided": 59,
       "wins": 41,
       "losses": 18,
       "pushes": 0,
       "pct": 69.5,
-      "breakEvenPct": 52.4,
+      "stdErrPct": 6.0,
+      "breakEvenPct": 52.6,
+      "beatsBreakEven": true,
       "priced": 11,
       "unpriced": 48,
       "units": 4.264,
       "roiPct": 7.2,
-      "note": "ROI is over all 59 graded picks; 48 of them carry no logged price and count as zero return."
+      "pricedUnits": 4.264,
+      "pricedRoiPct": 38.8,
+      "note": "ROI is over all 59 graded picks; 48 of them carry no logged price and count as zero return. Over the 11 priced picks alone the return is +38.8%."
     }
   },
   "recentResults": [
