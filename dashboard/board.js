@@ -702,12 +702,21 @@ function gameRow(play) {
   const gap = play.marketPct == null ? null : play.confidence - play.marketPct;
   const fades = fadesMarket(play);
   const when = startTime(play.startDate, play.league);
+  const result = resultFor(play.eventId);
+  const score = finalScore(result);
+  // The headline verdict follows the bet that was actually recommended, not
+  // always the moneyline -- otherwise a card headlining a total would report
+  // won or lost against a different market than the one it told you to back.
+  const verdict = marketOutcome(result, play.betMarket || "moneyline");
 
   const head = el("button", "ghead");
   head.innerHTML =
     `<div class="mu"><div class="t">${esc(play.matchup || "")}</div><div class="s">` +
       (when ? `<span class="tm">${esc(when)}</span>` : "") +
       (play.statusLabel ? `<span class="chip ${play.isFinal ? "final" : "live"}">${esc(play.statusLabel)}</span>` : "") +
+      // A played game should say what happened, not just that it happened.
+      (score ? `<span class="chip num">${esc(score.text)}</span>` : "") +
+      (verdict ? `<span class="chip ${OUTCOME_TONE[verdict]}">${OUTCOME_LABEL[verdict]}</span>` : "") +
       (play.published ? "" : `<span class="chip">Withheld</span>`) +
       (play.odds == null ? `<span class="chip warn">No price</span>` : "") +
       (fades === true ? `<span class="chip warn">Against the favourite</span>` : "") +
@@ -734,6 +743,43 @@ function gameRow(play) {
 }
 
 const MARKET_LABEL = { moneyline: "Moneyline", total: "Total", spread: "Spread / runline" };
+
+/* What actually happened, for a game that has been played.
+ *
+ * accuracy.json has carried the final score and the graded outcome of all
+ * three markets since side markets were scored, keyed by the same eventId the
+ * board already has -- and nothing on the board read it. A finished game said
+ * "Final" and stopped, which is the least interesting true thing about it.
+ */
+function resultFor(eventId) {
+  if (eventId == null) return null;
+  const row = (S.accuracy?.picksByEventId || {})[String(eventId)];
+  return row && row.status === "graded" ? row : null;
+}
+
+/* Scores arrive as strings from the scoreboard feed, so coerce rather than
+   trusting them, and say nothing at all when either side is unreadable. */
+function finalScore(result) {
+  const home = Number(result?.homeScore);
+  const away = Number(result?.awayScore);
+  if (!Number.isFinite(home) || !Number.isFinite(away)) return null;
+  // Away first, matching the "Away @ Home" order of every matchup label.
+  return { away, home, text: `${away}–${home}` };
+}
+
+/* Won, lost or pushed, per market. A push is neither: the stake comes back,
+   and calling it a win would flatter the record. */
+function marketOutcome(result, market) {
+  if (!result) return null;
+  if (market === "moneyline") {
+    return result.correct == null ? null : (result.correct ? "win" : "loss");
+  }
+  const block = market === "total" ? result.totalResult : result.spreadResult;
+  return block?.outcome || null;
+}
+
+const OUTCOME_LABEL = { win: "Won", loss: "Lost", push: "Push" };
+const OUTCOME_TONE = { win: "good", loss: "bad", push: "" };
 
 /* Which of the three markets to actually back.
  *
@@ -768,9 +814,14 @@ function marketsPanel(play) {
   }
 
   const headline = best.pick;
+  // Once a game is played the table can settle itself: every market it ranked
+  // has a graded outcome sitting in accuracy.json, so the panel that said
+  // which bet to back can also say whether backing it worked.
+  const result = resultFor(play.eventId);
   const rows = options.map((o) => {
     const isBest = headline && o.market === headline.market;
     const good = o.evPct > 0;
+    const outcome = marketOutcome(result, o.market);
     return `<tr style="${isBest ? "background:color-mix(in srgb, var(--good) 9%, transparent)" : ""}">` +
       `<td style="padding:7px 9px;white-space:nowrap">` +
         (isBest ? `<span class="chip good" style="margin-right:6px">Back this</span>` : "") +
@@ -784,7 +835,15 @@ function marketsPanel(play) {
       `<td class="num" style="padding:7px 9px;text-align:right">${american(o.odds)}</td>` +
       `<td class="num" style="padding:7px 9px;text-align:right">${pct(o.confidence)}</td>` +
       `<td class="num" style="padding:7px 9px;text-align:right;color:${good ? "var(--good)" : "var(--bad)"}">` +
-        `${sgn(o.evPct)}%</td></tr>`;
+        `${sgn(o.evPct)}%</td>` +
+      (result
+        ? `<td style="padding:7px 9px;text-align:right">` +
+          (outcome
+            ? `<span class="chip ${OUTCOME_TONE[outcome]}">${OUTCOME_LABEL[outcome]}</span>`
+            : `<span style="color:var(--muted)">—</span>`) +
+          `</td>`
+        : "") +
+      `</tr>`;
   }).join("");
 
   const held = best.heldBack;
@@ -812,7 +871,9 @@ function marketsPanel(play) {
   const p = el("div", "");
   p.innerHTML =
     `<div class="subh" style="margin:15px 0 8px"><h4>Which bet</h4>` +
-      `<span class="note">ranked by edge, gated by record</span></div>` +
+      `<span class="note">${result && finalScore(result)
+        ? `final ${esc(finalScore(result).text)} — settled below`
+        : "ranked by edge, gated by record"}</span></div>` +
     `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px">` +
       `<thead><tr style="color:var(--muted);font-size:11px;letter-spacing:.06em">` +
         `<th style="text-align:left;padding:0 9px 5px">MARKET</th>` +
@@ -820,6 +881,7 @@ function marketsPanel(play) {
         `<th style="text-align:right;padding:0 9px 5px">PRICE</th>` +
         `<th style="text-align:right;padding:0 9px 5px">MODEL</th>` +
         `<th style="text-align:right;padding:0 9px 5px">EDGE</th>` +
+        (result ? `<th style="text-align:right;padding:0 9px 5px">RESULT</th>` : "") +
       `</tr></thead><tbody>${rows}</tbody></table></div>` +
     notes.map((n, i) => `<p style="font-size:12px;color:${i && /not yet/.test(n) ? "var(--warn)" : "var(--muted)"};margin:10px 0 0">${esc(n)}</p>`).join("");
   return p;
