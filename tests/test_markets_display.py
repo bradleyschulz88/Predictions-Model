@@ -344,10 +344,58 @@ class BestBetSelectionTests(unittest.TestCase):
             self.assertEqual(mlb_predictions.market_priced_history("spread"), 9)
             self.assertFalse(mlb_predictions.market_is_validated("spread"))
 
-    def test_enough_priced_history_opens_the_gate(self) -> None:
-        report = {"summary": {"totals": {"graded": 60, "priced": mlb_predictions.MIN_MARKET_HISTORY}}}
+    def test_enough_priced_history_and_a_winning_record_opens_the_gate(self) -> None:
+        report = {"summary": {"totals": {
+            "graded": 60, "priced": mlb_predictions.MIN_MARKET_HISTORY,
+            "pct": 61.6, "breakEvenPct": 52.3,
+        }}}
         with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
             self.assertTrue(mlb_predictions.market_is_validated("total"))
+
+    def test_a_losing_record_stays_gated_however_much_history_it_has(self) -> None:
+        """Priced volume alone is not evidence the market pays. A market that
+        has hit under the break-even its own prices imply has shown the
+        opposite, and no amount of it should promote the market."""
+        report = {"summary": {"totals": {
+            "graded": 900, "priced": 800, "pct": 48.0, "breakEvenPct": 52.3,
+        }}}
+        with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
+            self.assertFalse(mlb_predictions.market_is_validated("total"))
+
+    def test_the_break_even_bar_is_the_one_the_prices_imply(self) -> None:
+        """Not a hardcoded 52.4%. The same 55% hit rate passes against -110
+        runline-style pricing and fails against a bar the real prices set
+        higher, which is what happens once MLB runlines carry odds."""
+        cheap = {"summary": {"totals": {"graded": 90, "priced": 90, "pct": 55.0, "breakEvenPct": 52.4}}}
+        dear = {"summary": {"totals": {"graded": 90, "priced": 90, "pct": 55.0, "breakEvenPct": 58.0}}}
+        with patch.object(mlb_predictions, "_get_accuracy_report", return_value=cheap):
+            self.assertTrue(mlb_predictions.market_is_validated("total"))
+        with patch.object(mlb_predictions, "_get_accuracy_report", return_value=dear):
+            self.assertFalse(mlb_predictions.market_is_validated("total"))
+
+    def test_a_record_with_no_hit_rate_yet_stays_gated(self) -> None:
+        report = {"summary": {"totals": {"graded": 60, "priced": 60, "pct": None}}}
+        with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
+            self.assertFalse(mlb_predictions.market_is_validated("total"))
+
+    def test_the_options_carry_the_record_so_the_card_can_caveat_it(self) -> None:
+        """A recommended side market has to be able to show its error bar."""
+        report = {"summary": {"totals": {
+            "graded": 75, "decided": 73, "priced": 64, "pct": 61.6,
+            "stdErrPct": 5.7, "breakEvenPct": 52.3, "beatsBreakEven": False,
+            "pricedRoiPct": 10.5,
+        }}}
+        prediction = self._prediction(ml_ev=4.0, total_ev=9.0)
+        with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
+            best = mlb_predictions.select_best_bet(prediction)
+        total = next(o for o in best["options"] if o["market"] == "total")
+        self.assertEqual(total["record"]["stdErrPct"], 5.7)
+        self.assertFalse(total["record"]["beatsBreakEven"])
+
+    def test_the_moneyline_carries_no_side_market_record(self) -> None:
+        prediction = self._prediction(ml_ev=4.0)
+        best = mlb_predictions.select_best_bet(prediction)
+        self.assertIsNone(best["options"][0]["record"])
 
     def test_a_missing_record_gates_everything_off(self) -> None:
         """Absent evidence is not evidence of safety."""

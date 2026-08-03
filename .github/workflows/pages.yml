@@ -59,7 +59,29 @@ jobs:
           cp dashboard/app.js dashboard/styles.css docs/
           cp dashboard/manifest.json dashboard/sw.js docs/
 
+      # tests/test_dashboard_render.py drives headless Chromium to check real
+      # geometry -- column clipping, alignment, horizontal overflow -- which
+      # string assertions against board.js structurally cannot do. The runner
+      # image ships Google Chrome, so nothing is installed here; this step
+      # just names the browser it will use, so a runner that ever loses one
+      # produces an obvious message rather than a puzzling test failure.
+      - name: Locate a browser for the render tests
+        run: |
+          for candidate in google-chrome chromium chromium-browser chrome; do
+            if command -v "$candidate" >/dev/null 2>&1; then
+              echo "render tests will use: $(command -v "$candidate")"
+              exit 0
+            fi
+          done
+          echo "::error::No Chromium-family browser on PATH. The dashboard render \
+          tests need one; install chromium or unset REQUIRE_RENDER_TESTS below."
+          exit 1
+
       - name: Run tests
+        env:
+          # Turn "no browser, so skip" into a failure. A silent skip here would
+          # mean layout regressions had quietly stopped failing the build.
+          REQUIRE_RENDER_TESTS: "1"
         run: python -m unittest discover -s tests -q
 
       # Refit before building so the slate is predicted with the newest weights.

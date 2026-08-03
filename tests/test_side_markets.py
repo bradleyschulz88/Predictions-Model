@@ -383,3 +383,87 @@ class RetroactiveGradingTests(unittest.TestCase):
             stored=pending, log_extras={"total": {"line": 10.0, "pickSide": "over"}}
         )
         self.assertIsNone(accuracy["picksByEventId"]["42"].get("totalResult"))
+
+
+class MarketUncertaintyTests(unittest.TestCase):
+    """A hit rate on a few dozen picks is not a settled number.
+
+    The spread record fell from 67.9% to 58.7% inside one afternoon's grading,
+    which is exactly the regression a thin sample predicts. Reporting the rate
+    with no interval, and an ROI diluted across picks that could never have
+    contributed to it, presented that as fact.
+    """
+
+    def _rows(self, key, wins, losses, *, odds=-110, priced=None):
+        """`priced` many rows carry a price; the rest carry none."""
+        priced = wins + losses if priced is None else priced
+        rows = []
+        for index in range(wins + losses):
+            outcome = "win" if index < wins else "loss"
+            row = {"outcome": outcome}
+            if index < priced:
+                row["odds"] = odds
+                row["units"] = accuracy_tracker.american_odds_profit(odds, outcome == "win")
+            rows.append({key: row})
+        return rows
+
+    def test_standard_error_shrinks_as_the_sample_grows(self) -> None:
+        small = accuracy_tracker._market_summary(self._rows("totalResult", 33, 21), "totalResult")
+        large = accuracy_tracker._market_summary(self._rows("totalResult", 330, 210), "totalResult")
+        self.assertAlmostEqual(small["pct"], large["pct"], places=0)
+        self.assertGreater(small["stdErrPct"], large["stdErrPct"])
+        self.assertAlmostEqual(small["stdErrPct"], large["stdErrPct"] * (10 ** 0.5), delta=0.2)
+
+    def test_a_thin_winning_record_is_not_called_conclusive(self) -> None:
+        """61% on 54 decided has a 95% interval that still spans break-even."""
+        summary = accuracy_tracker._market_summary(self._rows("totalResult", 33, 21), "totalResult")
+        self.assertGreater(summary["pct"], summary["breakEvenPct"])
+        self.assertFalse(summary["beatsBreakEven"])
+
+    def test_the_same_rate_on_a_big_sample_is_conclusive(self) -> None:
+        summary = accuracy_tracker._market_summary(self._rows("totalResult", 330, 210), "totalResult")
+        self.assertTrue(summary["beatsBreakEven"])
+
+    def test_a_losing_record_is_never_conclusive(self) -> None:
+        summary = accuracy_tracker._market_summary(self._rows("totalResult", 210, 330), "totalResult")
+        self.assertFalse(summary["beatsBreakEven"])
+
+    def test_break_even_comes_from_the_prices_actually_taken(self) -> None:
+        """Hardcoding -110 is fine until MLB runlines carry prices, which sit
+        nearer +150/-200 and imply a very different bar."""
+        cheap = accuracy_tracker._market_summary(
+            self._rows("spreadResult", 30, 30, odds=-110), "spreadResult")
+        dear = accuracy_tracker._market_summary(
+            self._rows("spreadResult", 30, 30, odds=-250), "spreadResult")
+        self.assertAlmostEqual(cheap["breakEvenPct"], 52.4, delta=0.2)
+        self.assertAlmostEqual(dear["breakEvenPct"], 71.4, delta=0.2)
+
+    def test_break_even_falls_back_to_minus_110_when_nothing_is_priced(self) -> None:
+        summary = accuracy_tracker._market_summary(
+            self._rows("totalResult", 5, 5, priced=0), "totalResult")
+        self.assertEqual(summary["breakEvenPct"], accuracy_tracker.DEFAULT_BREAK_EVEN_PCT)
+
+    def test_priced_roi_is_reported_separately_from_the_diluted_one(self) -> None:
+        """The headline divides units by every graded pick while only the
+        priced ones can contribute, so a market with 10 prices out of 75
+        reports a modest return that is really ten picks' worth of evidence."""
+        rows = self._rows("spreadResult", 40, 35, priced=10)
+        summary = accuracy_tracker._market_summary(rows, "spreadResult")
+        self.assertEqual(summary["priced"], 10)
+        self.assertNotAlmostEqual(summary["roiPct"], summary["pricedRoiPct"], places=1)
+        self.assertAlmostEqual(
+            summary["pricedRoiPct"], summary["pricedUnits"] / 10 * 100, places=1
+        )
+        self.assertIn("priced picks alone", summary["note"])
+
+    def test_a_fully_priced_market_reports_the_same_roi_both_ways(self) -> None:
+        rows = self._rows("totalResult", 30, 20)
+        summary = accuracy_tracker._market_summary(rows, "totalResult")
+        self.assertAlmostEqual(summary["roiPct"], summary["pricedRoiPct"], places=1)
+
+    def test_an_empty_market_does_not_divide_by_zero(self) -> None:
+        summary = accuracy_tracker._market_summary([], "totalResult")
+        self.assertEqual(summary["graded"], 0)
+        self.assertIsNone(summary["pct"])
+        self.assertIsNone(summary["stdErrPct"])
+        self.assertFalse(summary["beatsBreakEven"])

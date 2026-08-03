@@ -781,19 +781,26 @@ function marketsPanel(play) {
   }).join("");
 
   const held = best.heldBack;
-  let note;
+  const notes = [];
   if (!headline) {
-    note = "No market on this game clears zero expected value, so there is nothing here worth backing. " +
-      "That is a decision, not a gap.";
+    notes.push("No market on this game clears zero expected value, so there is nothing here worth backing. " +
+      "That is a decision, not a gap.");
   } else if (held) {
-    note = `${MARKET_LABEL[held.market]} shows the bigger edge at ${sgn(held.evPct)}%, but it has only ` +
+    notes.push(`${MARKET_LABEL[held.market]} shows the bigger edge at ${sgn(held.evPct)}%, but it has only ` +
       `${plural(held.gradedPriced ?? 0, "priced graded pick", "priced graded picks")} behind it — not enough to ` +
       `back ahead of the moneyline, which is fitted and calibrated against every graded game. It is shown ` +
-      `because the edge is real data, not because it is a recommendation.`;
+      `because the edge is real data, not because it is a recommendation.`);
   } else {
-    note = "All priced markets on this game, ranked by expected value per unit staked — the only figure " +
-      "comparable across different prices.";
+    notes.push("All priced markets on this game, ranked by expected value per unit staked — the only figure " +
+      "comparable across different prices.");
   }
+  // A recommended side market has to carry its error bar. Its record is a few
+  // dozen picks, where a hit rate moves several points on noise alone -- the
+  // spread record fell from 67.9% to 58.7% inside a single afternoon's
+  // grading. Printing the rate without the interval states a settled fact
+  // that the sample cannot support.
+  const caveat = headline && recordCaveat(headline);
+  if (caveat) notes.push(caveat);
 
   const p = el("div", "");
   p.innerHTML =
@@ -807,8 +814,24 @@ function marketsPanel(play) {
         `<th style="text-align:right;padding:0 9px 5px">MODEL</th>` +
         `<th style="text-align:right;padding:0 9px 5px">EDGE</th>` +
       `</tr></thead><tbody>${rows}</tbody></table></div>` +
-    `<p style="font-size:12px;color:var(--muted);margin:10px 0 0">${esc(note)}</p>`;
+    notes.map((n, i) => `<p style="font-size:12px;color:${i && /not yet/.test(n) ? "var(--warn)" : "var(--muted)"};margin:10px 0 0">${esc(n)}</p>`).join("");
   return p;
+}
+
+/* How thin the evidence behind a recommended side market actually is.
+   Null for the moneyline, which is fitted and calibrated, and for any market
+   with no graded record to describe. */
+function recordCaveat(option) {
+  const r = option?.record;
+  if (!r || r.pct == null) return null;
+  const label = MARKET_LABEL[option.market] || option.market;
+  const err = r.stdErrPct == null ? "" : ` ±${r.stdErrPct}`;
+  const base = `${label} has hit ${pct(r.pct)}${err} across ${plural(r.decided ?? 0, "decided pick", "decided picks")}, ` +
+    `against a ${pct(r.breakEvenPct)} break-even at the prices actually taken.`;
+  return r.beatsBreakEven
+    ? `${base} That clears break-even by more than the sample's own error.`
+    : `${base} That is not yet distinguishable from break-even — the edge above is the model's estimate, ` +
+      `not a demonstrated return.`;
 }
 
 function whyPanel(play) {
@@ -1292,7 +1315,17 @@ function cardsPanel(A, E) {
     if (!m?.graded) return null;
     const record = `${m.wins}-${m.losses}` + (m.pushes ? `-${m.pushes}` : "");
     const roi = m.priced ? `${sgn(m.roiPct, 1)}% ROI. ` : "";
-    return card(title, record, `${pct(m.pct)} on ${m.graded} graded. ${roi}${m.note}`,
+    // The error bar belongs beside the hit rate, not in a footnote. A few
+    // dozen picks moves several points on noise alone, so a bare "61.6%"
+    // reads as settled when the interval still spans break-even.
+    const err = m.stdErrPct == null ? "" : ` ±${m.stdErrPct}`;
+    const verdict = m.beatsBreakEven === true
+      ? " Clears break-even by more than the sample's error."
+      : m.beatsBreakEven === false
+        ? ` Not yet distinguishable from the ${pct(m.breakEvenPct)} break-even.`
+        : "";
+    return card(title, record,
+      `${pct(m.pct)}${err} on ${m.decided ?? m.graded} decided. ${roi}${verdict} ${m.note}`,
       m.priced && m.roiPct != null ? (m.roiPct > 0 ? "var(--good)" : m.roiPct < 0 ? "var(--bad)" : undefined) : undefined);
   };
   const totalsCard = marketCard("Totals", sum.totals);
