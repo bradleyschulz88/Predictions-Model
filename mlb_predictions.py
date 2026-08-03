@@ -528,6 +528,64 @@ def extract_spread_price(lines: list[dict[str, Any]], side: str) -> int | None:
     return None
 
 
+# A side market may only be promoted to a game's headline bet once it has this
+# many PRICED graded picks behind it. Priced, not merely graded: an unpriced
+# pick contributes no return, so it is no evidence that betting the market pays.
+# 30 is the bar this codebase already uses for "enough to conclude from"
+# (evaluation.MIN_RELIABLE_SAMPLE, MIN_KELLY_BAND_SAMPLE, MIN_LEAGUE_HISTORY).
+#
+# Counted per market across all leagues rather than per market per league:
+# split six ways the side-market record is under ten picks everywhere, so a
+# per-league bar would never open and the gate would just be an off switch.
+MIN_MARKET_HISTORY = 30
+
+_ACCURACY_REPORT: dict[str, Any] | None = None
+
+
+def _get_accuracy_report() -> dict[str, Any]:
+    """docs/data/accuracy.json -- the graded record, for gating decisions.
+
+    Read the same way the evaluation report is, and absent is the normal case
+    in a fresh checkout or in tests. An absent record gates every side market
+    off, which is the safe direction: it means "no evidence yet", not "fine".
+    """
+    global _ACCURACY_REPORT
+    if _ACCURACY_REPORT is None:
+        path = Path(__file__).resolve().parent / "docs" / "data" / "accuracy.json"
+        try:
+            _ACCURACY_REPORT = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            _ACCURACY_REPORT = {}
+    return _ACCURACY_REPORT
+
+
+# prediction key -> the accuracy summary block that records how it has done.
+_MARKET_RECORD_KEY = {"total": "totals", "spread": "spreads"}
+
+
+def market_priced_history(market: str) -> int:
+    """How many priced graded picks this side market has behind it."""
+    key = _MARKET_RECORD_KEY.get(market)
+    if key is None:
+        return 0
+    summary = (_get_accuracy_report().get("summary") or {}).get(key) or {}
+    priced = summary.get("priced")
+    return int(priced) if isinstance(priced, (int, float)) else 0
+
+
+def market_is_validated(market: str) -> bool:
+    """Whether this market has earned the right to headline a game.
+
+    The moneyline always has: it is the fitted, calibrated output the whole
+    model is built around. The side markets are heuristics -- a stack of
+    hand-tuned leans for totals, a normal margin model for spreads -- so they
+    have to show a priced record before they can outrank it.
+    """
+    if market == "moneyline":
+        return True
+    return market_priced_history(market) >= MIN_MARKET_HISTORY
+
+
 def _get_calibration_params() -> dict[str, Any]:
     global _CALIBRATION_PARAMS
     if _CALIBRATION_PARAMS is None:
@@ -2143,15 +2201,23 @@ def predict_runline(
         "homePct": round(home_covers * 100, 1),
         "awayPct": round(away_covers * 100, 1),
         "market": "runline",
-        # No confidence figure: runline picks have never been graded, so any
-        # number here would be invented.
-        "confidence": None,
+        # The cover probability for the side actually taken. It was already
+        # computed here and quoted in the detail text below; leaving the field
+        # None meant nothing downstream could price the pick, so the runline
+        # could never be compared against the moneyline. Still `unvalidated`:
+        # it is derived from the measured 70.8% clear rate, not calibrated
+        # against its own graded record the way the moneyline is.
+        "confidence": round(max(home_covers, away_covers) * 100, 1),
         "unvalidated": True,
+        # Baseball runlines go through this function rather than predict_spread,
+        # so without this every MLB runline was unpriced -- 47 of the 56 graded
+        # spread picks, which is why that market's ROI rested on only nine.
+        "odds": extract_spread_price(lines, pick_side),
         "detail": (
             f"Runline {line_for_pick:+.1f}. Model gives {team} "
             f"{max(home_covers, away_covers) * 100:.0f}% to cover, from a "
             f"{p_home * 100:.0f}% home win probability and the measured 70.8% of "
-            f"wins that clear 1.5 runs. Not yet graded or calibrated."
+            f"wins that clear 1.5 runs."
         ),
     }
 
@@ -2204,25 +2270,125 @@ def predict_spread(
         # The away side takes the opposite number to the home line.
         pick_side, pick_text = "away", f"Away {-spread_line:+.1f}"
 
+    # Probability the picked side covers, from the same normal margin model that
+    # produced modelLine -- not a second, inconsistent estimate.
+    #
+    # modelLine is -inv_cdf(p_home) * sigma, so the model's expected home margin
+    # is -modelLine. The home side covers a home line L when margin + L > 0, so
+    #   P(home covers) = P(margin > -L) = Phi((L - modelLine) / sigma).
+    # The away side takes the complement, since exactly one of them covers on a
+    # half-point line.
+    cover_home = NormalDist().cdf((spread_line - model_spread) / margin_sd)
+    cover = cover_home if pick_side == "home" else 1.0 - cover_home
+    confidence = round(cover * 100, 1) if pick_side in ("home", "away") else None
+
     return {
         "line": spread_line,
         "modelLine": round(model_spread, 1),
         "pick": pick_text,
         "pickSide": pick_side,
         "edgePoints": round(edge, 1),
-        # No confidence figure: spread picks have never been graded, so there is
-        # nothing to calibrate against and any number here would be invented.
-        "confidence": None,
+        # Derived from the margin model above rather than left blank. It is a
+        # real probability, but it inherits that model's assumptions -- a normal
+        # margin with a fixed per-league sigma -- and unlike the moneyline it has
+        # never been calibrated against its own graded record. `unvalidated`
+        # stays true so nothing downstream can mistake it for a fitted number.
+        "confidence": confidence,
         "unvalidated": True,
         # None on a push (no side taken) or an SBR-sourced line, which has
         # nowhere to carry a price. Present when ESPN core supplied it.
         "odds": extract_spread_price(lines, pick_side) if pick_side in ("home", "away") else None,
         "detail": (
             f"Model line {model_spread:+.1f} vs market {spread_line:+.1f} "
-            f"({edge:+.1f} pts). Spread picks are not yet graded or calibrated."
+            f"({edge:+.1f} pts)."
         ),
     }
 
+
+
+def _price_side_market(block: dict[str, Any] | None) -> None:
+    """Attach the same value block the moneyline carries, in place.
+
+    Percentage points of edge are not comparable across markets any more than
+    across prices: a 5-point edge on a -250 favourite and a 5-point edge on an
+    over at -108 are worth very different amounts. Running every market through
+    the same assess_price is what makes "which of these three is the best bet"
+    a question with an answer.
+    """
+    if not block:
+        return
+    confidence = block.get("confidence")
+    odds = block.get("odds")
+    if confidence is None or odds is None:
+        return
+    value = assess_price(float(confidence) / 100.0, odds)
+    if value:
+        block["value"] = value
+
+
+def _market_options(prediction: dict[str, Any]) -> list[dict[str, Any]]:
+    """Every market on this game that carries a real, priced expected value."""
+    options: list[dict[str, Any]] = []
+    candidates = (
+        ("moneyline", prediction.get("value"), prediction.get("outcomeLabel"), prediction.get("confidence")),
+        ("total", (prediction.get("total") or {}).get("value"),
+         (prediction.get("total") or {}).get("pick"), (prediction.get("total") or {}).get("confidence")),
+        ("spread", (prediction.get("spread") or {}).get("value"),
+         (prediction.get("spread") or {}).get("pick"), (prediction.get("spread") or {}).get("confidence")),
+    )
+    for market, value, label, confidence in candidates:
+        if not value or value.get("evPct") is None:
+            continue
+        options.append(
+            {
+                "market": market,
+                "pick": label,
+                "confidence": confidence,
+                "odds": value.get("odds"),
+                "evPct": value.get("evPct"),
+                "kellyPct": value.get("kellyPct"),
+                "breakEvenPct": value.get("breakEvenPct"),
+                "validated": market_is_validated(market),
+                "gradedPriced": None if market == "moneyline" else market_priced_history(market),
+            }
+        )
+    return options
+
+
+def select_best_bet(prediction: dict[str, Any]) -> dict[str, Any] | None:
+    """Rank this game's markets by expected value and name one to back.
+
+    Gated rather than a bare argmax. The moneyline is fitted and calibrated
+    against every graded game; the side markets are heuristics that have only
+    recently started carrying prices at all. Letting an unvalidated market win
+    the headline purely on a bigger EV number would present a hand-tuned lean
+    as the model's best work.
+
+    So the headline goes to the highest-EV market that has earned it, while
+    every priced market -- validated or not -- is still ranked and returned, so
+    a bigger unvalidated edge is visible rather than hidden. When nothing has
+    a price there is no best bet, which is a fact and not a gap.
+    """
+    options = _market_options(prediction)
+    if not options:
+        return None
+    options.sort(key=lambda option: option["evPct"], reverse=True)
+
+    eligible = [
+        option for option in options
+        if option["validated"] and option["evPct"] > 0
+    ]
+    headline = eligible[0] if eligible else None
+    top = options[0]
+
+    return {
+        "options": options,
+        # None when no market both clears zero EV and is trusted enough to back.
+        "pick": headline,
+        # Set when the genuinely highest-EV market was held back by the gate,
+        # so the card can say why rather than silently dropping it.
+        "heldBack": top if headline is not None and top is not headline else None,
+    }
 
 
 def _enrich_missing(games: list[dict[str, Any]]) -> None:
@@ -2282,6 +2448,16 @@ def apply_predictions(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
             )
             if spread_pred:
                 prediction["spread"] = spread_pred
+
+        # Price every market the same way before comparing them, then name the
+        # one worth backing. Without this the card showed three markets and an
+        # edge for only one of them, so "which should I actually bet" had no
+        # answer on the page.
+        _price_side_market(prediction.get("total"))
+        _price_side_market(prediction.get("spread"))
+        best = select_best_bet(prediction)
+        if best:
+            prediction["bestBet"] = best
 
         game["prediction"] = prediction
 
