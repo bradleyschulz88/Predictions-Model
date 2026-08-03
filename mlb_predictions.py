@@ -31,7 +31,7 @@ from elo import load_ratings, rating_edge
 from market import assess_price, devig_power, devig_proportional
 from youtube_intel import intel_edge, load_intel
 from model_core import resolve_probabilities
-from shared_utils import parse_record, win_pct_from_record, format_win_pct
+from shared_utils import parse_record, win_pct_from_record, win_pct_or_none, format_win_pct
 
 HOME_FIELD_LOGIT = {
     "mlb": 0.28,
@@ -773,6 +773,21 @@ def _video_intel() -> dict[str, Any]:
     return _VIDEO_INTEL
 
 
+def _pct_diff(
+    home_record: str | None, away_record: str | None, *, league: str
+) -> float | None:
+    """Home minus away win percentage, or None when either side has no games.
+
+    Both sides must have played for the difference to mean anything. One club
+    at 0-0 against one at 6-2 is not a -0.75 edge; it is an unknown.
+    """
+    home = win_pct_or_none(home_record, league=league)
+    away = win_pct_or_none(away_record, league=league)
+    if home is None or away is None:
+        return None
+    return round(home - away, 4)
+
+
 def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
     """Features the probability model reads, computed before any prediction exists.
 
@@ -804,15 +819,16 @@ def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
 
     return {
         "league": league,
-        "recordDiff": round(
-            win_pct_from_record(game.get("homeRecord"), league=league)
-            - win_pct_from_record(game.get("awayRecord"), league=league),
-            4,
+        # None, not 0.0, when either club has not played yet. At the start of a
+        # season every team is 0-0, so the old 0.5 default made these read as
+        # "two exactly average teams" -- and splitDiff's home-field centring
+        # then turned that fabricated 0.0 into a systematic edge against the
+        # home side on every opening-week game. See win_pct_or_none.
+        "recordDiff": _pct_diff(
+            game.get("homeRecord"), game.get("awayRecord"), league=league
         ),
-        "splitDiff": round(
-            win_pct_from_record(game.get("homeHomeRecord"), 0.5, league=league)
-            - win_pct_from_record(game.get("awayRoadRecord"), 0.5, league=league),
-            4,
+        "splitDiff": _pct_diff(
+            game.get("homeHomeRecord"), game.get("awayRoadRecord"), league=league
         ),
         "homePower": home_adv.get("powerRating"),
         "awayPower": away_adv.get("powerRating"),

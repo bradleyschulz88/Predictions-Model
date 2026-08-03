@@ -20,7 +20,7 @@ from mlb_predictions import (  # noqa: E402
     extract_total_price,
     kelly_band_probability,
 )
-from shared_utils import win_pct_from_record  # noqa: E402
+from shared_utils import win_pct_from_record, win_pct_or_none  # noqa: E402
 
 
 class SpreadSignTests(unittest.TestCase):
@@ -135,6 +135,75 @@ class LastFiveSentinelTests(unittest.TestCase):
             value = _last_five_pct(record)
             if value is not None:
                 self.assertGreaterEqual(value, 0.0, msg=record)
+
+
+class SeasonStartRecordTests(unittest.TestCase):
+    """An 0-0 club is not a .500 club.
+
+    win_pct_from_record folds "0-0" into its 0.5 default, which is right for a
+    display cell and wrong for a model input. Fed into a difference it yields
+    exactly 0.0, indistinguishable from two genuinely average teams -- and
+    splitDiff's home-field centring then turns that fabricated 0.0 into a
+    measured 1.04pt edge against the home side on every opening-week game.
+    NFL and NBA both open within ten weeks, so every game on the board would
+    have carried it at once.
+    """
+
+    def test_win_pct_or_none_is_none_before_any_games(self) -> None:
+        for record in ("0-0", "0-0-0", "", None, "—"):
+            self.assertIsNone(win_pct_or_none(record, league="nfl"), msg=repr(record))
+
+    def test_win_pct_or_none_matches_the_default_helper_once_played(self) -> None:
+        for record, league in (("11-3-1", "nfl"), ("40-15", "nba"), ("20-8-10", "epl")):
+            self.assertAlmostEqual(
+                win_pct_or_none(record, league=league),
+                win_pct_from_record(record, league=league),
+                msg=record,
+            )
+
+    def test_a_genuine_five_hundred_club_is_not_confused_with_an_unplayed_one(self) -> None:
+        """The whole point: 8-8 and 0-0 both read 0.5 through the old helper."""
+        self.assertAlmostEqual(win_pct_or_none("8-8", league="nfl"), 0.5)
+        self.assertIsNone(win_pct_or_none("0-0", league="nfl"))
+
+    def _inputs(self, **over):
+        game = {
+            "league": "nfl", "homeTeam": "H", "awayTeam": "A",
+            "homeRecord": "0-0", "awayRecord": "0-0",
+            "homeHomeRecord": "0-0", "awayRoadRecord": "0-0",
+            "enrichment": {},
+        }
+        game.update(over)
+        return mlb_predictions.extract_model_inputs(game)
+
+    def test_opening_night_logs_no_strength_features(self) -> None:
+        features = self._inputs()
+        self.assertIsNone(features["recordDiff"])
+        self.assertIsNone(features["splitDiff"])
+
+    def test_one_unplayed_side_is_still_unknown(self) -> None:
+        """0-0 against 6-2 is not a 0.75 edge to the away side."""
+        features = self._inputs(homeRecord="0-0", awayRecord="6-2")
+        self.assertIsNone(features["recordDiff"])
+
+    def test_real_records_are_unaffected(self) -> None:
+        features = self._inputs(
+            homeRecord="6-2", awayRecord="2-6",
+            homeHomeRecord="4-0", awayRoadRecord="1-3",
+        )
+        self.assertAlmostEqual(features["recordDiff"], 0.5)
+        self.assertAlmostEqual(features["splitDiff"], 0.75)
+
+    def test_the_phantom_home_bias_is_gone(self) -> None:
+        """End to end: two identical unplayed teams on a pick-em market must
+        not have strengthDiff invent an edge against the home side."""
+        from model_fit import build_feature_dict
+
+        collapsed = build_feature_dict(self._inputs(), split_diff_centre=0.0364)
+        self.assertIsNone(
+            collapsed["strengthDiff"],
+            "no games played means no strength evidence, not a -0.0182 edge",
+        )
 
 
 class RecordFormatTests(unittest.TestCase):

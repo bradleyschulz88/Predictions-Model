@@ -59,6 +59,31 @@ def win_pct_from_record(
     return wins / total if total else default
 
 
+def win_pct_or_none(record: str | None, *, league: str | None = None) -> float | None:
+    """Win percentage, or None when the club has not played yet.
+
+    ``win_pct_from_record`` folds "0-0" and "no record at all" into its 0.5
+    default, which is right for display -- a blank cell needs *some* number --
+    and wrong for a model input. A team that is 0-0 is not a .500 team; it is
+    a team with no evidence either way, and the difference matters most in the
+    first weeks of a season when every club is 0-0 at once.
+
+    Feeding the 0.5 default into a difference produces exactly 0.0, which then
+    passes through splitDiff's home-field centring and comes out as a small
+    negative -- a phantom edge against the home side on every opening-week
+    game. Returning None instead lets the fit standardise the feature to its
+    training mean, which is what "absent" is supposed to mean everywhere else
+    in this model.
+    """
+    parsed = parse_record(record)
+    if not parsed:
+        return None
+    total = sum(parsed[:3]) if len(parsed) == 3 else sum(parsed[:2])
+    if not total:
+        return None
+    return win_pct_from_record(record, league=league)
+
+
 def format_record(wins: int, losses: int, draws: int = 0) -> str:
     """Format wins, losses, draws into a record string."""
     if draws:
