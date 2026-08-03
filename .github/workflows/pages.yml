@@ -110,6 +110,13 @@ jobs:
           # falls back to its deterministic score, and the build is unaffected.
           # Add it at Settings > Secrets and variables > Actions.
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          # Also optional, and the only price source that covers AFL -- it has
+          # no SportsBookReview board and nothing in ESPN core, so without this
+          # every AFL pick stays unpriced and cannot be valued or ranked.
+          # Free plan at the-odds-api.com is 500 credits a month; the provider
+          # caches for six hours and only calls when AFL games are actually
+          # unpriced, which lands near 200. Absent, nothing is called at all.
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python scripts/build_pages_data.py
 
       # Re-score after grading so the published evaluation reflects today's
