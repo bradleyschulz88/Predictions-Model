@@ -205,6 +205,35 @@ function fadesMarket(play) {
   return market < 50;
 }
 
+/* Graded picks this league has of its own.
+ *
+ * The reliability curve every calibration reading comes from is pooled across
+ * every league at once. That is the right way to build it -- no single league
+ * has enough graded games to fit its own curve -- but it means a band reading
+ * "n=139" can be almost entirely another sport. True as a prior, misleading if
+ * presented as this league's record.
+ *
+ * NBA and NFL are the live case: both start seasons with zero graded games
+ * here, so every calibration number shown against one of their picks is
+ * borrowed from baseball until they build a record of their own. */
+const MIN_LEAGUE_HISTORY = 30;
+
+function leagueGraded(league) {
+  const row = (S.accuracy?.summary?.byLeague || {})[league];
+  return row?.total ?? 0;
+}
+
+/* Text for how far a league's own record backs a calibration reading, or null
+   when it has enough history to speak for itself. */
+function borrowedCalibrationNote(league) {
+  const graded = leagueGraded(league);
+  if (graded >= MIN_LEAGUE_HISTORY) return null;
+  const label = String(league || "").toUpperCase();
+  return graded === 0
+    ? `No ${label} pick has been graded here yet, so this band is borrowed entirely from other leagues. Treat it as a prior about the model, not a record of its ${label} form.`
+    : `Only ${plural(graded, "graded " + label + " pick", "graded " + label + " picks")} so far, so this band is mostly other leagues. It describes the model, not its ${label} form.`;
+}
+
 /* What games in this confidence band have actually done. More honest than a
    fabricated interval: it is measured, not modelled. */
 function bucketFor(confidence) {
@@ -412,19 +441,26 @@ function heroFor(play) {
       `${play.kellyPct == null ? "—" : pct(play.kellyPct)}` +
       `<span style="color:var(--muted);font-size:13px"> of bankroll</span></div>` +
       (bandSized
-        ? `<div style="font-size:11px;color:var(--warn);margin-top:2px">sized off the ${pct(play.kellyProbabilityPct)} band, not the ${pct(play.confidence)} headline</div>`
+        ? `<div style="font-size:11px;color:var(--warn);margin-top:2px">sized off the ${pct(play.kellyProbabilityPct)} band, not the ${pct(play.confidence)} headline` +
+          (borrowedCalibrationNote(play.league) ? ` — and that band is borrowed from other leagues` : "") + `</div>`
         : "") +
       `</div>` +
     `<div class="m"><div class="lbl">Price</div><div class="v">${american(play.odds)}</div></div>` +
-    `<div class="m"><div class="lbl">Calibration band</div><div class="v">${calibrationShort(play.confidence)}</div></div>`;
+    `<div class="m"><div class="lbl">Calibration band</div><div class="v">${calibrationShort(play.confidence, play.league)}</div></div>`;
   wrap.appendChild(meta);
   return wrap;
 }
 
-function calibrationShort(confidence) {
+function calibrationShort(confidence, league) {
   const b = bucketFor(confidence);
   if (!b) return "—";
-  return pct(b.actualWinPct) + `<span style="font-size:12px;color:var(--muted)"> actual</span>`;
+  // Say whose record it is. Unlabelled, a borrowed band reads as this
+  // league's own form, which for a league with no graded games is a number
+  // about baseball wearing an NBA badge.
+  const borrowed = league != null && borrowedCalibrationNote(league);
+  const tag = borrowed ? "borrowed" : "actual";
+  return pct(b.actualWinPct) +
+    `<span style="font-size:12px;color:var(--muted)"> ${tag}</span>`;
 }
 
 function leagueTile(L) {
@@ -450,6 +486,10 @@ function leagueTile(L) {
       `<span class="tsub">${L.pickCount} of ${L.gameCount} published</span>` +
       `<span class="go">&rarr;</span></div>` +
     (L.pricedCount ? "" : `<div><span class="chip warn">No prices</span></div>`) +
+    // A league with no graded record of its own is publishing picks whose
+    // confidence has never been checked against that sport. Say so here
+    // rather than only inside an expanded game card.
+    (leagueGraded(L.id) === 0 ? `<div><span class="chip warn">No graded record yet</span></div>` : "") +
     (best
       ? `<div class="tbest"><b>${esc(best.pick || "")}</b><br>` +
         `<span style="color:var(--muted)">${esc(best.matchup || "")}</span></div>` +
@@ -724,6 +764,7 @@ function whyPanel(play) {
   if (b) {
     const thin = b.picks < 30;
     const bad = Math.abs(b.overconfidencePct) > 8 && !thin;
+    const borrowed = borrowedCalibrationNote(play.league);
     left.appendChild(el("div", "",
       `<div class="subh" style="margin:17px 0 8px"><h4>Calibration check</h4>` +
         `<span class="note">not a forecast — the record</span></div>` +
@@ -738,6 +779,9 @@ function whyPanel(play) {
           : thin
             ? `<div style="font-size:12px;color:var(--muted);margin-top:6px">Too few picks in this band to conclude much.</div>`
             : "") +
+        (borrowed
+          ? `<div style="font-size:12px;color:var(--warn);margin-top:6px">${esc(borrowed)}</div>`
+          : "") +
       `</div>`));
   }
 
@@ -1337,9 +1381,12 @@ function checksOf(play) {
       "Confirm both starters' throwing hand and how each lineup splits against it."]);
   }
   const b = bucketFor(play.confidence);
+  const borrowed = borrowedCalibrationNote(play.league);
   if (b && b.picks >= 30 && b.overconfidencePct > 8) out.push(["calibration",
     `This sits in the ${b.range}% band, which has actually won ${pct(b.actualWinPct)} across ${b.picks} picks. ` +
-    `Treat the headline number as ${b.overconfidencePct.toFixed(0)} points optimistic.`]);
+    `Treat the headline number as ${b.overconfidencePct.toFixed(0)} points optimistic.` +
+    (borrowed ? ` Those picks are almost all other leagues, so read it as a prior about the model rather than about ${leagueShort(play)}.` : "")]);
+  else if (borrowed) out.push(["unproven league", borrowed]);
   if (play.evPct == null) out.push(["price",
     "Find a price yourself before staking. Without one there is no edge and no sizing, only a probability."]);
   return out.slice(0, 4);

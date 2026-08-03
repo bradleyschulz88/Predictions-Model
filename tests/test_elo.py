@@ -140,8 +140,39 @@ class RatingEdgeTests(unittest.TestCase):
     def _ratings(self):
         return {"leagues": {"nba": {"homeAdvantage": 60.0, "ratings": {"A": 1600.0, "B": 1500.0}}}}
 
-    def test_edge_includes_home_advantage(self) -> None:
-        self.assertAlmostEqual(rating_edge(self._ratings(), "nba", "A", "B"), 160.0)
+    def test_edge_excludes_home_advantage(self) -> None:
+        """The model feature is a pure team-strength gap.
+
+        This used to add the table's homeAdvantage, which made eloDiff carry a
+        per-league constant -- +24 rating points for MLB against +60 for NBA,
+        a 0.36 spread in eloDiff units -- with nothing to do with the two
+        clubs playing. Standardisation is global rather than per-league, so
+        that constant survived as a league indicator inside a feature meant to
+        measure team strength, duplicating both leagueIntercepts and the
+        fitted model's own home-field intercept.
+        """
+        self.assertAlmostEqual(rating_edge(self._ratings(), "nba", "A", "B"), 100.0)
+
+    def test_edge_is_antisymmetric(self) -> None:
+        """With home field removed, swapping the sides must just flip the sign.
+
+        It could not before: the old version returned 160 one way and -40 the
+        other, so the feature disagreed with itself about who was better.
+        """
+        forward = rating_edge(self._ratings(), "nba", "A", "B")
+        reverse = rating_edge(self._ratings(), "nba", "B", "A")
+        self.assertAlmostEqual(forward, -reverse)
+
+    def test_evenly_rated_clubs_have_no_edge(self) -> None:
+        ratings = {"leagues": {"nba": {"homeAdvantage": 60.0, "ratings": {"A": 1500.0, "B": 1500.0}}}}
+        self.assertAlmostEqual(rating_edge(ratings, "nba", "A", "B"), 0.0)
+
+    def test_elos_own_update_still_uses_home_advantage(self) -> None:
+        """The other half of the split: pregame_edge keeps it, because Elo's
+        expected-score update genuinely needs home field."""
+        table = EloTable("nba")
+        table.ratings = {"A": 1500.0, "B": 1500.0}
+        self.assertAlmostEqual(table.pregame_edge("A", "B"), table.home_advantage)
 
     def test_unknown_team_yields_nothing(self) -> None:
         self.assertIsNone(rating_edge(self._ratings(), "nba", "A", "Nobody"))
