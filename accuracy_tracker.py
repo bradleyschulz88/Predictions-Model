@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -18,6 +19,17 @@ ACCURACY_FILE = "accuracy.json"
 LOG_FILE = "predictions_log.json"
 LOOKBACK_DAYS = 30
 DEFAULT_STAKE_UNITS = 1.0
+
+# Break-even win rate at the standard -110, used only until a market has real
+# prices of its own to measure against.
+DEFAULT_BREAK_EVEN_PCT = 52.4
+
+
+def _implied_break_even(odds: Any) -> float:
+    """The win rate a price needs just to return the stake, as a percentage."""
+    value = float(odds)
+    decimal = 1.0 + (100.0 / abs(value) if value < 0 else value / 100.0)
+    return 100.0 / decimal
 
 # The log is rewritten and committed every 30 minutes, so it grows without
 # bound. Keep enough history to fit on and evaluate against, and drop the rest.
@@ -290,32 +302,71 @@ def _market_summary(results: list[dict[str, Any]], key: str) -> dict[str, Any]:
     losses = sum(1 for row in graded if row.get("outcome") == "loss")
     pushes = sum(1 for row in graded if row.get("outcome") == "push")
     decided = wins + losses
-    priced = sum(1 for row in graded if row.get("odds") is not None)
+    priced_rows = [row for row in graded if row.get("odds") is not None]
+    priced = len(priced_rows)
     units = round(sum(float(row.get("units") or 0.0) for row in graded), 3)
+    priced_units = round(sum(float(row.get("units") or 0.0) for row in priced_rows), 3)
+
+    # The bar these picks actually had to clear, from the prices they were
+    # really taken at rather than an assumed -110. It matters as soon as MLB
+    # runlines start carrying prices: those sit nearer +150/-200, where 52.4%
+    # is badly wrong. Falls back to -110 only when nothing is priced yet.
+    break_even = round(
+        sum(_implied_break_even(row["odds"]) for row in priced_rows) / priced, 1
+    ) if priced else DEFAULT_BREAK_EVEN_PCT
+
+    pct = round(wins / decided * 100, 1) if decided else None
+    # Binomial standard error on the hit rate. At these sample sizes it is the
+    # difference between "this market wins" and "this market might win": 56
+    # decided picks carries about 6.3 points of error, so a 61% record and a
+    # 52% record are not distinguishable from one another.
+    std_err = (
+        round(math.sqrt((wins / decided) * (1 - wins / decided) / decided) * 100, 1)
+        if decided
+        else None
+    )
+    # Does the record clear break-even by more than noise? Lower 95% bound
+    # against the bar it actually faced. This is the honest answer to "has this
+    # market shown it can pick", and it is not the same question as "is the ROI
+    # figure meaningful", which needs prices.
+    beats_break_even = (
+        bool(pct is not None and std_err is not None and (pct - 1.96 * std_err) > break_even)
+    )
 
     summary: dict[str, Any] = {
         "graded": len(graded),
+        "decided": decided,
         "wins": wins,
         "losses": losses,
         "pushes": pushes,
-        "pct": round(wins / decided * 100, 1) if decided else None,
-        # Break-even at the usual -110 is 52.4%.
-        "breakEvenPct": 52.4,
+        "pct": pct,
+        "stdErrPct": std_err,
+        "breakEvenPct": break_even,
+        "beatsBreakEven": beats_break_even,
         "priced": priced,
         "unpriced": len(graded) - priced,
     }
     if priced:
         summary["units"] = units
         summary["roiPct"] = round(units / len(graded) * 100, 1) if graded else None
+        # The same units over only the picks that could have produced them.
+        # roiPct divides by every graded pick, so a market with 9 prices out of
+        # 56 reports a modest return that is really nine picks' worth of
+        # evidence -- understating the priced result and hiding how thin it is.
+        summary["pricedUnits"] = priced_units
+        summary["pricedRoiPct"] = round(priced_units / priced * 100, 1)
         summary["note"] = (
             f"ROI is over all {len(graded)} graded picks; {len(graded) - priced} of them "
-            "carry no logged price and count as zero return."
+            f"carry no logged price and count as zero return. Over the {priced} priced "
+            f"picks alone the return is {priced_units / priced * 100:+.1f}%."
             if priced < len(graded)
             else "Hit rate and ROI both cover the full graded record."
         )
     else:
         summary["units"] = 0.0
         summary["roiPct"] = None
+        summary["pricedUnits"] = 0.0
+        summary["pricedRoiPct"] = None
         summary["note"] = "Hit rate only; these markets carry no logged price, so ROI is not measurable."
     return summary
 

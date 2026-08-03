@@ -563,13 +563,17 @@ def _get_accuracy_report() -> dict[str, Any]:
 _MARKET_RECORD_KEY = {"total": "totals", "spread": "spreads"}
 
 
-def market_priced_history(market: str) -> int:
-    """How many priced graded picks this side market has behind it."""
+def market_record(market: str) -> dict[str, Any]:
+    """This side market's graded record, as accuracy.json summarised it."""
     key = _MARKET_RECORD_KEY.get(market)
     if key is None:
-        return 0
-    summary = (_get_accuracy_report().get("summary") or {}).get(key) or {}
-    priced = summary.get("priced")
+        return {}
+    return (_get_accuracy_report().get("summary") or {}).get(key) or {}
+
+
+def market_priced_history(market: str) -> int:
+    """How many priced graded picks this side market has behind it."""
+    priced = market_record(market).get("priced")
     return int(priced) if isinstance(priced, (int, float)) else 0
 
 
@@ -579,11 +583,30 @@ def market_is_validated(market: str) -> bool:
     The moneyline always has: it is the fitted, calibrated output the whole
     model is built around. The side markets are heuristics -- a stack of
     hand-tuned leans for totals, a normal margin model for spreads -- so they
-    have to show a priced record before they can outrank it.
+    have to show a record first.
+
+    Two conditions, because they answer different questions. Enough PRICED
+    picks says the market is actually bettable and its return is measurable;
+    a hit rate above the break-even those prices imply says the record at
+    least points the right way.
+
+    Deliberately not a 95% significance test. At these sample sizes almost
+    nothing clears that bar -- neither market does today -- so requiring it
+    would mean no side market is ever backed, which is a different product
+    than the one asked for. The uncertainty is not hidden instead: the record
+    carries stdErrPct and beatsBreakEven, and the card prints them beside any
+    side market it recommends, so "best available" never reads as "proven".
     """
     if market == "moneyline":
         return True
-    return market_priced_history(market) >= MIN_MARKET_HISTORY
+    record = market_record(market)
+    if market_priced_history(market) < MIN_MARKET_HISTORY:
+        return False
+    pct = record.get("pct")
+    break_even = record.get("breakEvenPct")
+    if not isinstance(pct, (int, float)) or not isinstance(break_even, (int, float)):
+        return False
+    return pct > break_even
 
 
 def _get_calibration_params() -> dict[str, Any]:
@@ -2350,6 +2373,14 @@ def _market_options(prediction: dict[str, Any]) -> list[dict[str, Any]]:
                 "breakEvenPct": value.get("breakEvenPct"),
                 "validated": market_is_validated(market),
                 "gradedPriced": None if market == "moneyline" else market_priced_history(market),
+                # The record behind this market, with its error bar, so the
+                # card can say how thin the evidence is rather than presenting
+                # a hit rate on 70-odd picks as a settled fact.
+                "record": None if market == "moneyline" else {
+                    key: record.get(key)
+                    for key in ("pct", "stdErrPct", "breakEvenPct", "beatsBreakEven",
+                                "decided", "priced", "pricedRoiPct")
+                } if (record := market_record(market)) else None,
             }
         )
     return options
