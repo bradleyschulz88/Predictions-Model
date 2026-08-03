@@ -253,6 +253,31 @@ def _report_core_odds(stats: dict[str, Any], date_value: str) -> None:
         )
 
 
+def _report_odds_api(stats: dict[str, Any], date_value: str) -> None:
+    """Only speak when this source was actually reached for.
+
+    Silence covers both the normal case -- every other feed already priced the
+    slate -- and the unconfigured one, which is not a failure: no key means no
+    metered calls, and the build behaves exactly as it did before.
+    """
+    considered = stats.get("considered") or 0
+    if not considered or not stats.get("configured"):
+        return
+    where = f"{stats['league']} {date_value}"
+    if stats.get("priced"):
+        books = ", ".join(stats["books"][:3]) or "unknown"
+        print(
+            f"Odds: {where}: The Odds API priced {stats['priced']}/{considered} "
+            f"previously unpriced games via {books}",
+            flush=True,
+        )
+    else:
+        print(
+            f"Odds: {where}: The Odds API returned nothing for {considered} unpriced games",
+            flush=True,
+        )
+
+
 def _price_source_coverage(
     league_config: Any, core_stats: dict[str, Any]
 ) -> dict[str, Any] | None:
@@ -648,6 +673,24 @@ def fetch_dashboard_data(
 
     if include_odds:
         _optional("ESPN core odds", _core_odds)
+
+    # Truly last: a paid-tier-free API that covers leagues nothing else does.
+    # Costs a metered credit, so it runs only after every free source has had
+    # its turn and only if games are still unpriced, and does nothing at all
+    # without a key. AFL is the case it exists for -- no SBR board, nothing in
+    # ESPN core, so its picks have never had a price to compute value from.
+    api_stats: dict[str, Any] = {}
+
+    def _odds_api() -> None:
+        from data_providers.odds_api import attach_odds_to_games
+
+        api_stats.update(
+            attach_odds_to_games(games, league=league, verify_ssl=verify_ssl)
+        )
+        _report_odds_api(api_stats, date_value)
+
+    if include_odds:
+        _optional("The Odds API", _odds_api)
 
     payload = build_dashboard_payload_from_espn_games(games, url=url, league=league)
     if degraded:
