@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-04T08:25:13.879106+00:00",
+  "updatedAt": "2026-08-04T11:06:14.820907+00:00",
   "summary": {
     "last7Days": {
       "correct": 268,
@@ -7,7 +7,7 @@
       "pct": 61.3,
       "units": -1.046,
       "roiPct": -0.2,
-      "pending": 48,
+      "pending": 47,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 60.8,
       "units": 12.092,
       "roiPct": 1.5,
-      "pending": 48,
+      "pending": 47,
       "voided": 11
     },
     "byLeague": {
@@ -4413,34 +4413,6 @@
       "confidence": 88.2,
       "rawConfidence": 88.2,
       "rawHomeWinPct": 88.2,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-06"
-    },
-    {
-      "eventId": "401857119",
-      "league": "wnba",
-      "scheduleDate": "2026-08-06",
-      "matchup": "Las Vegas Aces @ Indiana Fever",
-      "predicted": "Indiana Fever",
-      "predictedSide": "home",
-      "outcomeLabel": "Indiana Fever to win",
-      "confidence": 56.4,
-      "rawConfidence": 56.4,
-      "rawHomeWinPct": 56.4,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -27444,7 +27416,7 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
