@@ -525,3 +525,119 @@ class PriceCoverageTests(unittest.TestCase):
         js = (Path(__file__).resolve().parent.parent / "dashboard" / "board.js").read_text()
         self.assertIn("priceCoverage?.noSourceFound", js)
         self.assertIn("No odds feed covers this league", js)
+
+
+class MlbSideMarketPricingTests(unittest.TestCase):
+    """MLB side markets could never be priced, by construction.
+
+    SportsBookReview posts MLB totals and spreads as bare numbers with no odds,
+    and fill_missing_moneylines -- the only caller of ESPN core, which is the
+    one source carrying side-market prices -- skips any game that already has a
+    moneyline. SBR gives MLB a moneyline, so ESPN core was never asked about
+    those games at all. The result was 11 priced spreads out of 58, the rest
+    being baseball runlines with no price to value them at.
+    """
+
+    CORE = [
+        {"sportsbook": "ESPN BET", "viewType": "MoneyLine",
+         "currentLine": {"home": "-150", "away": "+130"}},
+        {"sportsbook": "ESPN BET", "viewType": "Total",
+         "currentLine": {"over": "o8.5 (-110)", "under": "u8.5 (-112)"}},
+        {"sportsbook": "ESPN BET", "viewType": "Spread",
+         "currentLine": {"home": "-1.5 (+105)", "away": "+1.5 (-125)"}},
+    ]
+
+    def _sbr_game(self):
+        """An MLB game exactly as SBR delivers it: moneyline priced, sides bare."""
+        return {"eventId": "1", "lines": [
+            {"sportsbook": "SBR", "viewType": "MoneyLine",
+             "currentLine": {"home": "-150", "away": "+130"}},
+            {"sportsbook": "SBR", "viewType": "Total", "currentLine": {"over": "8.5", "under": "8.5"}},
+            {"sportsbook": "SBR", "viewType": "Spread", "currentLine": {"home": "-1.5", "away": "+1.5"}},
+        ]}
+
+    def setUp(self) -> None:
+        import espn_odds
+
+        espn_odds.clear_side_market_cache()
+
+    def test_a_bare_sbr_line_is_recognised_as_unpriced(self) -> None:
+        """A game can look fully covered and still be unvaluable."""
+        import espn_odds
+
+        self.assertFalse(espn_odds.has_priced_side_market(self._sbr_game()["lines"]))
+        self.assertTrue(espn_odds.has_priced_side_market(self.CORE))
+
+    def test_the_second_pass_prices_them(self) -> None:
+        import espn_odds
+        from mlb_predictions import extract_spread_price, extract_total_price
+
+        game = self._sbr_game()
+        with patch.object(espn_odds, "fetch_event_odds", return_value=self.CORE):
+            stats = espn_odds.fill_missing_side_market_prices([game], league="mlb")
+        self.assertEqual(stats["priced"], 1)
+        self.assertEqual(extract_total_price(game["lines"], "over"), -110)
+        self.assertEqual(extract_spread_price(game["lines"], "home"), 105)
+
+    def test_the_moneyline_is_not_duplicated(self) -> None:
+        """A second copy would land in the de-vigged consensus twice."""
+        import espn_odds
+
+        game = self._sbr_game()
+        with patch.object(espn_odds, "fetch_event_odds", return_value=self.CORE):
+            espn_odds.fill_missing_side_market_prices([game], league="mlb")
+        moneylines = [l for l in game["lines"] if "MoneyLine" in l["viewType"]]
+        self.assertEqual(len(moneylines), 1)
+
+    def test_a_game_with_no_moneyline_is_left_to_the_other_pass(self) -> None:
+        """fill_missing_moneylines owns those, and would fetch the same event."""
+        import espn_odds
+
+        game = {"eventId": "1", "lines": []}
+        with patch.object(espn_odds, "fetch_event_odds", side_effect=AssertionError("must not fetch")):
+            stats = espn_odds.fill_missing_side_market_prices([game], league="mlb")
+        self.assertEqual(stats["considered"], 0)
+
+    def test_an_already_priced_game_is_not_refetched(self) -> None:
+        import espn_odds
+
+        game = {"eventId": "1", "lines": self.CORE}
+        with patch.object(espn_odds, "fetch_event_odds", side_effect=AssertionError("must not fetch")):
+            stats = espn_odds.fill_missing_side_market_prices([game], league="mlb")
+        self.assertEqual(stats["considered"], 0)
+
+    def test_repeat_builds_reuse_the_cache(self) -> None:
+        """MLB runs ~15 games a day against a build every thirty minutes;
+        without a cache that is roughly 720 requests a day for lines that
+        barely move."""
+        import espn_odds
+
+        with patch.object(espn_odds, "fetch_event_odds", return_value=self.CORE) as fetch:
+            for _ in range(5):
+                espn_odds.fill_missing_side_market_prices([self._sbr_game()], league="mlb")
+        self.assertEqual(fetch.call_count, 1)
+
+    def test_the_cache_expires(self) -> None:
+        import espn_odds
+
+        with patch.object(espn_odds, "fetch_event_odds", return_value=self.CORE) as fetch:
+            espn_odds.fill_missing_side_market_prices([self._sbr_game()], league="mlb", now=0.0)
+            espn_odds.fill_missing_side_market_prices(
+                [self._sbr_game()], league="mlb",
+                now=espn_odds.SIDE_MARKET_CACHE_TTL_SECONDS + 1,
+            )
+        self.assertEqual(fetch.call_count, 2)
+
+    def test_it_reaches_a_real_runline_expected_value(self) -> None:
+        """The whole point: an MLB runline had no price to be valued at."""
+        import espn_odds
+
+        game = self._sbr_game()
+        game.update({"league": "mlb", "homeTeam": "Home", "awayTeam": "Away",
+                     "homeRecord": "60-40", "awayRecord": "40-60", "enrichment": {}})
+        with patch.object(espn_odds, "fetch_event_odds", return_value=self.CORE):
+            espn_odds.fill_missing_side_market_prices([game], league="mlb")
+        mlb_predictions.apply_predictions([game])
+        spread = game["prediction"].get("spread") or {}
+        self.assertIsNotNone(spread.get("odds"), "the runline must now carry a price")
+        self.assertIsNotNone((spread.get("value") or {}).get("evPct"))
