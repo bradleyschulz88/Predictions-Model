@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-04T00:05:44.688471+00:00",
+  "updatedAt": "2026-08-04T00:21:55.815118+00:00",
   "summary": {
     "last7Days": {
       "correct": 281,
@@ -7,7 +7,7 @@
       "pct": 61.9,
       "units": 3.592,
       "roiPct": 0.8,
-      "pending": 44,
+      "pending": 41,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 61.0,
       "units": 15.814,
       "roiPct": 2.0,
-      "pending": 44,
-      "voided": 13
+      "pending": 41,
+      "voided": 16
     },
     "byLeague": {
       "wnba": {
@@ -3924,34 +3924,6 @@
   ],
   "pendingPicks": [
     {
-      "eventId": "1133663",
-      "league": "afl",
-      "scheduleDate": "2026-08-07",
-      "matchup": "Hawthorn @ Brisbane Lions",
-      "predicted": "Hawthorn",
-      "predictedSide": "away",
-      "outcomeLabel": "Hawthorn to win",
-      "confidence": 57.8,
-      "rawConfidence": 57.8,
-      "rawHomeWinPct": 42.2,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-07"
-    },
-    {
       "eventId": "401879389",
       "league": "mlb",
       "scheduleDate": "2026-08-06",
@@ -5022,26 +4994,6 @@
       "published": true
     },
     {
-      "eventId": "401857112",
-      "league": "wnba",
-      "scheduleDate": "2026-08-03",
-      "matchup": "Seattle Storm @ New York Liberty",
-      "predicted": "New York Liberty",
-      "predictedSide": "home",
-      "outcomeLabel": "New York Liberty to win",
-      "confidence": 72.1,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-03",
-      "published": true
-    },
-    {
       "eventId": "401816383",
       "league": "mlb",
       "scheduleDate": "2026-08-03",
@@ -5049,26 +5001,6 @@
       "predicted": "Tampa Bay Rays",
       "predictedSide": "away",
       "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 73.0,
-      "pickOdds": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-03",
-      "published": true
-    },
-    {
-      "eventId": "401816382",
-      "league": "mlb",
-      "scheduleDate": "2026-08-03",
-      "matchup": "Toronto Blue Jays @ Houston Astros",
-      "predicted": "Houston Astros",
-      "predictedSide": "home",
-      "outcomeLabel": "Houston Astros to win",
       "confidence": 73.0,
       "pickOdds": null,
       "status": "pending",
@@ -24843,7 +24775,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-03",
-      "published": true,
+      "published": false,
       "voidReason": "voided"
     },
     "401816377": {
@@ -24898,7 +24830,7 @@
       "outcomeLabel": "Texas Rangers to win",
       "confidence": 64.8,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -24906,7 +24838,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-03",
-      "published": false
+      "published": true,
+      "voidReason": "voided"
     },
     "401816382": {
       "eventId": "401816382",
@@ -24918,7 +24851,7 @@
       "outcomeLabel": "Houston Astros to win",
       "confidence": 73.0,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -24926,7 +24859,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-03",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816383": {
       "eventId": "401816383",
@@ -24986,7 +24920,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-03",
-      "published": false,
+      "published": true,
       "voidReason": "voided"
     },
     "401857112": {
@@ -24999,7 +24933,7 @@
       "outcomeLabel": "New York Liberty to win",
       "confidence": 72.1,
       "pickOdds": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -25007,7 +24941,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-03",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401857113": {
       "eventId": "401857113",
@@ -27010,7 +26945,7 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "away",
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
