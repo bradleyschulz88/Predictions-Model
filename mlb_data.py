@@ -10,7 +10,7 @@ from typing import Any
 
 from data_providers.utils import team_match_score
 from espn_client import ESPNClientError, fetch_scoreboard, parse_scoreboard
-from espn_odds import fill_missing_moneylines
+from espn_odds import fill_missing_moneylines, fill_missing_side_market_prices
 from espn_enrichment import enrich_game, enrich_games, ensure_espn_odds_on_games
 from data_providers import enrich_games_with_providers
 from mlb_predictions import apply_predictions, has_moneyline_lines, is_publishable_pick
@@ -673,6 +673,24 @@ def fetch_dashboard_data(
 
     if include_odds:
         _optional("ESPN core odds", _core_odds)
+
+    # Second core pass, for games that already have a moneyline but whose
+    # total and spread carry no price. SBR posts those lines without odds, so
+    # an MLB game looked fully covered while being impossible to value on
+    # anything but the moneyline -- 11 priced spreads out of 58, the rest
+    # runlines that could not be valued at all.
+    def _core_side_markets() -> None:
+        stats = fill_missing_side_market_prices(games, league=league, verify_ssl=verify_ssl)
+        if stats.get("priced"):
+            print(
+                f"Odds: {league} {date_value}: ESPN core priced side markets on "
+                f"{stats['priced']}/{stats['considered']} games "
+                f"({stats['fetched']} fetched, {stats['cached']} cached)",
+                flush=True,
+            )
+
+    if include_odds:
+        _optional("ESPN core side markets", _core_side_markets)
 
     # Truly last: a paid-tier-free API that covers leagues nothing else does.
     # Costs a metered credit, so it runs only after every free source has had

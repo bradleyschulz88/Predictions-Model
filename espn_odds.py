@@ -46,10 +46,13 @@ circular.
 from __future__ import annotations
 
 import json
+import time
 from typing import Any
 
 from sbr_client import SBRClientError, get_text
 from sports_config import LeagueConfig, get_league
+
+_PRICE_IN_PARENS = __import__('re').compile(r'\(([+-]\d+)\)')
 
 ESPN_CORE_BASE = "https://sports.core.api.espn.com/v2/sports"
 
@@ -371,4 +374,112 @@ def fill_missing_moneylines(
             if book and book not in stats["books"]:
                 stats["books"].append(book)
 
+    return stats
+
+
+# Side-market prices are fetched from the same endpoint as moneylines, so a
+# repeated fetch inside this window is pure waste. MLB runs about fifteen games
+# a day against a build every thirty minutes; without this that is roughly 720
+# requests a day for lines that barely move.
+SIDE_MARKET_CACHE_TTL_SECONDS = 60 * 60
+_SIDE_MARKET_CACHE: dict[str, tuple[float, list[dict[str, Any]]]] = {}
+
+
+def clear_side_market_cache() -> None:
+    _SIDE_MARKET_CACHE.clear()
+
+
+def has_priced_side_market(lines: list[dict[str, Any]]) -> bool:
+    """Whether any total or spread on this game already carries a price.
+
+    SportsBookReview posts the line but never the price, so an MLB game can
+    look fully covered -- moneyline, total and spread all present -- while
+    being impossible to value on anything but the moneyline.
+    """
+    for line in lines or []:
+        view = line.get("viewType") or ""
+        if "Total" not in view and "Spread" not in view:
+            continue
+        current = line.get("currentLine") or line.get("openingLine")
+        if not isinstance(current, dict):
+            continue
+        if any(_PRICE_IN_PARENS.search(str(value)) for value in current.values() if value is not None):
+            return True
+    return False
+
+
+def fill_missing_side_market_prices(
+    games: list[dict[str, Any]],
+    *,
+    league: str,
+    max_events: int = 40,
+    retries: int = 2,
+    retry_delay: float = 0.5,
+    verify_ssl: bool = True,
+    now: float | None = None,
+) -> dict[str, Any]:
+    """Price the totals and spreads on games that already have a moneyline.
+
+    fill_missing_moneylines skips any game that is already priced, which is the
+    right rule for its own job and the reason MLB side markets were never
+    priced at all: SBR gives MLB a moneyline, so ESPN core -- the only source
+    that carries total and spread prices -- was never asked about those games.
+    The result was 11 priced spreads out of 58, with the rest being baseball
+    runlines that could not be valued at all.
+
+    Only the Total and Spread rows are merged. The moneyline is already there
+    and a second copy would land in the consensus twice.
+    """
+    from mlb_predictions import has_moneyline_lines
+
+    stats: dict[str, Any] = {
+        "league": league, "considered": 0, "fetched": 0, "priced": 0,
+        "books": [], "gaveUp": False, "cached": 0,
+    }
+    clock = time.time() if now is None else now
+    consecutive_empty = 0
+
+    for game in games:
+        lines = game.get("lines") or []
+        # Needs a moneyline (or the other pass owns it) and needs to be
+        # missing a side-market price (or there is nothing to fetch for).
+        if not has_moneyline_lines(lines) or has_priced_side_market(lines):
+            continue
+        event_id = game.get("eventId")
+        if not event_id:
+            continue
+
+        stats["considered"] += 1
+        key = f"{league}:{event_id}"
+        cached = _SIDE_MARKET_CACHE.get(key)
+        if cached and clock - cached[0] < SIDE_MARKET_CACHE_TTL_SECONDS:
+            market_lines = cached[1]
+            stats["cached"] += 1
+        else:
+            if stats["fetched"] >= max_events or stats["gaveUp"]:
+                continue
+            stats["fetched"] += 1
+            fetched = fetch_event_odds(
+                league, event_id, retries=retries, retry_delay=retry_delay, verify_ssl=verify_ssl
+            )
+            market_lines = [
+                line for line in fetched
+                if "Total" in (line.get("viewType") or "") or "Spread" in (line.get("viewType") or "")
+            ]
+            _SIDE_MARKET_CACHE[key] = (clock, market_lines)
+            if not market_lines:
+                consecutive_empty += 1
+                if consecutive_empty >= CONSECUTIVE_EMPTY_BEFORE_GIVING_UP:
+                    stats["gaveUp"] = True
+                continue
+            consecutive_empty = 0
+
+        if not market_lines:
+            continue
+        game["lines"] = lines + market_lines
+        stats["priced"] += 1
+        for line in market_lines:
+            book = line.get("sportsbook")
+            if book and book not in stats["books"]:
+                stats["books"].append(book)
     return stats
