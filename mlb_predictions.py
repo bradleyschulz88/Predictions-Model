@@ -2303,8 +2303,15 @@ def predict_runline(
         "confidence": round(max(home_covers, away_covers) * 100, 1),
         "unvalidated": True,
         # Baseball runlines go through this function rather than predict_spread,
-        # so without this every MLB runline was unpriced -- 47 of the 56 graded
-        # spread picks, which is why that market's ROI rested on only nine.
+        # so without this call there is no route to a price at all.
+        #
+        # With it there is still no price, and that is a source problem rather
+        # than a bug here. Measured 2026-08-05: ESPN core returns the runline
+        # as {"home": "-1.5", "away": "+1.5"} with no juice attached, where the
+        # same endpoint gives WNBA {"home": "-6.5 (-112)"}. So this reads None
+        # on every MLB game and the runline still cannot be valued against the
+        # moneyline. Pricing it needs a source that publishes the number --
+        # see the note above the side-market pass in mlb_data.py.
         "odds": extract_spread_price(lines, pick_side),
         "detail": (
             f"Runline {line_for_pick:+.1f}. Model gives {team} "

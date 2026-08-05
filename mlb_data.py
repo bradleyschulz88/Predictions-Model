@@ -711,8 +711,27 @@ def fetch_dashboard_data(
     # the intended one fetch per game per hour instead of one per game per
     # build. Set ESPN_SIDE_MARKET_ODDS=0 to switch it back off.
     #
-    # What it buys: every MLB runline was unpriced -- 62 of the 81 graded
-    # spread picks -- so that market's entire ROI rested on 13 WNBA spreads.
+    # What it buys, measured on the 2026-08-05 22:46Z build: totals went from
+    # 71/81 priced to 85/86. Runlines did not move, and will not from here.
+    #
+    # That was the goal and it is not reachable through this source. ESPN core
+    # returns a spread row for baseball, it survives the "Spread" filter, and
+    # extract_spread_price correctly reads nothing out of it, because the row
+    # carries no juice:
+    #
+    #     mlb   Spread  {"home": "-1.5",        "away": "+1.5"}
+    #     wnba  Spread  {"home": "-6.5 (-112)", "away": "+6.5 (-108)"}
+    #
+    # DraftKings publishes the runline handicap here without a price. Nothing
+    # is broken; the number does not exist on this endpoint. It explains the
+    # graded record exactly -- all 13 priced spreads were WNBA.
+    #
+    # Pricing runlines needs a different source. The Odds API below carries a
+    # `spreads` market and is already wired up, but it is metered against a
+    # 500-credit monthly free tier, so pointing it at ~15 MLB games a day is a
+    # deliberate spending decision rather than a code change. Left for a human
+    # to choose. See scripts/diagnose_side_markets.py to re-check whether ESPN
+    # ever starts publishing the price.
     if include_odds and os.environ.get("ESPN_SIDE_MARKET_ODDS", "1").strip() not in {"0", "false", "no"}:
         _optional("ESPN core side markets", _core_side_markets)
 
