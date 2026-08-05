@@ -342,6 +342,11 @@ class PredictorCoverageExpectationTests(unittest.TestCase):
             "published": games,
             "counts": {"espnPredictor": predictor, "impliedOdds": games},
             "pct": {"espnPredictor": round(predictor / games * 100, 1) if games else 0.0},
+            # The warning counts games that could still carry a predictor.
+            # These fixtures are all upcoming games, so every one is eligible.
+            "predictorEligible": games,
+            "predictorPresent": predictor,
+            "predictorPct": round(predictor / games * 100, 1) if games else None,
         }
 
     def _fired(self, league: str, games: int, predictor: int) -> bool:
