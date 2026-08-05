@@ -4,7 +4,12 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: "*/30 * * * *"
+    # Deliberately off the hour and half-hour. "*/30 * * * *" fires at :00 and
+    # :30, the two most congested minutes on GitHub's scheduler, and scheduled
+    # runs get dropped under load rather than queued. Measured over 2026-08-04
+    # the board updated every 75-195 minutes against a nominal 30, averaging
+    # about 90. Same cadence requested, just at minutes nobody else wants.
+    - cron: "7,37 * * * *"
   workflow_dispatch:
 
 permissions:

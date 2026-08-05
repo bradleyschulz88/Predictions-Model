@@ -109,9 +109,56 @@ def egress_ip() -> str:
 REPEATS = 5
 
 
+def probe_predictor_coverage() -> None:
+    """Report whether live summaries still carry the Matchup Predictor.
+
+    Every build warns that ESPN predictor coverage is 0% for MLB, and it did so
+    before the 403 outage too, so it is a separate fault. The parser handles the
+    shape in tests/fixtures/espn_summary_401815776.json correctly, which leaves
+    two candidates: summaries are not being fetched, or live payloads no longer
+    carry the field. Only ESPN can settle that.
+    """
+    headers = {"User-Agent": "EdgeBoard/1.0 (+https://github.com/bradleyschulz88/Predictions-Model)"}
+    scoreboard_url = (
+        f"https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates={TODAY}"
+    )
+    print("Live summary shape, MLB")
+    try:
+        request = urllib.request.Request(scoreboard_url, headers=headers)
+        with urllib.request.urlopen(request, timeout=30) as response:
+            events = json.loads(response.read()).get("events") or []
+    except Exception as exc:  # noqa: BLE001 - diagnostics only
+        print(f"    could not list events: {exc}")
+        return
+    if not events:
+        print("    no events on this slate, nothing to sample")
+        return
+
+    for event in events[:3]:
+        event_id = event.get("id")
+        url = f"https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event={event_id}"
+        try:
+            request = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(request, timeout=30) as response:
+                summary = json.loads(response.read())
+        except Exception as exc:  # noqa: BLE001 - diagnostics only
+            print(f"    event {event_id}: {exc}")
+            continue
+        predictor = summary.get("predictor") or {}
+        home = predictor.get("homeTeam") or {}
+        print(
+            f"    event {event_id}: predictor={'yes' if predictor else 'NO'} "
+            f"homeTeam keys={sorted(home) if home else '-'} "
+            f"pickcenter={len(summary.get('pickcenter') or [])} "
+            f"winprobability={len(summary.get('winprobability') or [])}"
+        )
+    print()
+
+
 def main() -> None:
     print(f"Runner egress IP: {egress_ip()}")
     print()
+    probe_predictor_coverage()
     for host_label, url in HOSTS.items():
         print(host_label)
         print(f"  {url}")
