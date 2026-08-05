@@ -1,0 +1,27 @@
+name: ESPN reachability probe
+
+# Temporary diagnostic. The scheduled build started getting HTTP 403 on every
+# ESPN scoreboard request some time between 2026-08-04 11:05Z and 23:31Z. This
+# probe runs from a GitHub runner (the network that matters) and reports which
+# header profiles and hosts ESPN accepts, so the fix is chosen from evidence
+# rather than guessed at. Delete once the cause is known.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "claude/**"
+    paths:
+      - ".github/workflows/espn-probe.yml"
+      - "scripts/probe_espn.py"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Probe ESPN
+        run: python scripts/probe_espn.py
