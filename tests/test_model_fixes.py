@@ -483,5 +483,6 @@ class EnrichmentPreservationTests(unittest.TestCase):
             result = mlb_predictions.apply_predictions([game])
         self.assertIsNotNone(result[0].get("prediction"))
 
+
 if __name__ == "__main__":
     unittest.main()

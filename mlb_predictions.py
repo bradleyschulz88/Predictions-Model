@@ -2176,7 +2176,33 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
 #     wnba    97        +2.00    13.49   (was 10.0 -- understated)
 #     afl     46        +8.28    40.05   (was 36.0 -- understated)
 #
-# NFL and NBA keep published figures; neither has graded games here yet.
+# CAREFUL: the table above is the WRONG STATISTIC, and the NFL and NBA entries
+# below -- which came from published figures -- are the right one.
+#
+# Both uses of this number need the spread of a single game's margin around
+# THAT GAME's expected margin, a residual. Converting a probability to a line
+# solves p = Phi(mu / sigma) for mu, and the cover check is
+# Phi((line - model_spread) / sigma); in each case the mean is the matchup's own
+# expected margin, not the league's. The SD taken across all games is larger,
+# because it also carries the game-to-game variation in team strength:
+#
+#     Var(margin over all games) = Var(expected margin) + Var(residual)
+#
+# Measured over completed 2025-26 seasons with scripts/measure_margin_sd.py,
+# the across-all-games figures are nba 16.21 (n=1059), nfl 14.18 (n=272, exactly
+# a full regular season, which is the check that the extraction is right) and
+# wnba 15.16 (n=288). Substituting nba 16.21 here makes an 80% favourite a
+# 13.6-point favourite, where the market prices that matchup around 9 or 10 --
+# tests/test_model_fixes.py::test_line_stays_realistic_at_the_extremes fails on
+# exactly that, and it is right to. NBA's 11.5 is the residual and is correct.
+#
+# OPEN, and a real error the other way: wnba 13.49 and afl 40.05 were measured
+# from graded games as an across-all-games SD -- the same wrong statistic -- so
+# both are too large. That is a conservative error: cover probabilities are
+# pulled toward 50% and lines come out too steep, so it costs picks rather than
+# making bad ones. Fixing it needs the residual, which needs closing spreads
+# alongside results; ESPN's historical scoreboard carries no odds, so it wants a
+# priced source. Do not "fix" these by measuring raw margins harder.
 #
 # MLB and EPL are deliberately absent. Their handicap is a FIXED line -- the
 # baseball runline is always +/-1.5 -- so mapping a win probability through a

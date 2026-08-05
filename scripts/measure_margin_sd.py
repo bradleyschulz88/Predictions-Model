@@ -1,15 +1,23 @@
 """Measure a league's final-margin standard deviation from played games.
 
-MARGIN_STD_DEV turns a win probability into a points line, and every entry in
-it was measured from graded results except NBA and NFL, which "keep published
-figures" because neither had graded games in this repo yet. That exception is
-load-bearing and worth removing: NBA's 11.5 sits below the measured WNBA 13.49
-for a higher-scoring version of the same sport, which is the wrong direction.
+READ THIS BEFORE USING THE NUMBER IT PRINTS. What this measures -- the spread
+of final margins across all games -- is NOT what MARGIN_STD_DEV holds, and
+substituting it there makes the model worse.
 
-The likely explanation is that 11.5 is the standard deviation of margin around
-the closing spread -- a residual -- rather than of the raw margin, which is what
-the map is documented to hold and what the probability-to-line conversion needs.
-This script reports both, so the two are never confused again.
+MARGIN_STD_DEV needs the spread of a game's margin around THAT GAME's expected
+margin, a residual. The across-all-games figure is larger because it also
+carries the game-to-game variation in team strength:
+
+    Var(margin over all games) = Var(expected margin) + Var(residual)
+
+This was learned the hard way: NBA measures 16.21 here, and putting that in
+MARGIN_STD_DEV turns an 80% favourite into a 13.6-point favourite where the
+market says about 9. The existing 11.5 is the residual and is right.
+
+So this script is for the first term, and is useful for sanity-checking a league
+or spotting a value that is wildly off -- not for setting MARGIN_STD_DEV. Getting
+the residual needs closing spreads alongside results, which ESPN's historical
+scoreboard does not carry.
 
 Seasons that have already been played are available from ESPN's scoreboard, so
 there is no need to wait for tip-off to measure this. Run it from the `ESPN
@@ -134,7 +142,8 @@ def main() -> int:
     else:
         print("  margin vs spread   no spreads on these slates")
     print()
-    print("  MARGIN_STD_DEV holds the raw final margin SD, the first line.")
+    print("  NOT the MARGIN_STD_DEV value. That needs the residual -- the second")
+    print("  line where a priced source supplies spreads -- not the first.")
     return 0
 
 

@@ -9,6 +9,12 @@ because the workflow succeeded and the tests never looked at the workflow.
 
 from __future__ import annotations
 
+import sys
+
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
 import re
 import unittest
 from pathlib import Path
@@ -261,10 +267,6 @@ class BorrowedCalibrationTests(unittest.TestCase):
         self.assertIn("if (graded >= MIN_LEAGUE_HISTORY) return null;", self.js)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class WhichBetPanelTests(unittest.TestCase):
     """The card named one bet and printed the other two markets as inert text
     with no pick, price or edge, so "is the moneyline even the best bet here"
@@ -359,3 +361,7 @@ class PlayedGameResultTests(unittest.TestCase):
     def test_the_result_column_only_exists_once_there_is_one(self) -> None:
         """An unplayed game must not show an empty column."""
         self.assertIn('result ? `<th style="text-align:right;padding:0 9px 5px">RESULT</th>` : ""', self.js)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -2,6 +2,12 @@
 
 from __future__ import annotations
 
+import sys
+
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
 import json
 import tempfile
 import unittest
@@ -214,10 +220,6 @@ class BuildPagesTests(unittest.TestCase):
         self.assertEqual(payload["gameCount"], 1)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class OddsCoverageWarningTests(unittest.TestCase):
     """A configured odds source that prices nothing is broken, not unpriced.
 
@@ -376,3 +378,7 @@ class PredictorCoverageExpectationTests(unittest.TestCase):
             self.assertTrue(get_league(league).supports_espn_predictor, league)
         for league in ("epl", "afl"):
             self.assertFalse(get_league(league).supports_espn_predictor, league)
+
+
+if __name__ == "__main__":
+    unittest.main()

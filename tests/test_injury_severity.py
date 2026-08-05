@@ -221,10 +221,6 @@ class RateLimitTests(unittest.TestCase):
         self.assertEqual(result["source"], "deterministic")
         self.assertGreater(result["score"], 0.0)
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class InjuryScorerReportTests(unittest.TestCase):
     """A green build is not evidence the NVIDIA key works.
 
@@ -439,3 +435,7 @@ class ApiKeyHygieneTests(unittest.TestCase):
         finally:
             ctx.__exit__(None, None, None)
         self.assertIsNone(self.module.last_failure())
+
+
+if __name__ == "__main__":
+    unittest.main()

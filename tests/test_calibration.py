@@ -249,10 +249,6 @@ class PublishThresholdTests(unittest.TestCase):
         self.assertFalse(is_publishable_pick(None))
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class PerLeagueThresholdTests(unittest.TestCase):
     """The per-league override mechanism, kept but deliberately unused.
 
@@ -505,3 +501,7 @@ class ReliabilityWindowTests(unittest.TestCase):
         from scripts import evaluation
 
         self.assertGreaterEqual(evaluation.MIN_BUCKET_FOR_CONCLUSION, 30)
+
+
+if __name__ == "__main__":
+    unittest.main()

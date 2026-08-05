@@ -244,5 +244,6 @@ class OutlierQuoteTests(unittest.TestCase):
             extract_pick_american_odds({"lines": self._lines(-153, 575)}, "home")
         )
 
+
 if __name__ == "__main__":
     unittest.main()

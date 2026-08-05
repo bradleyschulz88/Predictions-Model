@@ -212,5 +212,6 @@ class DriverExplanationTests(unittest.TestCase):
             result = _resolve()
         self.assertIsNone(result["drivers"])
 
+
 if __name__ == "__main__":
     unittest.main()
