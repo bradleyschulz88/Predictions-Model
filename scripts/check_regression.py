@@ -24,6 +24,21 @@ sys.path.insert(0, str(ROOT))
 
 BASELINE_FILE = ROOT / "docs" / "data" / "model_baseline.json"
 EVALUATION_FILE = ROOT / "docs" / "data" / "evaluation.json"
+WEIGHTS_FILE = ROOT / "docs" / "data" / "model_weights.json"
+
+# The fitted intercept is meant to hold only the residual the market anchor
+# misses, not home-field itself -- which is what lets NBA and NFL inherit it
+# before they have a graded game of their own. Measured 2026-08-05, no league's
+# entire home edge reaches this: the raw home logits run +0.1137 (mlb) to
+# +0.2231 (wnba), and the fitted global intercept sits at +0.0367. An intercept
+# past this band means the market feature has stopped carrying home advantage
+# and the intercept has started, at which point a cold-start league really is
+# being handed the wrong number. See scripts/measure_margin_sd.py.
+#
+# This lives here rather than in the test suite because model_weights.json is
+# gitignored and written by the refit step -- a checkout has no weights to
+# check, so a unit test could only ever assert against a file that never ships.
+MAX_RESIDUAL_INTERCEPT = 0.25
 
 # Absolute tolerances on walk-forward metrics, lower is better for both.
 LOG_LOSS_TOLERANCE = 0.02
@@ -42,7 +57,37 @@ def _load(path: Path) -> dict[str, Any]:
         return {}
 
 
+def check_intercepts(weights: dict[str, Any] | None = None) -> list[str]:
+    """Report any fitted intercept large enough to be carrying home-field."""
+    weights = _load(WEIGHTS_FILE) if weights is None else weights
+    if not weights:
+        return []
+
+    failures = []
+    for block in ("anchored", "standalone"):
+        fitted = (weights.get(block) or {}).get("weights") or []
+        if fitted and abs(fitted[0]) >= MAX_RESIDUAL_INTERCEPT:
+            failures.append(
+                f"{block} intercept {fitted[0]:+.4f} exceeds {MAX_RESIDUAL_INTERCEPT}"
+                " -- the market feature has stopped carrying home advantage"
+            )
+    for league, intercept in (weights.get("leagueIntercepts") or {}).items():
+        if abs(float(intercept)) >= MAX_RESIDUAL_INTERCEPT:
+            failures.append(
+                f"{league} intercept {float(intercept):+.4f} exceeds"
+                f" {MAX_RESIDUAL_INTERCEPT} -- it is an edge, not a correction"
+            )
+    return failures
+
+
 def check(*, update: bool = False) -> int:
+    intercept_failures = check_intercepts()
+    if intercept_failures:
+        print("FAIL: a fitted intercept has grown past a residual")
+        for failure in intercept_failures:
+            print(f"  - {failure}")
+        return 1
+
     evaluation = _load(EVALUATION_FILE)
     current = evaluation.get("fittedWalkForward") or {}
     if not current.get("logLoss"):
