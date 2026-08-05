@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-05T23:23:10.982577+00:00",
+  "updatedAt": "2026-08-05T23:41:39.996988+00:00",
   "summary": {
     "last7Days": {
       "correct": 276,
@@ -7,7 +7,7 @@
       "pct": 63.4,
       "units": 11.127,
       "roiPct": 2.6,
-      "pending": 50,
+      "pending": 46,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 61.2,
       "units": 16.317,
       "roiPct": 2.0,
-      "pending": 50,
-      "voided": 14
+      "pending": 46,
+      "voided": 20
     },
     "byLeague": {
       "mlb": {
@@ -5502,100 +5502,16 @@
       "published": true
     },
     {
-      "eventId": "401857116",
+      "eventId": "401857117",
       "league": "wnba",
       "scheduleDate": "2026-08-05",
-      "matchup": "Seattle Storm @ New York Liberty",
-      "predicted": "New York Liberty",
-      "predictedSide": "home",
-      "outcomeLabel": "New York Liberty to win",
-      "confidence": 85.6,
-      "rawConfidence": 85.6,
-      "rawHomeWinPct": 85.6,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-05",
-      "published": true
-    },
-    {
-      "eventId": "401857115",
-      "league": "wnba",
-      "scheduleDate": "2026-08-05",
-      "matchup": "Phoenix Mercury @ Atlanta Dream",
-      "predicted": "Atlanta Dream",
-      "predictedSide": "home",
-      "outcomeLabel": "Atlanta Dream to win",
-      "confidence": 76.9,
-      "rawConfidence": 76.9,
-      "rawHomeWinPct": 76.9,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-05",
-      "published": true
-    },
-    {
-      "eventId": "401816408",
-      "league": "mlb",
-      "scheduleDate": "2026-08-05",
-      "matchup": "Pittsburgh Pirates @ Milwaukee Brewers",
-      "predicted": "Milwaukee Brewers",
-      "predictedSide": "home",
-      "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 61.6,
-      "rawConfidence": 61.6,
-      "rawHomeWinPct": 61.6,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-05",
-      "published": true
-    },
-    {
-      "eventId": "401816405",
-      "league": "mlb",
-      "scheduleDate": "2026-08-05",
-      "matchup": "Washington Nationals @ Philadelphia Phillies",
-      "predicted": "Washington Nationals",
+      "matchup": "Dallas Wings @ Washington Mystics",
+      "predicted": "Dallas Wings",
       "predictedSide": "away",
-      "outcomeLabel": "Washington Nationals to win",
-      "confidence": 56.3,
-      "rawConfidence": 56.3,
-      "rawHomeWinPct": 43.7,
+      "outcomeLabel": "Dallas Wings to win",
+      "confidence": 60.0,
+      "rawConfidence": 60.0,
+      "rawHomeWinPct": 40.0,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -5624,34 +5540,6 @@
       "confidence": 59.5,
       "rawConfidence": 59.5,
       "rawHomeWinPct": 59.5,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-05",
-      "published": true
-    },
-    {
-      "eventId": "401816402",
-      "league": "mlb",
-      "scheduleDate": "2026-08-05",
-      "matchup": "Miami Marlins @ Atlanta Braves",
-      "predicted": "Atlanta Braves",
-      "predictedSide": "home",
-      "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 62.2,
-      "rawConfidence": 62.2,
-      "rawHomeWinPct": 62.2,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -26938,7 +26826,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": false,
+      "published": true,
       "voidReason": "voided"
     },
     "401816405": {
@@ -26959,7 +26847,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -26967,7 +26855,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816404": {
       "eventId": "401816404",
@@ -27015,7 +26904,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -27023,7 +26912,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816408": {
       "eventId": "401816408",
@@ -27043,7 +26933,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -27051,7 +26941,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816407": {
       "eventId": "401816407",
@@ -27099,7 +26990,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -27107,7 +26998,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401857116": {
       "eventId": "401857116",
@@ -27127,7 +27019,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -27135,7 +27027,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401857117": {
       "eventId": "401857117",
@@ -27163,7 +27056,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": false
+      "published": true
     },
     "401857118": {
       "eventId": "401857118",
