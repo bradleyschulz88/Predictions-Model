@@ -9,6 +9,19 @@ on:
     # runs get dropped under load rather than queued. Measured over 2026-08-04
     # the board updated every 75-195 minutes against a nominal 30, averaging
     # about 90. Same cadence requested, just at minutes nobody else wants.
+    #
+    # Re-measured 2026-08-05, after that change: gaps of 83, 99, 109, 109, 123,
+    # 136, 170, 194 and 266 minutes. Averaging about two hours, so moving off
+    # the busy minutes bought nothing measurable. No runs were cancelled and
+    # none failed -- the scheduler simply does not create them. That is
+    # documented best-effort behaviour for `schedule`, not a misconfiguration
+    # here, and there is no cron expression that fixes it.
+    #
+    # So do not tune this again expecting a different result. The board now
+    # reports the age of its last build rather than promising a cadence
+    # (buildAgeNote in dashboard/app.js). Getting a real 30 minutes needs an
+    # external trigger calling workflow_dispatch, which is infrastructure this
+    # project does not have.
     - cron: "7,37 * * * *"
   workflow_dispatch:
 
@@ -167,14 +180,38 @@ jobs:
           git commit -m "Update prediction accuracy [skip ci]"
           # Still needed now that runs queue instead of cancelling: this job
           # pushes to the same branch its own commit triggers builds from, and
-          # a scheduled run can land between this checkout and this push.
-          # Rebase and retry rather than dropping the run's data.
+          # a scheduled run or a merged pull request can land between this
+          # checkout and this push. Rebase and retry rather than dropping the
+          # run's data.
+          #
+          # The abort is what makes the retries worth anything. `git pull
+          # --rebase` stops on a conflict and leaves unmerged files behind, and
+          # every later attempt then dies on "Pulling is not possible because
+          # you have unmerged files" without ever trying again -- so all four
+          # attempts were spent on the first failure. Seen on the 14:21Z run of
+          # 2026-08-05, which gave up and warned while a pull request merged
+          # mid-build had moved main underneath it.
+          #
+          # Conflicts here are always on regenerated data, and this run's copy
+          # is the newer computation over the same inputs, so it wins. In a
+          # rebase "theirs" is the commit being replayed -- ours -- which is
+          # the opposite of what the word suggests everywhere else.
           for attempt in 1 2 3 4; do
             if git push; then exit 0; fi
             sleep $((2 ** attempt))
-            git pull --rebase origin main || true
+            git rebase --abort 2>/dev/null || true
+            git fetch origin main || true
+            git rebase -X theirs origin/main || git rebase --abort 2>/dev/null || true
           done
-          echo "::warning::Could not push updated model data after 4 attempts"
+          # Loud rather than soft. This used to be a ::warning::, which renders
+          # the same shade as "everything is fine" next to a green tick, and a
+          # build that quietly failed to record its picks is exactly the kind
+          # of thing that goes unnoticed for a week. Deliberately does not fail
+          # the step: the deploy below publishes from disk and matters more,
+          # and the next build regenerates the log from the same sources.
+          echo "::error::Could not push updated model data after 4 attempts;"\
+               "this run's accuracy data is not recorded. The board still"\
+               "deployed. The next build should recover it."
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4

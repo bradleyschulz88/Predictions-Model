@@ -3120,6 +3120,32 @@ function formatTimezoneLabel(timeZone) {
   return TIMEZONE_LABELS[timeZone] || timeZone.split("/").pop()?.replace(/_/g, " ") || timeZone;
 }
 
+/* How old the published snapshot is, in plain words.
+   The workflow asks for a build every 30 minutes and GitHub's scheduler does
+   not oblige: measured 2026-08-05, the gaps between scheduled runs ran 83 to
+   266 minutes and averaged about two hours. That is the scheduler's own
+   best-effort behaviour under load, not a misconfiguration -- the cron was
+   already moved off :00/:30 to the quieter :07/:37 for exactly this reason and
+   it changed nothing. So the page reports the age it can measure instead of a
+   cadence it cannot keep. */
+function buildAgeNote(builtAt) {
+  const stamp = builtAt ? Date.parse(builtAt) : NaN;
+  if (!Number.isFinite(stamp)) return "Predictions come from the last GitHub Actions build.";
+  const minutes = Math.max(0, Math.round((Date.now() - stamp) / 60000));
+  const when =
+    minutes < 2 ? "just now"
+    : minutes < 60 ? `${minutes} minutes ago`
+    : minutes < 120 ? "an hour ago"
+    : minutes < 60 * 24 ? `${Math.round(minutes / 60)} hours ago`
+    : `${Math.round(minutes / (60 * 24))} days ago`;
+  // Only worth explaining once it looks wrong. Under about two hours is the
+  // normal working range, so saying so would be noise.
+  const note = minutes >= 150
+    ? " GitHub schedules these on a best-effort basis, so gaps of a few hours are normal rather than a fault."
+    : "";
+  return `Predictions last rebuilt ${when}.${note}`;
+}
+
 function formatDateBarLabel(iso, sport = sportSelect.value, gameCount = null) {
   const today = leagueDateIso(sport, 0);
   const tomorrow = leagueDateIso(sport, 1);
@@ -4708,7 +4734,7 @@ function renderGames(games) {
       scheduleCount > 0
         ? ` ${scheduleCount} game${scheduleCount === 1 ? "" : "s"} on the schedule, but no model picks are loaded yet.`
         : "";
-    gamesEl.innerHTML = `<div class="empty-state">No ${leagueLabel} picks available for ${displayDate}${tz ? ` (${tz})` : ""}.${removedNote}${scheduleNote} Source: ${sourceHint}.${buildError ? ` Build error: ${buildError}` : ""}${scheduleOnly ? " Predictions refresh every 30 minutes on GitHub Actions — try Refresh or check the Actions workflow." : ""}</div>`;
+    gamesEl.innerHTML = `<div class="empty-state">No ${leagueLabel} picks available for ${displayDate}${tz ? ` (${tz})` : ""}.${removedNote}${scheduleNote} Source: ${sourceHint}.${buildError ? ` Build error: ${buildError}` : ""}${scheduleOnly ? ` ${buildAgeNote(manifestData?.builtAt)} Try Refresh, or check the Actions workflow if it stays empty.` : ""}</div>`;
     renderTopPicks([]);
     renderStats(lastPayload || {}, [], { gameCount: refreshedGames.length });
     renderModelDayResult(refreshedGames);
@@ -5452,7 +5478,13 @@ async function loadDashboard(force = false) {
 
         const detailParts = [
           "Fixtures come from GitHub snapshots when built, otherwise live ESPN in your browser.",
-          `Predictions refresh every 30 minutes on GitHub Actions; live scores every ${manifestData?.liveScoreRefreshSeconds || 90}s.`,
+          // Reports when the snapshot was actually built rather than promising
+          // a cadence. The cron asks for every 30 minutes and GitHub's
+          // scheduler does not deliver it: measured 2026-08-05, gaps between
+          // scheduled runs ran 83 to 266 minutes, averaging about two hours.
+          // Saying "every 30 minutes" made a stale board look like a broken
+          // one, when the build had simply not been given a runner yet.
+          `${buildAgeNote(manifestData?.builtAt)} Live scores refresh every ${manifestData?.liveScoreRefreshSeconds || 90}s in your browser.`,
         ];
         if (tz && US_SCHEDULE_SPORTS.has(league)) {
           detailParts.push(`US sports use ${formatTimezoneLabel(tz)} calendar dates (not your local day).`);
