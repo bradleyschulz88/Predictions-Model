@@ -100,6 +100,9 @@ def egress_ip() -> str:
         return f"unavailable ({exc})"
 
 
+REPEATS = 5
+
+
 def main() -> None:
     print(f"Runner egress IP: {egress_ip()}")
     print()
@@ -109,6 +112,18 @@ def main() -> None:
         for profile_label, headers in PROFILES.items():
             print(f"    {profile_label:<32} {probe(url, headers)}")
         print()
+
+    # A single request per profile is not enough to choose the replacement UA:
+    # if Akamai's rule is probabilistic, one 200 proves nothing. Repeat the
+    # candidates against the host that is actually blocked and report the
+    # tally, so the UA that ships is the one that passed every time.
+    blocked_url = HOSTS["site.api scoreboard (what the build uses)"]
+    print(f"Repeatability on the blocked host, {REPEATS} requests each")
+    for profile_label, headers in PROFILES.items():
+        outcomes = [probe(blocked_url, headers) for _ in range(REPEATS)]
+        ok = sum(1 for outcome in outcomes if outcome.startswith("200"))
+        codes = sorted({outcome.split(" |")[0] for outcome in outcomes})
+        print(f"    {profile_label:<32} {ok}/{REPEATS} ok  ({', '.join(codes)})")
 
 
 if __name__ == "__main__":
