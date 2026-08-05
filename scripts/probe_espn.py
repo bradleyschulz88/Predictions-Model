@@ -1,25 +1,31 @@
-"""Probe ESPN from a GitHub runner to find out why every request returns 403.
+"""Ask ESPN, from a runner, which request shapes it currently accepts.
 
-The scheduled build started failing with HTTP 403 on every scoreboard request
-between 2026-08-04 11:05Z and 23:31Z. Two explanations fit: ESPN began
-rejecting our bot-shaped User-Agent, or it began rejecting the runner's IP
-range. Those need opposite fixes, so this asks ESPN directly.
+Written during the 2026-08-04 outage, when Akamai began returning 403 to every
+site.api.espn.com request and took all six leagues down at once. The build kept
+succeeding and publishing empty slates, so the only visible symptom was on the
+site. Diagnosis took three guesses; this script would have taken one.
 
-Each header profile is tried against each host. A profile that succeeds where
-the production one fails means headers are the problem and the fix is local. If
-every profile fails identically, the request is not what ESPN objects to.
+Kept because that failure mode will recur: bot rules change without notice, the
+dev sandbox's egress policy blocks espn.com so it cannot be tested locally, and
+a runner is the only place the real answer lives. Each header profile is tried
+against each host, then repeated so a probabilistic rule cannot masquerade as a
+clean pass.
 
-Run via the `ESPN reachability probe` workflow. Delete once the cause is known.
+Run via the `ESPN reachability probe` workflow.
 """
 
 from __future__ import annotations
 
+import datetime
 import json
 import ssl
 import urllib.error
 import urllib.request
 
-TODAY = "20260805"
+# Today in US Eastern, which is the day ESPN's scoreboard keys on. A fixed
+# date would quietly start probing an empty slate and read as a change in
+# ESPN's behaviour when it is only a stale constant.
+TODAY = (datetime.datetime.now(datetime.UTC) - datetime.timedelta(hours=5)).strftime("%Y%m%d")
 
 HOSTS = {
     "site.api scoreboard (what the build uses)": (
