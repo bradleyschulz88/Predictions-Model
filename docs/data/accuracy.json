@@ -1,36 +1,36 @@
 {
-  "updatedAt": "2026-08-05T00:29:39.243263+00:00",
+  "updatedAt": "2026-08-05T00:49:25.683192+00:00",
   "summary": {
     "last7Days": {
-      "correct": 268,
-      "total": 437,
-      "pct": 61.3,
-      "units": -1.046,
-      "roiPct": -0.2,
-      "pending": 47,
+      "correct": 267,
+      "total": 435,
+      "pct": 61.4,
+      "units": -0.046,
+      "roiPct": -0.0,
+      "pending": 39,
       "voided": 0
     },
     "allTime": {
-      "correct": 476,
-      "total": 783,
+      "correct": 475,
+      "total": 781,
       "pct": 60.8,
-      "units": 12.092,
-      "roiPct": 1.5,
-      "pending": 47,
-      "voided": 11
+      "units": 13.092,
+      "roiPct": 1.7,
+      "pending": 39,
+      "voided": 21
     },
     "byLeague": {
       "mlb": {
-        "correct": 183,
-        "total": 320,
+        "correct": 182,
+        "total": 318,
         "pct": 57.2,
-        "units": -2.184,
-        "roiPct": -0.7,
+        "units": -1.184,
+        "roiPct": -0.4,
         "pending": 0,
         "voided": 0,
-        "priced": 281,
-        "unpriced": 39,
-        "pricedPct": 87.8
+        "priced": 280,
+        "unpriced": 38,
+        "pricedPct": 88.1
       },
       "wnba": {
         "correct": 52,
@@ -71,52 +71,52 @@
       }
     },
     "streak": {
-      "current": 2,
-      "type": "win",
+      "current": 1,
+      "type": "loss",
       "bestWin": 6,
       "bestLoss": 4
     },
     "closingLineValue": {
-      "picks": 85,
-      "avgPct": -0.51,
-      "beatCloseP": 48.2,
+      "picks": 84,
+      "avgPct": -0.57,
+      "beatCloseP": 47.6,
       "note": "Closing line value predicts long-run profitability better than win rate."
     },
     "totals": {
-      "graded": 65,
-      "decided": 63,
+      "graded": 63,
+      "decided": 61,
       "wins": 35,
-      "losses": 28,
+      "losses": 26,
       "pushes": 2,
-      "pct": 55.6,
+      "pct": 57.4,
       "stdErrPct": 6.3,
       "breakEvenPct": 52.2,
       "beatsBreakEven": false,
-      "priced": 55,
+      "priced": 53,
       "unpriced": 10,
-      "units": -3.218,
-      "roiPct": -5.0,
-      "pricedUnits": -3.218,
-      "pricedRoiPct": -5.9,
-      "note": "ROI is over all 65 graded picks; 10 of them carry no logged price and count as zero return. Over the 55 priced picks alone the return is -5.9%."
+      "units": -1.218,
+      "roiPct": -1.9,
+      "pricedUnits": -1.218,
+      "pricedRoiPct": -2.3,
+      "note": "ROI is over all 63 graded picks; 10 of them carry no logged price and count as zero return. Over the 53 priced picks alone the return is -2.3%."
     },
     "spreads": {
-      "graded": 65,
-      "decided": 65,
-      "wins": 47,
+      "graded": 63,
+      "decided": 63,
+      "wins": 45,
       "losses": 18,
       "pushes": 0,
-      "pct": 72.3,
-      "stdErrPct": 5.6,
+      "pct": 71.4,
+      "stdErrPct": 5.7,
       "breakEvenPct": 52.7,
       "beatsBreakEven": true,
       "priced": 12,
-      "unpriced": 53,
+      "unpriced": 51,
       "units": 5.111,
-      "roiPct": 7.9,
+      "roiPct": 8.1,
       "pricedUnits": 5.111,
       "pricedRoiPct": 42.6,
-      "note": "ROI is over all 65 graded picks; 53 of them carry no logged price and count as zero return. Over the 12 priced picks alone the return is +42.6%."
+      "note": "ROI is over all 63 graded picks; 51 of them carry no logged price and count as zero return. Over the 12 priced picks alone the return is +42.6%."
     }
   },
   "recentResults": [
@@ -211,51 +211,6 @@
       }
     },
     {
-      "eventId": "401816381",
-      "league": "mlb",
-      "scheduleDate": "2026-08-03",
-      "matchup": "San Francisco Giants @ Texas Rangers",
-      "predicted": "Texas Rangers",
-      "predictedSide": "home",
-      "outcomeLabel": "Texas Rangers to win",
-      "confidence": 55.2,
-      "rawConfidence": 55.2,
-      "rawHomeWinPct": 55.2,
-      "probabilityMethod": "fitted",
-      "evPct": -2.67,
-      "kellyPct": 0.0,
-      "pickOdds": -131,
-      "openingOdds": -110,
-      "openingSide": "home",
-      "published": true,
-      "clvPct": 4.33,
-      "status": "graded",
-      "actual": "San Francisco Giants",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "1",
-      "awayScore": "5",
-      "gradedAt": "2026-08-04T05:42:13.089815+00:00",
-      "date": "2026-08-03",
-      "totalResult": {
-        "line": 8.0,
-        "pickSide": "over",
-        "actual": 6,
-        "outcome": "loss",
-        "odds": -112,
-        "units": -1.0
-      },
-      "spreadResult": {
-        "line": -1.5,
-        "pickSide": "away",
-        "margin": -4,
-        "market": "runline",
-        "outcome": "win",
-        "odds": null,
-        "units": null
-      }
-    },
-    {
       "eventId": "401857112",
       "league": "wnba",
       "scheduleDate": "2026-08-03",
@@ -298,51 +253,6 @@
         "outcome": "win",
         "odds": -118,
         "units": 0.847
-      }
-    },
-    {
-      "eventId": "401816382",
-      "league": "mlb",
-      "scheduleDate": "2026-08-03",
-      "matchup": "Toronto Blue Jays @ Houston Astros",
-      "predicted": "Toronto Blue Jays",
-      "predictedSide": "away",
-      "outcomeLabel": "Toronto Blue Jays to win",
-      "confidence": 62.5,
-      "rawConfidence": 62.5,
-      "rawHomeWinPct": 37.5,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": -140,
-      "openingSide": "home",
-      "published": true,
-      "clvPct": null,
-      "status": "graded",
-      "actual": "Toronto Blue Jays",
-      "correct": true,
-      "units": null,
-      "homeScore": "1",
-      "awayScore": "3",
-      "gradedAt": "2026-08-04T02:46:14.239300+00:00",
-      "date": "2026-08-03",
-      "totalResult": {
-        "line": 9.0,
-        "pickSide": "over",
-        "actual": 4,
-        "outcome": "loss",
-        "odds": -122,
-        "units": -1.0
-      },
-      "spreadResult": {
-        "line": 1.5,
-        "pickSide": "away",
-        "margin": -2,
-        "market": "runline",
-        "outcome": "win",
-        "odds": null,
-        "units": null
       }
     },
     {
@@ -4035,9 +3945,177 @@
       "published": true,
       "totalResult": null,
       "spreadResult": null
+    },
+    {
+      "eventId": "401816287",
+      "league": "mlb",
+      "scheduleDate": "2026-07-27",
+      "matchup": "New York Yankees @ Chicago White Sox",
+      "predicted": "New York Yankees",
+      "predictedSide": "away",
+      "outcomeLabel": "New York Yankees to win",
+      "confidence": 57.9,
+      "rawConfidence": 57.9,
+      "rawHomeWinPct": 42.1,
+      "probabilityMethod": "fitted",
+      "pickOdds": -145,
+      "openingOdds": -145,
+      "openingSide": "away",
+      "clvPct": 0.0,
+      "status": "graded",
+      "actual": "New York Yankees",
+      "correct": true,
+      "units": 0.69,
+      "homeScore": "5",
+      "awayScore": "9",
+      "gradedAt": "2026-07-28T03:37:06.227849+00:00",
+      "date": "2026-07-27",
+      "published": true,
+      "totalResult": null,
+      "spreadResult": null
+    },
+    {
+      "eventId": "401816281",
+      "league": "mlb",
+      "scheduleDate": "2026-07-27",
+      "matchup": "Atlanta Braves @ New York Mets",
+      "predicted": "Atlanta Braves",
+      "predictedSide": "away",
+      "outcomeLabel": "Atlanta Braves to win",
+      "confidence": 61.3,
+      "rawConfidence": 61.3,
+      "rawHomeWinPct": 38.7,
+      "probabilityMethod": "fitted",
+      "pickOdds": -105,
+      "openingOdds": -105,
+      "openingSide": "away",
+      "clvPct": 0.0,
+      "status": "graded",
+      "actual": "New York Mets",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "14",
+      "awayScore": "3",
+      "gradedAt": "2026-07-28T02:43:24.094150+00:00",
+      "date": "2026-07-27",
+      "published": true,
+      "totalResult": null,
+      "spreadResult": null
     }
   ],
   "pendingPicks": [
+    {
+      "eventId": "1133670",
+      "league": "afl",
+      "scheduleDate": "2026-08-08",
+      "matchup": "Richmond @ Adelaide Crows",
+      "predicted": "Adelaide Crows",
+      "predictedSide": "home",
+      "outcomeLabel": "Adelaide Crows to win",
+      "confidence": 95.0,
+      "rawConfidence": 95.0,
+      "rawHomeWinPct": 95.0,
+      "probabilityMethod": "fitted",
+      "evPct": -1.2,
+      "kellyPct": 0.0,
+      "pickOdds": -2500,
+      "openingOdds": -2500,
+      "openingSide": "home",
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-08"
+    },
+    {
+      "eventId": "1133668",
+      "league": "afl",
+      "scheduleDate": "2026-08-08",
+      "matchup": "Port Adelaide @ Sydney Swans",
+      "predicted": "Sydney Swans",
+      "predictedSide": "home",
+      "outcomeLabel": "Sydney Swans to win",
+      "confidence": 91.1,
+      "rawConfidence": 91.1,
+      "rawHomeWinPct": 91.1,
+      "probabilityMethod": "fitted",
+      "evPct": 3.91,
+      "kellyPct": 6.99,
+      "pickOdds": -714,
+      "openingOdds": -714,
+      "openingSide": "home",
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-08"
+    },
+    {
+      "eventId": "1133666",
+      "league": "afl",
+      "scheduleDate": "2026-08-08",
+      "matchup": "Fremantle @ Melbourne",
+      "predicted": "Fremantle",
+      "predictedSide": "away",
+      "outcomeLabel": "Fremantle to win",
+      "confidence": 68.9,
+      "rawConfidence": 68.9,
+      "rawHomeWinPct": 31.1,
+      "probabilityMethod": "fitted",
+      "evPct": 6.77,
+      "kellyPct": 0.0,
+      "pickOdds": -182,
+      "openingOdds": -182,
+      "openingSide": "away",
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-08"
+    },
+    {
+      "eventId": "1133664",
+      "league": "afl",
+      "scheduleDate": "2026-08-08",
+      "matchup": "Essendon @ Geelong Cats",
+      "predicted": "Geelong Cats",
+      "predictedSide": "home",
+      "outcomeLabel": "Geelong Cats to win",
+      "confidence": 95.0,
+      "rawConfidence": 95.0,
+      "rawHomeWinPct": 95.0,
+      "probabilityMethod": "fitted",
+      "evPct": -3.1,
+      "kellyPct": 0.0,
+      "pickOdds": -5000,
+      "openingOdds": -5000,
+      "openingSide": "home",
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-08"
+    },
     {
       "eventId": "401857122",
       "league": "wnba",
@@ -4739,34 +4817,6 @@
       "published": true
     },
     {
-      "eventId": "401816413",
-      "league": "mlb",
-      "scheduleDate": "2026-08-05",
-      "matchup": "San Diego Padres @ Arizona Diamondbacks",
-      "predicted": "Arizona Diamondbacks",
-      "predictedSide": "home",
-      "outcomeLabel": "Arizona Diamondbacks to win",
-      "confidence": 53.0,
-      "rawConfidence": 53.0,
-      "rawHomeWinPct": 53.0,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-05"
-    },
-    {
       "eventId": "401816411",
       "league": "mlb",
       "scheduleDate": "2026-08-05",
@@ -4851,22 +4901,22 @@
       "published": true
     },
     {
-      "eventId": "401816404",
+      "eventId": "401816405",
       "league": "mlb",
       "scheduleDate": "2026-08-05",
-      "matchup": "St. Louis Cardinals @ New York Yankees",
-      "predicted": "New York Yankees",
-      "predictedSide": "home",
-      "outcomeLabel": "New York Yankees to win",
-      "confidence": 59.5,
-      "rawConfidence": 59.5,
-      "rawHomeWinPct": 59.5,
+      "matchup": "Washington Nationals @ Philadelphia Phillies",
+      "predicted": "Washington Nationals",
+      "predictedSide": "away",
+      "outcomeLabel": "Washington Nationals to win",
+      "confidence": 56.3,
+      "rawConfidence": 56.3,
+      "rawHomeWinPct": 43.7,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
       "pickOdds": null,
       "openingOdds": null,
-      "openingSide": "home",
+      "openingSide": "away",
       "clvPct": null,
       "status": "pending",
       "actual": null,
@@ -4879,16 +4929,16 @@
       "published": true
     },
     {
-      "eventId": "401816403",
+      "eventId": "401816404",
       "league": "mlb",
       "scheduleDate": "2026-08-05",
-      "matchup": "New York Mets @ Cleveland Guardians",
-      "predicted": "Cleveland Guardians",
+      "matchup": "St. Louis Cardinals @ New York Yankees",
+      "predicted": "New York Yankees",
       "predictedSide": "home",
-      "outcomeLabel": "Cleveland Guardians to win",
-      "confidence": 55.7,
-      "rawConfidence": 55.7,
-      "rawHomeWinPct": 55.7,
+      "outcomeLabel": "New York Yankees to win",
+      "confidence": 59.5,
+      "rawConfidence": 59.5,
+      "rawHomeWinPct": 59.5,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -5017,34 +5067,6 @@
       "published": true
     },
     {
-      "eventId": "401816398",
-      "league": "mlb",
-      "scheduleDate": "2026-08-04",
-      "matchup": "San Diego Padres @ Arizona Diamondbacks",
-      "predicted": "Arizona Diamondbacks",
-      "predictedSide": "home",
-      "outcomeLabel": "Arizona Diamondbacks to win",
-      "confidence": 53.0,
-      "rawConfidence": 53.0,
-      "rawHomeWinPct": 53.0,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-04"
-    },
-    {
       "eventId": "401816396",
       "league": "mlb",
       "scheduleDate": "2026-08-04",
@@ -5059,268 +5081,6 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "away",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-04",
-      "published": true
-    },
-    {
-      "eventId": "401816394",
-      "league": "mlb",
-      "scheduleDate": "2026-08-04",
-      "matchup": "San Francisco Giants @ Texas Rangers",
-      "predicted": "Texas Rangers",
-      "predictedSide": "home",
-      "outcomeLabel": "Texas Rangers to win",
-      "confidence": 58.7,
-      "rawConfidence": 58.7,
-      "rawHomeWinPct": 58.7,
-      "probabilityMethod": "fitted",
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-04",
-      "published": true
-    },
-    {
-      "eventId": "401816393",
-      "league": "mlb",
-      "scheduleDate": "2026-08-04",
-      "matchup": "Pittsburgh Pirates @ Milwaukee Brewers",
-      "predicted": "Milwaukee Brewers",
-      "predictedSide": "home",
-      "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 61.7,
-      "rawConfidence": 61.7,
-      "rawHomeWinPct": 61.7,
-      "probabilityMethod": "fitted",
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-04",
-      "published": true
-    },
-    {
-      "eventId": "401816392",
-      "league": "mlb",
-      "scheduleDate": "2026-08-04",
-      "matchup": "Minnesota Twins @ Kansas City Royals",
-      "predicted": "Minnesota Twins",
-      "predictedSide": "away",
-      "outcomeLabel": "Minnesota Twins to win",
-      "confidence": 55.1,
-      "rawConfidence": 55.1,
-      "rawHomeWinPct": 44.9,
-      "probabilityMethod": "fitted",
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-04",
-      "published": true
-    },
-    {
-      "eventId": "401816391",
-      "league": "mlb",
-      "scheduleDate": "2026-08-04",
-      "matchup": "Los Angeles Dodgers @ Chicago Cubs",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "away",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 57.9,
-      "rawConfidence": 57.9,
-      "rawHomeWinPct": 42.1,
-      "probabilityMethod": "fitted",
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-04",
-      "published": true
-    },
-    {
-      "eventId": "401816390",
-      "league": "mlb",
-      "scheduleDate": "2026-08-04",
-      "matchup": "Washington Nationals @ Philadelphia Phillies",
-      "predicted": "Washington Nationals",
-      "predictedSide": "away",
-      "outcomeLabel": "Washington Nationals to win",
-      "confidence": 55.6,
-      "rawConfidence": 55.6,
-      "rawHomeWinPct": 44.4,
-      "probabilityMethod": "fitted",
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-04",
-      "published": true
-    },
-    {
-      "eventId": "401816389",
-      "league": "mlb",
-      "scheduleDate": "2026-08-04",
-      "matchup": "St. Louis Cardinals @ New York Yankees",
-      "predicted": "New York Yankees",
-      "predictedSide": "home",
-      "outcomeLabel": "New York Yankees to win",
-      "confidence": 59.0,
-      "rawConfidence": 59.0,
-      "rawHomeWinPct": 59.0,
-      "probabilityMethod": "fitted",
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-04",
-      "published": true
-    },
-    {
-      "eventId": "401816388",
-      "league": "mlb",
-      "scheduleDate": "2026-08-04",
-      "matchup": "New York Mets @ Cleveland Guardians",
-      "predicted": "Cleveland Guardians",
-      "predictedSide": "home",
-      "outcomeLabel": "Cleveland Guardians to win",
-      "confidence": 55.9,
-      "rawConfidence": 55.9,
-      "rawHomeWinPct": 55.9,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-04",
-      "published": true
-    },
-    {
-      "eventId": "401816387",
-      "league": "mlb",
-      "scheduleDate": "2026-08-04",
-      "matchup": "Miami Marlins @ Atlanta Braves",
-      "predicted": "Atlanta Braves",
-      "predictedSide": "home",
-      "outcomeLabel": "Atlanta Braves to win",
-      "confidence": 63.7,
-      "rawConfidence": 63.7,
-      "rawHomeWinPct": 63.7,
-      "probabilityMethod": "fitted",
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-04",
-      "published": true
-    },
-    {
-      "eventId": "401816385",
-      "league": "mlb",
-      "scheduleDate": "2026-08-04",
-      "matchup": "Athletics @ Cincinnati Reds",
-      "predicted": "Cincinnati Reds",
-      "predictedSide": "home",
-      "outcomeLabel": "Cincinnati Reds to win",
-      "confidence": 57.3,
-      "rawConfidence": 57.3,
-      "rawHomeWinPct": 57.3,
-      "probabilityMethod": "fitted",
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-04",
-      "published": true
-    },
-    {
-      "eventId": "401816384",
-      "league": "mlb",
-      "scheduleDate": "2026-08-04",
-      "matchup": "Los Angeles Angels @ Baltimore Orioles",
-      "predicted": "Baltimore Orioles",
-      "predictedSide": "home",
-      "outcomeLabel": "Baltimore Orioles to win",
-      "confidence": 61.5,
-      "rawConfidence": 61.5,
-      "rawHomeWinPct": 61.5,
-      "probabilityMethod": "fitted",
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
       "clvPct": null,
       "status": "pending",
       "actual": null,
@@ -25202,7 +24962,7 @@
       "pickOdds": -131,
       "openingOdds": -110,
       "openingSide": "home",
-      "published": true,
+      "published": false,
       "clvPct": 4.33,
       "status": "graded",
       "actual": "San Francisco Giants",
@@ -25247,7 +25007,7 @@
       "pickOdds": null,
       "openingOdds": -140,
       "openingSide": "home",
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "graded",
       "actual": "Toronto Blue Jays",
@@ -25703,7 +25463,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -25711,7 +25471,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-04",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816385": {
       "eventId": "401816385",
@@ -25729,7 +25490,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -25737,7 +25498,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-04",
-      "published": true
+      "published": false,
+      "voidReason": "voided"
     },
     "401816390": {
       "eventId": "401816390",
@@ -25755,7 +25517,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -25763,7 +25525,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-04",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816389": {
       "eventId": "401816389",
@@ -25781,7 +25544,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -25789,7 +25552,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-04",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816387": {
       "eventId": "401816387",
@@ -25807,7 +25571,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -25815,7 +25579,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-04",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816392": {
       "eventId": "401816392",
@@ -25833,7 +25598,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -25841,7 +25606,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-04",
-      "published": true
+      "published": false,
+      "voidReason": "voided"
     },
     "401816393": {
       "eventId": "401816393",
@@ -25859,7 +25625,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -25867,7 +25633,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-04",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816391": {
       "eventId": "401816391",
@@ -25885,7 +25652,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -25893,7 +25660,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-04",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816394": {
       "eventId": "401816394",
@@ -25911,7 +25679,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -25919,7 +25687,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-04",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816396": {
       "eventId": "401816396",
@@ -26051,7 +25820,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -26059,7 +25828,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-04",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401857320": {
       "eventId": "401857320",
@@ -26109,7 +25879,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -26117,7 +25887,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-04",
-      "published": false
+      "published": true,
+      "voidReason": "voided"
     },
     "401816410": {
       "eventId": "401816410",
@@ -26285,7 +26056,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": true
+      "published": false
     },
     "401816405": {
       "eventId": "401816405",
@@ -26313,7 +26084,7 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": false
+      "published": true
     },
     "401816404": {
       "eventId": "401816404",
@@ -26856,16 +26627,17 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
-      "published": false,
+      "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-04"
+      "date": "2026-08-04",
+      "voidReason": "voided"
     },
     "401816397": {
       "eventId": "401816397",
@@ -26912,7 +26684,7 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
@@ -27024,7 +26796,7 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
@@ -28014,1003 +27786,119 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-07"
+    },
+    "1133666": {
+      "eventId": "1133666",
+      "league": "afl",
+      "scheduleDate": "2026-08-08",
+      "matchup": "Fremantle @ Melbourne",
+      "predicted": "Fremantle",
+      "predictedSide": "away",
+      "outcomeLabel": "Fremantle to win",
+      "confidence": 68.9,
+      "rawConfidence": 68.9,
+      "rawHomeWinPct": 31.1,
+      "probabilityMethod": "fitted",
+      "evPct": 6.77,
+      "kellyPct": 0.0,
+      "pickOdds": -182,
+      "openingOdds": -182,
+      "openingSide": "away",
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-08"
+    },
+    "1133668": {
+      "eventId": "1133668",
+      "league": "afl",
+      "scheduleDate": "2026-08-08",
+      "matchup": "Port Adelaide @ Sydney Swans",
+      "predicted": "Sydney Swans",
+      "predictedSide": "home",
+      "outcomeLabel": "Sydney Swans to win",
+      "confidence": 91.1,
+      "rawConfidence": 91.1,
+      "rawHomeWinPct": 91.1,
+      "probabilityMethod": "fitted",
+      "evPct": 3.91,
+      "kellyPct": 6.99,
+      "pickOdds": -714,
+      "openingOdds": -714,
+      "openingSide": "home",
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-08"
+    },
+    "1133664": {
+      "eventId": "1133664",
+      "league": "afl",
+      "scheduleDate": "2026-08-08",
+      "matchup": "Essendon @ Geelong Cats",
+      "predicted": "Geelong Cats",
+      "predictedSide": "home",
+      "outcomeLabel": "Geelong Cats to win",
+      "confidence": 95.0,
+      "rawConfidence": 95.0,
+      "rawHomeWinPct": 95.0,
+      "probabilityMethod": "fitted",
+      "evPct": -3.1,
+      "kellyPct": 0.0,
+      "pickOdds": -5000,
+      "openingOdds": -5000,
+      "openingSide": "home",
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-08"
+    },
+    "1133670": {
+      "eventId": "1133670",
+      "league": "afl",
+      "scheduleDate": "2026-08-08",
+      "matchup": "Richmond @ Adelaide Crows",
+      "predicted": "Adelaide Crows",
+      "predictedSide": "home",
+      "outcomeLabel": "Adelaide Crows to win",
+      "confidence": 95.0,
+      "rawConfidence": 95.0,
+      "rawHomeWinPct": 95.0,
+      "probabilityMethod": "fitted",
+      "evPct": -1.2,
+      "kellyPct": 0.0,
+      "pickOdds": -2500,
+      "openingOdds": -2500,
+      "openingSide": "home",
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-08"
     }
   },
-  "skippedDates": [
-    {
-      "league": "afl",
-      "date": "2026-07-06",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260706"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-07",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260707"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-08",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260708"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-09",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260709"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-10",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260710"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-11",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260711"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-12",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260712"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-13",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260713"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-14",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260714"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-15",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260715"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-16",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260716"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-17",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260717"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-18",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260718"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-19",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260719"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-20",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260720"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-21",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260721"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-22",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260722"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-23",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260723"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-24",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260724"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-25",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260725"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-26",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260726"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-27",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260727"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-28",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260728"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-29",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260729"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-30",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260730"
-    },
-    {
-      "league": "afl",
-      "date": "2026-07-31",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260731"
-    },
-    {
-      "league": "afl",
-      "date": "2026-08-01",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260801"
-    },
-    {
-      "league": "afl",
-      "date": "2026-08-02",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260802"
-    },
-    {
-      "league": "afl",
-      "date": "2026-08-03",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260803"
-    },
-    {
-      "league": "afl",
-      "date": "2026-08-04",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260804"
-    },
-    {
-      "league": "afl",
-      "date": "2026-08-05",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260805"
-    },
-    {
-      "league": "afl",
-      "date": "2026-08-06",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260806"
-    },
-    {
-      "league": "afl",
-      "date": "2026-08-07",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/australian-football/afl/scoreboard?dates=20260807"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-06",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260706"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-07",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260707"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-08",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260708"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-09",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260709"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-10",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260710"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-11",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260711"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-12",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260712"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-13",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260713"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-14",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260714"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-15",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260715"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-16",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260716"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-17",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260717"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-18",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260718"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-19",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260719"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-20",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260720"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-21",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260721"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-22",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260722"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-23",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260723"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-24",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260724"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-25",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260725"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-26",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260726"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-27",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260727"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-28",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260728"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-29",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260729"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-30",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260730"
-    },
-    {
-      "league": "epl",
-      "date": "2026-07-31",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260731"
-    },
-    {
-      "league": "epl",
-      "date": "2026-08-01",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260801"
-    },
-    {
-      "league": "epl",
-      "date": "2026-08-02",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260802"
-    },
-    {
-      "league": "epl",
-      "date": "2026-08-03",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260803"
-    },
-    {
-      "league": "epl",
-      "date": "2026-08-04",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260804"
-    },
-    {
-      "league": "epl",
-      "date": "2026-08-05",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260805"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-18",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260618"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-21",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260621"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-22",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260622"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-06-25",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260625"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-05",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260705"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-06",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260706"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-07",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260707"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-08",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260708"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-09",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260709"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-10",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260710"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-11",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260711"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-12",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260712"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-13",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260713"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-14",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260714"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-15",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260715"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-16",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260716"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-17",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260717"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-18",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260718"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-19",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260719"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-20",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260720"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-21",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260721"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-22",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260722"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-23",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260723"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-24",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260724"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-25",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260725"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-26",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260726"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-27",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260727"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-28",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260728"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-29",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260729"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-30",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260730"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-07-31",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260731"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-08-01",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260801"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-08-02",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260802"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-08-03",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260803"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-08-04",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260804"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-08-05",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260805"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-08-06",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260806"
-    },
-    {
-      "league": "mlb",
-      "date": "2026-08-07",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=20260807"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-05",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260705"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-06",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260706"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-07",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260707"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-08",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260708"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-09",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260709"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-10",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260710"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-11",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260711"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-12",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260712"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-13",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260713"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-14",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260714"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-15",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260715"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-16",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260716"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-17",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260717"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-18",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260718"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-19",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260719"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-20",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260720"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-21",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260721"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-22",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260722"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-23",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260723"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-24",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260724"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-25",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260725"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-26",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260726"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-27",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260727"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-28",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260728"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-29",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260729"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-30",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260730"
-    },
-    {
-      "league": "nba",
-      "date": "2026-07-31",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260731"
-    },
-    {
-      "league": "nba",
-      "date": "2026-08-01",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260801"
-    },
-    {
-      "league": "nba",
-      "date": "2026-08-02",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260802"
-    },
-    {
-      "league": "nba",
-      "date": "2026-08-03",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260803"
-    },
-    {
-      "league": "nba",
-      "date": "2026-08-04",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260804"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-05",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260705"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-06",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260706"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-07",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260707"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-08",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260708"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-09",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260709"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-10",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260710"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-11",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260711"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-12",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260712"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-13",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260713"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-14",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260714"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-15",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260715"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-16",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260716"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-17",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260717"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-18",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260718"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-19",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260719"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-20",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260720"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-21",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260721"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-22",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260722"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-23",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260723"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-24",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260724"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-25",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260725"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-26",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260726"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-27",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260727"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-28",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260728"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-29",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260729"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-30",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260730"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-07-31",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260731"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-08-01",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260801"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-08-02",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260802"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-08-03",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260803"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-08-04",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260804"
-    },
-    {
-      "league": "nfl",
-      "date": "2026-08-06",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260806"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-05",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260705"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-06",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260706"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-07",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260707"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-08",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260708"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-09",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260709"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-10",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260710"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-11",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260711"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-12",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260712"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-13",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260713"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-14",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260714"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-15",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260715"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-16",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260716"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-17",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260717"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-18",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260718"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-19",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260719"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-20",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260720"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-21",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260721"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-22",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260722"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-23",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260723"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-24",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260724"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-25",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260725"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-26",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260726"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-27",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260727"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-28",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260728"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-29",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260729"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-30",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260730"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-07-31",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260731"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-08-01",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260801"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-08-02",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260802"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-08-03",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260803"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-08-04",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260804"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-08-05",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260805"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-08-06",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260806"
-    },
-    {
-      "league": "wnba",
-      "date": "2026-08-07",
-      "error": "HTTP 403 for https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard?dates=20260807"
-    }
-  ]
+  "skippedDates": []
 }
