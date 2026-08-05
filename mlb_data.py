@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -689,7 +690,20 @@ def fetch_dashboard_data(
                 flush=True,
             )
 
-    if include_odds:
+    # OFF BY DEFAULT. This pass issues one ESPN core request per unpriced
+    # game -- about fifteen per build for MLB -- and the build runs every
+    # thirty minutes. The in-process cache that was supposed to absorb that
+    # does nothing across builds, because CI starts a fresh interpreter each
+    # time, so the real rate is roughly 720 requests a day rather than the ~24
+    # intended. The first build after this pass began actually firing had all
+    # six schedule feeds fail at once, which is what an IP-level rate limit
+    # looks like from outside.
+    #
+    # Re-enable with ESPN_SIDE_MARKET_ODDS=1 once the cache survives across
+    # builds. Until then MLB runlines stay unpriced, which is the state the
+    # board has been in all along and is strictly better than taking the whole
+    # schedule down with it.
+    if include_odds and os.environ.get("ESPN_SIDE_MARKET_ODDS", "").strip() in {"1", "true", "yes"}:
         _optional("ESPN core side markets", _core_side_markets)
 
     # Truly last: a paid-tier-free API that covers leagues nothing else does.
