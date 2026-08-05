@@ -465,5 +465,117 @@ class MarketUncertaintyTests(unittest.TestCase):
         self.assertFalse(summary["beatsBreakEven"])
 
 
+class PricedPopulationTests(unittest.TestCase):
+    """The hit rate and the return have to describe the same picks.
+
+    Measured on the 2026-08-05 board, totals read 53.2% against a 52.4%
+    break-even while returning -7.2%: a market that appeared to win and lose
+    money at once. Neither figure was wrong. They covered different picks --
+    the rate spanned all 77 decided, the return only the 71 priced, and the
+    priced subset was 47.8% while the ten unpriced went 9-1. Break-even is
+    derived from prices, so comparing it against a rate that includes unpriced
+    picks compares a bar to a population that never faced it.
+
+    The old summary made that comparison, and its beatsBreakEven answered for
+    the blended rate. These pin the split.
+    """
+
+    def _rows(self, key, *, priced_wins, priced_losses, unpriced_wins, unpriced_losses,
+              odds=-110):
+        """Priced and unpriced records set independently.
+
+        MarketUncertaintyTests._rows prices the first N rows and wins the first
+        M, so its priced subset is all wins whenever priced <= wins -- fine for
+        what it checks, useless here, where the whole point is a priced subset
+        that disagrees with the unpriced one.
+        """
+        rows = []
+        for outcome, count in (("win", priced_wins), ("loss", priced_losses)):
+            for _ in range(count):
+                rows.append({key: {
+                    "outcome": outcome,
+                    "odds": odds,
+                    "units": accuracy_tracker.american_odds_profit(odds, outcome == "win"),
+                }})
+        for outcome, count in (("win", unpriced_wins), ("loss", unpriced_losses)):
+            for _ in range(count):
+                rows.append({key: {"outcome": outcome}})
+        return rows
+
+    def _observed(self):
+        """The shape that exposed this: totals as they actually stood."""
+        return self._rows(
+            "totalResult",
+            priced_wins=32, priced_losses=35, unpriced_wins=9, unpriced_losses=1,
+        )
+
+    def test_the_priced_rate_is_reported_alongside_the_blended_one(self) -> None:
+        summary = accuracy_tracker._market_summary(self._observed(), "totalResult")
+        self.assertAlmostEqual(summary["pct"], 53.2, delta=0.3)
+        self.assertAlmostEqual(summary["pricedPct"], 47.8, delta=0.3)
+        self.assertEqual(summary["pricedDecided"], 67)
+        self.assertIsNotNone(summary["pricedStdErrPct"])
+
+    def test_break_even_is_judged_against_the_picks_that_had_a_price(self) -> None:
+        """The defect itself: blended 53.2% clears a 52.4% bar, priced 47.8% does not."""
+        summary = accuracy_tracker._market_summary(self._observed(), "totalResult")
+        self.assertGreater(summary["pct"], summary["breakEvenPct"])
+        self.assertLess(summary["pricedPct"], summary["breakEvenPct"])
+        self.assertFalse(summary["beatsBreakEven"])
+
+    def test_a_losing_return_never_sits_beside_a_winning_verdict(self) -> None:
+        """Whatever the blend says, these two must not disagree in sign."""
+        summary = accuracy_tracker._market_summary(self._observed(), "totalResult")
+        self.assertLess(summary["pricedRoiPct"], 0)
+        self.assertFalse(summary["beatsBreakEven"])
+
+    def test_the_note_says_the_two_rates_cover_different_picks(self) -> None:
+        note = accuracy_tracker._market_summary(self._observed(), "totalResult")["note"]
+        self.assertIn("47.8%", note)
+        self.assertIn("break-even applies to", note)
+
+    def test_a_thin_priced_subset_cannot_establish_an_edge(self) -> None:
+        """Spreads: 9-4 priced is 69.2% but +/-12.8, so the bound is under 52.6%.
+
+        The blended 64.2% over 81 picks previously answered this and called it
+        conclusive on the strength of 68 picks that had no price at all.
+        """
+        rows = self._rows(
+            "spreadResult",
+            priced_wins=9, priced_losses=4, unpriced_wins=43, unpriced_losses=25,
+        )
+        summary = accuracy_tracker._market_summary(rows, "spreadResult")
+        self.assertAlmostEqual(summary["pct"], 64.2, delta=0.3)
+        self.assertAlmostEqual(summary["pricedPct"], 69.2, delta=0.3)
+        self.assertGreater(summary["pricedStdErrPct"], 10.0)
+        self.assertFalse(summary["beatsBreakEven"])
+
+    def test_a_fully_priced_market_reports_one_rate_twice(self) -> None:
+        """No split to make, so the card must not sprout a redundant figure."""
+        rows = self._rows("totalResult", priced_wins=30, priced_losses=20,
+                          unpriced_wins=0, unpriced_losses=0)
+        summary = accuracy_tracker._market_summary(rows, "totalResult")
+        self.assertEqual(summary["pct"], summary["pricedPct"])
+        self.assertEqual(summary["decided"], summary["pricedDecided"])
+        self.assertNotIn("break-even applies to", summary["note"])
+
+    def test_an_unpriced_market_reports_no_priced_rate(self) -> None:
+        rows = self._rows("totalResult", priced_wins=0, priced_losses=0,
+                          unpriced_wins=6, unpriced_losses=4)
+        summary = accuracy_tracker._market_summary(rows, "totalResult")
+        self.assertIsNotNone(summary["pct"])
+        self.assertIsNone(summary["pricedPct"])
+        self.assertEqual(summary["pricedDecided"], 0)
+        self.assertFalse(summary["beatsBreakEven"])
+
+    def test_pushes_stay_out_of_both_rates(self) -> None:
+        rows = self._rows("totalResult", priced_wins=10, priced_losses=10,
+                          unpriced_wins=0, unpriced_losses=0)
+        rows += [{"totalResult": {"outcome": "push", "odds": -110, "units": 0.0}}]
+        summary = accuracy_tracker._market_summary(rows, "totalResult")
+        self.assertEqual(summary["pricedDecided"], 20)
+        self.assertEqual(summary["pricedPct"], 50.0)
+
+
 if __name__ == "__main__":
     unittest.main()

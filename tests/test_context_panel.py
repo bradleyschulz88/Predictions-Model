@@ -70,8 +70,10 @@ def _shown(league: str, **features) -> list[str]:
     the test, not the code.
     """
     tiles = _tiles(league, **features)
-    is_baseball = league.lower() == "mlb"
-    return [k for k, v in tiles.items() if not (v.get("baseballOnly") and not is_baseball)]
+    return [
+        k for k, v in tiles.items()
+        if not v.get("leagues") or league.lower() in v["leagues"]
+    ]
 
 
 @unittest.skipUnless(_node(), "node is required to execute the board's tile logic")
@@ -163,43 +165,67 @@ class ContextPanelTests(unittest.TestCase):
 class LeagueApplicabilityTests(unittest.TestCase):
     """A tile that can never resolve for a sport must not read as missing data.
 
-    PARK_FACTORS and TEAM_HOME hold 30 MLB clubs each, bullpen workload comes
-    from the MLB pitching pipeline, and handedness is gated on the league
-    outright. On an NBA card all four render "no data", which says a feed is
-    broken when nothing is -- half a card of false alarms on every game, once
-    those seasons start.
+    PARK_FACTORS holds 30 MLB parks, bullpen workload comes from the MLB
+    pitching pipeline, and handedness is gated on the league outright. On an
+    NBA card those render "no data", which says a feed is broken when nothing
+    is -- false alarms on every game once those seasons start.
+
+    Each tile names the leagues its table covers rather than carrying a
+    baseball/not-baseball boolean. The boolean was true until TEAM_HOME grew to
+    cover basketball and football: travel now resolves for four leagues while
+    the park factors resolve for one, and no single flag can say both. Had it
+    stayed a boolean, widening the travel table would have put an empty
+    "Travel burden" tile straight back onto AFL and EPL cards.
     """
 
-    BASEBALL_ONLY = {
-        "Ballpark scoring", "Bullpen freshness", "Travel burden", "Left-handed starter",
-    }
+    MLB_ONLY = {"Ballpark scoring", "Bullpen freshness", "Left-handed starter"}
+    # Where TEAM_HOME has venues. AFL and EPL are deliberately not in it.
+    TRAVEL_LEAGUES = ("mlb", "nba", "nfl", "wnba")
 
     def test_baseball_keeps_every_tile(self) -> None:
         shown = _shown("mlb", eloEdge=-35, parkEdge=15, bullpenDiff=0.8,
                        travelDiff=3.2, handednessDiff=0)
         self.assertEqual(len(shown), 8)
-        for label in self.BASEBALL_ONLY:
+        for label in self.MLB_ONLY | {"Travel burden"}:
             self.assertIn(label, shown)
 
     def test_basketball_drops_the_baseball_only_tiles(self) -> None:
         shown = _shown("nba", eloEdge=-35, homeInjuryLoad=3.0, awayInjuryLoad=1.5)
-        for label in self.BASEBALL_ONLY:
+        for label in self.MLB_ONLY:
             self.assertNotIn(label, shown, f"{label} cannot resolve for nba")
+
+    def test_travel_is_shown_wherever_there_are_venues_for_it(self) -> None:
+        """It used to be hidden everywhere but baseball, which was the sport it
+
+        mattered least in -- a baseball series parks a club in one city for
+        three days, where an NBA season is 82 games of back-to-backs."""
+        for league in self.TRAVEL_LEAGUES:
+            self.assertIn("Travel burden", _shown(league, travelDiff=3.2), league)
+
+    def test_travel_stays_hidden_where_there_are_none(self) -> None:
+        """The regression this generalisation exists to prevent."""
+        for league in ("afl", "epl", "worldcup"):
+            self.assertNotIn("Travel burden", _shown(league, eloEdge=-35), league)
 
     def test_the_cross_sport_tiles_survive(self) -> None:
         """Dropping the inapplicable ones must not take the real ones with it."""
         for league in ("nba", "nfl", "wnba", "epl", "afl"):
             shown = _shown(league, eloEdge=-35, h2hDiff=0.33,
                            homeInjuryLoad=3.0, awayInjuryLoad=1.5, homeRest=1, awayRest=0)
-            self.assertEqual(len(shown), 4, league)
             self.assertIn("Team rating gap", shown, league)
             self.assertIn("Injuries out", shown, league)
+            self.assertIn("Days off", shown, league)
+            self.assertIn("This season's meetings", shown, league)
 
-    def test_an_unknown_league_is_treated_as_not_baseball(self) -> None:
-        self.assertNotIn("Travel burden", _shown("", eloEdge=-35))
+    def test_an_unknown_league_gets_only_the_universal_tiles(self) -> None:
+        shown = _shown("", eloEdge=-35, travelDiff=3.2, parkEdge=15)
+        self.assertNotIn("Travel burden", shown)
+        self.assertNotIn("Ballpark scoring", shown)
+        self.assertIn("Team rating gap", shown)
 
     def test_the_flag_is_not_case_sensitive(self) -> None:
         self.assertIn("Travel burden", _shown("MLB", travelDiff=3.2))
+        self.assertIn("Ballpark scoring", _shown("MLB", parkEdge=15))
 
 
 class JargonRemovedTests(unittest.TestCase):

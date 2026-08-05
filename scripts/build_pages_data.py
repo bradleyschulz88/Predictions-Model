@@ -17,6 +17,7 @@ from data_coverage import coverage_warnings, emit_ci_warnings, summarize_coverag
 from mlb_data import fetch_dashboard_data, strip_betting_lines_for_display  # noqa: E402
 from calibration_params import is_publishable_pick  # noqa: E402
 from elo import build_and_write as build_elo_ratings  # noqa: E402
+from espn_odds import load_side_market_cache, save_side_market_cache  # noqa: E402
 from scripts.backtest_model import write_calibration_report  # noqa: E402
 from schedule_dates import default_game_date, get_schedule_timezone, schedule_dates_for_league  # noqa: E402
 from sports_config import get_league, list_league_ids  # noqa: E402
@@ -283,6 +284,16 @@ def report_injury_scorer(payloads: dict[str, dict]) -> None:
 
 def main() -> int:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Side-market prices carry over from the previous build when the workflow
+    # restores the cache file. Without this the hour-long TTL never applies --
+    # CI starts a fresh interpreter every thirty minutes, so every game was
+    # re-fetched every build, and that request volume is why the pass that
+    # prices MLB runlines was switched off in the first place.
+    restored = load_side_market_cache()
+    if restored:
+        print(f"Odds: restored {restored} cached side-market prices", flush=True)
+
     manifest: dict = {"builtAt": None, "leagues": []}
     primary_payloads: dict[str, dict] = {}
     payloads_for_accuracy: list[dict] = []
@@ -403,6 +414,11 @@ def main() -> int:
 
     (OUTPUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     (OUTPUT_DIR / "overview.json").write_text(json.dumps(overview, indent=2), encoding="utf-8")
+
+    saved = save_side_market_cache()
+    if saved:
+        print(f"Odds: saved {saved} side-market prices for the next build", flush=True)
+
     print("Done.", flush=True)
     return 0
 

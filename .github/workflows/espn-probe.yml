@@ -1,19 +1,37 @@
-name: ESPN reachability probe
+name: ESPN reachability check
 
-# Temporary diagnostic. The scheduled build started getting HTTP 403 on every
-# ESPN scoreboard request some time between 2026-08-04 11:05Z and 23:31Z. This
-# probe runs from a GitHub runner (the network that matters) and reports which
-# header profiles and hosts ESPN accepts, so the fix is chosen from evidence
-# rather than guessed at. Delete once the cause is known.
+# Was a temporary diagnostic for the 2026-08-04 outage, when Akamai began
+# returning 403 to every site.api.espn.com request and took all six leagues
+# down at once. That cause is known and fixed -- it rejects any User-Agent
+# claiming to be a browser without a browser's TLS fingerprint, and an honest
+# project UA gets 200 -- so the diagnostic job is done.
+#
+# Kept, and promoted from a report to a check, because of how that outage
+# presented: the build kept succeeding and publishing empty slates for half a
+# day. An empty slate is not an error, so nothing failed and nothing said
+# anything; the only symptom was on the site. probe_espn.py now exits non-zero
+# when the UA the build sends stops getting through, and this runs weekly so
+# the next rule change is caught by a red run rather than by someone noticing
+# a flat board.
+#
+# The dev sandbox's egress policy blocks espn.com, so a runner is the only
+# place any of this can be answered.
 
 on:
   workflow_dispatch:
+  # Monday morning UTC. Weekly is the right cadence: bot rules change on the
+  # order of months, and the scheduled build would surface a hard outage
+  # within thirty minutes anyway. This catches the quiet kind.
+  schedule:
+    - cron: "17 6 * * 1"
   push:
     branches:
       - "claude/**"
     paths:
       - ".github/workflows/espn-probe.yml"
       - "scripts/probe_espn.py"
+      - "scripts/diagnose_predictor.py"
+      - "espn_client.py"
 
 jobs:
   probe:
@@ -23,7 +41,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Probe ESPN
+
+      # Fails the run if the shipping User-Agent stops being accepted.
+      - name: Check ESPN still accepts what the build sends
         run: python scripts/probe_espn.py
 
       # A "Measure league home advantage" step lived here. It has served its
@@ -34,10 +54,12 @@ jobs:
       # hand after a season ends. Re-running it every build would spend ~500
       # requests re-deriving a number that is already written down.
 
-      # Two dates on purpose: ESPN drops the Matchup Predictor once a game
-      # is final, so an all-finished slate legitimately reports zero and a
-      # slate still to be played should not.
+      # Two dates on purpose: ESPN drops the Matchup Predictor once a game is
+      # final, so an all-finished slate legitimately reports zero and a slate
+      # still to be played should not. Computed rather than hardcoded -- the
+      # previous fixed dates were stale the day after they were written, and a
+      # long-past date reports zero for the boring reason.
       - name: Diagnose ESPN predictor coverage
         run: |
-          python scripts/diagnose_predictor.py mlb 2026-08-05
-          python scripts/diagnose_predictor.py mlb 2026-08-04
+          python scripts/diagnose_predictor.py mlb "$(date -u +%Y-%m-%d)"
+          python scripts/diagnose_predictor.py mlb "$(date -u -d yesterday +%Y-%m-%d)"

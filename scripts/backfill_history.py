@@ -223,9 +223,10 @@ def build_features(
         ).get("edge")
         if league == "mlb"
         else None,
-        "travelDiff": travel_edge(game.get("homeTeam"), game.get("awayTeam"))
-        if league == "mlb"
-        else None,
+        # Not league-gated: TEAM_HOME covers MLB, NBA, NFL and the WNBA, and
+        # travel_edge returns None for a club it does not know. Backfilling a
+        # season again will now populate this for basketball and football.
+        "travelDiff": travel_edge(game.get("homeTeam"), game.get("awayTeam")),
     }
 
     home_form = home_state.form_pct()

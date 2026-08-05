@@ -690,20 +690,30 @@ def fetch_dashboard_data(
                 flush=True,
             )
 
-    # OFF BY DEFAULT. This pass issues one ESPN core request per unpriced
-    # game -- about fifteen per build for MLB -- and the build runs every
-    # thirty minutes. The in-process cache that was supposed to absorb that
-    # does nothing across builds, because CI starts a fresh interpreter each
-    # time, so the real rate is roughly 720 requests a day rather than the ~24
-    # intended. The first build after this pass began actually firing had all
-    # six schedule feeds fail at once, which is what an IP-level rate limit
-    # looks like from outside.
+    # ON by default. It was off, on a diagnosis that turned out to be wrong.
     #
-    # Re-enable with ESPN_SIDE_MARKET_ODDS=1 once the cache survives across
-    # builds. Until then MLB runlines stay unpriced, which is the state the
-    # board has been in all along and is strictly better than taking the whole
-    # schedule down with it.
-    if include_odds and os.environ.get("ESPN_SIDE_MARKET_ODDS", "").strip() in {"1", "true", "yes"}:
+    # The reasoning was that this pass took the schedule feeds down: it fires
+    # one ESPN core request per unpriced game, the first build after it began
+    # firing had all six feeds fail at once, and that looks like an IP-level
+    # rate limit. It was not. The feeds were failing on HTTP 403 from
+    # site.api.espn.com, which rejects any request claiming to be a browser
+    # without a browser's TLS fingerprint; an honest project User-Agent gets
+    # 200, and has since. The timings never fit the rate-limit story either --
+    # the 11:00Z artifact was healthy at 717,559 bytes and the 23:30Z one was
+    # empty, while this pass only reached main at 00:13Z the next day.
+    #
+    # This pass talks to sports.core.api.espn.com, a different host, which
+    # served 200 OK on every header profile probed on 2026-08-05 including the
+    # bare one. It was never the host that broke.
+    #
+    # The volume concern was real and is now addressed rather than avoided: the
+    # cache persists across builds via ESPN_SIDE_MARKET_CACHE, so the rate is
+    # the intended one fetch per game per hour instead of one per game per
+    # build. Set ESPN_SIDE_MARKET_ODDS=0 to switch it back off.
+    #
+    # What it buys: every MLB runline was unpriced -- 62 of the 81 graded
+    # spread picks -- so that market's entire ROI rested on 13 WNBA spreads.
+    if include_odds and os.environ.get("ESPN_SIDE_MARKET_ODDS", "1").strip() not in {"0", "false", "no"}:
         _optional("ESPN core side markets", _core_side_markets)
 
     # Truly last: a paid-tier-free API that covers leagues nothing else does.

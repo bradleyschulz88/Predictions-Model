@@ -1015,7 +1015,16 @@ function whyPanel(play) {
 
      This tracks which tables exist today, not a fact about the sports. Fill in
      TEAM_HOME for the other leagues and travel stops being baseball-only. */
-  const isBaseball = String(play.league || "").toLowerCase() === "mlb";
+  /* A tile carries `leagues` when its underlying table only covers some of
+     them, and is hidden where it could never resolve. This was a boolean
+     `baseballOnly` until the travel table grew to cover basketball and
+     football -- at which point a single flag could no longer say the truth,
+     because travel resolves for four leagues and the park factors for one.
+     Leaving it a boolean would have put an empty "Travel burden" tile back on
+     AFL and EPL cards, which is the exact false alarm the flag exists to
+     prevent. Absent means the feature is available everywhere. */
+  const league = String(play.league || "").toLowerCase();
+  const covers = (i) => !i.leagues || i.leagues.includes(league);
   const items = [
     {
       kk: "Team rating gap",
@@ -1026,7 +1035,7 @@ function whyPanel(play) {
     },
     {
       kk: "Ballpark scoring",
-      baseballOnly: true,
+      leagues: ["mlb"],
       kv: n(f.parkEdge) == null ? null : `${sgn(n(f.parkEdge), 0)}%`,
       /* The only tile here that is not about either team. Worth saying so --
          a reader reasonably assumes every number in this grid picks a side. */
@@ -1038,7 +1047,7 @@ function whyPanel(play) {
     },
     {
       kk: "Bullpen freshness",
-      baseballOnly: true,
+      leagues: ["mlb"],
       kv: n(f.bullpenDiff) == null ? null : `${sgn(n(f.bullpenDiff), 1)} inn`,
       hint: n(f.bullpenDiff) == null ? null
         : n(f.bullpenDiff) === 0 ? "Both relief corps equally worked."
@@ -1061,8 +1070,11 @@ function whyPanel(play) {
         : `Share of this season's meetings ${HOME} has won.`,
     },
     {
+      // Not baseball-only any more: TEAM_HOME covers MLB, NBA, NFL and the
+      // WNBA, so this resolves for all four. A league still outside the table
+      // renders it empty like any other missing feature.
       kk: "Travel burden",
-      baseballOnly: true,
+      leagues: ["mlb", "nba", "nfl", "wnba"],
       kv: n(f.travelDiff) == null ? null : sgn(n(f.travelDiff), 2),
       hint: n(f.travelDiff) == null ? null
         : n(f.travelDiff) === 0 ? "No meaningful trip for the visitors."
@@ -1070,7 +1082,7 @@ function whyPanel(play) {
     },
     {
       kk: "Left-handed starter",
-      baseballOnly: true,
+      leagues: ["mlb"],
       kv: n(f.handednessDiff) == null ? null
         : n(f.handednessDiff) === 0 ? "neither" : favours(n(f.handednessDiff)),
       /* 0 here genuinely means "both or neither", not missing data, and the
@@ -1097,8 +1109,8 @@ function whyPanel(play) {
   /* Dropped rather than greyed out: an empty tile still reads as a gap in the
      data. The note below says what is missing and why, once, instead of four
      times per card. */
-  const hidden = items.filter((i) => i.baseballOnly && !isBaseball);
-  const shown = items.filter((i) => !(i.baseballOnly && !isBaseball));
+  const hidden = items.filter((i) => !covers(i));
+  const shown = items.filter(covers);
   const ctx = el("div", "ctx");
   shown.forEach((i) => {
     const k = el("div", "k" + (i.kv == null ? " off" : ""));
@@ -1112,9 +1124,12 @@ function whyPanel(play) {
   });
   right.appendChild(ctx);
   if (hidden.length) {
+    /* Names the sport rather than saying "baseball only", which stopped being
+       true once travel covered four leagues and the park factors one. */
     right.appendChild(el("div", "", `<div class="khint" style="margin-top:7px">` +
       `${hidden.map((i) => esc(i.kk.toLowerCase())).join(", ")} ` +
-      `${hidden.length === 1 ? "is" : "are"} tracked for baseball only, so ` +
+      `${hidden.length === 1 ? "is" : "are"} not tracked for ` +
+      `${esc(league.toUpperCase() || "this sport")}, so ` +
       `${hidden.length === 1 ? "it is" : "they are"} not shown here.</div>`));
   }
 
@@ -1535,26 +1550,60 @@ function cardsPanel(A, E) {
     // dozen picks moves several points on noise alone, so a bare "61.6%"
     // reads as settled when the interval still spans break-even.
     const err = m.stdErrPct == null ? "" : ` ±${m.stdErrPct}`;
+    // The break-even bar is derived from prices, so it can only be read
+    // against the picks that carried one. Showing the all-graded rate next to
+    // it made totals look like they beat break-even (53.2% vs 52.4%) while
+    // losing 7.2% -- the two numbers covered different picks. When the priced
+    // rate differs, it goes on screen beside the blended one.
+    const pricedRate = (m.pricedPct != null && m.pricedPct !== m.pct)
+      ? ` ${pct(m.pricedPct)}${m.pricedStdErrPct == null ? "" : ` ±${m.pricedStdErrPct}`}`
+        + ` on the ${m.pricedDecided} priced.`
+      : "";
     const verdict = m.beatsBreakEven === true
       ? " Clears break-even by more than the sample's error."
       : m.beatsBreakEven === false
         ? ` Not yet distinguishable from the ${pct(m.breakEvenPct)} break-even.`
         : "";
     return card(title, record,
-      `${pct(m.pct)}${err} on ${m.decided ?? m.graded} decided. ${roi}${verdict} ${m.note}`,
+      `${pct(m.pct)}${err} on ${m.decided ?? m.graded} decided.${pricedRate} ${roi}${verdict} ${m.note}`,
       m.priced && m.roiPct != null ? (m.roiPct > 0 ? "var(--good)" : m.roiPct < 0 ? "var(--bad)" : undefined) : undefined);
   };
   const totalsCard = marketCard("Totals", sum.totals);
   if (totalsCard) cards.appendChild(totalsCard);
   const spreadsCard = marketCard("Spreads / runline", sum.spreads);
   if (spreadsCard) cards.appendChild(spreadsCard);
-  const dv = E?.divergence;
-  if (dv) {
+  /* Current pipeline where it exists, because a refit changes what the model
+     says and pooling across versions describes a forecaster that is no longer
+     running. Pooled reported a 19.2pt median with 57.5% of games over 15pts;
+     the model actually live sits near 3pts with almost none over 15. The
+     pooled figure stays in the sub-line as the trend it is. */
+  const dvAll = E?.divergence;
+  const dv = (dvAll?.current?.n ? dvAll.current : dvAll);
+  if (dv?.n) {
+    const trend = (dvAll?.current?.n && dvAll.medianGapPct != null)
+      ? ` Across all ${dvAll.n} graded picks, including earlier versions of the model, it was ${dvAll.medianGapPct.toFixed(1)}pts.`
+      : "";
     cards.appendChild(card("Divergence from market", dv.medianGapPct.toFixed(1) + "pts",
-      `Median gap. ${dv.shareOver15Pct}% of games differ by more than 15 points.`));
-    if (dv.fadesMarket) cards.appendChild(card("Against the favourite", pct(dv.fadesMarket.winPct),
-      `${dv.fadesMarket.picks} picks against the price, break-even ${pct(dv.fadesMarket.breakEvenPct)}.`,
-      dv.fadesMarket.winPct > dv.fadesMarket.breakEvenPct ? "var(--good)" : "var(--bad)"));
+      `Median gap over ${dv.n} picks by the model running now. ` +
+      `${dv.shareOver15Pct}% of games differ by more than 15 points.${trend}`));
+    const fade = dv.fadesMarket;
+    if (fade && fade.picks) {
+      // Verdict on the interval, not the point estimate: 38.9% on 18 picks
+      // carries +/-11.8 and says nothing either way, which is not the same
+      // as a red card saying the model loses money fading the price.
+      const err = fade.stdErrPct == null ? "" : ` ±${fade.stdErrPct}`;
+      const clearly = fade.stdErrPct == null ? null
+        : (fade.winPct - 1.96 * fade.stdErrPct) > fade.breakEvenPct ? "var(--good)"
+        : (fade.winPct + 1.96 * fade.stdErrPct) < fade.breakEvenPct ? "var(--bad)"
+        : undefined;
+      cards.appendChild(card("Against the favourite", pct(fade.winPct) + err,
+        `${fade.picks} of ${dv.n} picks (${fade.sharePct}%) go against the price, ` +
+        `break-even ${pct(fade.breakEvenPct)}. ` +
+        (clearly === undefined
+          ? "The interval spans break-even, so this is not yet evidence either way."
+          : "Clear of break-even by more than the sample's error."),
+        clearly));
+    }
   }
   if (sum.streak) cards.appendChild(card("Streak", `${sum.streak.current} ${sum.streak.type}`,
     `Best run ${sum.streak.bestWin} wins, worst ${sum.streak.bestLoss} losses. Streaks are noise at this sample size and are shown for context only.`));

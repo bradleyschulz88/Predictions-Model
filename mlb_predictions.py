@@ -927,9 +927,13 @@ def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
         "h2hDiff": _h2h_diff(enrichment),
         # Distance and body-clock shift carried by the visiting club. Positive
         # favours the home side, matching every other diff here. Candidate only.
-        "travelDiff": travel_edge(game.get("homeTeam"), game.get("awayTeam"))
-        if _league_id(game) == "mlb"
-        else None,
+        #
+        # No league gate: TEAM_HOME now covers MLB, NBA, NFL and the WNBA, and
+        # travel_edge already returns None for a club it does not know, so the
+        # table is the limit rather than a hardcoded league check. The gate was
+        # withholding this from basketball, where 82 games and back-to-backs
+        # across three time zones make it matter more than in baseball.
+        "travelDiff": travel_edge(game.get("homeTeam"), game.get("awayTeam")),
         # Southpaw asymmetry between the two starters. Facts only -- no platoon
         # adjustment, which would need lineup splits that confirm too late.
         "handednessDiff": handedness_diff(game) if _league_id(game) == "mlb" else None,
