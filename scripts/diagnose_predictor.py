@@ -42,6 +42,23 @@ def main() -> int:
     if not games:
         return 1
 
+    # Survey the whole slate first. ESPN publishes the Matchup Predictor for
+    # upcoming games and drops it once a game is final, so a slate's coverage
+    # depends entirely on which games are still to be played -- and a sample of
+    # one says nothing.
+    print("slate survey: predictor presence by game state")
+    with_predictor = 0
+    for entry in games:
+        summary = fetch_event_summary(entry.get("eventId"), league=league)
+        present = bool(summary.get("predictor") or {})
+        with_predictor += present
+        print(
+            f"    {entry.get('eventId')}  predictor={'yes' if present else 'no ':<3}"
+            f"  status={entry.get('gameStatusText')!r}"
+        )
+    print(f"  {with_predictor}/{len(games)} carry a predictor")
+    print()
+
     game = games[0]
     event_id = game.get("eventId")
     print(f"sampling event {event_id}: {game.get('awayTeam')} @ {game.get('homeTeam')}")

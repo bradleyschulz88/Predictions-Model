@@ -26,5 +26,10 @@ jobs:
       - name: Probe ESPN
         run: python scripts/probe_espn.py
 
+      # Two dates on purpose: ESPN drops the Matchup Predictor once a game
+      # is final, so an all-finished slate legitimately reports zero and a
+      # slate still to be played should not.
       - name: Diagnose ESPN predictor coverage
-        run: python scripts/diagnose_predictor.py mlb
+        run: |
+          python scripts/diagnose_predictor.py mlb 2026-08-05
+          python scripts/diagnose_predictor.py mlb 2026-08-04
