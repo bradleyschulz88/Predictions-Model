@@ -641,3 +641,73 @@ class MlbSideMarketPricingTests(unittest.TestCase):
         spread = game["prediction"].get("spread") or {}
         self.assertIsNotNone(spread.get("odds"), "the runline must now carry a price")
         self.assertIsNotNone((spread.get("value") or {}).get("evPct"))
+
+
+class PerMarketPriceGuardTests(unittest.TestCase):
+    """The guard has to be per market, not "any side market".
+
+    The first version asked whether ANY side market carried a price. That is
+    true for almost every MLB game, because the ESPN summary already prices
+    totals -- so the fetch was skipped and the spread, the market that actually
+    needed it, was never asked for. It shipped looking correct and produced
+    nought of eighty-four priced MLB runlines on the live board, with the guard
+    reporting everything fine.
+    """
+
+    CORE = [
+        {"sportsbook": "ESPN BET", "viewType": "Total",
+         "currentLine": {"over": "o8.5 (-110)", "under": "u8.5 (-112)"}},
+        {"sportsbook": "ESPN BET", "viewType": "Spread",
+         "currentLine": {"home": "-1.5 (+105)", "away": "+1.5 (-125)"}},
+    ]
+
+    def _live_mlb_shape(self):
+        """Exactly what the live board had: total priced, spread bare."""
+        return {"eventId": "1", "lines": [
+            {"viewType": "MoneyLine", "currentLine": {"home": "-150", "away": "+130"}},
+            {"viewType": "Total", "currentLine": {"over": "o8.5 (-108)", "under": "u8.5 (-112)"}},
+            {"viewType": "Spread", "currentLine": {"home": "-1.5", "away": "+1.5"}},
+        ]}
+
+    def setUp(self) -> None:
+        import espn_odds
+
+        espn_odds.clear_side_market_cache()
+
+    def test_a_priced_total_does_not_mask_an_unpriced_spread(self) -> None:
+        import espn_odds
+
+        lines = self._live_mlb_shape()["lines"]
+        self.assertTrue(espn_odds.has_priced_market(lines, "Total"))
+        self.assertFalse(espn_odds.has_priced_market(lines, "Spread"))
+
+    def test_the_spread_is_fetched_even_when_the_total_is_priced(self) -> None:
+        """The exact live failure: 0 of 84 MLB runlines priced."""
+        import espn_odds
+        from mlb_predictions import extract_spread_price
+
+        game = self._live_mlb_shape()
+        with patch.object(espn_odds, "fetch_event_odds", return_value=self.CORE):
+            stats = espn_odds.fill_missing_side_market_prices([game], league="mlb")
+        self.assertEqual(stats["priced"], 1)
+        self.assertEqual(extract_spread_price(game["lines"], "home"), 105)
+
+    def test_an_already_priced_market_is_not_duplicated(self) -> None:
+        """Re-adding a priced market puts the same line in the consensus twice."""
+        import espn_odds
+
+        game = self._live_mlb_shape()
+        with patch.object(espn_odds, "fetch_event_odds", return_value=self.CORE):
+            espn_odds.fill_missing_side_market_prices([game], league="mlb")
+        totals = [l for l in game["lines"] if "Total" in l["viewType"]]
+        self.assertEqual(len(totals), 1)
+
+    def test_a_game_with_both_markets_priced_is_skipped(self) -> None:
+        import espn_odds
+
+        game = {"eventId": "1", "lines": [
+            {"viewType": "MoneyLine", "currentLine": {"home": "-150", "away": "+130"}},
+        ] + self.CORE}
+        with patch.object(espn_odds, "fetch_event_odds", side_effect=AssertionError("must not fetch")):
+            stats = espn_odds.fill_missing_side_market_prices([game], league="mlb")
+        self.assertEqual(stats["considered"], 0)
