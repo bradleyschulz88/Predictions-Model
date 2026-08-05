@@ -114,5 +114,50 @@ class VsMarketBlockTests(unittest.TestCase):
         self.assertLess(scores["vsMarket"]["n"], scores["n"])
 
 
+
+
+class LiveHomeBiasTests(unittest.TestCase):
+    """Home bias must be measured on the live model, with its uncertainty.
+
+    The published figure read MLB at +6.4pts, a large and specific-looking
+    fault. The live model is at +0.4pts on 500 games -- the +6.4 belongs to
+    model versions that no longer run. And WNBA's +4.2pts on 95 games is
+    inside one standard error, so it is not a finding either.
+    """
+
+    def test_a_neutral_model_reports_no_bias(self) -> None:
+        scores = walk_forward_scores(_samples(400, market_skill=0.8, model_skill=0.8))
+        bias = scores["homeBias"]["mlb"]
+        self.assertFalse(bias["significant"])
+        self.assertLess(abs(bias["biasPct"]), 1.96 * bias["stdErrPct"])
+
+    def test_a_real_lean_is_flagged_significant(self) -> None:
+        """Push every prediction toward home and the check must catch it."""
+        samples = _samples(400, market_skill=0.8, model_skill=0.8)
+        for s in samples:
+            s.values["strengthDiff"] = abs(s.values["strengthDiff"]) + 3.0
+            s.values["marketLogit"] = abs(s.values["marketLogit"]) + 3.0
+        scores = walk_forward_scores(samples)
+        bias = scores["homeBias"]["mlb"]
+        self.assertGreater(bias["biasPct"], 0)
+        self.assertTrue(bias["significant"])
+
+    def test_standard_error_shrinks_with_sample_size(self) -> None:
+        small = walk_forward_scores(_samples(200, market_skill=0.8, model_skill=0.8))
+        large = walk_forward_scores(_samples(900, market_skill=0.8, model_skill=0.8))
+        self.assertLess(
+            large["homeBias"]["mlb"]["stdErrPct"],
+            small["homeBias"]["mlb"]["stdErrPct"],
+        )
+
+    def test_bias_is_reported_per_league(self) -> None:
+        samples = _samples(400, market_skill=0.8, model_skill=0.8)
+        for s in samples[::2]:
+            s.league = "wnba"
+        scores = walk_forward_scores(samples)
+        self.assertIn("mlb", scores["homeBias"])
+        self.assertIn("wnba", scores["homeBias"])
+
+
 if __name__ == "__main__":
     unittest.main()

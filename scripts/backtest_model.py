@@ -340,7 +340,17 @@ def print_evaluation(report: dict[str, Any]) -> None:
                   f" model {head['modelLogLoss']} · market {head['marketLogLoss']}"
                   f" · edge {head['edge']:+.4f}")
 
-    print("\n  Home bias (pick rate vs actual home win rate)")
+    live_bias = (report.get("fittedWalkForward") or {}).get("homeBias") or {}
+    if live_bias:
+        print("\n  Home bias, LIVE model out of sample (this is the one to act on)")
+        for league, stats in sorted(live_bias.items()):
+            verdict = "SIGNIFICANT" if stats["significant"] else "within noise"
+            print(f"    {league:<10} picks home {stats['pickHomePct']:>5}%"
+                  f" · home wins {stats['actualHomeWinPct']:>5}%"
+                  f" · bias {stats['biasPct']:+.1f} ±{stats['stdErrPct']:.1f}pts"
+                  f" (n={stats['n']}) -- {verdict}")
+
+    print("\n  Home bias, published picks pooled across model versions -- history")
     for league, stats in sorted(report["homeBias"].items()):
         print(f"    {league:<10} picks home {stats['pickHomePct']:>5}%"
               f" · home wins {stats['actualHomeWinPct']:>5}%"

@@ -2200,9 +2200,17 @@ def predict_game(game: dict[str, Any]) -> dict[str, Any]:
 # from graded games as an across-all-games SD -- the same wrong statistic -- so
 # both are too large. That is a conservative error: cover probabilities are
 # pulled toward 50% and lines come out too steep, so it costs picks rather than
-# making bad ones. Fixing it needs the residual, which needs closing spreads
-# alongside results; ESPN's historical scoreboard carries no odds, so it wants a
-# priced source. Do not "fix" these by measuring raw margins harder.
+# making bad ones. Do not "fix" these by measuring raw margins harder.
+#
+# scripts/estimate_margin_residual.py does the conversion without needing
+# closing spreads, using Var(margin) = Var(expected margin) + Var(residual)
+# and reading Var(expected margin) off the spread of market win probabilities
+# already in the graded log. It reproduces NBA's 11.5 from NBA's raw 16.21,
+# which is the check that it works.
+#
+# It cannot run yet: it needs ~100 priced graded games per league and WNBA has
+# 23, AFL none, because AFL only gained a price source recently. Re-run it once
+# the log fills and promote what it reports.
 #
 # MLB and EPL are deliberately absent. Their handicap is a FIXED line -- the
 # baseball runline is always +/-1.5 -- so mapping a win probability through a
