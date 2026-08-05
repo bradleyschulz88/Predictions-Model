@@ -49,6 +49,7 @@ import json
 import time
 from typing import Any
 
+from espn_client import ESPN_USER_AGENT
 from sbr_client import SBRClientError, get_text
 from sports_config import LeagueConfig, get_league
 
@@ -292,6 +293,7 @@ def fetch_event_odds(
             retries=retries,
             retry_delay=retry_delay,
             verify_ssl=verify_ssl,
+            user_agent=ESPN_USER_AGENT,
         )
         payload = json.loads(text)
     except (SBRClientError, json.JSONDecodeError, ValueError, OSError):

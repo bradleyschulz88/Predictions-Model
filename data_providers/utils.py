@@ -70,7 +70,14 @@ def fetch_json(
     retries: int = 2,
     retry_delay: float = 0.5,
     verify_ssl: bool = True,
+    user_agent: str = BROWSER_USER_AGENT,
 ) -> dict[str, Any]:
+    """Fetch and parse a JSON object, with an optional shared cache.
+
+    The browser User-Agent is the default because most providers want to look
+    like an ordinary visitor. ESPN is the exception -- it refuses requests that
+    claim to be a browser -- so callers hitting it pass ESPN_USER_AGENT.
+    """
     if cache_key:
         cached = PROVIDER_CACHE.get(cache_key)
         if cached is not None:
@@ -81,7 +88,7 @@ def fetch_json(
         retries=retries,
         retry_delay=retry_delay,
         verify_ssl=verify_ssl,
-        user_agent=BROWSER_USER_AGENT,
+        user_agent=user_agent,
     )
     data = json.loads(text)
     if not isinstance(data, dict):

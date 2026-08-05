@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from data_providers.utils import best_team_match, fetch_json, normalize_team_name, stat_map, to_float
+from espn_client import ESPN_USER_AGENT
 from sports_config import LeagueConfig, get_league
 
 
@@ -26,6 +27,7 @@ def fetch_espn_team_directory(league: str, *, verify_ssl: bool = True) -> dict[s
         f"https://site.api.espn.com/apis/site/v2/sports/{league_config.espn_path}/teams",
         cache_key=cache_key,
         verify_ssl=verify_ssl,
+        user_agent=ESPN_USER_AGENT,
     )
     directory: dict[str, dict[str, Any]] = {}
     for team in _flatten_espn_teams(payload):
@@ -53,6 +55,7 @@ def fetch_espn_team_statistics(
         f"https://site.api.espn.com/apis/site/v2/sports/{league_config.espn_path}/teams/{team_id}/statistics",
         cache_key=cache_key,
         verify_ssl=verify_ssl,
+        user_agent=ESPN_USER_AGENT,
     )
     stats_root = ((payload.get("results") or {}).get("stats") or {})
     categories = stats_root.get("categories") or []
@@ -92,6 +95,7 @@ def fetch_espn_standings(league: str, *, verify_ssl: bool = True) -> dict[str, d
         f"https://site.api.espn.com/apis/v2/sports/{league_config.espn_path}/standings",
         cache_key=cache_key,
         verify_ssl=verify_ssl,
+        user_agent=ESPN_USER_AGENT,
     )
 
     teams: dict[str, dict[str, Any]] = {}

@@ -11,6 +11,25 @@ from sports_config import LeagueConfig, get_league
 
 ESPN_API_BASE = "https://site.api.espn.com/apis/site/v2/sports"
 
+# site.api.espn.com sits behind Akamai, which on 2026-08-04 began returning 403
+# to anything claiming to be Mozilla without a real browser's TLS fingerprint.
+# That took every league's schedule down at once, because the scoreboard fetch
+# was sending the bot-shaped "Mozilla/5.0 (compatible; MLB-SBR-Client/1.0)".
+#
+# Probed from a runner, five requests each (scripts/probe_espn.py):
+#
+#   Mozilla/5.0 (compatible; MLB-SBR-Client/1.0)   0/5
+#   full Chrome UA                                 0/5
+#   full Chrome UA + browser accept headers        0/5
+#   EdgeBoard/1.0                                  0/5
+#   Python-urllib/3.12                             5/5
+#   EdgeBoard/1.0 (+repo url)                      5/5
+#
+# So the rule is not "no bots" -- it is "do not pretend to be a browser". An
+# honest identity with a contact URL is what passes, and it is also the right
+# thing to send. Keep the "(+url)" comment: the bare token is refused.
+ESPN_USER_AGENT = "EdgeBoard/1.0 (+https://github.com/bradleyschulz88/Predictions-Model)"
+
 
 class ESPNClientError(SBRClientError):
     """Error while fetching or parsing ESPN schedule data."""
@@ -42,7 +61,13 @@ def fetch_scoreboard(
     verify_ssl: bool = True,
 ) -> dict[str, Any]:
     url = build_scoreboard_url(league, date)
-    text = get_text(url, retries=retries, retry_delay=retry_delay, verify_ssl=verify_ssl)
+    text = get_text(
+        url,
+        retries=retries,
+        retry_delay=retry_delay,
+        verify_ssl=verify_ssl,
+        user_agent=ESPN_USER_AGENT,
+    )
     try:
         data = json.loads(text)
     except json.JSONDecodeError as exc:
