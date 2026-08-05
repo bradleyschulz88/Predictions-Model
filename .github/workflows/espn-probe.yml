@@ -26,9 +26,6 @@ jobs:
       - name: Probe ESPN
         run: python scripts/probe_espn.py
 
-      # Two dates on purpose: ESPN drops the Matchup Predictor once a game
-      # is final, so an all-finished slate legitimately reports zero and a
-      # slate still to be played should not.
       # NBA and NFL have zero graded games, so fit_from_observations gives
       # them a league intercept of exactly 0.0 and they inherit one fitted on
       # baseball. Measure what their home advantage actually is before the
@@ -41,6 +38,9 @@ jobs:
           python scripts/measure_margin_sd.py mlb 2025-05-01 2025-08-31
           python scripts/measure_margin_sd.py wnba 2025-05-16 2025-09-11
 
+      # Two dates on purpose: ESPN drops the Matchup Predictor once a game
+      # is final, so an all-finished slate legitimately reports zero and a
+      # slate still to be played should not.
       - name: Diagnose ESPN predictor coverage
         run: |
           python scripts/diagnose_predictor.py mlb 2026-08-05
