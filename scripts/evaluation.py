@@ -363,13 +363,8 @@ def compare_forecasters(
     }
 
 
-def divergence_report(observations: Sequence[Observation]) -> dict[str, Any]:
-    """How far the model strays from the market, and whether straying pays.
-
-    Fading an efficient market is the expensive way to be wrong, so this is
-    tracked as a first-class metric rather than left implicit in the win rate.
-    """
-    paired = [item for item in observations if item.market is not None and item.model is not None]
+def _divergence_stats(paired: Sequence[Observation]) -> dict[str, Any]:
+    """Gap and fade record over one set of paired observations."""
     if not paired:
         return {"n": 0}
 
@@ -400,10 +395,42 @@ def divergence_report(observations: Sequence[Observation]) -> dict[str, Any]:
         "fadesMarket": {
             "picks": fade_total,
             "winPct": round(fade_hits / fade_total * 100, 1) if fade_total else None,
+            # Binomial error on the fade rate. Without it a 52.6% on 116 picks
+            # reads as "just above break-even" when the interval is +/-4.6 and
+            # spans everything from a real edge to a real leak.
+            "stdErrPct": (
+                round(math.sqrt(0.25 / fade_total) * 100, 1) if fade_total else None
+            ),
+            "sharePct": round(fade_total / len(paired) * 100, 1),
             # -110 juice needs 52.38% to break even; below that, fading burns money.
             "breakEvenPct": 52.4,
         },
     }
+
+
+def divergence_report(observations: Sequence[Observation]) -> dict[str, Any]:
+    """How far the model strays from the market, and whether straying pays.
+
+    Fading an efficient market is the expensive way to be wrong, so this is
+    tracked as a first-class metric rather than left implicit in the win rate.
+
+    Reported twice, and the `current` block is the one to read. Pooled over
+    every graded pick this said the model diverges by a 19.2-point median with
+    57.5% of games over 15 points, which was true of the model as it stood in
+    June and false of the one running now: measured 2026-08-05, the most recent
+    third of the record sits at a 3.9-point median with 6.7% over 15, and the
+    share of picks that fade the market fell from 23.0% to 12.4%. A refit
+    changes what the model says, so pooling across versions describes a
+    forecaster that no longer exists -- the same trap reliability already
+    avoids, and selected the same way, by pipeline marker rather than by a time
+    window, because `date` is the grade date and not the pick date.
+    """
+    paired = [item for item in observations if item.market is not None and item.model is not None]
+    report = _divergence_stats(paired)
+    report["current"] = _divergence_stats(
+        [item for item in paired if getattr(item, "current_pipeline", False)]
+    )
+    return report
 
 
 def home_bias_report(observations: Sequence[Observation]) -> dict[str, Any]:

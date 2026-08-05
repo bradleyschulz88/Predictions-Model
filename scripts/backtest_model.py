@@ -320,14 +320,23 @@ def print_evaluation(report: dict[str, Any]) -> None:
 
     divergence = report["divergence"]
     if divergence.get("n"):
-        print("\n  Model vs market")
-        print(f"    median gap {divergence['medianGapPct']}pts · mean {divergence['meanGapPct']}pts"
-              f" · {divergence['shareOver15Pct']}% of games diverge >15pts")
-        agree = divergence["agreesWithMarket"]
-        fade = divergence["fadesMarket"]
-        print(f"    agrees with market: {agree['picks']} picks, {agree['winPct']}% win")
-        print(f"    fades market:       {fade['picks']} picks, {fade['winPct']}% win"
-              f" (break-even {fade['breakEvenPct']}%)")
+        # Current pipeline first, because that is the model anyone can act on.
+        # The pooled row is kept underneath for the trend, clearly labelled --
+        # it was the only row for a while and reported June's 19.2-point median
+        # as though it described the model running today.
+        for label, block in (("current pipeline", divergence.get("current") or {}),
+                             ("all versions pooled", divergence)):
+            if not block.get("n"):
+                continue
+            print(f"\n  Model vs market ({label}, n={block['n']})")
+            print(f"    median gap {block['medianGapPct']}pts · mean {block['meanGapPct']}pts"
+                  f" · {block['shareOver15Pct']}% of games diverge >15pts")
+            agree = block["agreesWithMarket"]
+            fade = block["fadesMarket"]
+            print(f"    agrees with market: {agree['picks']} picks, {agree['winPct']}% win")
+            err = "" if fade.get("stdErrPct") is None else f" ±{fade['stdErrPct']}"
+            print(f"    fades market:       {fade['picks']} picks ({fade['sharePct']}%),"
+                  f" {fade['winPct']}%{err} win (break-even {fade['breakEvenPct']}%)")
 
     fitted = report.get("fittedWalkForward") or {}
     if fitted.get("n"):

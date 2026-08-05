@@ -1572,13 +1572,38 @@ function cardsPanel(A, E) {
   if (totalsCard) cards.appendChild(totalsCard);
   const spreadsCard = marketCard("Spreads / runline", sum.spreads);
   if (spreadsCard) cards.appendChild(spreadsCard);
-  const dv = E?.divergence;
-  if (dv) {
+  /* Current pipeline where it exists, because a refit changes what the model
+     says and pooling across versions describes a forecaster that is no longer
+     running. Pooled reported a 19.2pt median with 57.5% of games over 15pts;
+     the model actually live sits near 3pts with almost none over 15. The
+     pooled figure stays in the sub-line as the trend it is. */
+  const dvAll = E?.divergence;
+  const dv = (dvAll?.current?.n ? dvAll.current : dvAll);
+  if (dv?.n) {
+    const trend = (dvAll?.current?.n && dvAll.medianGapPct != null)
+      ? ` Across all ${dvAll.n} graded picks, including earlier versions of the model, it was ${dvAll.medianGapPct.toFixed(1)}pts.`
+      : "";
     cards.appendChild(card("Divergence from market", dv.medianGapPct.toFixed(1) + "pts",
-      `Median gap. ${dv.shareOver15Pct}% of games differ by more than 15 points.`));
-    if (dv.fadesMarket) cards.appendChild(card("Against the favourite", pct(dv.fadesMarket.winPct),
-      `${dv.fadesMarket.picks} picks against the price, break-even ${pct(dv.fadesMarket.breakEvenPct)}.`,
-      dv.fadesMarket.winPct > dv.fadesMarket.breakEvenPct ? "var(--good)" : "var(--bad)"));
+      `Median gap over ${dv.n} picks by the model running now. ` +
+      `${dv.shareOver15Pct}% of games differ by more than 15 points.${trend}`));
+    const fade = dv.fadesMarket;
+    if (fade && fade.picks) {
+      // Verdict on the interval, not the point estimate: 38.9% on 18 picks
+      // carries +/-11.8 and says nothing either way, which is not the same
+      // as a red card saying the model loses money fading the price.
+      const err = fade.stdErrPct == null ? "" : ` ±${fade.stdErrPct}`;
+      const clearly = fade.stdErrPct == null ? null
+        : (fade.winPct - 1.96 * fade.stdErrPct) > fade.breakEvenPct ? "var(--good)"
+        : (fade.winPct + 1.96 * fade.stdErrPct) < fade.breakEvenPct ? "var(--bad)"
+        : undefined;
+      cards.appendChild(card("Against the favourite", pct(fade.winPct) + err,
+        `${fade.picks} of ${dv.n} picks (${fade.sharePct}%) go against the price, ` +
+        `break-even ${pct(fade.breakEvenPct)}. ` +
+        (clearly === undefined
+          ? "The interval spans break-even, so this is not yet evidence either way."
+          : "Clear of break-even by more than the sample's error."),
+        clearly));
+    }
   }
   if (sum.streak) cards.appendChild(card("Streak", `${sum.streak.current} ${sum.streak.type}`,
     `Best run ${sum.streak.bestWin} wins, worst ${sum.streak.bestLoss} losses. Streaks are noise at this sample size and are shown for context only.`));
