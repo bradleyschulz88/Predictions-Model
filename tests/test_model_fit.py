@@ -504,63 +504,132 @@ class ColdStartLeagueTests(unittest.TestCase):
     _league_intercepts skips them entirely and they fall back on the global
     intercept -- fitted, today, almost entirely on baseball. The worry was that
     this hands them baseball's home-field edge, which is the weakest of the
-    four leagues measured.
+    four leagues measured (see scripts/measure_margin_sd.py for the table).
 
     It does not, because the market anchor carries home advantage and the
-    intercept only holds the residual the market misses. The measurement is in
-    the docstring of scripts/measure_margin_sd.py: raw home logits run +0.1137
-    (mlb) to +0.2231 (wnba), while the fitted intercepts are an order of
-    magnitude smaller. These tests pin both halves of that.
+    intercept only holds the residual the market misses. These fit their own
+    models rather than reading docs/data/model_weights.json: that file is
+    gitignored and produced by the refit step *after* tests run, so a checkout
+    does not have one. The guard on the actually-published weights lives in
+    scripts/check_regression.py, which runs where the file exists.
     """
 
-    WEIGHTS = json.loads((ROOT / "docs" / "data" / "model_weights.json").read_text())
+    # MLB's raw home edge, +0.1122 in logit space, is the number the intercept
+    # would have to carry if it were a home-field term rather than a residual.
+    HOME_LOGIT = math.log(0.528 / 0.472)
 
-    # Every league's entire measured home edge sits below this. A global
-    # intercept above it would mean the term had stopped being a residual and
-    # started carrying home-field on its own -- at which point handing it to a
-    # league that has never played would be a real error rather than a rounding
-    # one, and this test is the tripwire for that.
-    MAX_RESIDUAL_INTERCEPT = 0.25
+    @staticmethod
+    def _priced_samples(count: int, home_rate: float, price_spread: float) -> list[Sample]:
+        """Games the market prices around the league's home edge.
+
+        `price_spread` is how much the quoted price varies game to game. Zero
+        means every game is priced identically, which is not a slate -- it is
+        the degenerate case used below to show what the intercept does when the
+        market feature has nothing to say.
+        """
+        base = math.log(home_rate / (1 - home_rate))
+        samples = []
+        for index in range(count):
+            market = random.gauss(base, price_spread)
+            samples.append(
+                Sample(
+                    values={"strengthDiff": (market - base) / 2, "marketLogit": market},
+                    label=1 if random.random() < 1 / (1 + math.exp(-market)) else 0,
+                    league="mlb",
+                    date=f"2026-06-{(index % 28) + 1:02d}",
+                )
+            )
+        return samples
+
+    def _fit(self, price_spread: float, count: int = 600) -> dict:
+        random.seed(12)
+        return fit_from_observations(self._priced_samples(count, 0.528, price_spread))
 
     def test_a_league_with_no_games_gets_no_intercept_of_its_own(self) -> None:
-        samples = [
-            Sample(values={"strengthDiff": 0.1, "marketLogit": 0.2}, label=1,
-                   league="mlb", date="2026-06-01")
-            for _ in range(60)
-        ]
-        fitted = fit_from_observations(samples)
+        fitted = self._fit(0.4, count=60)
         self.assertIn("mlb", fitted["leagueIntercepts"])
         self.assertNotIn("nba", fitted["leagueIntercepts"])
 
-    def test_the_shipped_global_intercept_is_a_residual_not_a_home_field_term(self) -> None:
-        for block in ("anchored", "standalone"):
-            intercept = self.WEIGHTS[block]["weights"][0]
-            self.assertLess(
-                abs(intercept), self.MAX_RESIDUAL_INTERCEPT,
-                f"{block} intercept {intercept:+.4f} is large enough to be "
-                "carrying home-field, which a cold-start league must not inherit",
-            )
+    def test_the_intercept_empties_out_as_the_market_feature_fills_up(self) -> None:
+        """The mechanism, not a magic number.
 
-    def test_the_shipped_league_intercepts_are_corrections_not_edges(self) -> None:
-        """If one grew past the band, the cold start would start costing."""
-        for league, intercept in self.WEIGHTS["leagueIntercepts"].items():
-            self.assertLess(abs(intercept), self.MAX_RESIDUAL_INTERCEPT, league)
-
-    def test_a_cold_start_league_is_not_pinned_to_the_baseball_correction(self) -> None:
-        """It gets the global term, and MLB's own correction is applied on top.
-
-        Concretely: baseball's fitted intercept is negative, so MLB ends up
-        *below* the untuned global value rather than above it. A cold-start
-        league inheriting the global term is therefore not inheriting
-        baseball's answer -- it is inheriting the one baseball was corrected
-        away from.
+        On a slate where every game carries the same price the market feature
+        is constant, standardisation erases it, and the intercept is left
+        holding the entire home edge. Let the price vary the way a real slate
+        does and the intercept drains away into the feature. That is what makes
+        it a residual, and it is the whole reason a league that has never
+        played can inherit it without inheriting baseball's home-field figure.
         """
-        model = LogisticModel(self.WEIGHTS)
-        cold = model.predict_from_values({"strengthDiff": 0.0, "marketLogit": 0.0}, "nba")
-        mlb = model.predict_from_values({"strengthDiff": 0.0, "marketLogit": 0.0}, "mlb")
-        self.assertNotAlmostEqual(cold, mlb, places=4)
-        # Both land near a coin flip; the gap is under a point, not a real edge.
-        self.assertLess(abs(cold - mlb), 0.02)
+        flat = abs(self._fit(0.0)["anchored"]["weights"][0])
+        realistic = abs(self._fit(0.6)["anchored"]["weights"][0])
+        self.assertGreater(flat, self.HOME_LOGIT, "a dead market should strand the edge here")
+        self.assertLess(realistic, flat / 4)
+        self.assertLess(realistic, self.HOME_LOGIT / 4)
+
+    def test_a_cold_start_league_forgoes_almost_nothing(self) -> None:
+        """What NBA loses by having no intercept is the intercept MLB earns.
+
+        With the anchored block already explaining the outcomes, that residual
+        is ~0.0000, so the two leagues are handed the same answer. The gap --
+        not its sign -- is the thing worth pinning: whichever way baseball's
+        own correction happens to point on a given refit, it is too small to
+        move a published probability.
+        """
+        model = LogisticModel(self._fit(0.6))
+        values = {"strengthDiff": 0.0, "marketLogit": 0.0}
+        cold = model.predict_from_values(values, "nba")
+        mlb = model.predict_from_values(values, "mlb")
+        self.assertLess(abs(cold - mlb), 0.01)
+
+
+class InterceptGateTests(unittest.TestCase):
+    """The build gate that watches the intercept on the weights that ship.
+
+    model_weights.json is gitignored and written by the refit step, so this
+    check runs there rather than in the suite. That makes it the kind of gate
+    nobody sees fire until it matters, which is exactly the kind worth testing.
+    """
+
+    def setUp(self) -> None:
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import check_regression
+
+        self.gate = check_regression
+        self.limit = check_regression.MAX_RESIDUAL_INTERCEPT
+
+    def _weights(self, *, global_intercept: float = 0.0, **leagues: float) -> dict:
+        return {
+            "anchored": {"weights": [global_intercept, 0.4, 0.42]},
+            "standalone": {"weights": [global_intercept, 0.75]},
+            "leagueIntercepts": leagues,
+        }
+
+    def test_a_healthy_fit_passes(self) -> None:
+        """The values actually observed on 2026-08-05."""
+        weights = self._weights(global_intercept=0.0367, mlb=-0.0362, wnba=0.0992)
+        self.assertEqual(self.gate.check_intercepts(weights), [])
+
+    def test_a_global_intercept_carrying_home_field_fails(self) -> None:
+        failures = self.gate.check_intercepts(self._weights(global_intercept=self.limit + 0.05))
+        self.assertEqual(len(failures), 2)  # anchored and standalone both.
+        self.assertIn("stopped carrying home advantage", failures[0])
+
+    def test_a_league_intercept_that_became_an_edge_fails(self) -> None:
+        failures = self.gate.check_intercepts(self._weights(afl=self.limit + 0.1))
+        self.assertEqual(len(failures), 1)
+        self.assertIn("afl", failures[0])
+
+    def test_the_sign_does_not_matter(self) -> None:
+        """A large negative intercept is the same defect pointing the other way."""
+        self.assertEqual(len(self.gate.check_intercepts(self._weights(mlb=-self.limit - 0.1))), 1)
+
+    def test_absent_weights_are_not_a_failure(self) -> None:
+        """A checkout has no weights file; that must not fail the gate."""
+        self.assertEqual(self.gate.check_intercepts({}), [])
+
+    def test_the_limit_clears_every_measured_home_edge(self) -> None:
+        """WNBA's +0.2231 is the largest of the four; the gate must sit above it."""
+        self.assertGreater(self.limit, 0.2231)
 
 
 if __name__ == "__main__":
