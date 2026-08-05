@@ -1006,6 +1006,16 @@ function whyPanel(play) {
   const HOME = teamShort(play.homeTeam) || "the home side";
   const AWAY = teamShort(play.awayTeam) || "the visitors";
   const favours = (v) => (v > 0 ? HOME : AWAY);
+  /* Four of these are fed by baseball-only tables: PARK_FACTORS and TEAM_HOME
+     hold 30 MLB clubs each, bullpen workload comes from the MLB pitching
+     pipeline, and handedness is gated on league === "mlb" outright. On an NBA
+     or NFL card they can never resolve, and rendering them as "no data" says a
+     feed is broken when nothing is. Half a card of false alarms, on every game,
+     once those seasons start.
+
+     This tracks which tables exist today, not a fact about the sports. Fill in
+     TEAM_HOME for the other leagues and travel stops being baseball-only. */
+  const isBaseball = String(play.league || "").toLowerCase() === "mlb";
   const items = [
     {
       kk: "Team rating gap",
@@ -1016,6 +1026,7 @@ function whyPanel(play) {
     },
     {
       kk: "Ballpark scoring",
+      baseballOnly: true,
       kv: n(f.parkEdge) == null ? null : `${sgn(n(f.parkEdge), 0)}%`,
       /* The only tile here that is not about either team. Worth saying so --
          a reader reasonably assumes every number in this grid picks a side. */
@@ -1027,6 +1038,7 @@ function whyPanel(play) {
     },
     {
       kk: "Bullpen freshness",
+      baseballOnly: true,
       kv: n(f.bullpenDiff) == null ? null : `${sgn(n(f.bullpenDiff), 1)} inn`,
       hint: n(f.bullpenDiff) == null ? null
         : n(f.bullpenDiff) === 0 ? "Both relief corps equally worked."
@@ -1050,6 +1062,7 @@ function whyPanel(play) {
     },
     {
       kk: "Travel burden",
+      baseballOnly: true,
       kv: n(f.travelDiff) == null ? null : sgn(n(f.travelDiff), 2),
       hint: n(f.travelDiff) == null ? null
         : n(f.travelDiff) === 0 ? "No meaningful trip for the visitors."
@@ -1057,6 +1070,7 @@ function whyPanel(play) {
     },
     {
       kk: "Left-handed starter",
+      baseballOnly: true,
       kv: n(f.handednessDiff) == null ? null
         : n(f.handednessDiff) === 0 ? "neither" : favours(n(f.handednessDiff)),
       /* 0 here genuinely means "both or neither", not missing data, and the
@@ -1080,8 +1094,13 @@ function whyPanel(play) {
         : `${HOME} / ${AWAY}. Rest since each side last played; 0 means they played yesterday.`,
     },
   ];
+  /* Dropped rather than greyed out: an empty tile still reads as a gap in the
+     data. The note below says what is missing and why, once, instead of four
+     times per card. */
+  const hidden = items.filter((i) => i.baseballOnly && !isBaseball);
+  const shown = items.filter((i) => !(i.baseballOnly && !isBaseball));
   const ctx = el("div", "ctx");
-  items.forEach((i) => {
+  shown.forEach((i) => {
     const k = el("div", "k" + (i.kv == null ? " off" : ""));
     k.innerHTML =
       `<div class="kv">${i.kv == null ? "no data" : esc(String(i.kv))}</div>` +
@@ -1092,6 +1111,12 @@ function whyPanel(play) {
     ctx.appendChild(k);
   });
   right.appendChild(ctx);
+  if (hidden.length) {
+    right.appendChild(el("div", "", `<div class="khint" style="margin-top:7px">` +
+      `${hidden.map((i) => esc(i.kk.toLowerCase())).join(", ")} ` +
+      `${hidden.length === 1 ? "is" : "are"} tracked for baseball only, so ` +
+      `${hidden.length === 1 ? "it is" : "they are"} not shown here.</div>`));
+  }
 
   const p = f.mlbPitching;
   if (p) {
