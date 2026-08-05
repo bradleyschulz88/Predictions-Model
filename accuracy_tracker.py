@@ -145,6 +145,10 @@ def _build_pick_record(
         "pickOdds": pending.get("pickOdds"),
         "openingOdds": pending.get("openingOdds"),
         "openingSide": pending.get("openingSide"),
+        # Set once the game is under way, meaning pickOdds is a real pre-game
+        # close. Absent means it is only the latest quote seen, which is not
+        # the same thing and must not be averaged in as if it were.
+        "pickOddsFrozenAt": pending.get("pickOddsFrozenAt"),
         # Rows logged before publishing and logging were separated have no flag
         # and were publishable by definition, so absent means True.
         "published": pending.get("published", True),
@@ -235,6 +239,32 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 opening_odds = current_odds
             opening_side = existing.get("openingSide") or prediction.get("predictedSide")
 
+            # Two ways the closing price was being destroyed, both silent.
+            #
+            # Nothing stopped a build from overwriting pickOdds after the game
+            # had started, so a build landing mid-game replaced the closing line
+            # with an in-play number, and one landing after the final replaced
+            # it with whatever the book showed then. Either way CLV was
+            # measuring the wrong pair of prices.
+            #
+            # And any build where the odds fetch came back empty -- a provider
+            # blip, a book pulling a market -- wrote None straight over a price
+            # already recorded, losing it for good.
+            #
+            # So: a recorded price is never replaced by nothing, and never
+            # updated once the game is under way. The last price seen before
+            # the first pitch is the close, which is what CLV needs.
+            previous_odds = existing.get("pickOdds")
+            started = bool(game.get("isLive") or game.get("isFinal") or game.get("isVoided"))
+            frozen_at = existing.get("pickOddsFrozenAt")
+            if started and previous_odds is not None:
+                pick_odds = previous_odds
+                frozen_at = frozen_at or payload.get("fetchedAt")
+            elif current_odds is None:
+                pick_odds = previous_odds
+            else:
+                pick_odds = current_odds
+
             log["predictions"][event_id] = {
                 "eventId": event_id,
                 "league": league,
@@ -257,9 +287,12 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 "kellyPct": (prediction.get("value") or {}).get("kellyPct"),
                 # pickOdds is the latest price seen; by grade time it is the
                 # closing line. openingOdds is pinned to the first one.
-                "pickOdds": current_odds,
+                "pickOdds": pick_odds,
                 "openingOdds": opening_odds,
                 "openingSide": opening_side,
+                # When the price stopped being updated. Present means this is a
+                # genuine pre-game close rather than the latest quote seen.
+                "pickOddsFrozenAt": frozen_at,
                 # False means the model made this pick but the board withheld
                 # it. Kept for training; excluded from the published record.
                 "published": published,
@@ -581,6 +614,53 @@ def _winner_from_game(game: dict[str, Any]) -> str | None:
     return game.get("homeTeam") if home > away else game.get("awayTeam")
 
 
+def clv_summary(window: list[dict[str, Any]]) -> dict[str, Any]:
+    """Closing line value over picks that actually have a closing line.
+
+    Only picks whose price was frozen at kick-off have one. The rest carry the
+    latest quote seen, which is not a close, and averaging the two together
+    produced a headline that could not be acted on -- it read -0.52% over 96
+    picks with no way to tell how many were genuine. Beating the close is a
+    coin flip under the null, so the standard error is reported alongside the
+    rate and beatsCoinFlip requires the interval to clear 50, not the point.
+    """
+    confirmed = [
+        float(item["clvPct"])
+        for item in window
+        if item.get("clvPct") is not None and item.get("pickOddsFrozenAt")
+    ]
+    provisional = sum(
+        1
+        for item in window
+        if item.get("clvPct") is not None and not item.get("pickOddsFrozenAt")
+    )
+    beat_rate = (
+        sum(1 for value in confirmed if value > 0) / len(confirmed) * 100 if confirmed else None
+    )
+    return {
+        "picks": len(confirmed),
+        "avgPct": round(sum(confirmed) / len(confirmed), 2) if confirmed else None,
+        "beatCloseP": round(beat_rate, 1) if beat_rate is not None else None,
+        # Binomial standard error against the 50% null, so a rate near 50 on a
+        # thin sample cannot be read as evidence either way.
+        "beatCloseStdErrPct": (
+            round(math.sqrt(0.25 / len(confirmed)) * 100, 1) if confirmed else None
+        ),
+        "beatsCoinFlip": (
+            None
+            if not confirmed
+            else beat_rate - 1.96 * math.sqrt(0.25 / len(confirmed)) * 100 > 50.0
+        ),
+        # Picks with a price but no confirmed close yet. Excluded above rather
+        # than silently mixed in.
+        "provisionalPicks": provisional,
+        "note": (
+            "Closing line value predicts long-run profitability better than win rate. "
+            "Measured only on picks whose price was frozen when the game started."
+        ),
+    }
+
+
 def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, Any]:
     log_path = data_dir / LOG_FILE
     accuracy_path = data_dir / ACCURACY_FILE
@@ -794,19 +874,7 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
         1 for item in pending_picks if (item.get("scheduleDate") or "") >= earliest_cutoff
     )
 
-    clv_values = [
-        float(item["clvPct"]) for item in window if item.get("clvPct") is not None
-    ]
-    clv_summary = {
-        "picks": len(clv_values),
-        "avgPct": round(sum(clv_values) / len(clv_values), 2) if clv_values else None,
-        "beatCloseP": (
-            round(sum(1 for value in clv_values if value > 0) / len(clv_values) * 100, 1)
-            if clv_values
-            else None
-        ),
-        "note": "Closing line value predicts long-run profitability better than win rate.",
-    }
+    clv_summary_payload = clv_summary(window)
 
     streak = _compute_streak(recent_results)
 
@@ -817,7 +885,7 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
             "allTime": all_time,
             "byLeague": by_league,
             "streak": streak,
-            "closingLineValue": clv_summary,
+            "closingLineValue": clv_summary_payload,
             # Their own buckets, never folded into the moneyline record above.
             # A good totals week must not flatter a bad picking week.
             "totals": _market_summary(all_results, "totalResult"),
