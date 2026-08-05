@@ -726,12 +726,10 @@ def fetch_dashboard_data(
     # is broken; the number does not exist on this endpoint. It explains the
     # graded record exactly -- all 13 priced spreads were WNBA.
     #
-    # Pricing runlines needs a different source. The Odds API below carries a
-    # `spreads` market and is already wired up, but it is metered against a
-    # 500-credit monthly free tier, so pointing it at ~15 MLB games a day is a
-    # deliberate spending decision rather than a code change. Left for a human
-    # to choose. See scripts/diagnose_side_markets.py to re-check whether ESPN
-    # ever starts publishing the price.
+    # Pricing runlines needs a different source, and now uses one: the Odds API
+    # pass below asks baseball for the `spreads` market only. See
+    # scripts/diagnose_side_markets.py to re-check whether ESPN ever starts
+    # publishing the price, at which point the paid call can be dropped.
     if include_odds and os.environ.get("ESPN_SIDE_MARKET_ODDS", "1").strip() not in {"0", "false", "no"}:
         _optional("ESPN core side markets", _core_side_markets)
 
@@ -750,8 +748,29 @@ def fetch_dashboard_data(
         )
         _report_odds_api(api_stats, date_value)
 
+    # Second Odds API pass, for a market rather than a whole game. A league can
+    # be fully priced on the moneyline and still have no spread price anywhere
+    # free -- which is exactly MLB, where ESPN publishes the runline handicap
+    # with no juice on it. attach_odds_to_games above only looks at games with
+    # no moneyline at all, so baseball never reaches it and no credit is spent.
+    #
+    # Shares the same six-hour cache as the pass above, so on a day this has
+    # already fetched, it costs nothing further.
+    def _odds_api_spreads() -> None:
+        from data_providers.odds_api import fill_missing_spread_prices
+
+        stats = fill_missing_spread_prices(games, league=league, verify_ssl=verify_ssl)
+        if stats.get("priced"):
+            print(
+                f"Odds: {league} {date_value}: The Odds API priced spreads on "
+                f"{stats['priced']}/{stats['considered']} games "
+                f"({', '.join(stats['books'][:3])})",
+                flush=True,
+            )
+
     if include_odds:
         _optional("The Odds API", _odds_api)
+        _optional("The Odds API spreads", _odds_api_spreads)
 
     payload = build_dashboard_payload_from_espn_games(games, url=url, league=league)
     if degraded:

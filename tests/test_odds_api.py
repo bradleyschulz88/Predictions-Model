@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import json
 import sys
+import tempfile
+import time
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -62,12 +64,30 @@ class ConfigurationTests(unittest.TestCase):
         self.assertEqual(games[0]["lines"], [])
 
     def test_an_uncovered_league_never_spends_a_credit(self) -> None:
-        """MLB, NBA, NFL, WNBA and EPL are already served for nothing."""
+        """NBA, NFL, WNBA and EPL are already served for nothing.
+
+        MLB is no longer in this list, but only for one market -- see
+        SpreadFillTests. It stays in the moneyline case below, because
+        SportsBookReview supplies that for free.
+        """
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
              patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
-            for league in ("mlb", "nba", "nfl", "wnba", "epl"):
+            for league in ("nba", "nfl", "wnba", "epl"):
                 stats = odds_api.attach_odds_to_games([_game()], league=league)
                 self.assertEqual(stats["priced"], 0, msg=league)
+
+    def test_baseball_never_spends_a_credit_on_a_moneyline(self) -> None:
+        """MLB is configured for its runline and asks for `spreads` alone.
+
+        A call from the moneyline path could not return an h2h price even if it
+        succeeded, so it would spend a credit and attach nothing. Gated on the
+        market rather than on the league, or adding MLB to LEAGUE_ODDS would
+        have quietly opened this path too.
+        """
+        with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
+             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+            stats = odds_api.attach_odds_to_games([_game()], league="mlb")
+        self.assertEqual(stats["priced"], 0)
 
 
 class BudgetTests(unittest.TestCase):
@@ -186,6 +206,199 @@ class MatchingTests(unittest.TestCase):
             stats = odds_api.attach_odds_to_games(games, league="afl")
         self.assertEqual(stats["priced"], 0)
         self.assertEqual(games[0]["lines"], [])
+
+
+class SpreadFillTests(unittest.TestCase):
+    """MLB runlines, the one market with no free price anywhere.
+
+    SportsBookReview gives baseball a moneyline and ESPN core now prices 85 of
+    86 totals, but ESPN publishes the runline handicap with no juice on it --
+    {"home": "-1.5"} where the same endpoint returns WNBA
+    {"home": "-6.5 (-112)"}. Measured 2026-08-05: 0 of 62 graded runlines had
+    a price, so that market could never be valued or ranked.
+
+    The trap is the entry point. attach_odds_to_games only looks at games with
+    no moneyline at all, which is right for AFL and useless here, because every
+    MLB game has one.
+    """
+
+    HOME, AWAY = "Houston Astros", "Toronto Blue Jays"
+
+    def setUp(self) -> None:
+        odds_api.clear_cache()
+
+    def _mlb_payload(self):
+        return [{
+            "id": "m1", "home_team": self.HOME, "away_team": self.AWAY,
+            "bookmakers": [{"key": "dk", "title": "DraftKings", "markets": [
+                {"key": "spreads", "outcomes": [
+                    {"name": self.HOME, "price": 2.05, "point": -1.5},
+                    {"name": self.AWAY, "price": 1.8, "point": 1.5}]},
+            ]}],
+        }]
+
+    def _mlb_game(self):
+        """As the board has it: moneyline priced, runline bare."""
+        return {
+            "eventId": "401816410", "league": "mlb",
+            "homeTeam": self.HOME, "awayTeam": self.AWAY,
+            "lines": [
+                {"sportsbook": "SBR", "viewType": "MoneyLine",
+                 "currentLine": {"home": "-208", "away": "+195"}},
+                {"sportsbook": "ESPN BET", "viewType": "Spread",
+                 "currentLine": {"home": "-1.5", "away": "+1.5"}},
+            ],
+        }
+
+    def test_a_priced_moneyline_does_not_hide_an_unpriced_runline(self) -> None:
+        """The bug this exists for: the game looks covered and is not."""
+        games = [self._mlb_game()]
+        with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
+             patch.object(odds_api, "get_text", return_value=json.dumps(self._mlb_payload())):
+            stats = odds_api.fill_missing_spread_prices(games, league="mlb")
+        self.assertEqual(stats["considered"], 1)
+        self.assertEqual(stats["priced"], 1)
+
+    def test_the_runline_price_is_readable_by_the_extractor(self) -> None:
+        """End to end: what predict_runline actually calls has to return a number."""
+        from mlb_predictions import extract_spread_price
+
+        games = [self._mlb_game()]
+        with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
+             patch.object(odds_api, "get_text", return_value=json.dumps(self._mlb_payload())):
+            odds_api.fill_missing_spread_prices(games, league="mlb")
+        self.assertEqual(extract_spread_price(games[0]["lines"], "home"), 105)
+        self.assertEqual(extract_spread_price(games[0]["lines"], "away"), -125)
+
+    def test_only_spread_rows_are_merged(self) -> None:
+        """A second moneyline would land in the consensus twice."""
+        games = [self._mlb_game()]
+        payload = self._mlb_payload()
+        payload[0]["bookmakers"][0]["markets"].append(
+            {"key": "h2h", "outcomes": [{"name": self.HOME, "price": 1.5},
+                                        {"name": self.AWAY, "price": 2.6}]})
+        with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
+             patch.object(odds_api, "get_text", return_value=json.dumps(payload)):
+            odds_api.fill_missing_spread_prices(games, league="mlb")
+        views = [line["viewType"] for line in games[0]["lines"]]
+        self.assertEqual(views.count("MoneyLine"), 1)
+
+    def test_an_already_priced_spread_is_left_alone(self) -> None:
+        """No credit for a game a free source already covered."""
+        game = self._mlb_game()
+        game["lines"][1]["currentLine"] = {"home": "-1.5 (+105)", "away": "+1.5 (-125)"}
+        with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
+             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+            stats = odds_api.fill_missing_spread_prices([game], league="mlb")
+        self.assertEqual(stats["considered"], 0)
+        self.assertEqual(stats["priced"], 0)
+
+    def test_no_key_means_no_call(self) -> None:
+        with patch.object(odds_api.os, "environ", {}), \
+             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+            stats = odds_api.fill_missing_spread_prices([self._mlb_game()], league="mlb")
+        self.assertFalse(stats["configured"])
+        self.assertEqual(stats["priced"], 0)
+
+    def test_a_league_without_a_spreads_market_never_calls(self) -> None:
+        with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
+             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+            for league in ("nba", "nfl", "wnba", "epl"):
+                stats = odds_api.fill_missing_spread_prices([self._mlb_game()], league=league)
+                self.assertEqual(stats["priced"], 0, msg=league)
+
+
+class CreditCostTests(unittest.TestCase):
+    """A credit is charged per market per region, so the ask is the price."""
+
+    def test_baseball_asks_for_one_market_not_three(self) -> None:
+        """h2h and totals both have free sources; paying for them is waste."""
+        self.assertEqual(odds_api.LEAGUE_ODDS["mlb"].markets, "spreads")
+        self.assertEqual(odds_api.LEAGUE_ODDS["mlb"].credits_per_call, 1)
+
+    def test_afl_still_asks_for_everything_because_it_has_nothing(self) -> None:
+        self.assertEqual(odds_api.LEAGUE_ODDS["afl"].credits_per_call, 3)
+
+    def test_the_whole_board_fits_the_free_tier(self) -> None:
+        """Four calls a day each on a six-hour cache, against 500 a month."""
+        monthly = sum(
+            config.credits_per_call * 4 * 30 for config in odds_api.LEAGUE_ODDS.values()
+        )
+        self.assertLess(monthly, 500, f"{monthly} credits a month exceeds the free tier")
+
+    def test_baseball_uses_us_books(self) -> None:
+        """`au` would be an Australian shop guessing at an MLB runline."""
+        self.assertEqual(odds_api.LEAGUE_ODDS["mlb"].regions, "us")
+
+
+class CachePersistenceTests(unittest.TestCase):
+    """The six-hour TTL is worth nothing if the cache dies with the process.
+
+    CI starts a fresh interpreter every thirty minutes, so an in-process dict
+    is empty on arrival every time and every build pays again. For the ESPN
+    pass that was rudeness; here it is money -- MLB alone would spend a credit
+    on each of ~48 builds a day, about 1,440 a month against an allowance of
+    500, so the whole free tier would be gone inside a week.
+    """
+
+    def setUp(self) -> None:
+        odds_api.clear_cache()
+        self._dir = tempfile.TemporaryDirectory()
+        self.addCleanup(self._dir.cleanup)
+        self.path = Path(self._dir.name) / "nested" / "odds-api.json"
+        patcher = patch.dict(
+            odds_api.os.environ, {odds_api.CACHE_FILE_ENV: str(self.path)}
+        )
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def _seed(self, age_seconds: float = 0.0) -> None:
+        odds_api._CACHE["baseball_mlb"] = (time.time() - age_seconds, [{"id": "m1"}])
+
+    def test_a_saved_slate_comes_back_next_build(self) -> None:
+        self._seed()
+        self.assertEqual(odds_api.save_cache(), 1)
+        odds_api.clear_cache()
+        self.assertEqual(odds_api.load_cache(), 1)
+        self.assertEqual(odds_api._CACHE["baseball_mlb"][1], [{"id": "m1"}])
+
+    def test_a_restored_slate_spends_no_credit(self) -> None:
+        """The whole point. If this fetches, the quota is being burned."""
+        self._seed()
+        odds_api.save_cache()
+        odds_api.clear_cache()
+        odds_api.load_cache()
+        with patch.object(odds_api.os, "environ",
+                          {"ODDS_API_KEY": "k", odds_api.CACHE_FILE_ENV: str(self.path)}), \
+             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+            events = odds_api.fetch_league_odds("mlb")
+        self.assertEqual(events, [{"id": "m1"}])
+
+    def test_an_expired_slate_is_dropped_on_the_way_in(self) -> None:
+        """A stale file must not pin an old price onto a live board."""
+        stale = time.time() - odds_api.CACHE_TTL_SECONDS - 60
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text(json.dumps(
+            {"entries": {"baseball_mlb": {"fetchedAt": stale, "events": [{"id": "m1"}]}}}
+        ), encoding="utf-8")
+        self.assertEqual(odds_api.load_cache(), 0)
+        self.assertEqual(odds_api._CACHE, {})
+
+    def test_an_expired_slate_is_not_written_out(self) -> None:
+        self._seed(age_seconds=odds_api.CACHE_TTL_SECONDS + 60)
+        self.assertEqual(odds_api.save_cache(), 0)
+
+    def test_a_missing_or_corrupt_file_is_not_an_error(self) -> None:
+        self.assertEqual(odds_api.load_cache(), 0)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text("{not json", encoding="utf-8")
+        self.assertEqual(odds_api.load_cache(), 0)
+
+    def test_no_configured_path_disables_persistence_silently(self) -> None:
+        self._seed()
+        with patch.dict(odds_api.os.environ, {odds_api.CACHE_FILE_ENV: ""}):
+            self.assertEqual(odds_api.save_cache(), 0)
+            self.assertEqual(odds_api.load_cache(), 0)
 
 
 if __name__ == "__main__":

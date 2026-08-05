@@ -116,10 +116,16 @@ jobs:
       # restore-keys means a miss falls back to the most recent build's file
       # rather than starting cold, and the run_id in the key makes every build
       # write a fresh entry instead of racing the same one.
+      # The Odds API file in here is the one that costs money: without it that
+      # provider's six-hour cache never survives the interpreter, and MLB alone
+      # would spend a credit on each of ~48 builds a day against an allowance
+      # of 500 a month.
       - name: Restore side-market price cache
         uses: actions/cache@v4
         with:
-          path: .cache/side-market-odds.json
+          path: |
+            .cache/side-market-odds.json
+            .cache/odds-api.json
           key: side-market-odds-${{ github.run_id }}
           restore-keys: |
             side-market-odds-
@@ -127,6 +133,7 @@ jobs:
       - name: Build dashboard JSON
         env:
           ESPN_SIDE_MARKET_CACHE: .cache/side-market-odds.json
+          ODDS_API_CACHE: .cache/odds-api.json
           # Optional. When the secret is absent this is empty, injury severity
           # falls back to its deterministic score, and the build is unaffected.
           # Add it at Settings > Secrets and variables > Actions.
