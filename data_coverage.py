@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 COVERAGE_FLAGS = (
@@ -24,6 +25,56 @@ PUBLISH_RATE_WARN_THRESHOLD = 25.0
 
 # Small slates swing wildly -- 1 of 3 is 33% and means nothing.
 MIN_SLATE_FOR_PUBLISH_WARNING = 8
+
+# A league with an odds source that suddenly prices far fewer games has a
+# broken source, and until now that only surfaced as a flat board -- the
+# existing check below fires at exactly zero, so a source degrading from 15/15
+# to 3/15 was invisible.
+#
+# Measured on the 2026-08-05 build, healthy pricing is effectively total on
+# games a book has had time to post: MLB 15/15, 15/15, 15/15, 14/15 across
+# 08-01..08-05. So a real degradation is far below this, and 60% will not fire
+# on one book dropping a single game.
+PRICED_SHARE_WARN_THRESHOLD = 60.0
+
+# Books post lines about a day out. The same build shows MLB 0/11 priced for
+# 08-06 and 0/15 for 08-07 while every earlier date is complete -- that is the
+# market not having opened yet, not a fault, and counting it would fire this
+# warning on every slate the board carries. So only games a price should
+# already exist for are counted. Generous on purpose: 36 hours is past the
+# observed horizon, so anything still unpriced inside it is a genuine miss.
+PRICE_EXPECTED_WITHIN_HOURS = 36
+
+# Same reason as MIN_SLATE_FOR_PUBLISH_WARNING: a share computed on three
+# games is noise.
+MIN_SLATE_FOR_PRICING_WARNING = 5
+
+
+def _price_should_exist(game: dict[str, Any], *, now: datetime | None = None) -> bool:
+    """True when a book has had time to post a line for this game.
+
+    A game already under way or finished certainly had one. A game far enough
+    in the future may legitimately have none, and treating that as a fault is
+    how the predictor-coverage check spent weeks crying wolf.
+    """
+    if game.get("isVoided"):
+        return False
+    if game.get("isFinal") or game.get("isLive"):
+        return True
+
+    reference = now or datetime.now(timezone.utc)
+    start = game.get("startDate") or game.get("scheduleDate")
+    if not start:
+        # No time to reason about. Counting it would let a feed that stops
+        # emitting start times quietly switch this check off.
+        return True
+    try:
+        parsed = datetime.fromisoformat(str(start).replace("Z", "+00:00"))
+    except ValueError:
+        return True
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed <= reference + timedelta(hours=PRICE_EXPECTED_WITHIN_HOURS)
 
 
 def coverage_from_game(game: dict[str, Any]) -> dict[str, bool]:
@@ -56,7 +107,9 @@ def coverage_from_game(game: dict[str, Any]) -> dict[str, bool]:
     }
 
 
-def summarize_coverage(games: list[dict[str, Any]]) -> dict[str, Any]:
+def summarize_coverage(
+    games: list[dict[str, Any]], *, now: datetime | None = None
+) -> dict[str, Any]:
     total = len(games)
     counts = {flag: 0 for flag in COVERAGE_FLAGS}
     # ESPN publishes the Matchup Predictor before a game and drops it the moment
@@ -66,6 +119,8 @@ def summarize_coverage(games: list[dict[str, Any]]) -> dict[str, Any]:
     # slate 0/15 with every game 'Final'.
     predictor_eligible = 0
     predictor_present = 0
+    priced_eligible = 0
+    priced_present = 0
     for game in games:
         flags = coverage_from_game(game)
         for flag, present in flags.items():
@@ -75,6 +130,10 @@ def summarize_coverage(games: list[dict[str, Any]]) -> dict[str, Any]:
             predictor_eligible += 1
             if flags.get("espnPredictor"):
                 predictor_present += 1
+        if _price_should_exist(game, now=now):
+            priced_eligible += 1
+            if flags.get("impliedOdds"):
+                priced_present += 1
 
     pct = {
         flag: round(counts[flag] / total * 100, 1) if total else 0.0
@@ -106,6 +165,14 @@ def summarize_coverage(games: list[dict[str, Any]]) -> dict[str, Any]:
             round(predictor_present / predictor_eligible * 100, 1)
             if predictor_eligible
             else None
+        ),
+        # Same treatment for prices: measured over games a book has had time
+        # to post, so a slate that is simply too far out never reads as a
+        # broken feed.
+        "pricedEligible": priced_eligible,
+        "pricedPresent": priced_present,
+        "pricedSharePct": (
+            round(priced_present / priced_eligible * 100, 1) if priced_eligible else None
         ),
     }
 
@@ -167,11 +234,42 @@ def coverage_warnings(
         # cannot destroy the schedule. Without this check the failure is
         # invisible: WNBA logged 115 picks with no price on any of them while
         # carrying a perfectly good sbr_odds_slug.
-        if _expects_odds(league) and not (summary.get("counts") or {}).get("impliedOdds"):
+        # Gated on eligibility for the same reason as the share check below: a
+        # slate three days out is legitimately unpriced everywhere, and this
+        # would call that a broken slug on every future date it was handed.
+        # Today it only ever sees the default date, so the fault never showed
+        # -- which is exactly how it would survive to bite later.
+        priced_eligible = summary.get("pricedEligible")
+        if priced_eligible is None:
+            priced_eligible = game_count
+        if (
+            _expects_odds(league)
+            and priced_eligible
+            and not (summary.get("counts") or {}).get("impliedOdds")
+        ):
             warnings.append(
                 f"{league}{date_note}: has an odds source configured but priced "
-                f"0/{game_count} games -- the slug or the team-name match is broken, "
-                f"not the market"
+                f"0/{priced_eligible} games a book should have posted by now -- the "
+                f"slug or the team-name match is broken, not the market"
+            )
+
+        # Partial degradation, which the zero-check above cannot see. A source
+        # that goes from pricing every game to pricing a third of them is
+        # broken in exactly the way that shows up as a thin board days later
+        # -- the point is to hear it from the build instead.
+        priced_eligible = summary.get("pricedEligible") or 0
+        priced_share = summary.get("pricedSharePct")
+        if (
+            _expects_odds(league)
+            and priced_eligible >= MIN_SLATE_FOR_PRICING_WARNING
+            and priced_share is not None
+            and 0 < priced_share < PRICED_SHARE_WARN_THRESHOLD
+        ):
+            warnings.append(
+                f"{league}{date_note}: priced only {summary.get('pricedPresent', 0)}"
+                f"/{priced_eligible} games a book should have posted by now "
+                f"({priced_share}%, below {PRICED_SHARE_WARN_THRESHOLD}%) -- a price "
+                f"source has degraded, the slate has not"
             )
 
         # A publish bar that swallows the slate is a broken bar, not a quiet day.
