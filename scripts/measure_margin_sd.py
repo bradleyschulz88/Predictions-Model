@@ -134,6 +134,22 @@ def main() -> int:
         print("  not enough completed games to measure")
         return 1
 
+    # Home win rate, which is the other thing a league with no graded games
+    # cannot supply. fit_from_observations shrinks a league's own home-field
+    # estimate by count/(count+50), so a league at zero games gets exactly 0.0
+    # and silently inherits an intercept fitted on the leagues that do have
+    # data -- almost all of it baseball, which has the weakest home edge of
+    # any of them.
+    home_wins = sum(1 for margin in margins if margin > 0)
+    decided = sum(1 for margin in margins if margin != 0)
+    if decided:
+        rate = home_wins / decided * 100
+        std_err = math.sqrt(0.25 / decided) * 100
+        # Intercept in logit space, which is the unit model_fit stores.
+        implied = math.log((rate / 100) / (1 - rate / 100))
+        print(f"  home win rate      n={decided:5}  {rate:5.1f}% +/-{std_err:.1f}"
+              f"   implied intercept {implied:+.4f}")
+
     print(f"  raw final margin   n={len(margins):5}  "
           f"mean {statistics.fmean(margins):+6.2f}  SD {statistics.stdev(margins):6.2f}")
     if len(residuals) >= 2:
