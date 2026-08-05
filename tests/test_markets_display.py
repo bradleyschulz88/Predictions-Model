@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import json
 import sys
+import tempfile
+import time
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -707,6 +710,140 @@ class PerMarketPriceGuardTests(unittest.TestCase):
         with patch.object(espn_odds, "fetch_event_odds", side_effect=AssertionError("must not fetch")):
             stats = espn_odds.fill_missing_side_market_prices([game], league="mlb")
         self.assertEqual(stats["considered"], 0)
+
+
+class SideMarketCachePersistenceTests(unittest.TestCase):
+    """The cache has to outlive the interpreter or its TTL means nothing.
+
+    espn_odds caches a game's side-market price for an hour, which on CI never
+    once applied: the build runs every thirty minutes in a fresh process, so
+    every game was re-fetched every build. That request volume -- roughly 720 a
+    day against the intended 24 -- is why the pass that prices MLB runlines was
+    switched off, leaving all 62 graded runlines unvaluable.
+    """
+
+    CORE = [
+        {"sportsbook": "ESPN BET", "viewType": "Total",
+         "currentLine": {"over": "o8.5 (-110)", "under": "u8.5 (-112)"}},
+    ]
+
+    def setUp(self) -> None:
+        import espn_odds
+
+        self.espn_odds = espn_odds
+        espn_odds.clear_side_market_cache()
+        self._dir = tempfile.TemporaryDirectory()
+        self.addCleanup(self._dir.cleanup)
+        self.path = Path(self._dir.name) / "nested" / "odds.json"
+        patcher = patch.dict(
+            espn_odds.os.environ, {espn_odds.SIDE_MARKET_CACHE_ENV: str(self.path)}
+        )
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def _seed(self, age_seconds: float) -> None:
+        """Put one entry in the in-process cache, aged by hand."""
+        self.espn_odds._SIDE_MARKET_CACHE["mlb:1"] = (
+            time.time() - age_seconds, list(self.CORE)
+        )
+
+    def test_a_saved_entry_comes_back_on_the_next_run(self) -> None:
+        self._seed(0)
+        self.assertEqual(self.espn_odds.save_side_market_cache(), 1)
+        self.espn_odds.clear_side_market_cache()
+        self.assertEqual(self.espn_odds.load_side_market_cache(), 1)
+        self.assertEqual(self.espn_odds._SIDE_MARKET_CACHE["mlb:1"][1], self.CORE)
+
+    def test_a_restored_entry_actually_prevents_the_fetch(self) -> None:
+        """The whole point: a second build must not re-request the same game."""
+        self._seed(0)
+        self.espn_odds.save_side_market_cache()
+        self.espn_odds.clear_side_market_cache()
+        self.espn_odds.load_side_market_cache()
+
+        game = {"eventId": "1", "lines": [
+            {"sportsbook": "SBR", "viewType": "MoneyLine",
+             "currentLine": {"home": "-150", "away": "+130"}},
+            {"sportsbook": "SBR", "viewType": "Total",
+             "currentLine": {"over": "8.5", "under": "8.5"}},
+        ]}
+        with patch.object(self.espn_odds, "fetch_event_odds",
+                          side_effect=AssertionError("must not fetch a cached game")):
+            stats = self.espn_odds.fill_missing_side_market_prices([game], league="mlb")
+        self.assertEqual(stats["cached"], 1)
+        self.assertEqual(stats["fetched"], 0)
+
+    def test_an_expired_entry_is_not_written_out(self) -> None:
+        self._seed(self.espn_odds.SIDE_MARKET_CACHE_TTL_SECONDS + 60)
+        self.assertEqual(self.espn_odds.save_side_market_cache(), 0)
+
+    def test_an_expired_entry_is_dropped_on_the_way_in(self) -> None:
+        """A stale file must not pin yesterday's price onto a live board."""
+        stale = time.time() - self.espn_odds.SIDE_MARKET_CACHE_TTL_SECONDS - 60
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text(json.dumps(
+            {"entries": {"mlb:1": {"fetchedAt": stale, "lines": self.CORE}}}
+        ), encoding="utf-8")
+        self.assertEqual(self.espn_odds.load_side_market_cache(), 0)
+        self.assertEqual(self.espn_odds._SIDE_MARKET_CACHE, {})
+
+    def test_a_missing_file_is_not_an_error(self) -> None:
+        """First build after a cache miss has nothing to restore, and proceeds."""
+        self.assertEqual(self.espn_odds.load_side_market_cache(), 0)
+
+    def test_a_corrupt_file_is_not_an_error(self) -> None:
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text("{not json", encoding="utf-8")
+        self.assertEqual(self.espn_odds.load_side_market_cache(), 0)
+
+    def test_a_malformed_entry_is_skipped_not_fatal(self) -> None:
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text(json.dumps({"entries": {
+            "mlb:1": {"lines": self.CORE},
+            "mlb:2": {"fetchedAt": "not a number", "lines": self.CORE},
+            "mlb:3": {"fetchedAt": time.time(), "lines": "not a list"},
+            "mlb:4": {"fetchedAt": time.time(), "lines": self.CORE},
+        }}), encoding="utf-8")
+        self.assertEqual(self.espn_odds.load_side_market_cache(), 1)
+        self.assertIn("mlb:4", self.espn_odds._SIDE_MARKET_CACHE)
+
+    def test_no_configured_path_disables_persistence_silently(self) -> None:
+        """Outside CI an in-process dict is fine; nothing should be written."""
+        self._seed(0)
+        with patch.dict(self.espn_odds.os.environ, {self.espn_odds.SIDE_MARKET_CACHE_ENV: ""}):
+            self.assertEqual(self.espn_odds.save_side_market_cache(), 0)
+            self.assertEqual(self.espn_odds.load_side_market_cache(), 0)
+
+
+class SideMarketPassEnabledTests(unittest.TestCase):
+    """The pass is on by default now, having been off on a wrong diagnosis.
+
+    It was blamed for taking all six schedule feeds down. The real cause was
+    HTTP 403 from site.api.espn.com, which rejects browser-claiming User-Agents
+    without a browser TLS fingerprint. This pass talks to
+    sports.core.api.espn.com, which answered 200 on every header profile
+    probed, and the timings never fit either -- the empty artifact predates
+    this pass reaching main by half a day.
+    """
+
+    def test_the_pass_targets_the_host_that_was_never_blocked(self) -> None:
+        import espn_odds
+
+        self.assertIn("sports.core.api.espn.com", espn_odds.ESPN_CORE_BASE)
+        self.assertNotIn("site.api.espn.com", espn_odds.ESPN_CORE_BASE)
+
+    def test_it_runs_without_the_opt_in_variable(self) -> None:
+        import mlb_data
+
+        source = Path(mlb_data.__file__).read_text(encoding="utf-8")
+        self.assertIn('os.environ.get("ESPN_SIDE_MARKET_ODDS", "1")', source)
+
+    def test_it_can_still_be_switched_off(self) -> None:
+        """An escape hatch has to exist, or the next outage has no quick lever."""
+        import mlb_data
+
+        source = Path(mlb_data.__file__).read_text(encoding="utf-8")
+        self.assertIn('not in {"0", "false", "no"}', source)
 
 
 if __name__ == "__main__":

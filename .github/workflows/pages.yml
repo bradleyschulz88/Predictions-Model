@@ -109,8 +109,24 @@ jobs:
       - name: Recheck queued candidate features
         run: python model_fit.py --ablate --write
 
+      # ESPN core side-market prices, carried between builds. The pass that
+      # prices MLB runlines fires one request per unpriced game and the build
+      # runs every thirty minutes; the hour-long TTL in espn_odds only bites if
+      # the cache outlives the interpreter, which on CI it otherwise does not.
+      # restore-keys means a miss falls back to the most recent build's file
+      # rather than starting cold, and the run_id in the key makes every build
+      # write a fresh entry instead of racing the same one.
+      - name: Restore side-market price cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/side-market-odds.json
+          key: side-market-odds-${{ github.run_id }}
+          restore-keys: |
+            side-market-odds-
+
       - name: Build dashboard JSON
         env:
+          ESPN_SIDE_MARKET_CACHE: .cache/side-market-odds.json
           # Optional. When the secret is absent this is empty, injury severity
           # falls back to its deterministic score, and the build is unaffected.
           # Add it at Settings > Secrets and variables > Actions.

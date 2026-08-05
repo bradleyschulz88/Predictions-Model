@@ -46,7 +46,9 @@ circular.
 from __future__ import annotations
 
 import json
+import os
 import time
+from pathlib import Path
 from typing import Any
 
 from espn_client import ESPN_USER_AGENT
@@ -385,6 +387,67 @@ def fill_missing_moneylines(
 # requests a day for lines that barely move.
 SIDE_MARKET_CACHE_TTL_SECONDS = 60 * 60
 _SIDE_MARKET_CACHE: dict[str, tuple[float, list[dict[str, Any]]]] = {}
+
+# Where that cache lives between builds. CI starts a fresh interpreter every
+# thirty minutes, so an in-process dict never survives to be hit -- the TTL
+# above was measuring a window the process never lived to see, and the pass was
+# left switched off partly for that reason. Pointed at a file the workflow
+# restores and saves, one fetch an hour per game becomes the real rate rather
+# than the intended one. Unset outside CI, where an in-process dict is fine.
+SIDE_MARKET_CACHE_ENV = "ESPN_SIDE_MARKET_CACHE"
+
+
+def _cache_path() -> Path | None:
+    raw = os.environ.get(SIDE_MARKET_CACHE_ENV, "").strip()
+    return Path(raw) if raw else None
+
+
+def load_side_market_cache() -> int:
+    """Seed the in-process cache from disk. Returns how many entries survived.
+
+    Anything past its TTL is dropped on the way in, so a stale file cannot
+    pin an old price onto a live board. A malformed or missing file is not an
+    error: the pass just fetches, which is what it would have done anyway.
+    """
+    path = _cache_path()
+    if path is None or not path.is_file():
+        return 0
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return 0
+    now = time.time()
+    kept = 0
+    for key, entry in (payload.get("entries") or {}).items():
+        try:
+            stamp = float(entry["fetchedAt"])
+            lines = entry["lines"]
+        except (KeyError, TypeError, ValueError):
+            continue
+        if not isinstance(lines, list) or now - stamp >= SIDE_MARKET_CACHE_TTL_SECONDS:
+            continue
+        _SIDE_MARKET_CACHE[key] = (stamp, lines)
+        kept += 1
+    return kept
+
+
+def save_side_market_cache() -> int:
+    """Write the cache back out. Returns how many entries were written."""
+    path = _cache_path()
+    if path is None:
+        return 0
+    now = time.time()
+    entries = {
+        key: {"fetchedAt": stamp, "lines": lines}
+        for key, (stamp, lines) in _SIDE_MARKET_CACHE.items()
+        if now - stamp < SIDE_MARKET_CACHE_TTL_SECONDS
+    }
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({"entries": entries}), encoding="utf-8")
+    except OSError:
+        return 0
+    return len(entries)
 
 
 def clear_side_market_cache() -> None:
