@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-05T23:08:59.155598+00:00",
+  "updatedAt": "2026-08-05T23:23:10.982577+00:00",
   "summary": {
     "last7Days": {
       "correct": 276,
@@ -16,8 +16,8 @@
       "pct": 61.2,
       "units": 16.317,
       "roiPct": 2.0,
-      "pending": 51,
-      "voided": 13
+      "pending": 50,
+      "voided": 14
     },
     "byLeague": {
       "mlb": {
@@ -27676,14 +27676,15 @@
       "openingSide": "home",
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-05"
+      "date": "2026-08-05",
+      "voidReason": "voided"
     },
     "401816412": {
       "eventId": "401816412",
