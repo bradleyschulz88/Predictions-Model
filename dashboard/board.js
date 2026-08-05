@@ -1370,10 +1370,27 @@ function cardsPanel(A, E) {
       `<div style="font-size:12.5px;color:var(--muted)">${sub}</div>`;
     return d;
   };
+  /* CLV is only measured on picks whose price was frozen when the game
+     started. Everything else is the latest quote seen, which is a different
+     number, and mixing them is how this read -0.52% over 96 picks while
+     measuring nothing. A card that says "still filling" is information; a
+     card that vanishes looks like a bug. */
   const clv = sum.closingLineValue;
-  if (clv && clv.picks) cards.appendChild(card("Closing line value", sgn(clv.avgPct, 2) + "%",
-    `${clv.picks} picks, beat the close ${pct(clv.beatCloseP)} of the time. Tracks long-run profit better than hit rate.`,
-    clv.avgPct > 0 ? "var(--good)" : "var(--bad)"));
+  if (clv && clv.picks) {
+    const beat = clv.beatCloseP;
+    const err = clv.beatCloseStdErrPct;
+    const verdict = clv.beatsCoinFlip
+      ? "clears a coin flip"
+      : "not yet distinguishable from a coin flip";
+    cards.appendChild(card("Closing line value", sgn(clv.avgPct, 2) + "%",
+      `${clv.picks} confirmed closes, beat the close ${pct(beat)}` +
+      (err != null ? ` ±${err}` : "") + ` of the time -- ${verdict}.`,
+      clv.avgPct > 0 ? "var(--good)" : "var(--bad)"));
+  } else if (clv && clv.provisionalPicks) {
+    cards.appendChild(card("Closing line value", "--",
+      `${clv.provisionalPicks} picks priced, none with a confirmed closing line yet. ` +
+      `A price only counts once it is frozen at first pitch.`));
+  }
   const wf = E?.fittedWalkForward;
   if (wf) cards.appendChild(card("Walk-forward, out of sample", wf.logLoss.toFixed(4),
     `${wf.folds} folds, n=${wf.n}. Every build fails if this regresses against the checked-in baseline.`));
