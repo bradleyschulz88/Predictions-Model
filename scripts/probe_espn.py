@@ -53,8 +53,17 @@ PROFILES: dict[str, dict[str, str]] = {
         "Referer": "https://www.espn.com/",
         "Origin": "https://www.espn.com",
     },
-    # urllib's own default, to see whether any UA at all is the trigger.
+    # The first probe showed Akamai rejects every UA that claims to be Mozilla
+    # while allowing urllib's honest default, so the rule is aimed at spoofed
+    # browsers rather than at scripts. These candidates check how far that
+    # tolerance extends, because the replacement UA has to be one that is
+    # tested rather than assumed.
     "urllib default UA": {},
+    "explicit Python-urllib": {"User-Agent": "Python-urllib/3.12"},
+    "honest project UA": {
+        "User-Agent": "EdgeBoard/1.0 (+https://github.com/bradleyschulz88/Predictions-Model)"
+    },
+    "honest project UA, bare": {"User-Agent": "EdgeBoard/1.0"},
 }
 
 
