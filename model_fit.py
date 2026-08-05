@@ -872,16 +872,18 @@ def walk_forward_scores(
                 # model's. Scoring them on identical games out of sample is the
                 # only fair comparison; the published record pools every model
                 # version this log has carried and describes history instead.
-                predictions.append((prob, sample.label, sample.values.get("marketLogit")))
+                predictions.append(
+                    (prob, sample.label, sample.values.get("marketLogit"), sample.league)
+                )
 
     if not predictions:
         return {"folds": 0}
 
     log_loss = -sum(
-        math.log(max(1e-9, prob if label else 1.0 - prob)) for prob, label, _ in predictions
+        math.log(max(1e-9, prob if label else 1.0 - prob)) for prob, label, _, _ in predictions
     ) / len(predictions)
-    brier = sum((prob - label) ** 2 for prob, label, _ in predictions) / len(predictions)
-    hits = sum(1 for prob, label, _ in predictions if (prob >= 0.5) == bool(label))
+    brier = sum((prob - label) ** 2 for prob, label, _, _ in predictions) / len(predictions)
+    hits = sum(1 for prob, label, _, _ in predictions if (prob >= 0.5) == bool(label))
 
     scores = {
         "folds": folds,
@@ -898,7 +900,7 @@ def walk_forward_scores(
     # long as its own bad history dominates the record.
     priced = [
         (prob, label, market)
-        for prob, label, market in predictions
+        for prob, label, market, _ in predictions
         if market not in (None, 0.0)
     ]
     if priced:
@@ -915,6 +917,32 @@ def walk_forward_scores(
             "marketLogLoss": round(market_loss, 4),
             "edge": round(market_loss - model_loss, 4),
         }
+
+    # Home bias for the model that is running now. The published figure is
+    # computed on whatever version made each pick, and it read MLB at +6.4pts
+    # -- a large, specific-looking fault that the live model does not have
+    # (+0.4pts). Reported with its binomial standard error, because on a
+    # league with 95 graded games a 4pt gap is one standard error and means
+    # nothing on its own.
+    home_bias: dict[str, Any] = {}
+    leagues = sorted({league for _, _, _, league in predictions})
+    for league in leagues:
+        pool = [(prob, label) for prob, label, _, lg in predictions if lg == league]
+        if not pool:
+            continue
+        picked_home = sum(1 for prob, _ in pool if prob > 0.5) / len(pool) * 100
+        actual_home = sum(label for _, label in pool) / len(pool) * 100
+        std_err = math.sqrt(0.25 / len(pool)) * 100
+        home_bias[league] = {
+            "n": len(pool),
+            "pickHomePct": round(picked_home, 1),
+            "actualHomeWinPct": round(actual_home, 1),
+            "biasPct": round(picked_home - actual_home, 1),
+            "stdErrPct": round(std_err, 1),
+            "significant": abs(picked_home - actual_home) > 1.96 * std_err,
+        }
+    if home_bias:
+        scores["homeBias"] = home_bias
     return scores
 
 
