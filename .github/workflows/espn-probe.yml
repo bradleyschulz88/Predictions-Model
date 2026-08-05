@@ -63,3 +63,13 @@ jobs:
         run: |
           python scripts/diagnose_predictor.py mlb "$(date -u +%Y-%m-%d)"
           python scripts/diagnose_predictor.py mlb "$(date -u -d yesterday +%Y-%m-%d)"
+
+      # Re-enabling the side-market pass fixed totals (85/86 priced) and did
+      # nothing for MLB runlines (0/62), while WNBA and AFL spreads price
+      # fine. Those MLB events were fetched successfully, so ESPN core returns
+      # something for the spread that the merge does not use. WNBA runs
+      # alongside as the working control.
+      - name: Diagnose side-market odds
+        run: |
+          python scripts/diagnose_side_markets.py mlb "$(date -u +%Y-%m-%d)"
+          python scripts/diagnose_side_markets.py wnba "$(date -u +%Y-%m-%d)"
