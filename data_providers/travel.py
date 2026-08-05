@@ -1,4 +1,4 @@
-"""Travel and body-clock context for MLB.
+"""Travel and body-clock context for MLB, NBA, NFL and the WNBA.
 
 What this measures
 ------------------
@@ -67,6 +67,97 @@ TEAM_HOME: dict[str, dict[str, Any]] = {
     # Temporary homes, matching where these clubs actually play.
     "Athletics": {"lat": 38.58, "lon": -121.51, "utc": -8, "dst": True},  # Sacramento
     "Tampa Bay Rays": {"lat": 27.98, "lon": -82.51, "utc": -5, "dst": True},  # Tampa
+
+    # NBA. Basketball is the sport this feature should matter most in: 82 games
+    # with back-to-backs across three or four time zones, against baseball's
+    # series format that parks a club in one city for three days.
+    "Atlanta Hawks": {"lat": 33.76, "lon": -84.40, "utc": -5, "dst": True},
+    "Boston Celtics": {"lat": 42.37, "lon": -71.06, "utc": -5, "dst": True},
+    "Brooklyn Nets": {"lat": 40.68, "lon": -73.98, "utc": -5, "dst": True},
+    "Charlotte Hornets": {"lat": 35.23, "lon": -80.84, "utc": -5, "dst": True},
+    "Chicago Bulls": {"lat": 41.88, "lon": -87.67, "utc": -6, "dst": True},
+    "Cleveland Cavaliers": {"lat": 41.50, "lon": -81.69, "utc": -5, "dst": True},
+    "Dallas Mavericks": {"lat": 32.79, "lon": -96.81, "utc": -6, "dst": True},
+    "Denver Nuggets": {"lat": 39.75, "lon": -105.01, "utc": -7, "dst": True},
+    "Detroit Pistons": {"lat": 42.34, "lon": -83.05, "utc": -5, "dst": True},
+    "Golden State Warriors": {"lat": 37.77, "lon": -122.39, "utc": -8, "dst": True},
+    "Houston Rockets": {"lat": 29.75, "lon": -95.36, "utc": -6, "dst": True},
+    "Indiana Pacers": {"lat": 39.76, "lon": -86.16, "utc": -5, "dst": True},
+    "LA Clippers": {"lat": 33.94, "lon": -118.34, "utc": -8, "dst": True},
+    "Los Angeles Lakers": {"lat": 34.04, "lon": -118.27, "utc": -8, "dst": True},
+    "Memphis Grizzlies": {"lat": 35.14, "lon": -90.05, "utc": -6, "dst": True},
+    "Miami Heat": {"lat": 25.78, "lon": -80.19, "utc": -5, "dst": True},
+    "Milwaukee Bucks": {"lat": 43.04, "lon": -87.92, "utc": -6, "dst": True},
+    "Minnesota Timberwolves": {"lat": 44.98, "lon": -93.28, "utc": -6, "dst": True},
+    "New Orleans Pelicans": {"lat": 29.95, "lon": -90.08, "utc": -6, "dst": True},
+    "New York Knicks": {"lat": 40.75, "lon": -73.99, "utc": -5, "dst": True},
+    "Oklahoma City Thunder": {"lat": 35.46, "lon": -97.52, "utc": -6, "dst": True},
+    "Orlando Magic": {"lat": 28.54, "lon": -81.38, "utc": -5, "dst": True},
+    "Philadelphia 76ers": {"lat": 39.90, "lon": -75.17, "utc": -5, "dst": True},
+    "Phoenix Suns": {"lat": 33.45, "lon": -112.07, "utc": -7, "dst": False},
+    "Portland Trail Blazers": {"lat": 45.53, "lon": -122.67, "utc": -8, "dst": True},
+    "Sacramento Kings": {"lat": 38.58, "lon": -121.50, "utc": -8, "dst": True},
+    "San Antonio Spurs": {"lat": 29.43, "lon": -98.44, "utc": -6, "dst": True},
+    "Toronto Raptors": {"lat": 43.64, "lon": -79.38, "utc": -5, "dst": True},
+    "Utah Jazz": {"lat": 40.77, "lon": -111.90, "utc": -7, "dst": True},
+    "Washington Wizards": {"lat": 38.90, "lon": -77.02, "utc": -5, "dst": True},
+
+    # NFL. One game a week, so the rest half of this matters far less, but the
+    # body-clock half matters more: a 1pm Eastern kickoff is 10am to a west
+    # coast side, and that is the one travel effect with the best support.
+    "Arizona Cardinals": {"lat": 33.53, "lon": -112.26, "utc": -7, "dst": False},
+    "Atlanta Falcons": {"lat": 33.76, "lon": -84.40, "utc": -5, "dst": True},
+    "Baltimore Ravens": {"lat": 39.28, "lon": -76.62, "utc": -5, "dst": True},
+    "Buffalo Bills": {"lat": 42.77, "lon": -78.79, "utc": -5, "dst": True},
+    "Carolina Panthers": {"lat": 35.23, "lon": -80.85, "utc": -5, "dst": True},
+    "Chicago Bears": {"lat": 41.86, "lon": -87.62, "utc": -6, "dst": True},
+    "Cincinnati Bengals": {"lat": 39.10, "lon": -84.52, "utc": -5, "dst": True},
+    "Cleveland Browns": {"lat": 41.51, "lon": -81.70, "utc": -5, "dst": True},
+    "Dallas Cowboys": {"lat": 32.75, "lon": -97.09, "utc": -6, "dst": True},
+    "Denver Broncos": {"lat": 39.74, "lon": -105.02, "utc": -7, "dst": True},
+    "Detroit Lions": {"lat": 42.34, "lon": -83.05, "utc": -5, "dst": True},
+    "Green Bay Packers": {"lat": 44.50, "lon": -88.06, "utc": -6, "dst": True},
+    "Houston Texans": {"lat": 29.68, "lon": -95.41, "utc": -6, "dst": True},
+    "Indianapolis Colts": {"lat": 39.76, "lon": -86.16, "utc": -5, "dst": True},
+    "Jacksonville Jaguars": {"lat": 30.32, "lon": -81.64, "utc": -5, "dst": True},
+    "Kansas City Chiefs": {"lat": 39.05, "lon": -94.48, "utc": -6, "dst": True},
+    "Las Vegas Raiders": {"lat": 36.09, "lon": -115.18, "utc": -8, "dst": True},
+    # Both LA clubs share SoFi Stadium, so they share a row's worth of numbers.
+    "Los Angeles Chargers": {"lat": 33.95, "lon": -118.34, "utc": -8, "dst": True},
+    "Los Angeles Rams": {"lat": 33.95, "lon": -118.34, "utc": -8, "dst": True},
+    "Miami Dolphins": {"lat": 25.96, "lon": -80.24, "utc": -5, "dst": True},
+    "Minnesota Vikings": {"lat": 44.97, "lon": -93.26, "utc": -6, "dst": True},
+    "New England Patriots": {"lat": 42.09, "lon": -71.26, "utc": -5, "dst": True},
+    "New Orleans Saints": {"lat": 29.95, "lon": -90.08, "utc": -6, "dst": True},
+    # Both New York clubs play in New Jersey, at the same ground.
+    "New York Giants": {"lat": 40.81, "lon": -74.07, "utc": -5, "dst": True},
+    "New York Jets": {"lat": 40.81, "lon": -74.07, "utc": -5, "dst": True},
+    "Philadelphia Eagles": {"lat": 39.90, "lon": -75.17, "utc": -5, "dst": True},
+    "Pittsburgh Steelers": {"lat": 40.45, "lon": -80.02, "utc": -5, "dst": True},
+    "San Francisco 49ers": {"lat": 37.40, "lon": -121.97, "utc": -8, "dst": True},
+    "Seattle Seahawks": {"lat": 47.60, "lon": -122.33, "utc": -8, "dst": True},
+    "Tampa Bay Buccaneers": {"lat": 27.98, "lon": -82.50, "utc": -5, "dst": True},
+    "Tennessee Titans": {"lat": 36.17, "lon": -86.77, "utc": -6, "dst": True},
+    "Washington Commanders": {"lat": 38.91, "lon": -76.86, "utc": -5, "dst": True},
+
+    # WNBA, including the three clubs added for 2026. The All-Star sides that
+    # appear in the feed as TEAM COOP and TEAM SPOON are deliberately absent:
+    # they have no home, and travel_context returning None for them is correct.
+    "Atlanta Dream": {"lat": 33.65, "lon": -84.45, "utc": -5, "dst": True},
+    "Chicago Sky": {"lat": 41.85, "lon": -87.62, "utc": -6, "dst": True},
+    "Connecticut Sun": {"lat": 41.49, "lon": -72.09, "utc": -5, "dst": True},
+    "Dallas Wings": {"lat": 32.73, "lon": -97.11, "utc": -6, "dst": True},
+    "Golden State Valkyries": {"lat": 37.77, "lon": -122.39, "utc": -8, "dst": True},
+    "Indiana Fever": {"lat": 39.76, "lon": -86.16, "utc": -5, "dst": True},
+    "Las Vegas Aces": {"lat": 36.09, "lon": -115.18, "utc": -8, "dst": True},
+    "Los Angeles Sparks": {"lat": 34.04, "lon": -118.27, "utc": -8, "dst": True},
+    "Minnesota Lynx": {"lat": 44.98, "lon": -93.28, "utc": -6, "dst": True},
+    "New York Liberty": {"lat": 40.68, "lon": -73.98, "utc": -5, "dst": True},
+    "Phoenix Mercury": {"lat": 33.45, "lon": -112.07, "utc": -7, "dst": False},
+    "Portland Fire": {"lat": 45.53, "lon": -122.67, "utc": -8, "dst": True},
+    "Seattle Storm": {"lat": 47.62, "lon": -122.35, "utc": -8, "dst": True},
+    "Toronto Tempo": {"lat": 43.63, "lon": -79.41, "utc": -5, "dst": True},
+    "Washington Mystics": {"lat": 38.90, "lon": -77.00, "utc": -5, "dst": True},
 }
 
 # Arizona does not observe daylight saving, so its offset to the eastern clubs

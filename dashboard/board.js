@@ -1015,7 +1015,16 @@ function whyPanel(play) {
 
      This tracks which tables exist today, not a fact about the sports. Fill in
      TEAM_HOME for the other leagues and travel stops being baseball-only. */
-  const isBaseball = String(play.league || "").toLowerCase() === "mlb";
+  /* A tile carries `leagues` when its underlying table only covers some of
+     them, and is hidden where it could never resolve. This was a boolean
+     `baseballOnly` until the travel table grew to cover basketball and
+     football -- at which point a single flag could no longer say the truth,
+     because travel resolves for four leagues and the park factors for one.
+     Leaving it a boolean would have put an empty "Travel burden" tile back on
+     AFL and EPL cards, which is the exact false alarm the flag exists to
+     prevent. Absent means the feature is available everywhere. */
+  const league = String(play.league || "").toLowerCase();
+  const covers = (i) => !i.leagues || i.leagues.includes(league);
   const items = [
     {
       kk: "Team rating gap",
@@ -1026,7 +1035,7 @@ function whyPanel(play) {
     },
     {
       kk: "Ballpark scoring",
-      baseballOnly: true,
+      leagues: ["mlb"],
       kv: n(f.parkEdge) == null ? null : `${sgn(n(f.parkEdge), 0)}%`,
       /* The only tile here that is not about either team. Worth saying so --
          a reader reasonably assumes every number in this grid picks a side. */
@@ -1038,7 +1047,7 @@ function whyPanel(play) {
     },
     {
       kk: "Bullpen freshness",
-      baseballOnly: true,
+      leagues: ["mlb"],
       kv: n(f.bullpenDiff) == null ? null : `${sgn(n(f.bullpenDiff), 1)} inn`,
       hint: n(f.bullpenDiff) == null ? null
         : n(f.bullpenDiff) === 0 ? "Both relief corps equally worked."
@@ -1061,8 +1070,11 @@ function whyPanel(play) {
         : `Share of this season's meetings ${HOME} has won.`,
     },
     {
+      // Not baseball-only any more: TEAM_HOME covers MLB, NBA, NFL and the
+      // WNBA, so this resolves for all four. A league still outside the table
+      // renders it empty like any other missing feature.
       kk: "Travel burden",
-      baseballOnly: true,
+      leagues: ["mlb", "nba", "nfl", "wnba"],
       kv: n(f.travelDiff) == null ? null : sgn(n(f.travelDiff), 2),
       hint: n(f.travelDiff) == null ? null
         : n(f.travelDiff) === 0 ? "No meaningful trip for the visitors."
@@ -1070,7 +1082,7 @@ function whyPanel(play) {
     },
     {
       kk: "Left-handed starter",
-      baseballOnly: true,
+      leagues: ["mlb"],
       kv: n(f.handednessDiff) == null ? null
         : n(f.handednessDiff) === 0 ? "neither" : favours(n(f.handednessDiff)),
       /* 0 here genuinely means "both or neither", not missing data, and the
@@ -1097,8 +1109,8 @@ function whyPanel(play) {
   /* Dropped rather than greyed out: an empty tile still reads as a gap in the
      data. The note below says what is missing and why, once, instead of four
      times per card. */
-  const hidden = items.filter((i) => i.baseballOnly && !isBaseball);
-  const shown = items.filter((i) => !(i.baseballOnly && !isBaseball));
+  const hidden = items.filter((i) => !covers(i));
+  const shown = items.filter(covers);
   const ctx = el("div", "ctx");
   shown.forEach((i) => {
     const k = el("div", "k" + (i.kv == null ? " off" : ""));
@@ -1112,9 +1124,12 @@ function whyPanel(play) {
   });
   right.appendChild(ctx);
   if (hidden.length) {
+    /* Names the sport rather than saying "baseball only", which stopped being
+       true once travel covered four leagues and the park factors one. */
     right.appendChild(el("div", "", `<div class="khint" style="margin-top:7px">` +
       `${hidden.map((i) => esc(i.kk.toLowerCase())).join(", ")} ` +
-      `${hidden.length === 1 ? "is" : "are"} tracked for baseball only, so ` +
+      `${hidden.length === 1 ? "is" : "are"} not tracked for ` +
+      `${esc(league.toUpperCase() || "this sport")}, so ` +
       `${hidden.length === 1 ? "it is" : "they are"} not shown here.</div>`));
   }
 
