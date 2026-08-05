@@ -103,6 +103,10 @@ class CoverageMetricsTests(unittest.TestCase):
                     "gameCount": 10,
                     "pct": {"espnPredictor": 5.0},
                     "counts": {"espnPredictor": 0, "impliedOdds": 10},
+                    # All ten still to be played, so all ten are eligible.
+                    "predictorEligible": 10,
+                    "predictorPresent": 0,
+                    "predictorPct": 0.0,
                 }
             }
         )

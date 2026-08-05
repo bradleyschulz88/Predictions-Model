@@ -59,11 +59,22 @@ def coverage_from_game(game: dict[str, Any]) -> dict[str, bool]:
 def summarize_coverage(games: list[dict[str, Any]]) -> dict[str, Any]:
     total = len(games)
     counts = {flag: 0 for flag in COVERAGE_FLAGS}
+    # ESPN publishes the Matchup Predictor before a game and drops it the moment
+    # the game is final, so a finished slate cannot carry one and counting it
+    # against the whole slate measures the clock, not the feed. Verified live:
+    # the 2026-08-05 slate returned predictor coverage 100%, the 2026-08-04
+    # slate 0/15 with every game 'Final'.
+    predictor_eligible = 0
+    predictor_present = 0
     for game in games:
         flags = coverage_from_game(game)
         for flag, present in flags.items():
             if present:
                 counts[flag] += 1
+        if _can_carry_predictor(game):
+            predictor_eligible += 1
+            if flags.get("espnPredictor"):
+                predictor_present += 1
 
     pct = {
         flag: round(counts[flag] / total * 100, 1) if total else 0.0
@@ -85,6 +96,17 @@ def summarize_coverage(games: list[dict[str, Any]]) -> dict[str, Any]:
         "counts": counts,
         "pct": pct,
         "published": published,
+        # Reported separately from counts/pct so the dashboard's coverage
+        # display keeps meaning "of this slate" while the warning can ask the
+        # answerable question: of the games that could have a predictor, how
+        # many did.
+        "predictorEligible": predictor_eligible,
+        "predictorPresent": predictor_present,
+        "predictorPct": (
+            round(predictor_present / predictor_eligible * 100, 1)
+            if predictor_eligible
+            else None
+        ),
     }
 
 
@@ -95,6 +117,18 @@ def summarize_league_payloads(payloads: list[dict[str, Any]]) -> dict[str, Any]:
         games = payload.get("games") or []
         by_league[league] = summarize_coverage(games)
     return by_league
+
+
+def _can_carry_predictor(game: dict[str, Any]) -> bool:
+    """True while ESPN would still publish a Matchup Predictor for this game.
+
+    The field is pregame-only: it is present on a scheduled game and gone once
+    the game is final. Voided games (postponed, cancelled) never get one either.
+    """
+    if game.get("isFinal") or game.get("isVoided"):
+        return False
+    status = (game.get("statusType") or "").upper()
+    return status not in {"STATUS_FINAL", "STATUS_POSTPONED", "STATUS_CANCELED", "STATUS_CANCELLED"}
 
 
 def coverage_warnings(
@@ -114,11 +148,17 @@ def coverage_warnings(
         # US major leagues and not for Australian football or soccer, so AFL
         # logged a 0% coverage warning on every build -- permanent noise, which
         # is worse than silence because it trains you to skip the annotations.
-        predictor_pct = (summary.get("pct") or {}).get("espnPredictor", 0.0)
-        if _expects_predictor(league) and predictor_pct < threshold:
+        # Measured over games that could carry a predictor at all. A finished
+        # slate has none by construction, and warning about that is the same
+        # permanent noise as the AFL case above -- it fired on every overnight
+        # build and meant nothing.
+        eligible = summary.get("predictorEligible") or 0
+        predictor_pct = summary.get("predictorPct")
+        if _expects_predictor(league) and eligible and predictor_pct < threshold:
             warnings.append(
                 f"{league}{date_note}: ESPN predictor coverage {predictor_pct}% "
-                f"({summary['counts']['espnPredictor']}/{game_count}) below {threshold}%"
+                f"({summary.get('predictorPresent', 0)}/{eligible} games still to be "
+                f"played) below {threshold}%"
             )
 
         # A league configured with an odds source that lands zero prices is
