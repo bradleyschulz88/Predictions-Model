@@ -26,6 +26,14 @@ jobs:
       - name: Probe ESPN
         run: python scripts/probe_espn.py
 
+      # A "Measure league home advantage" step lived here. It has served its
+      # purpose: the four leagues were measured on 2026-08-05 and the gaps
+      # between them are inside one standard error, so no league intercept
+      # needs changing. The table and the reasoning are in the docstring of
+      # scripts/measure_margin_sd.py; the script is still there to be run by
+      # hand after a season ends. Re-running it every build would spend ~500
+      # requests re-deriving a number that is already written down.
+
       # Two dates on purpose: ESPN drops the Matchup Predictor once a game
       # is final, so an all-finished slate legitimately reports zero and a
       # slate still to be played should not.

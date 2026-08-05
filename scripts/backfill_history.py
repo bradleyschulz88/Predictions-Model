@@ -66,6 +66,22 @@ HISTORY_FILE = "history_features.json"
 
 # A club needs some games behind it before its record means anything. Below
 # this the features are noise and the row is skipped rather than fitted on.
+#
+# This is a game count, not a calendar one, so what it costs depends entirely
+# on how often a league plays. Measured on the 2025-26 backfills:
+#
+#   nba   2025-10-21 requested, first usable row 2025-11-09 -- under 3 weeks
+#         of warm-up, 1076 rows kept.
+#   nfl   2025-09-04 requested, first usable row 2025-11-16 -- eleven weeks,
+#         because a club plays once a week. 122 rows kept out of a season of
+#         roughly 280 completed games.
+#
+# So a weekly sport forfeits well over half of every season to this threshold,
+# while a daily one forfeits almost nothing. Left at 10 deliberately: NFL is
+# 122 of 3407 rows either way, and the screening set exists to rank candidate
+# features, which MLB's 2209 rows already dominate. Revisit it if NFL ever
+# needs to carry a conclusion on its own -- at which point the fix is to scale
+# the threshold to the league's season length rather than lower it globally.
 MIN_GAMES_BEFORE_USABLE = 10
 
 FORM_WINDOW = 5

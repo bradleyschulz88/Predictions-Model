@@ -38,7 +38,7 @@ HARNESS = """
 const teamShort = (t) => t;
 const sgn = (v, d) => (v > 0 ? "+" : v < 0 ? "\\u2212" : "") + Math.abs(v).toFixed(d);
 const f = {features};
-const play = {{ homeTeam: "HOMESIDE", awayTeam: "AWAYSIDE" }};
+const play = {{ homeTeam: "HOMESIDE", awayTeam: "AWAYSIDE", league: "{league}" }};
 {block}
 console.log(JSON.stringify(items));
 """
@@ -48,16 +48,30 @@ def _node() -> str | None:
     return shutil.which("node")
 
 
-def _tiles(**features) -> dict[str, dict]:
+def _tiles(league: str = "mlb", **features) -> dict[str, dict]:
     """Run the real tile block under node and return it keyed by label."""
     source = BOARD_JS.read_text(encoding="utf-8")
     match = BLOCK.search(source)
     assert match, "could not find the context tile block in board.js"
-    script = HARNESS.format(features=json.dumps(features), block=match.group(0))
+    script = HARNESS.format(
+        features=json.dumps(features), block=match.group(0), league=league
+    )
     out = subprocess.run(
         [_node(), "-e", script], capture_output=True, text=True, timeout=30, check=True
     )
     return {item["kk"]: item for item in json.loads(out.stdout)}
+
+
+def _shown(league: str, **features) -> list[str]:
+    """Labels a card for this league would actually render.
+
+    Mirrors production's own comparison, which lowercases. An earlier version
+    compared the raw string and reported "MLB" as not-baseball -- a failure in
+    the test, not the code.
+    """
+    tiles = _tiles(league, **features)
+    is_baseball = league.lower() == "mlb"
+    return [k for k, v in tiles.items() if not (v.get("baseballOnly") and not is_baseball)]
 
 
 @unittest.skipUnless(_node(), "node is required to execute the board's tile logic")
@@ -143,6 +157,49 @@ class ContextPanelTests(unittest.TestCase):
         for label, tile in tiles.items():
             self.assertIsNotNone(tile["kv"], label)
             self.assertTrue(tile.get("hint"), f"{label} has a value but no explanation")
+
+
+@unittest.skipUnless(_node(), "node is required to execute the board's tile logic")
+class LeagueApplicabilityTests(unittest.TestCase):
+    """A tile that can never resolve for a sport must not read as missing data.
+
+    PARK_FACTORS and TEAM_HOME hold 30 MLB clubs each, bullpen workload comes
+    from the MLB pitching pipeline, and handedness is gated on the league
+    outright. On an NBA card all four render "no data", which says a feed is
+    broken when nothing is -- half a card of false alarms on every game, once
+    those seasons start.
+    """
+
+    BASEBALL_ONLY = {
+        "Ballpark scoring", "Bullpen freshness", "Travel burden", "Left-handed starter",
+    }
+
+    def test_baseball_keeps_every_tile(self) -> None:
+        shown = _shown("mlb", eloEdge=-35, parkEdge=15, bullpenDiff=0.8,
+                       travelDiff=3.2, handednessDiff=0)
+        self.assertEqual(len(shown), 8)
+        for label in self.BASEBALL_ONLY:
+            self.assertIn(label, shown)
+
+    def test_basketball_drops_the_baseball_only_tiles(self) -> None:
+        shown = _shown("nba", eloEdge=-35, homeInjuryLoad=3.0, awayInjuryLoad=1.5)
+        for label in self.BASEBALL_ONLY:
+            self.assertNotIn(label, shown, f"{label} cannot resolve for nba")
+
+    def test_the_cross_sport_tiles_survive(self) -> None:
+        """Dropping the inapplicable ones must not take the real ones with it."""
+        for league in ("nba", "nfl", "wnba", "epl", "afl"):
+            shown = _shown(league, eloEdge=-35, h2hDiff=0.33,
+                           homeInjuryLoad=3.0, awayInjuryLoad=1.5, homeRest=1, awayRest=0)
+            self.assertEqual(len(shown), 4, league)
+            self.assertIn("Team rating gap", shown, league)
+            self.assertIn("Injuries out", shown, league)
+
+    def test_an_unknown_league_is_treated_as_not_baseball(self) -> None:
+        self.assertNotIn("Travel burden", _shown("", eloEdge=-35))
+
+    def test_the_flag_is_not_case_sensitive(self) -> None:
+        self.assertIn("Travel burden", _shown("MLB", travelDiff=3.2))
 
 
 class JargonRemovedTests(unittest.TestCase):
