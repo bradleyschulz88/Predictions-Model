@@ -6,7 +6,7 @@ import json
 import time
 from typing import Any
 
-from espn_client import build_summary_url
+from espn_client import ESPN_USER_AGENT, build_summary_url
 from mlb_cache import ENRICHMENT_CACHE
 from sbr_client import SBRClientError, get_text
 from sports_config import LeagueConfig, get_league
@@ -29,7 +29,13 @@ def fetch_event_summary(
     verify_ssl: bool = True,
 ) -> dict[str, Any]:
     url = build_summary_url(league, event_id)
-    text = get_text(url, retries=retries, retry_delay=retry_delay, verify_ssl=verify_ssl)
+    text = get_text(
+        url,
+        retries=retries,
+        retry_delay=retry_delay,
+        verify_ssl=verify_ssl,
+        user_agent=ESPN_USER_AGENT,
+    )
     try:
         data = json.loads(text)
     except json.JSONDecodeError as exc:
