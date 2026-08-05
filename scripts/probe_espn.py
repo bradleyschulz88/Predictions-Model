@@ -11,7 +11,13 @@ a runner is the only place the real answer lives. Each header profile is tried
 against each host, then repeated so a probabilistic rule cannot masquerade as a
 clean pass.
 
-Run via the `ESPN reachability probe` workflow.
+Two audiences, in that order. The table is for a human choosing a replacement
+User-Agent. The exit code is for the scheduler: this returns non-zero when the
+UA the build actually sends stops getting through, which is the alarm that did
+not exist on 2026-08-04 -- the build kept succeeding and publishing empty
+slates for half a day, because nothing about an empty slate is an error.
+
+Run via the `ESPN reachability check` workflow.
 """
 
 from __future__ import annotations
@@ -19,8 +25,13 @@ from __future__ import annotations
 import datetime
 import json
 import ssl
+import sys
 import urllib.error
 import urllib.request
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
 
 # Today in US Eastern, which is the day ESPN's scoreboard keys on. A fixed
 # date would quietly start probing an empty slate and read as a change in
@@ -155,7 +166,34 @@ def probe_predictor_coverage() -> None:
     print()
 
 
-def main() -> None:
+def check_shipping_user_agent(url: str) -> bool:
+    """Does the User-Agent the build actually sends still get through?
+
+    The report above is for a human choosing a fix. This is the part a machine
+    can act on, and it is why the workflow is worth keeping on a schedule
+    rather than deleting now the 2026-08-04 cause is known: bot rules change
+    without notice, and the last time one did, the build kept succeeding and
+    publishing empty slates for half a day. Nothing failed, so nothing said
+    anything. A red run here is the warning that did not exist.
+
+    Repeated, because a probabilistic rule that lets one request through would
+    otherwise read as healthy.
+    """
+    from espn_client import ESPN_USER_AGENT
+
+    outcomes = [probe(url, {"User-Agent": ESPN_USER_AGENT}) for _ in range(REPEATS)]
+    ok = sum(1 for outcome in outcomes if outcome.startswith("200"))
+    print()
+    print(f"Shipping User-Agent ({ESPN_USER_AGENT}): {ok}/{REPEATS} ok")
+    if ok == REPEATS:
+        return True
+    for outcome in outcomes:
+        if not outcome.startswith("200"):
+            print(f"  {outcome}")
+    return False
+
+
+def main() -> int:
     print(f"Runner egress IP: {egress_ip()}")
     print()
     probe_predictor_coverage()
@@ -178,6 +216,14 @@ def main() -> None:
         codes = sorted({outcome.split(" |")[0] for outcome in outcomes})
         print(f"    {profile_label:<32} {ok}/{REPEATS} ok  ({', '.join(codes)})")
 
+    if check_shipping_user_agent(blocked_url):
+        return 0
+    print()
+    print("::error::ESPN is rejecting the User-Agent the build sends. The board "
+          "will publish empty slates without failing. See the table above for a "
+          "profile that still works and update ESPN_USER_AGENT in espn_client.py.")
+    return 1
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
