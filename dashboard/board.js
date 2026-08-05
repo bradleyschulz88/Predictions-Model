@@ -988,23 +988,107 @@ function whyPanel(play) {
   const right = el("div");
   right.innerHTML = `<div class="subh"><h4>Context</h4><span class="note">known, not yet trusted as its own input</span></div>`;
   const f = play.features || {};
-  const n = (v) => { const x = Number(v); return Number.isFinite(x) ? x : null; };
+  /* Number(null) is 0 and Number("") is 0, so a feature the model logged as
+     absent was arriving here as a real zero -- "no rating gap", "no travel",
+     "no injuries" -- rather than as missing. Python writes None, JSON carries
+     null, and every one of those became a confident 0 on the card. */
+  const n = (v) => {
+    if (v === null || v === undefined || v === "") return null;
+    const x = Number(v);
+    return Number.isFinite(x) ? x : null;
+  };
+  /* Every one of these was a bare signed number against a jargon label, which
+     is unreadable unless you already know the sign convention AND the sport.
+     "Head to head -1.00" tells you nothing; "Boston has won every meeting"
+     tells you the same thing. So each tile now carries a unit and a sentence
+     naming the side it favours, rather than expecting the reader to decode a
+     minus sign. */
+  const HOME = teamShort(play.homeTeam) || "the home side";
+  const AWAY = teamShort(play.awayTeam) || "the visitors";
+  const favours = (v) => (v > 0 ? HOME : AWAY);
   const items = [
-    { kk: "Elo gap", kv: n(f.eloEdge) == null ? null : sgn(n(f.eloEdge), 0) },
-    { kk: "Park run index", kv: n(f.parkEdge) == null ? null : sgn(n(f.parkEdge), 0) },
-    { kk: "Bullpen rest", kv: n(f.bullpenDiff) == null ? null : sgn(n(f.bullpenDiff), 1) },
-    { kk: "Head to head", kv: n(f.h2hDiff) == null ? null : sgn(n(f.h2hDiff), 2) },
-    { kk: "Travel", kv: n(f.travelDiff) == null ? null : sgn(n(f.travelDiff), 2) },
-    { kk: "Handedness", kv: n(f.handednessDiff) == null ? null : sgn(n(f.handednessDiff), 0) },
-    { kk: "Injury load H/A", kv: n(f.homeInjuryLoad) == null && n(f.awayInjuryLoad) == null
-        ? null : `${n(f.homeInjuryLoad) ?? "—"} / ${n(f.awayInjuryLoad) ?? "—"}` },
-    { kk: "Rest days H/A", kv: n(f.homeRest) == null && n(f.awayRest) == null
-        ? null : `${n(f.homeRest) ?? "—"} / ${n(f.awayRest) ?? "—"}` },
+    {
+      kk: "Team rating gap",
+      kv: n(f.eloEdge) == null ? null : `${Math.abs(n(f.eloEdge)).toFixed(0)} pts`,
+      hint: n(f.eloEdge) == null ? null
+        : n(f.eloEdge) === 0 ? "Both clubs rated level."
+        : `${favours(n(f.eloEdge))} rated higher, on form to date. Home advantage is not in this number.`,
+    },
+    {
+      kk: "Ballpark scoring",
+      kv: n(f.parkEdge) == null ? null : `${sgn(n(f.parkEdge), 0)}%`,
+      /* The only tile here that is not about either team. Worth saying so --
+         a reader reasonably assumes every number in this grid picks a side. */
+      hint: n(f.parkEdge) == null ? null
+        : n(f.parkEdge) >= 8 ? "This ground yields well above average runs. Favours neither team — it lifts the total."
+        : n(f.parkEdge) >= 3 ? "Slightly high-scoring ground. Affects the total, not the winner."
+        : n(f.parkEdge) <= -3 ? "Low-scoring ground. Affects the total, not the winner."
+        : "An average ground for scoring.",
+    },
+    {
+      kk: "Bullpen freshness",
+      kv: n(f.bullpenDiff) == null ? null : `${sgn(n(f.bullpenDiff), 1)} inn`,
+      hint: n(f.bullpenDiff) == null ? null
+        : n(f.bullpenDiff) === 0 ? "Both relief corps equally worked."
+        : `${favours(n(f.bullpenDiff))} has the fresher relief pitchers — the other side's have thrown more lately.`,
+    },
+    {
+      kk: "This season's meetings",
+      /* Shown as the home side's share of meetings won rather than the signed
+         difference the model stores. The two shares sum to 1, so
+         share = (diff + 1) / 2 loses nothing -- and "-1.00" was exactly the
+         number that read as meaningless. */
+      kv: n(f.h2hDiff) == null ? null
+        : `${HOME} ${Math.round(((n(f.h2hDiff) + 1) / 2) * 100)}%`,
+      /* Phrased about the same side the value names, or the tile reads as two
+         different facts. */
+      hint: n(f.h2hDiff) == null ? null
+        : n(f.h2hDiff) === 0 ? `${HOME} and ${AWAY} have split their meetings this season.`
+        : n(f.h2hDiff) <= -1 ? `${HOME} has lost every meeting with ${AWAY} this season.`
+        : n(f.h2hDiff) >= 1 ? `${HOME} has won every meeting with ${AWAY} this season.`
+        : `Share of this season's meetings ${HOME} has won.`,
+    },
+    {
+      kk: "Travel burden",
+      kv: n(f.travelDiff) == null ? null : sgn(n(f.travelDiff), 2),
+      hint: n(f.travelDiff) == null ? null
+        : n(f.travelDiff) === 0 ? "No meaningful trip for the visitors."
+        : `${AWAY} travelled — distance plus time-zone change. Higher means a harder trip.`,
+    },
+    {
+      kk: "Left-handed starter",
+      kv: n(f.handednessDiff) == null ? null
+        : n(f.handednessDiff) === 0 ? "neither" : favours(n(f.handednessDiff)),
+      /* 0 here genuinely means "both or neither", not missing data, and the
+         bare 0 read as an absent value. */
+      hint: n(f.handednessDiff) == null ? null
+        : n(f.handednessDiff) === 0 ? "Both starters throw the same hand, or neither is a lefty."
+        : `Only ${favours(n(f.handednessDiff))} starts a left-hander, which is the rarer matchup.`,
+    },
+    {
+      kk: "Injuries out",
+      kv: n(f.homeInjuryLoad) == null && n(f.awayInjuryLoad) == null
+        ? null : `${n(f.homeInjuryLoad) ?? "—"} / ${n(f.awayInjuryLoad) ?? "—"}`,
+      hint: n(f.homeInjuryLoad) == null && n(f.awayInjuryLoad) == null ? null
+        : `${HOME} / ${AWAY}. Weighted by how important the missing players are; lower is healthier.`,
+    },
+    {
+      kk: "Days off",
+      kv: n(f.homeRest) == null && n(f.awayRest) == null
+        ? null : `${n(f.homeRest) ?? "—"} / ${n(f.awayRest) ?? "—"}`,
+      hint: n(f.homeRest) == null && n(f.awayRest) == null ? null
+        : `${HOME} / ${AWAY}. Rest since each side last played; 0 means they played yesterday.`,
+    },
   ];
   const ctx = el("div", "ctx");
   items.forEach((i) => {
     const k = el("div", "k" + (i.kv == null ? " off" : ""));
-    k.innerHTML = `<div class="kv">${i.kv == null ? "no data" : i.kv}</div><div class="kk lbl">${i.kk}</div>`;
+    k.innerHTML =
+      `<div class="kv">${i.kv == null ? "no data" : esc(String(i.kv))}</div>` +
+      `<div class="kk lbl">${esc(i.kk)}</div>` +
+      (i.kv == null
+        ? `<div class="khint">Not available for this game.</div>`
+        : i.hint ? `<div class="khint">${esc(i.hint)}</div>` : "");
     ctx.appendChild(k);
   });
   right.appendChild(ctx);
@@ -1012,12 +1096,21 @@ function whyPanel(play) {
   const p = f.mlbPitching;
   if (p) {
     right.appendChild(el("div", "",
-      `<div class="subh" style="margin:15px 0 8px"><h4>Starters</h4><span class="note">season / last few starts</span></div>` +
+      `<div class="subh" style="margin:15px 0 8px"><h4>Pitching</h4>` +
+      `<span class="note">runs allowed per nine innings — lower is better</span></div>` +
       `<div class="ctx">` +
-        `<div class="k"><div class="kv">${p.homePitcherApiEra ?? "—"} / ${p.homePitcherRecentEra ?? "—"}</div><div class="kk lbl">Home ERA</div></div>` +
-        `<div class="k"><div class="kv">${p.awayPitcherApiEra ?? "—"} / ${p.awayPitcherRecentEra ?? "—"}</div><div class="kk lbl">Away ERA</div></div>` +
-        `<div class="k"><div class="kv">${p.homeBullpenEra ?? "—"}</div><div class="kk lbl">Home bullpen</div></div>` +
-        `<div class="k"><div class="kv">${p.awayBullpenEra ?? "—"}</div><div class="kk lbl">Away bullpen</div></div>` +
+        `<div class="k"><div class="kv">${p.homePitcherApiEra ?? "—"} / ${p.homePitcherRecentEra ?? "—"}</div>` +
+          `<div class="kk lbl">${esc(HOME)} starter</div>` +
+          `<div class="khint">Season so far / last few outings. The starter is the single biggest per-game factor in baseball.</div></div>` +
+        `<div class="k"><div class="kv">${p.awayPitcherApiEra ?? "—"} / ${p.awayPitcherRecentEra ?? "—"}</div>` +
+          `<div class="kk lbl">${esc(AWAY)} starter</div>` +
+          `<div class="khint">Season so far / last few outings.</div></div>` +
+        `<div class="k"><div class="kv">${p.homeBullpenEra ?? "—"}</div>` +
+          `<div class="kk lbl">${esc(HOME)} bullpen</div>` +
+          `<div class="khint">The relief pitchers who finish the game once the starter comes out.</div></div>` +
+        `<div class="k"><div class="kv">${p.awayBullpenEra ?? "—"}</div>` +
+          `<div class="kk lbl">${esc(AWAY)} bullpen</div>` +
+          `<div class="khint">Relief pitchers.</div></div>` +
       `</div>`));
   }
 
@@ -1575,7 +1668,15 @@ function knownOf(play) {
     return out;
   }
   const cov = f.dataCoverage || {};
-  const n = (v) => { const x = Number(v); return Number.isFinite(x) ? x : null; };
+  /* Number(null) is 0 and Number("") is 0, so a feature the model logged as
+     absent was arriving here as a real zero -- "no rating gap", "no travel",
+     "no injuries" -- rather than as missing. Python writes None, JSON carries
+     null, and every one of those became a confident 0 on the card. */
+  const n = (v) => {
+    if (v === null || v === undefined || v === "") return null;
+    const x = Number(v);
+    return Number.isFinite(x) ? x : null;
+  };
   if (cov.lineup) out.push(["lineup", "Confirmed batting order for both sides."]);
   if (cov.mlbPitching && f.mlbPitching) out.push(["starters",
     `Home ${f.mlbPitching.homePitcherApiEra ?? "—"} ERA against away ${f.mlbPitching.awayPitcherApiEra ?? "—"}, plus both bullpens.`]);
@@ -1593,7 +1694,15 @@ function knownOf(play) {
 function checksOf(play) {
   const out = [];
   const f = featuresFor(play);
-  const n = (v) => { const x = Number(v); return Number.isFinite(x) ? x : null; };
+  /* Number(null) is 0 and Number("") is 0, so a feature the model logged as
+     absent was arriving here as a real zero -- "no rating gap", "no travel",
+     "no injuries" -- rather than as missing. Python writes None, JSON carries
+     null, and every one of those became a confident 0 on the card. */
+  const n = (v) => {
+    if (v === null || v === undefined || v === "") return null;
+    const x = Number(v);
+    return Number.isFinite(x) ? x : null;
+  };
   if (fadesMarket(play) === true) {
     const dv = S.evaluation?.divergence?.fadesMarket;
     out.push(["against the favourite",

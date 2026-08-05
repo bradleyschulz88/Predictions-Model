@@ -292,6 +292,13 @@ tr.dim td { color:var(--muted); }
 .ctx .k .kv { font-family:var(--mono); font-size:15px; font-weight:600; }
 .ctx .k .kk { font-size:10.5px; }
 .ctx .k.off .kv { color:var(--muted); }
+/* One plain-language line per tile. These carried a bare signed number and
+   a jargon label, which only reads if you already know both the sport and
+   the sign convention. */
+.ctx .k .khint { font-size:11px; line-height:1.35; color:var(--muted); margin-top:4px; }
+/* Wider tiles: the sentence needs room, and a 148px column broke it into
+   two-word lines. */
+.ctx { grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); }
 
 /* ---------- charts ---------- */
 figure { margin:0; }
