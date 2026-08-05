@@ -20,11 +20,39 @@ the residual needs closing spreads alongside results, which ESPN's historical
 scoreboard does not carry.
 
 Seasons that have already been played are available from ESPN's scoreboard, so
-there is no need to wait for tip-off to measure this. Run it from the `ESPN
-reachability probe` workflow -- the dev sandbox's egress policy blocks
-espn.com, so it cannot be run locally.
+there is no need to wait for tip-off to measure this. The dev sandbox's egress
+policy blocks espn.com, so run it from a GitHub runner rather than locally:
 
     python scripts/measure_margin_sd.py nba 2025-11-01 2026-03-31
+
+MEASURED 2026-08-05, most recent complete season of each league. The question
+was whether NBA and NFL -- which have no graded games and therefore no league
+intercept of their own -- are being handed a home-field figure fitted on
+baseball, whose home edge is the weakest of the four.
+
+    league   n     home win rate   implied logit
+    wnba      288  55.6% +/-2.9    +0.2231
+    nba      1059  55.0% +/-1.5    +0.1990
+    nfl       271  53.9% +/-3.0    +0.1553
+    mlb      1603  52.8% +/-1.2    +0.1137
+
+They are not, and the premise was wrong twice over.
+
+First, the gaps are not measurable at these sample sizes. NBA minus MLB is
+2.2 points against a standard error of sqrt(1.5^2 + 1.2^2) = 1.9 -- 1.15 sigma.
+NFL minus MLB is 1.1 against 3.2. Nothing here separates the leagues.
+
+Second, and larger: the fitted intercept is not a home-field term. The market
+anchor already carries home advantage, so model_fit's intercept only holds the
+residual bias the market misses -- which is why every fitted league intercept
+is tiny (mlb -0.0362, wnba +0.0992) next to the raw logits above. A league at
+zero games inherits the global intercept, +0.0367, worth 0.9 points at even
+money, and that is *larger* than what MLB ends up with (+0.0367 - 0.0362 =
++0.0005). Whatever the cold start costs NBA, it does not cost it home-field.
+
+So this needs no fix, and re-running the four leagues on every build would burn
+~500 requests to re-derive the table above. Run it by hand once a season has
+finished if you want to check the figures have not moved.
 """
 
 from __future__ import annotations

@@ -497,5 +497,71 @@ class HomeFieldTests(unittest.TestCase):
         self.assertAlmostEqual(neutral, 0.54, delta=0.05)
 
 
+class ColdStartLeagueTests(unittest.TestCase):
+    """What a league with no graded games is handed, and why it is safe.
+
+    NBA and NFL have zero graded picks until their seasons open, so
+    _league_intercepts skips them entirely and they fall back on the global
+    intercept -- fitted, today, almost entirely on baseball. The worry was that
+    this hands them baseball's home-field edge, which is the weakest of the
+    four leagues measured.
+
+    It does not, because the market anchor carries home advantage and the
+    intercept only holds the residual the market misses. The measurement is in
+    the docstring of scripts/measure_margin_sd.py: raw home logits run +0.1137
+    (mlb) to +0.2231 (wnba), while the fitted intercepts are an order of
+    magnitude smaller. These tests pin both halves of that.
+    """
+
+    WEIGHTS = json.loads((ROOT / "docs" / "data" / "model_weights.json").read_text())
+
+    # Every league's entire measured home edge sits below this. A global
+    # intercept above it would mean the term had stopped being a residual and
+    # started carrying home-field on its own -- at which point handing it to a
+    # league that has never played would be a real error rather than a rounding
+    # one, and this test is the tripwire for that.
+    MAX_RESIDUAL_INTERCEPT = 0.25
+
+    def test_a_league_with_no_games_gets_no_intercept_of_its_own(self) -> None:
+        samples = [
+            Sample(values={"strengthDiff": 0.1, "marketLogit": 0.2}, label=1,
+                   league="mlb", date="2026-06-01")
+            for _ in range(60)
+        ]
+        fitted = fit_from_observations(samples)
+        self.assertIn("mlb", fitted["leagueIntercepts"])
+        self.assertNotIn("nba", fitted["leagueIntercepts"])
+
+    def test_the_shipped_global_intercept_is_a_residual_not_a_home_field_term(self) -> None:
+        for block in ("anchored", "standalone"):
+            intercept = self.WEIGHTS[block]["weights"][0]
+            self.assertLess(
+                abs(intercept), self.MAX_RESIDUAL_INTERCEPT,
+                f"{block} intercept {intercept:+.4f} is large enough to be "
+                "carrying home-field, which a cold-start league must not inherit",
+            )
+
+    def test_the_shipped_league_intercepts_are_corrections_not_edges(self) -> None:
+        """If one grew past the band, the cold start would start costing."""
+        for league, intercept in self.WEIGHTS["leagueIntercepts"].items():
+            self.assertLess(abs(intercept), self.MAX_RESIDUAL_INTERCEPT, league)
+
+    def test_a_cold_start_league_is_not_pinned_to_the_baseball_correction(self) -> None:
+        """It gets the global term, and MLB's own correction is applied on top.
+
+        Concretely: baseball's fitted intercept is negative, so MLB ends up
+        *below* the untuned global value rather than above it. A cold-start
+        league inheriting the global term is therefore not inheriting
+        baseball's answer -- it is inheriting the one baseball was corrected
+        away from.
+        """
+        model = LogisticModel(self.WEIGHTS)
+        cold = model.predict_from_values({"strengthDiff": 0.0, "marketLogit": 0.0}, "nba")
+        mlb = model.predict_from_values({"strengthDiff": 0.0, "marketLogit": 0.0}, "mlb")
+        self.assertNotAlmostEqual(cold, mlb, places=4)
+        # Both land near a coin flip; the gap is under a point, not a real edge.
+        self.assertLess(abs(cold - mlb), 0.02)
+
+
 if __name__ == "__main__":
     unittest.main()
