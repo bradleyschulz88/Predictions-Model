@@ -7,6 +7,12 @@ like a huge model improvement and be entirely fictional.
 
 from __future__ import annotations
 
+import sys
+
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
 import json
 import tempfile
 import unittest

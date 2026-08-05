@@ -374,3 +374,7 @@ class SelfDiagnosingTests(unittest.TestCase):
             bullpen._warned = False
             bullpen.team_relief_innings(147)
         self.assertIn("game log cannot substitute", buffer.getvalue())
+
+
+if __name__ == "__main__":
+    unittest.main()

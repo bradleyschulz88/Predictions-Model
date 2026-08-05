@@ -2,6 +2,12 @@
 
 from __future__ import annotations
 
+import sys
+
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
 import json
 import threading
 import unittest
@@ -128,10 +134,6 @@ class DashboardServerTests(OfflineTestCase):
         with urllib.request.urlopen(f"http://{self.host}:{self.port}/", timeout=5) as response:
             html = response.read().decode("utf-8")
         self.assertIn("Edge Board", html)
-
-
-if __name__ == "__main__":
-    unittest.main()
 
 
 class TeamAbbreviationTests(OfflineTestCase):
@@ -357,3 +359,7 @@ class ProductNameTests(OfflineTestCase):
 
     def test_readme_leads_with_the_new_name(self) -> None:
         self.assertTrue(self._read("README.md").startswith("# Edge Board"))
+
+
+if __name__ == "__main__":
+    unittest.main()

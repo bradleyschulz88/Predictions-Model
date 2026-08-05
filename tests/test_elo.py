@@ -184,10 +184,6 @@ class RatingEdgeTests(unittest.TestCase):
         self.assertIsNone(rating_edge({}, "nba", "A", "B"))
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class EloIsAvailableBeforePredictions(unittest.TestCase):
     """elo_ratings.json is gitignored, so a fresh CI checkout has no ratings.
 
@@ -216,3 +212,7 @@ class EloIsAvailableBeforePredictions(unittest.TestCase):
     def test_edge_is_none_without_a_ratings_table(self) -> None:
         """The failure mode this ordering avoids, pinned so it stays understood."""
         self.assertIsNone(rating_edge({}, "mlb", "Yankees", "Tigers"))
+
+
+if __name__ == "__main__":
+    unittest.main()

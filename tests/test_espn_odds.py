@@ -8,6 +8,12 @@ market to anchor to.
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
 import json
 import unittest
 from unittest.mock import patch
@@ -271,10 +277,6 @@ class ProviderFilterTests(unittest.TestCase):
             self.assertEqual(name, name.casefold())
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class CircuitBreakerTests(unittest.TestCase):
     """A league ESPN does not cover must not be retried forever.
 
@@ -311,3 +313,7 @@ class CircuitBreakerTests(unittest.TestCase):
             stats = fill_missing_moneylines(self._games(6), league="wnba")
         self.assertFalse(stats["gaveUp"])
         self.assertEqual(stats["priced"], 6)
+
+
+if __name__ == "__main__":
+    unittest.main()

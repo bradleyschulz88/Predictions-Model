@@ -191,10 +191,6 @@ class HeadToHeadFeatureTests(unittest.TestCase):
         self.assertEqual(extract_model_inputs(_game())["parkEdge"], 15.0)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class RunlineCoherenceTests(unittest.TestCase):
     """The number attached to a pick must match whether that side is favoured.
 
@@ -711,3 +707,7 @@ class PerMarketPriceGuardTests(unittest.TestCase):
         with patch.object(espn_odds, "fetch_event_odds", side_effect=AssertionError("must not fetch")):
             stats = espn_odds.fill_missing_side_market_prices([game], league="mlb")
         self.assertEqual(stats["considered"], 0)
+
+
+if __name__ == "__main__":
+    unittest.main()

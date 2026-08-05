@@ -2,6 +2,12 @@
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
 import unittest
 
 from espn_enrichment import ensure_espn_odds_on_games
@@ -46,10 +52,6 @@ class OddsMatchingTests(unittest.TestCase):
         games = [{"awayTeam": "A", "homeTeam": "B", "lines": []}]
         merge_sbr_odds_into_games(games, league="afl", date_value="2026-06-15")
         self.assertEqual(games[0]["lines"], [])
-
-
-if __name__ == "__main__":
-    unittest.main()
 
 
 class OddsFailureDoesNotDropSchedule(unittest.TestCase):
@@ -310,3 +312,7 @@ class MatchedIsNotPricedTests(unittest.TestCase):
         with redirect_stdout(buffer):
             mlb_data._report_odds_merge(self._merge("MoneyLine"))
         self.assertEqual(buffer.getvalue(), "")
+
+
+if __name__ == "__main__":
+    unittest.main()

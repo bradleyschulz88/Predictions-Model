@@ -510,9 +510,21 @@ def standardisation(
 class ProbabilityModel(Protocol):
     """Seam for swapping in a stronger learner without touching the caller.
 
-    ml_model/ holds a trained XGBoost + isotonic calibrator that is not on the
-    prediction path. Once there is enough graded data to justify it, it can be
-    wrapped to satisfy this protocol and dropped in behind the same interface.
+    A gradient-boosted model lived in ml_model/ for a while and was deleted: it
+    was never on the prediction path, needed numpy, scikit-learn and xgboost
+    against a stdlib-only runtime, and its headline metrics (log loss 0.582,
+    Brier 0.206, AUC 0.738) were not comparable to the live model's -- different
+    sample, synthetic rows included, per-fold AUC ranging 0.47 to 0.66 at n=510.
+
+    Anything dropped in here later has to earn its place the same way every
+    current feature did, whatever its own training metrics say:
+
+        python model_fit.py --ablate
+        python scripts/check_regression.py
+
+    both compare against the live walk-forward baseline in
+    docs/data/model_baseline.json. A model that cannot beat that out of sample
+    should not ship.
     """
 
     def predict_proba(self, features: dict[str, Any], league: str) -> float | None:

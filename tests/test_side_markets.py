@@ -300,10 +300,6 @@ class MarketSummaryTests(unittest.TestCase):
         self.assertIn("1 of them", summary["note"])
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class RetroactiveGradingTests(unittest.TestCase):
     """An already-graded record is never rebuilt, so it needs reconciling.
 
@@ -467,3 +463,7 @@ class MarketUncertaintyTests(unittest.TestCase):
         self.assertIsNone(summary["pct"])
         self.assertIsNone(summary["stdErrPct"])
         self.assertFalse(summary["beatsBreakEven"])
+
+
+if __name__ == "__main__":
+    unittest.main()

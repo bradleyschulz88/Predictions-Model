@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -128,23 +129,27 @@ class UnpricedLeagueTests(unittest.TestCase):
         self.assertEqual(result["mlb"]["pricedPct"], 60.0)
 
 
-class QuarantineTests(unittest.TestCase):
-    def test_orphaned_model_artifacts_are_not_on_the_prediction_path(self) -> None:
-        """Nothing outside ml_model/ may import the experimental artifacts."""
-        offenders = []
+class StdlibOnlyTests(unittest.TestCase):
+    """The runtime is stdlib-only by design.
+
+    Replaces two tests that guarded ml_model/ -- one asserting nothing imported
+    the quarantined artifacts, one asserting the directory documented itself.
+    That directory is gone, so both were checking a thing that cannot happen.
+    The rule they were really protecting is this one, which still applies.
+    """
+
+    THIRD_PARTY = ("numpy", "pandas", "sklearn", "scipy", "xgboost", "torch")
+
+    def test_no_third_party_imports_on_the_prediction_path(self) -> None:
+        offenders: list[str] = []
         for path in ROOT.glob("*.py"):
-            if "experimental" in path.read_text(encoding="utf-8"):
-                offenders.append(path.name)
+            source = path.read_text(encoding="utf-8")
+            for module in self.THIRD_PARTY:
+                if re.search(rf"^\s*(?:import|from)\s+{module}\b", source, re.M):
+                    offenders.append(f"{path.name}: {module}")
         self.assertEqual(offenders, [])
 
-    def test_experimental_directory_documents_itself(self) -> None:
-        readme = ROOT / "ml_model" / "experimental" / "README.md"
-        self.assertTrue(readme.is_file())
-        self.assertIn("not on the prediction path", readme.read_text(encoding="utf-8").lower())
 
-
-if __name__ == "__main__":
-    unittest.main()
 
 
 class PublishVersusLogTests(unittest.TestCase):
@@ -499,3 +504,7 @@ class ClosingLineValueRobustnessTests(unittest.TestCase):
         """Guards the guard: hardening must not have broken the calculation."""
         self.assertGreater(closing_line_value(self._record(130, 110)), 0)
         self.assertLess(closing_line_value(self._record(-130, -110)), 0)
+
+
+if __name__ == "__main__":
+    unittest.main()
