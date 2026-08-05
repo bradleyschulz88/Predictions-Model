@@ -18,6 +18,11 @@ from mlb_data import fetch_dashboard_data, strip_betting_lines_for_display  # no
 from calibration_params import is_publishable_pick  # noqa: E402
 from elo import build_and_write as build_elo_ratings  # noqa: E402
 from espn_odds import load_side_market_cache, save_side_market_cache  # noqa: E402
+from data_providers.odds_api import (  # noqa: E402
+    load_cache as load_odds_api_cache,
+    quota_status as odds_api_quota,
+    save_cache as save_odds_api_cache,
+)
 from scripts.backtest_model import write_calibration_report  # noqa: E402
 from schedule_dates import default_game_date, get_schedule_timezone, schedule_dates_for_league  # noqa: E402
 from sports_config import get_league, list_league_ids  # noqa: E402
@@ -294,6 +299,13 @@ def main() -> int:
     if restored:
         print(f"Odds: restored {restored} cached side-market prices", flush=True)
 
+    # Same reason, and here it is money rather than politeness: The Odds API
+    # is metered against 500 credits a month, and without this its six-hour
+    # cache never survives to be hit, so every build spends afresh.
+    restored_api = load_odds_api_cache()
+    if restored_api:
+        print(f"Odds: restored {restored_api} cached Odds API slates", flush=True)
+
     manifest: dict = {"builtAt": None, "leagues": []}
     primary_payloads: dict[str, dict] = {}
     payloads_for_accuracy: list[dict] = []
@@ -418,6 +430,13 @@ def main() -> int:
     saved = save_side_market_cache()
     if saved:
         print(f"Odds: saved {saved} side-market prices for the next build", flush=True)
+
+    saved_api = save_odds_api_cache()
+    if saved_api:
+        print(f"Odds: saved {saved_api} Odds API slates for the next build", flush=True)
+    quota = odds_api_quota()
+    if quota:
+        print(f"Odds API quota: {json.dumps(quota)}", flush=True)
 
     print("Done.", flush=True)
     return 0
