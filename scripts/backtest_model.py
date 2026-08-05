@@ -298,7 +298,21 @@ def print_evaluation(report: dict[str, Any]) -> None:
     print("Model evaluation")
     print(f"  Graded observations: {report['n']}\n")
 
-    print("  All graded games")
+    # This block goes first because the tables below cannot answer "is the model
+    # better than the market". They score `model (published)`, which is whatever
+    # version was live when each game was predicted, so a model fixed last week
+    # still reads as losing for as long as its own bad history dominates the
+    # record. This is the live model, out of sample, on the games where a price
+    # existed -- the same games, the same fold boundaries.
+    fitted_head = (report.get("fittedWalkForward") or {}).get("vsMarket") or {}
+    if fitted_head.get("n"):
+        verdict = "ahead of" if fitted_head["edge"] > 0 else "behind"
+        print("  LIVE MODEL vs MARKET, out of sample, same games")
+        print(f"    model {fitted_head['modelLogLoss']} · market {fitted_head['marketLogLoss']}"
+              f" · n={fitted_head['n']}")
+        print(f"    the model is {verdict} the market by {abs(fitted_head['edge']):.4f} logloss\n")
+
+    print("  All graded games -- POOLED ACROSS EVERY MODEL VERSION, read as history")
     _print_forecaster_table(report["overall"])
 
     print("\n  Games with market odds (same slate for every forecaster)")
@@ -320,6 +334,11 @@ def print_evaluation(report: dict[str, Any]) -> None:
         print("\n  Fitted model, walk-forward (out-of-sample, model currently live)")
         print(f"    features {'+'.join(fitted['features'])} · {fitted['folds']} folds · n={fitted['n']}")
         print(f"    logloss {fitted['logLoss']} · brier {fitted['brier']} · acc {fitted['accuracy']}")
+        head = fitted.get("vsMarket") or {}
+        if head.get("n"):
+            print(f"    against the market on the {head['n']} priced games of those:"
+                  f" model {head['modelLogLoss']} · market {head['marketLogLoss']}"
+                  f" · edge {head['edge']:+.4f}")
 
     print("\n  Home bias (pick rate vs actual home win rate)")
     for league, stats in sorted(report["homeBias"].items()):
