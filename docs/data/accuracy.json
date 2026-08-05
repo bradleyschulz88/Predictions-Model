@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-05T22:37:11.888454+00:00",
+  "updatedAt": "2026-08-05T23:08:59.155598+00:00",
   "summary": {
     "last7Days": {
       "correct": 276,
@@ -16,8 +16,8 @@
       "pct": 61.2,
       "units": 16.317,
       "roiPct": 2.0,
-      "pending": 53,
-      "voided": 11
+      "pending": 51,
+      "voided": 13
     },
     "byLeague": {
       "mlb": {
@@ -26901,7 +26901,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -26909,7 +26909,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816403": {
       "eventId": "401816403",
@@ -26929,7 +26930,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -26937,7 +26938,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": false
+      "published": false,
+      "voidReason": "voided"
     },
     "401816405": {
       "eventId": "401816405",
@@ -27645,14 +27647,15 @@
       "openingSide": "home",
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-05"
+      "date": "2026-08-05",
+      "voidReason": "voided"
     },
     "401816401": {
       "eventId": "401816401",
