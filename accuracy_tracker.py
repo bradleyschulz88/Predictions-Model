@@ -346,22 +346,41 @@ def _market_summary(results: list[dict[str, Any]], key: str) -> dict[str, Any]:
         sum(_implied_break_even(row["odds"]) for row in priced_rows) / priced, 1
     ) if priced else DEFAULT_BREAK_EVEN_PCT
 
-    pct = round(wins / decided * 100, 1) if decided else None
-    # Binomial standard error on the hit rate. At these sample sizes it is the
-    # difference between "this market wins" and "this market might win": 56
-    # decided picks carries about 6.3 points of error, so a 61% record and a
-    # 52% record are not distinguishable from one another.
-    std_err = (
-        round(math.sqrt((wins / decided) * (1 - wins / decided) / decided) * 100, 1)
-        if decided
-        else None
-    )
-    # Does the record clear break-even by more than noise? Lower 95% bound
-    # against the bar it actually faced. This is the honest answer to "has this
-    # market shown it can pick", and it is not the same question as "is the ROI
-    # figure meaningful", which needs prices.
-    beats_break_even = (
-        bool(pct is not None and std_err is not None and (pct - 1.96 * std_err) > break_even)
+    def _rate(rows: list[dict[str, Any]]) -> tuple[int, float | None, float | None]:
+        """Hit rate and its binomial standard error over one set of rows.
+
+        At these sample sizes the error bar is the difference between "this
+        market wins" and "this market might win": 56 decided picks carries
+        about 6.3 points, so a 61% record and a 52% record are not
+        distinguishable from one another.
+        """
+        won = sum(1 for row in rows if row.get("outcome") == "win")
+        lost = sum(1 for row in rows if row.get("outcome") == "loss")
+        settled = won + lost
+        if not settled:
+            return 0, None, None
+        share = won / settled
+        return settled, round(share * 100, 1), round(math.sqrt(share * (1 - share) / settled) * 100, 1)
+
+    _, pct, std_err = _rate(graded)
+
+    # The same rate over only the picks that carry a price. This is the one
+    # that belongs next to ROI and break-even, and keeping them apart matters:
+    # measured 2026-08-05, totals ran 47.8% priced against 90.0% on the ten
+    # unpriced picks, so the blended 53.2% sat above a 52.4% break-even while
+    # the money went the other way at -7.2%. The hit rate and the return were
+    # describing different populations, which reads as a market that wins and
+    # loses at the same time. Break-even is derived from prices, so it can only
+    # honestly be compared against the picks that had one.
+    priced_decided, priced_pct, priced_std_err = _rate(priced_rows)
+
+    # Does the record clear break-even by more than noise? Lower 95% bound,
+    # priced picks only, against the bar those picks actually faced. This is
+    # the honest answer to "has this market shown it can pick at these prices".
+    beats_break_even = bool(
+        priced_pct is not None
+        and priced_std_err is not None
+        and (priced_pct - 1.96 * priced_std_err) > break_even
     )
 
     summary: dict[str, Any] = {
@@ -372,6 +391,9 @@ def _market_summary(results: list[dict[str, Any]], key: str) -> dict[str, Any]:
         "pushes": pushes,
         "pct": pct,
         "stdErrPct": std_err,
+        "pricedDecided": priced_decided,
+        "pricedPct": priced_pct,
+        "pricedStdErrPct": priced_std_err,
         "breakEvenPct": break_even,
         "beatsBreakEven": beats_break_even,
         "priced": priced,
@@ -386,13 +408,24 @@ def _market_summary(results: list[dict[str, Any]], key: str) -> dict[str, Any]:
         # evidence -- understating the priced result and hiding how thin it is.
         summary["pricedUnits"] = priced_units
         summary["pricedRoiPct"] = round(priced_units / priced * 100, 1)
-        summary["note"] = (
-            f"ROI is over all {len(graded)} graded picks; {len(graded) - priced} of them "
-            f"carry no logged price and count as zero return. Over the {priced} priced "
-            f"picks alone the return is {priced_units / priced * 100:+.1f}%."
-            if priced < len(graded)
-            else "Hit rate and ROI both cover the full graded record."
-        )
+        if priced < len(graded):
+            note = (
+                f"ROI is over all {len(graded)} graded picks; {len(graded) - priced} of them "
+                f"carry no logged price and count as zero return. Over the {priced} priced "
+                f"picks alone the return is {priced_units / priced * 100:+.1f}%."
+            )
+            # Say it outright when the two populations disagree, rather than
+            # leaving a reader to notice that a hit rate over every graded pick
+            # is sitting beside a return over only the priced ones.
+            if priced_pct is not None and pct is not None and abs(priced_pct - pct) >= 3.0:
+                note += (
+                    f" The {pct}% hit rate covers all {decided} decided picks; over the"
+                    f" priced ones alone it is {priced_pct}%, and that is the figure the"
+                    f" {break_even}% break-even applies to."
+                )
+        else:
+            note = "Hit rate and ROI both cover the full graded record."
+        summary["note"] = note
     else:
         summary["units"] = 0.0
         summary["roiPct"] = None

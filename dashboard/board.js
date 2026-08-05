@@ -1535,13 +1535,22 @@ function cardsPanel(A, E) {
     // dozen picks moves several points on noise alone, so a bare "61.6%"
     // reads as settled when the interval still spans break-even.
     const err = m.stdErrPct == null ? "" : ` ±${m.stdErrPct}`;
+    // The break-even bar is derived from prices, so it can only be read
+    // against the picks that carried one. Showing the all-graded rate next to
+    // it made totals look like they beat break-even (53.2% vs 52.4%) while
+    // losing 7.2% -- the two numbers covered different picks. When the priced
+    // rate differs, it goes on screen beside the blended one.
+    const pricedRate = (m.pricedPct != null && m.pricedPct !== m.pct)
+      ? ` ${pct(m.pricedPct)}${m.pricedStdErrPct == null ? "" : ` ±${m.pricedStdErrPct}`}`
+        + ` on the ${m.pricedDecided} priced.`
+      : "";
     const verdict = m.beatsBreakEven === true
       ? " Clears break-even by more than the sample's error."
       : m.beatsBreakEven === false
         ? ` Not yet distinguishable from the ${pct(m.breakEvenPct)} break-even.`
         : "";
     return card(title, record,
-      `${pct(m.pct)}${err} on ${m.decided ?? m.graded} decided. ${roi}${verdict} ${m.note}`,
+      `${pct(m.pct)}${err} on ${m.decided ?? m.graded} decided.${pricedRate} ${roi}${verdict} ${m.note}`,
       m.priced && m.roiPct != null ? (m.roiPct > 0 ? "var(--good)" : m.roiPct < 0 ? "var(--bad)" : undefined) : undefined);
   };
   const totalsCard = marketCard("Totals", sum.totals);
