@@ -868,24 +868,54 @@ def walk_forward_scores(
             # against a different training set and leak information.
             prob = model.predict_from_values(sample.values, sample.league)
             if prob is not None:
-                predictions.append((prob, sample.label))
+                # Keep the market's own view of the same game alongside the
+                # model's. Scoring them on identical games out of sample is the
+                # only fair comparison; the published record pools every model
+                # version this log has carried and describes history instead.
+                predictions.append((prob, sample.label, sample.values.get("marketLogit")))
 
     if not predictions:
         return {"folds": 0}
 
     log_loss = -sum(
-        math.log(max(1e-9, prob if label else 1.0 - prob)) for prob, label in predictions
+        math.log(max(1e-9, prob if label else 1.0 - prob)) for prob, label, _ in predictions
     ) / len(predictions)
-    brier = sum((prob - label) ** 2 for prob, label in predictions) / len(predictions)
-    hits = sum(1 for prob, label in predictions if (prob >= 0.5) == bool(label))
+    brier = sum((prob - label) ** 2 for prob, label, _ in predictions) / len(predictions)
+    hits = sum(1 for prob, label, _ in predictions if (prob >= 0.5) == bool(label))
 
-    return {
+    scores = {
         "folds": folds,
         "n": len(predictions),
         "logLoss": round(log_loss, 4),
         "brier": round(brier, 4),
         "accuracy": round(hits / len(predictions), 4),
     }
+
+    # Head-to-head against the market on exactly the games where a price
+    # existed. Without this the only market comparison available was against
+    # `model (published)`, which pools every model version the log has ever
+    # carried -- so a fixed model still reads as losing to the market for as
+    # long as its own bad history dominates the record.
+    priced = [
+        (prob, label, market)
+        for prob, label, market in predictions
+        if market not in (None, 0.0)
+    ]
+    if priced:
+        model_loss = -sum(
+            math.log(max(1e-9, prob if label else 1.0 - prob)) for prob, label, _ in priced
+        ) / len(priced)
+        market_loss = -sum(
+            math.log(max(1e-9, sigmoid(market) if label else 1.0 - sigmoid(market)))
+            for _, label, market in priced
+        ) / len(priced)
+        scores["vsMarket"] = {
+            "n": len(priced),
+            "modelLogLoss": round(model_loss, 4),
+            "marketLogLoss": round(market_loss, 4),
+            "edge": round(market_loss - model_loss, 4),
+        }
+    return scores
 
 
 def choose_l2(

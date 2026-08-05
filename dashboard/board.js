@@ -1394,6 +1394,18 @@ function cardsPanel(A, E) {
   const wf = E?.fittedWalkForward;
   if (wf) cards.appendChild(card("Walk-forward, out of sample", wf.logLoss.toFixed(4),
     `${wf.folds} folds, n=${wf.n}. Every build fails if this regresses against the checked-in baseline.`));
+  /* The only fair model-vs-market comparison. The accuracy tables score the
+     confidence that was published at the time, which pools every model version
+     this log has carried -- so a model corrected last week still reads as
+     losing until its own history washes out. This is the model running now,
+     out of sample, on the games where a price existed. */
+  const head = wf?.vsMarket;
+  if (head?.n) cards.appendChild(card(
+    "Live model vs market",
+    (head.edge > 0 ? "+" : "") + head.edge.toFixed(4),
+    `Out of sample on ${head.n} priced games: model ${head.modelLogLoss}, market ` +
+    `${head.marketLogLoss}. Positive means the model prices those games better.`,
+    head.edge > 0 ? "var(--good)" : "var(--bad)"));
   /* Totals/spreads only carry a price when ESPN core odds embedded one --
      SBR has nowhere to put it -- so the card reads "hit rate only" until
      that happens, then switches to real ROI, mirroring _market_summary. */
