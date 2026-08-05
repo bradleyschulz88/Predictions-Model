@@ -389,23 +389,29 @@ def clear_side_market_cache() -> None:
     _SIDE_MARKET_CACHE.clear()
 
 
-def has_priced_side_market(lines: list[dict[str, Any]]) -> bool:
-    """Whether any total or spread on this game already carries a price.
+def has_priced_market(lines: list[dict[str, Any]], view: str) -> bool:
+    """Whether one named market already carries a price on this game.
 
-    SportsBookReview posts the line but never the price, so an MLB game can
-    look fully covered -- moneyline, total and spread all present -- while
-    being impossible to value on anything but the moneyline.
+    Per market, deliberately. The first version of this asked "does ANY side
+    market have a price", which is true for almost every MLB game because the
+    ESPN summary already prices totals -- so the fetch was skipped and the
+    spread, the market that actually needed it, was never asked for. Nought of
+    eighty-four MLB runlines priced, with the guard reporting everything fine.
     """
     for line in lines or []:
-        view = line.get("viewType") or ""
-        if "Total" not in view and "Spread" not in view:
+        if view not in (line.get("viewType") or ""):
             continue
         current = line.get("currentLine") or line.get("openingLine")
         if not isinstance(current, dict):
             continue
-        if any(_PRICE_IN_PARENS.search(str(value)) for value in current.values() if value is not None):
+        if any(_PRICE_IN_PARENS.search(str(v)) for v in current.values() if v is not None):
             return True
     return False
+
+
+def has_priced_side_market(lines: list[dict[str, Any]]) -> bool:
+    """Both side markets priced. Kept for callers that want the coarse answer."""
+    return has_priced_market(lines, "Total") and has_priced_market(lines, "Spread")
 
 
 def fill_missing_side_market_prices(
@@ -443,7 +449,10 @@ def fill_missing_side_market_prices(
         lines = game.get("lines") or []
         # Needs a moneyline (or the other pass owns it) and needs to be
         # missing a side-market price (or there is nothing to fetch for).
-        if not has_moneyline_lines(lines) or has_priced_side_market(lines):
+        if not has_moneyline_lines(lines):
+            continue
+        wanted = [v for v in ("Total", "Spread") if not has_priced_market(lines, v)]
+        if not wanted:
             continue
         event_id = game.get("eventId")
         if not event_id:
@@ -462,9 +471,12 @@ def fill_missing_side_market_prices(
             fetched = fetch_event_odds(
                 league, event_id, retries=retries, retry_delay=retry_delay, verify_ssl=verify_ssl
             )
+            # Only the markets this game was actually missing. Re-adding a
+            # market that is already priced just puts a second copy of the same
+            # line into the consensus.
             market_lines = [
                 line for line in fetched
-                if "Total" in (line.get("viewType") or "") or "Spread" in (line.get("viewType") or "")
+                if any(v in (line.get("viewType") or "") for v in wanted)
             ]
             _SIDE_MARKET_CACHE[key] = (clock, market_lines)
             if not market_lines:
