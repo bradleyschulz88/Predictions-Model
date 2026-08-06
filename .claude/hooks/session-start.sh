@@ -77,4 +77,40 @@ else
   echo "session-start: omniroute not installed; skipping"
 fi
 
+# ---------------------------------------------------------------------------
+# graphify
+#
+# A CLI plus a /graphify skill that maps this repo into a queryable knowledge
+# graph. Installed with `uv tool install`, so it lives in the container and
+# dies with it -- the same problem this file exists to solve.
+#
+# Measured against an empty uv cache in this container: 7 seconds and ~175MB
+# of cache for around thirty tree-sitter wheels. Cheap enough to do on every
+# session start rather than leaving it to be re-run by hand.
+#
+# --native-tls with the agent proxy's CA bundle is required: uv does not read
+# the certifi path exported above, and without it every PyPI fetch fails with
+# "invalid peer certificate: UnknownIssuer".
+# ---------------------------------------------------------------------------
+if command -v graphify >/dev/null 2>&1; then
+  echo "session-start: graphify already installed ($(graphify --version 2>/dev/null || echo present))"
+elif command -v uv >/dev/null 2>&1; then
+  GRAPHIFY_CA="/root/.ccr/ca-bundle.crt"
+  [ -f "$GRAPHIFY_CA" ] || GRAPHIFY_CA="${SSL_CERT_FILE:-}"
+  # The published package is `graphifyy`; the command it installs is
+  # `graphify`. Not a typo -- checked against the project's own pyproject.
+  if SSL_CERT_FILE="$GRAPHIFY_CA" uv tool install --native-tls graphifyy >/dev/null 2>&1; then
+    # Registers the skill and writes ~/.claude/CLAUDE.md. Also container-local.
+    if PATH="$HOME/.local/bin:$PATH" graphify install --platform claude >/dev/null 2>&1; then
+      echo "session-start: graphify installed and /graphify skill registered"
+    else
+      echo "session-start: graphify installed but the skill would not register; continuing"
+    fi
+  else
+    echo "session-start: graphify would not install; continuing"
+  fi
+else
+  echo "session-start: uv not available, skipping graphify"
+fi
+
 echo "session-start: ready"
