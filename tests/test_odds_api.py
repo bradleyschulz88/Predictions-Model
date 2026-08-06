@@ -400,6 +400,102 @@ class CachePersistenceTests(unittest.TestCase):
             self.assertEqual(odds_api.save_cache(), 0)
             self.assertEqual(odds_api.load_cache(), 0)
 
+    def test_valid_json_of_the_wrong_shape_is_not_an_error(self) -> None:
+        """A bare list or null parses fine and then raises on .get.
+
+        Caught by fuzzing the loader: only OSError and JSONDecodeError were
+        handled, so `[]` or `null` in the cache file threw AttributeError out
+        of build start-up -- the exact outcome this function exists to avoid.
+        The file comes back from a shared actions/cache key, so its contents
+        are not something this code gets to assume.
+        """
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        for payload in ("[]", "null", '"a string"', "123", "true"):
+            self.path.write_text(payload, encoding="utf-8")
+            self.assertEqual(odds_api.load_cache(), 0, payload)
+
+
+class FixtureOrientationTests(unittest.TestCase):
+    """A match must not attach a fixture's prices with the sides swapped.
+
+    _match_event scores home-against-home and away-against-away, which reads
+    like it settles orientation. It does not when both clubs share a city:
+    "New York Yankees" against "New York Mets" scores 0.667 on two of three
+    matching words, so an event with the clubs the wrong way round clears the
+    0.6 bar just as the right one does.
+
+    The consequence is not a missing price, it is a wrong one -- the home side
+    handed the away side's handicap, turning a -1.5 favourite into a +1.5
+    underdog on the market whose entire purpose is to be valued. The API
+    returns a slate spanning several days, so a later reversed fixture between
+    the same two clubs is an ordinary thing to find in the response.
+
+    A per-side floor does not fix it: 0.667 clears any floor loose enough to
+    tolerate the naming differences this matcher exists for. Orientation has
+    to be decided against the mirror image instead.
+    """
+
+    def _event(self, home, away):
+        return {"id": f"{home}|{away}", "home_team": home, "away_team": away}
+
+    SAME_CITY = [
+        ("New York Yankees", "New York Mets"),
+        ("Los Angeles Dodgers", "Los Angeles Angels"),
+        ("Chicago White Sox", "Chicago Cubs"),
+    ]
+
+    def test_a_reversed_fixture_is_not_matched(self) -> None:
+        for home, away in self.SAME_CITY:
+            got = odds_api._match_event(
+                {"homeTeam": home, "awayTeam": away}, [self._event(away, home)]
+            )
+            self.assertIsNone(got, f"{away} @ {home} matched its own mirror image")
+
+    def test_the_right_way_round_still_matches(self) -> None:
+        for home, away in self.SAME_CITY:
+            got = odds_api._match_event(
+                {"homeTeam": home, "awayTeam": away}, [self._event(home, away)]
+            )
+            self.assertIsNotNone(got, f"{away} @ {home} no longer matches itself")
+
+    def test_the_right_event_wins_when_both_orientations_are_present(self) -> None:
+        """Both appear in one response when two clubs meet again days later."""
+        home, away = "New York Yankees", "New York Mets"
+        got = odds_api._match_event(
+            {"homeTeam": home, "awayTeam": away},
+            [self._event(away, home), self._event(home, away)],
+        )
+        self.assertEqual(got["id"], f"{home}|{away}")
+
+    def test_loose_club_naming_still_matches(self) -> None:
+        """The fuzziness this matcher exists for must survive the fix."""
+        got = odds_api._match_event(
+            {"homeTeam": "Carlton Blues", "awayTeam": "Collingwood Magpies"},
+            [self._event("Carlton", "Collingwood")],
+        )
+        self.assertIsNotNone(got)
+
+    def test_a_reversed_match_cannot_reach_the_lines(self) -> None:
+        """End to end: no prices attached, rather than inverted ones."""
+        game = {
+            "eventId": "1", "league": "mlb",
+            "homeTeam": "New York Yankees", "awayTeam": "New York Mets",
+            "lines": [{"sportsbook": "SBR", "viewType": "MoneyLine",
+                       "currentLine": {"home": "-150", "away": "+130"}}],
+        }
+        reversed_event = [{
+            "id": "r", "home_team": "New York Mets", "away_team": "New York Yankees",
+            "bookmakers": [{"key": "dk", "title": "DraftKings", "markets": [
+                {"key": "spreads", "outcomes": [
+                    {"name": "New York Mets", "price": 2.05, "point": -1.5},
+                    {"name": "New York Yankees", "price": 1.8, "point": 1.5}]}]}],
+        }]
+        with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
+             patch.object(odds_api, "get_text", return_value=json.dumps(reversed_event)):
+            stats = odds_api.fill_missing_spread_prices([game], league="mlb")
+        self.assertEqual(stats["priced"], 0)
+        self.assertEqual([line["viewType"] for line in game["lines"]], ["MoneyLine"])
+
 
 if __name__ == "__main__":
     unittest.main()

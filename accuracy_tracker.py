@@ -10,7 +10,7 @@ from typing import Any
 
 from data_providers.utils import team_match_score
 from espn_client import fetch_scoreboard, parse_scoreboard
-from mlb_predictions import _best_price_for_side, _line_odds_value, american_odds_to_implied
+from mlb_predictions import _best_price_for_side, american_odds_to_implied
 from calibration_params import is_publishable_pick
 from schedule_dates import league_schedule_date
 from sports_config import list_league_ids

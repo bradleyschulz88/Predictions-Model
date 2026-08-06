@@ -628,7 +628,40 @@ def load_model(data_dir: Path | None = None) -> LogisticModel | None:
         return None
     if not payload.get("anchored") and not payload.get("standalone"):
         return None
+    if not _blocks_are_consistent(payload):
+        return None
     return LogisticModel(payload)
+
+
+def _blocks_are_consistent(payload: dict[str, Any]) -> bool:
+    """Every block's weights must line up with its own feature list.
+
+    predict_from_values scores with `zip(weights, row)`, and zip stops at the
+    shorter side. A weights list one item short therefore drops the last
+    feature and returns a confident, wrong number rather than raising: on the
+    live file, truncating one weight moved a published probability from 76.3%
+    to 65.5% with nothing logged. This file is regenerated every build and is
+    gitignored, so a partial write has no reviewer and no diff to notice it.
+
+    Refusing the file falls back to the heuristic path, which the build already
+    treats as a first-class outcome, and the refit gate fails the build when
+    model_fit.py produces nothing usable. Both are loud. A silently truncated
+    model is not.
+    """
+    for name in ("anchored", "standalone"):
+        block = payload.get(name)
+        if not block:
+            continue
+        weights = block.get("weights")
+        features = block.get("features")
+        if not isinstance(weights, list) or not isinstance(features, list):
+            return False
+        # One weight per feature, plus the leading intercept that to_row emits.
+        if len(weights) != len(features) + 1:
+            return False
+        if not all(isinstance(w, (int, float)) and math.isfinite(w) for w in weights):
+            return False
+    return True
 
 
 # --------------------------------------------------------------------------

@@ -632,5 +632,79 @@ class InterceptGateTests(unittest.TestCase):
         self.assertGreater(self.limit, 0.2231)
 
 
+class WeightsFileIntegrityTests(unittest.TestCase):
+    """A weights file whose lengths disagree must be refused, not scored with.
+
+    predict_from_values scores with zip(weights, row), and zip stops at the
+    shorter side. So a weights list one item short silently drops the last
+    feature and returns a confident wrong number instead of raising. On the
+    live file, truncating a single weight moved a published probability from
+    76.3% to 65.5% with nothing logged anywhere.
+
+    That file is regenerated every build and is gitignored, so a partial write
+    gets no reviewer and leaves no diff. Refusing it falls back to the
+    heuristic path, which the build already handles, and the refit gate fails
+    loudly when no usable weights are produced.
+    """
+
+    def setUp(self) -> None:
+        self.dir = Path(tempfile.mkdtemp())
+        self.good = {
+            "anchored": {"features": ["strengthDiff", "marketLogit"],
+                         "weights": [0.03, 0.4, 0.42],
+                         "means": {}, "scales": {}, "n": 100},
+            "standalone": {"features": ["strengthDiff"], "weights": [0.07, 0.75],
+                           "means": {}, "scales": {}, "n": 100},
+            "leagueIntercepts": {"mlb": -0.03},
+        }
+
+    def _load(self, payload):
+        (self.dir / "model_weights.json").write_text(json.dumps(payload))
+        return model_fit.load_model(self.dir)
+
+    def test_an_intact_file_still_loads(self) -> None:
+        self.assertIsNotNone(self._load(self.good))
+
+    def test_a_truncated_weights_list_is_refused(self) -> None:
+        """The case that silently mispredicts."""
+        broken = json.loads(json.dumps(self.good))
+        broken["anchored"]["weights"] = broken["anchored"]["weights"][:-1]
+        self.assertIsNone(self._load(broken))
+
+    def test_an_overlong_weights_list_is_refused(self) -> None:
+        broken = json.loads(json.dumps(self.good))
+        broken["anchored"]["weights"].append(0.9)
+        self.assertIsNone(self._load(broken))
+
+    def test_a_feature_added_without_its_weight_is_refused(self) -> None:
+        broken = json.loads(json.dumps(self.good))
+        broken["standalone"]["features"].append("ghost")
+        self.assertIsNone(self._load(broken))
+
+    def test_a_non_finite_weight_is_refused(self) -> None:
+        """NaN poisons the whole score, and Python's json round-trips it.
+
+        json.dumps writes a bare NaN/Infinity and json.loads reads it straight
+        back, so this reaches the model rather than failing as a parse error.
+        """
+        for literal in ("NaN", "Infinity", "-Infinity"):
+            payload = json.dumps(self.good).replace("0.4,", f"{literal},", 1)
+            self.assertIn(literal, payload)
+            (self.dir / "model_weights.json").write_text(payload)
+            self.assertIsNone(model_fit.load_model(self.dir), literal)
+
+    def test_a_weights_field_of_the_wrong_type_is_refused(self) -> None:
+        broken = json.loads(json.dumps(self.good))
+        broken["anchored"]["weights"] = "nope"
+        self.assertIsNone(self._load(broken))
+
+    def test_only_one_block_present_is_still_validated(self) -> None:
+        """standalone alone is a legitimate file; it still has to line up."""
+        one = {"standalone": self.good["standalone"], "leagueIntercepts": {}}
+        self.assertIsNotNone(self._load(one))
+        one["standalone"]["weights"] = one["standalone"]["weights"][:-1]
+        self.assertIsNone(self._load(one))
+
+
 if __name__ == "__main__":
     unittest.main()

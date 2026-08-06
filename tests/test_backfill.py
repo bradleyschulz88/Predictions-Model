@@ -10,11 +10,9 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from scripts.backfill_history import (  # noqa: E402
-    MIN_GAMES_BEFORE_USABLE,
     TeamState,
     _assert_state_predates_game,
     _final_scores,
-    build_features,
     replay_league,
 )
 
