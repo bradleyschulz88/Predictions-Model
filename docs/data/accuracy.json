@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-05T23:41:39.996988+00:00",
+  "updatedAt": "2026-08-06T00:16:10.922072+00:00",
   "summary": {
     "last7Days": {
       "correct": 276,
@@ -7,7 +7,7 @@
       "pct": 63.4,
       "units": 11.127,
       "roiPct": 2.6,
-      "pending": 46,
+      "pending": 44,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 61.2,
       "units": 16.317,
       "roiPct": 2.0,
-      "pending": 46,
-      "voided": 20
+      "pending": 44,
+      "voided": 22
     },
     "byLeague": {
       "mlb": {
@@ -5484,62 +5484,6 @@
       "confidence": 63.6,
       "rawConfidence": 63.6,
       "rawHomeWinPct": 63.6,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-05",
-      "published": true
-    },
-    {
-      "eventId": "401857117",
-      "league": "wnba",
-      "scheduleDate": "2026-08-05",
-      "matchup": "Dallas Wings @ Washington Mystics",
-      "predicted": "Dallas Wings",
-      "predictedSide": "away",
-      "outcomeLabel": "Dallas Wings to win",
-      "confidence": 60.0,
-      "rawConfidence": 60.0,
-      "rawHomeWinPct": 40.0,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-05",
-      "published": true
-    },
-    {
-      "eventId": "401816404",
-      "league": "mlb",
-      "scheduleDate": "2026-08-05",
-      "matchup": "St. Louis Cardinals @ New York Yankees",
-      "predicted": "New York Yankees",
-      "predictedSide": "home",
-      "outcomeLabel": "New York Yankees to win",
-      "confidence": 59.5,
-      "rawConfidence": 59.5,
-      "rawHomeWinPct": 59.5,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -26876,7 +26820,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -26884,7 +26828,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401816402": {
       "eventId": "401816402",
@@ -26962,7 +26907,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -26970,7 +26915,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": false
+      "published": false,
+      "voidReason": "voided"
     },
     "401857115": {
       "eventId": "401857115",
@@ -27048,7 +26994,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
@@ -27056,7 +27002,8 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-05",
-      "published": true
+      "published": true,
+      "voidReason": "voided"
     },
     "401857118": {
       "eventId": "401857118",
