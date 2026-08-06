@@ -814,6 +814,19 @@ class SideMarketCachePersistenceTests(unittest.TestCase):
             self.assertEqual(self.espn_odds.save_side_market_cache(), 0)
             self.assertEqual(self.espn_odds.load_side_market_cache(), 0)
 
+    def test_valid_json_of_the_wrong_shape_is_not_an_error(self) -> None:
+        """Found by fuzzing: only OSError and JSONDecodeError were caught.
+
+        A bare list or a null parses cleanly and then raises AttributeError on
+        .get, out of build start-up -- the one outcome this loader exists to
+        prevent. The file is restored from a shared actions/cache key, so its
+        shape is not something this code gets to assume.
+        """
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        for payload in ("[]", "null", '"a string"', "123", "true"):
+            self.path.write_text(payload, encoding="utf-8")
+            self.assertEqual(self.espn_odds.load_side_market_cache(), 0, payload)
+
 
 class SideMarketPassEnabledTests(unittest.TestCase):
     """The pass is on by default now, having been off on a wrong diagnosis.

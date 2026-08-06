@@ -416,6 +416,12 @@ def load_side_market_cache() -> int:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return 0
+    # Valid JSON of the wrong shape is not an error either. A bare list or a
+    # null parses fine and then raises AttributeError on .get, which would take
+    # the build down at start-up -- the one outcome this whole function exists
+    # to avoid.
+    if not isinstance(payload, dict):
+        return 0
     now = time.time()
     kept = 0
     for key, entry in (payload.get("entries") or {}).items():

@@ -31,7 +31,6 @@ candidate and ships only if it beats its own absence out of sample.
 
 from __future__ import annotations
 
-from typing import Any
 
 from data_providers.utils import fetch_json, to_float
 

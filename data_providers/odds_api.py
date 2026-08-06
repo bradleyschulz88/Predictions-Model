@@ -133,6 +133,12 @@ def load_cache() -> int:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return 0
+    # Valid JSON of the wrong shape is not an error either. A bare list or a
+    # null parses fine and then raises AttributeError on .get, which would take
+    # the build down at start-up -- the one outcome this whole function exists
+    # to avoid.
+    if not isinstance(payload, dict):
+        return 0
     now = time.time()
     kept = 0
     for sport_key, entry in (payload.get("entries") or {}).items():
@@ -436,15 +442,39 @@ def _match_event(game: dict[str, Any], events: list[dict[str, Any]]) -> dict[str
     Scoring the pair together rather than either alone is what stops a derby
     -- two clubs from the same city, sharing a word in their names -- from
     attaching the wrong fixture's prices.
+
+    That is not enough on its own, because a shared city scores high both ways
+    round. "New York Yankees" against "New York Mets" scores 0.667 on two of
+    three matching words, so an event with the two clubs the right way round
+    and one with them swapped both clear a 0.6 bar -- and a swapped match
+    hands the home side the away side's handicap and price, turning a -1.5
+    favourite into a +1.5 underdog. Silently, on a market whose whole purpose
+    is to be valued.
+
+    So orientation has to be decided rather than assumed: an event only counts
+    if it fits this fixture better than its mirror image does. Identical clubs
+    score 1.0 forwards and 0.667 reversed, which is a clear answer, while the
+    swapped event scores 0.667 forwards and 1.0 reversed and is rejected. A
+    per-side floor would not catch this, because 0.667 clears any floor low
+    enough to tolerate the naming differences this matcher exists for.
     """
     home = str(game.get("homeTeam") or "")
     away = str(game.get("awayTeam") or "")
     best, best_score = None, 0.0
     for event in events:
+        event_home = str(event.get("home_team") or "")
+        event_away = str(event.get("away_team") or "")
         score = (
-            team_match_score(str(event.get("home_team") or ""), home)
-            + team_match_score(str(event.get("away_team") or ""), away)
+            team_match_score(event_home, home) + team_match_score(event_away, away)
         ) / 2.0
+        mirrored = (
+            team_match_score(event_home, away) + team_match_score(event_away, home)
+        ) / 2.0
+        # Ties count as ambiguous and are dropped: if a fixture reads the same
+        # both ways there is nothing to tell the sides apart, and guessing is
+        # how the wrong price gets attached.
+        if score <= mirrored:
+            continue
         if score > best_score:
             best, best_score = event, score
     return best if best_score >= 0.6 else None
