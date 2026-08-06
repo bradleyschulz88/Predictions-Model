@@ -218,6 +218,25 @@ jobs:
         with:
           path: docs
 
+      # The action's default timeout is 600000ms, and on 2026-08-06 that became
+      # the difference between a green build and a red one rather than a real
+      # signal. GitHub's Pages deployments slowed from ~6 seconds the day
+      # before to the best part of ten minutes:
+      #
+      #   14:58Z run  deploy took 9m39s  -> succeeded with 21 seconds to spare
+      #   12:28Z run  deploy took 10m02s -> "Timeout reached, aborting!"
+      #
+      # Everything before the deploy succeeded in both: tests, refit, build,
+      # and the data commit. The only difference between them was which side of
+      # the default a queue happened to land on, and losing that coin flip
+      # cancelled a deployment that was otherwise on its way.
+      #
+      # Twenty minutes is headroom over the worst observed, not a fix for a
+      # hang: the step still fails loudly if the deployment genuinely never
+      # lands, which is the case worth seeing. Runs sit hours apart in
+      # practice, so holding the concurrency group longer costs nothing.
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+        with:
+          timeout: 1200000
