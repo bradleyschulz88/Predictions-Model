@@ -55,3 +55,6 @@ docs/data/*_20[0-9][0-9]-[0-9][0-9]-[0-9][0-9].json
 # Coverage data, written by the audit tooling; never a build artefact.
 .coverage
 htmlcov/
+
+# graphify knowledge-graph output: ~11MB of derived data, rebuilt on demand.
+graphify-out/
