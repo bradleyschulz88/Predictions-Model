@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-07T09:17:34.257381+00:00",
+  "updatedAt": "2026-08-07T10:37:37.470349+00:00",
   "summary": {
     "last7Days": {
       "correct": 273,
@@ -16,8 +16,8 @@
       "pct": 61.6,
       "units": 22.037,
       "roiPct": 2.7,
-      "pending": 62,
-      "voided": 11
+      "pending": 60,
+      "voided": 12
     },
     "byLeague": {
       "wnba": {
@@ -29069,14 +29069,15 @@
       "openingSide": "away",
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-07"
+      "date": "2026-08-07",
+      "voidReason": "voided"
     },
     "401816428": {
       "eventId": "401816428",
@@ -29151,7 +29152,7 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "away",
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
