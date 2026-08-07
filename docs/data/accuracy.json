@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-07T22:20:41.390454+00:00",
+  "updatedAt": "2026-08-07T23:20:41.119168+00:00",
   "summary": {
     "last7Days": {
       "correct": 274,
@@ -16,8 +16,8 @@
       "pct": 61.7,
       "units": 23.157,
       "roiPct": 2.8,
-      "pending": 56,
-      "voided": 11
+      "pending": 55,
+      "voided": 12
     },
     "byLeague": {
       "afl": {
@@ -29255,14 +29255,15 @@
       "openingSide": "home",
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-07"
+      "date": "2026-08-07",
+      "voidReason": "voided"
     },
     "401816432": {
       "eventId": "401816432",
