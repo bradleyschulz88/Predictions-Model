@@ -3128,6 +3128,11 @@ function formatTimezoneLabel(timeZone) {
    already moved off :00/:30 to the quieter :07/:37 for exactly this reason and
    it changed nothing. So the page reports the age it can measure instead of a
    cadence it cannot keep. */
+/* Must match STALE_AFTER_MINUTES in board.js -- a test pins the two together,
+   because the pages are separate bundles with no shared module and nothing
+   else would notice them drifting apart. */
+const STALE_AFTER_MINUTES = 150;
+
 function buildAgeNote(builtAt) {
   const stamp = builtAt ? Date.parse(builtAt) : NaN;
   if (!Number.isFinite(stamp)) return "Predictions come from the last GitHub Actions build.";
@@ -3140,7 +3145,7 @@ function buildAgeNote(builtAt) {
     : `${Math.round(minutes / (60 * 24))} days ago`;
   // Only worth explaining once it looks wrong. Under about two hours is the
   // normal working range, so saying so would be noise.
-  const note = minutes >= 150
+  const note = minutes >= STALE_AFTER_MINUTES
     ? " GitHub schedules these on a best-effort basis, so gaps of a few hours are normal rather than a fault."
     : "";
   return `Predictions last rebuilt ${when}.${note}`;

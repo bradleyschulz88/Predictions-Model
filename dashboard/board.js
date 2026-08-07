@@ -16,6 +16,40 @@
 
 /* ------------------------------------------------------------------ helpers */
 const $ = (s, r = document) => r.querySelector(s);
+
+/* Builds older than this are called out rather than left to be worked out
+   from a timestamp. Two and a half hours: GitHub delivers this schedule about
+   every two hours in practice, so anything past that is genuinely unusual
+   rather than the normal spread.
+
+   Must match STALE_AFTER_MINUTES in app.js -- a test pins the two together,
+   because the pages are separate bundles with no shared module and nothing
+   else would notice them drifting apart. */
+const STALE_AFTER_MINUTES = 150;
+
+/* How old this data is, in words, appended to the absolute timestamp.
+
+   The footer used to show the build time alone. That is the right fact and
+   the wrong presentation: on 2026-08-06 a GitHub incident left the board
+   seven hours stale, and "Built 6 Aug, 15:04" looks exactly like a fresh
+   build unless the reader happens to do the subtraction. The age is the part
+   that tells you something is wrong, so it goes on screen next to it. */
+function buildAge(updatedAt) {
+  const stamp = updatedAt ? Date.parse(updatedAt) : NaN;
+  if (!Number.isFinite(stamp)) return "";
+  const minutes = Math.max(0, Math.round((Date.now() - stamp) / 60000));
+  const ago =
+    minutes < 2 ? "just now"
+    : minutes < 60 ? `${minutes} min ago`
+    : minutes < 60 * 24 ? `${Math.round(minutes / 60)} hr ago`
+    : `${Math.round(minutes / (60 * 24))} days ago`;
+  if (minutes < STALE_AFTER_MINUTES) return ` · ${ago}`;
+  /* Names the likely cause, because the honest answer is almost always the
+     scheduler rather than a broken model, and a reader who knows that will
+     not go hunting through the repo. */
+  return ` · <span class="stale">${ago} — builds are not landing;` +
+    ` GitHub schedules these on a best-effort basis</span>`;
+}
 const el = (t, c, h) => {
   const n = document.createElement(t);
   if (c) n.className = c;
@@ -1964,7 +1998,8 @@ async function boot() {
   S.manifest = manifest;
 
   $("#foot").innerHTML = accuracy
-    ? `Built ${new Date(accuracy.updatedAt).toLocaleString(undefined, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}<br>` +
+    ? `Built ${new Date(accuracy.updatedAt).toLocaleString(undefined, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}` +
+      `${buildAge(accuracy.updatedAt)}<br>` +
       `${(accuracy.summary?.allTime || {}).total ?? 0} graded picks`
     : "Data unavailable";
 

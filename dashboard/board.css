@@ -101,6 +101,11 @@ body {
   margin-left:auto; font-family:var(--mono); font-size:10px; color:var(--muted);
 }
 .railfoot { margin-top:auto; padding:14px 18px; border-top:1px solid var(--rule); font-size:11.5px; color:var(--muted); }
+/* A build that has stopped landing is the one footer fact worth reading, so
+   it is the one thing in there that is not muted. Uses --warn rather than
+   --bad: the data is stale, not wrong, and the usual cause is GitHub's
+   scheduler rather than anything the model did. */
+.railfoot .stale { color:var(--warn); font-weight:600; }
 .themebtn {
   appearance:none; background:var(--inset); border:1px solid var(--rule); color:var(--ink2);
   border-radius:2px; padding:5px 9px; font-family:var(--display); text-transform:uppercase;
