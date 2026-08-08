@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-08T10:55:54.971653+00:00",
+  "updatedAt": "2026-08-08T11:42:36.430115+00:00",
   "summary": {
     "last7Days": {
       "correct": 268,
@@ -7,7 +7,7 @@
       "pct": 63.7,
       "units": 7.043,
       "roiPct": 1.7,
-      "pending": 49,
+      "pending": 48,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 61.4,
       "units": 18.746,
       "roiPct": 2.2,
-      "pending": 49,
-      "voided": 11
+      "pending": 48,
+      "voided": 12
     },
     "byLeague": {
       "afl": {
@@ -5930,34 +5930,6 @@
       "openingSide": "home",
       "published": true,
       "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-08"
-    },
-    {
-      "eventId": "1133670",
-      "league": "afl",
-      "scheduleDate": "2026-08-08",
-      "matchup": "Richmond @ Adelaide Crows",
-      "predicted": "Adelaide Crows",
-      "predictedSide": "home",
-      "outcomeLabel": "Adelaide Crows to win",
-      "confidence": 95.0,
-      "rawConfidence": 95.0,
-      "rawHomeWinPct": 95.0,
-      "probabilityMethod": "fitted",
-      "evPct": -1.2,
-      "kellyPct": 0.0,
-      "pickOdds": -2500,
-      "openingOdds": -2500,
-      "openingSide": "home",
-      "published": true,
-      "clvPct": 0.0,
       "status": "pending",
       "actual": null,
       "correct": null,
@@ -30042,14 +30014,15 @@
       "openingSide": "home",
       "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-08"
+      "date": "2026-08-08",
+      "voidReason": "voided"
     },
     "401816441": {
       "eventId": "401816441",
