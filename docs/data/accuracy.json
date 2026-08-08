@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-07T23:20:41.119168+00:00",
+  "updatedAt": "2026-08-08T00:08:06.692063+00:00",
   "summary": {
     "last7Days": {
       "correct": 274,
@@ -16,8 +16,8 @@
       "pct": 61.7,
       "units": 23.157,
       "roiPct": 2.8,
-      "pending": 55,
-      "voided": 12
+      "pending": 54,
+      "voided": 15
     },
     "byLeague": {
       "afl": {
@@ -5339,6 +5339,35 @@
       "date": "2026-08-09"
     },
     {
+      "eventId": "1133667",
+      "league": "afl",
+      "scheduleDate": "2026-08-09",
+      "matchup": "Carlton @ St Kilda",
+      "predicted": "Carlton",
+      "predictedSide": "away",
+      "outcomeLabel": "Carlton to win",
+      "confidence": 56.3,
+      "rawConfidence": 56.3,
+      "rawHomeWinPct": 43.7,
+      "probabilityMethod": "fitted",
+      "evPct": -3.81,
+      "kellyPct": 0.0,
+      "pickOdds": -141,
+      "openingOdds": -141,
+      "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-09"
+    },
+    {
       "eventId": "1133665",
       "league": "afl",
       "scheduleDate": "2026-08-09",
@@ -5938,34 +5967,6 @@
       "confidence": 54.8,
       "rawConfidence": 54.8,
       "rawHomeWinPct": 45.2,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-07"
-    },
-    {
-      "eventId": "401816435",
-      "league": "mlb",
-      "scheduleDate": "2026-08-07",
-      "matchup": "Detroit Tigers @ San Francisco Giants",
-      "predicted": "Detroit Tigers",
-      "predictedSide": "away",
-      "outcomeLabel": "Detroit Tigers to win",
-      "confidence": 56.2,
-      "rawConfidence": 56.2,
-      "rawHomeWinPct": 43.8,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -29115,14 +29116,15 @@
       "openingSide": "home",
       "published": false,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-07"
+      "date": "2026-08-07",
+      "voidReason": "voided"
     },
     "401816429": {
       "eventId": "401816429",
@@ -29171,14 +29173,15 @@
       "openingSide": "away",
       "published": false,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-07"
+      "date": "2026-08-07",
+      "voidReason": "voided"
     },
     "401816426": {
       "eventId": "401816426",
@@ -29227,14 +29230,15 @@
       "openingSide": "home",
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-07"
+      "date": "2026-08-07",
+      "voidReason": "voided"
     },
     "401816425": {
       "eventId": "401816425",
@@ -29282,16 +29286,17 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
-      "published": false,
+      "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-07"
+      "date": "2026-08-07",
+      "voidReason": "voided"
     },
     "401816434": {
       "eventId": "401816434",
@@ -29312,14 +29317,15 @@
       "openingSide": "home",
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-07"
+      "date": "2026-08-07",
+      "voidReason": "voided"
     },
     "401816431": {
       "eventId": "401816431",
@@ -30293,7 +30299,7 @@
       "openingOdds": -141,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": 0.0,
       "status": "pending",
       "actual": null,
