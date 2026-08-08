@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-08T07:36:46.789654+00:00",
+  "updatedAt": "2026-08-08T08:23:40.065762+00:00",
   "summary": {
     "last7Days": {
       "correct": 266,
@@ -7,7 +7,7 @@
       "pct": 63.5,
       "units": 6.943,
       "roiPct": 1.7,
-      "pending": 50,
+      "pending": 49,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 61.3,
       "units": 18.646,
       "roiPct": 2.2,
-      "pending": 50,
-      "voided": 12
+      "pending": 49,
+      "voided": 13
     },
     "byLeague": {
       "afl": {
@@ -5953,34 +5953,6 @@
       "kellyPct": 0.0,
       "pickOdds": -2500,
       "openingOdds": -2500,
-      "openingSide": "home",
-      "published": true,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-08"
-    },
-    {
-      "eventId": "1133668",
-      "league": "afl",
-      "scheduleDate": "2026-08-08",
-      "matchup": "Port Adelaide @ Sydney Swans",
-      "predicted": "Sydney Swans",
-      "predictedSide": "home",
-      "outcomeLabel": "Sydney Swans to win",
-      "confidence": 91.1,
-      "rawConfidence": 91.1,
-      "rawHomeWinPct": 91.1,
-      "probabilityMethod": "fitted",
-      "evPct": 3.91,
-      "kellyPct": 6.99,
-      "pickOdds": -714,
-      "openingOdds": -714,
       "openingSide": "home",
       "published": true,
       "clvPct": 0.0,
@@ -29976,14 +29948,15 @@
       "openingSide": "home",
       "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-08"
+      "date": "2026-08-08",
+      "voidReason": "voided"
     },
     "1133664": {
       "eventId": "1133664",
