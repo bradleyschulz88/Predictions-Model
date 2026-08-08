@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-08T16:54:57.080460+00:00",
+  "updatedAt": "2026-08-08T17:46:37.194878+00:00",
   "summary": {
     "last7Days": {
       "correct": 269,
@@ -7,7 +7,7 @@
       "pct": 63.7,
       "units": 7.073,
       "roiPct": 1.7,
-      "pending": 48,
+      "pending": 47,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 61.4,
       "units": 18.776,
       "roiPct": 2.2,
-      "pending": 48,
-      "voided": 11
+      "pending": 47,
+      "voided": 12
     },
     "byLeague": {
       "afl": {
@@ -5550,34 +5550,6 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "away",
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-08"
-    },
-    {
-      "eventId": "401857125",
-      "league": "wnba",
-      "scheduleDate": "2026-08-08",
-      "matchup": "Las Vegas Aces @ Minnesota Lynx",
-      "predicted": "Minnesota Lynx",
-      "predictedSide": "home",
-      "outcomeLabel": "Minnesota Lynx to win",
-      "confidence": 67.7,
-      "rawConfidence": 67.7,
-      "rawHomeWinPct": 67.7,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
       "published": true,
       "clvPct": null,
       "status": "pending",
@@ -30451,14 +30423,15 @@
       "openingSide": "home",
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-08"
+      "date": "2026-08-08",
+      "voidReason": "voided"
     },
     "401857126": {
       "eventId": "401857126",
