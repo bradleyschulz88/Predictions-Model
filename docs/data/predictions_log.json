@@ -61043,6 +61043,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 3.51,
+          "homePitcherFip": 3.62107,
           "homePitcherRecentEra": 2.69,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.34,
@@ -61078,7 +61079,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816429": {
       "eventId": "401816429",
@@ -61143,7 +61144,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 2.69,
-          "homePitcherFip": 3.15952,
+          "homePitcherFip": 3.15933,
           "homePitcherRecentEra": 3.16,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.19,
@@ -61179,7 +61180,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816427": {
       "eventId": "401816427",
@@ -61211,7 +61212,7 @@
         "parkEdge": 1.0,
         "h2hDiff": 0.5,
         "travelDiff": 0.324,
-        "handednessDiff": null,
+        "handednessDiff": 0.0,
         "bullpenDiff": -2.7,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
@@ -61233,11 +61234,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 3.57,
+          "homePitcherFip": 3.59996,
+          "homePitcherRecentEra": 2.69,
+          "homePitcherHand": "R",
+          "homeTeamPitchingEra": 4.71,
+          "homeBullpenEra": 4.75,
+          "awayPitcherApiEra": 4.83,
+          "awayPitcherFip": 5.73945,
+          "awayPitcherRecentEra": 6.92,
+          "awayPitcherHand": "R",
+          "awayTeamPitchingEra": 4.48,
+          "awayBullpenEra": 4.51
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": 98.0,
@@ -61262,7 +61281,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816426": {
       "eventId": "401816426",
@@ -61333,7 +61352,7 @@
           "homeTeamPitchingEra": 3.3,
           "homeBullpenEra": 3.32,
           "awayPitcherApiEra": 4.83,
-          "awayPitcherFip": 4.1697923841059605,
+          "awayPitcherFip": 4.169602384105961,
           "awayPitcherRecentEra": 4.44,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 3.6,
@@ -61363,7 +61382,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816424": {
       "eventId": "401816424",
@@ -61395,7 +61414,7 @@
         "parkEdge": -3.0,
         "h2hDiff": -1.0,
         "travelDiff": 6.36,
-        "handednessDiff": null,
+        "handednessDiff": 0.0,
         "bullpenDiff": 2.2,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
@@ -61417,11 +61436,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 3.47,
+          "homePitcherFip": 4.60825,
+          "homePitcherRecentEra": 0.0,
+          "homePitcherHand": "R",
+          "homeTeamPitchingEra": 3.97,
+          "homeBullpenEra": 4.0,
+          "awayPitcherApiEra": 7.27,
+          "awayPitcherFip": 7.35605,
+          "awayPitcherRecentEra": 7.68,
+          "awayPitcherHand": "R",
+          "awayTeamPitchingEra": 4.53,
+          "awayBullpenEra": 4.58
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": 106.0,
@@ -61446,7 +61483,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816425": {
       "eventId": "401816425",
@@ -61517,7 +61554,7 @@
           "homeTeamPitchingEra": 3.5,
           "homeBullpenEra": 3.52,
           "awayPitcherApiEra": 7.04,
-          "awayPitcherFip": 4.75657,
+          "awayPitcherFip": 4.75639,
           "awayPitcherRecentEra": 8.37,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 5.41,
@@ -61547,7 +61584,7 @@
         "pickSide": "home",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816432": {
       "eventId": "401816432",
@@ -61579,7 +61616,7 @@
         "parkEdge": 0.0,
         "h2hDiff": 0.0,
         "travelDiff": 1.247,
-        "handednessDiff": null,
+        "handednessDiff": 0.0,
         "bullpenDiff": -8.8,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 2.3,
@@ -61601,11 +61638,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 6.06,
+          "homePitcherFip": 4.86252,
+          "homePitcherRecentEra": 3.58,
+          "homePitcherHand": "L",
+          "homeTeamPitchingEra": 4.11,
+          "homeBullpenEra": 4.12,
+          "awayPitcherApiEra": 2.57,
+          "awayPitcherFip": 3.18926,
+          "awayPitcherRecentEra": 0.52,
+          "awayPitcherHand": "L",
+          "awayTeamPitchingEra": 3.84,
+          "awayBullpenEra": 3.86
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": 64.0,
@@ -61630,7 +61685,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816434": {
       "eventId": "401816434",
@@ -61731,7 +61786,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816431": {
       "eventId": "401816431",
@@ -61763,7 +61818,7 @@
         "parkEdge": 0.0,
         "h2hDiff": -1.0,
         "travelDiff": 0.33,
-        "handednessDiff": null,
+        "handednessDiff": 1.0,
         "bullpenDiff": -6.8,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
@@ -61785,11 +61840,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 2.45,
+          "homePitcherFip": 3.08682,
+          "homePitcherRecentEra": 2.25,
+          "homePitcherHand": "L",
+          "homeTeamPitchingEra": 4.84,
+          "homeBullpenEra": 4.88,
+          "awayPitcherApiEra": 4.29,
+          "awayPitcherFip": 3.533473151364764,
+          "awayPitcherRecentEra": 1.58,
+          "awayPitcherHand": "R",
+          "awayTeamPitchingEra": 4.05,
+          "awayBullpenEra": 4.09
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": -217.0,
@@ -61814,7 +61887,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816430": {
       "eventId": "401816430",
@@ -61846,7 +61919,7 @@
         "parkEdge": 2.0,
         "h2hDiff": 0.5,
         "travelDiff": 1.986,
-        "handednessDiff": null,
+        "handednessDiff": 0.0,
         "bullpenDiff": -4.5,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 3.45,
@@ -61868,11 +61941,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 4.21,
+          "homePitcherFip": 4.25516,
+          "homePitcherRecentEra": 8.24,
+          "homePitcherHand": "R",
+          "homeTeamPitchingEra": 4.28,
+          "homeBullpenEra": 4.32,
+          "awayPitcherApiEra": 3.76,
+          "awayPitcherFip": 3.35821,
+          "awayPitcherRecentEra": 4.71,
+          "awayPitcherHand": "R",
+          "awayTeamPitchingEra": 4.19,
+          "awayBullpenEra": 4.23
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": 0.0,
@@ -61897,7 +61988,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816433": {
       "eventId": "401816433",
@@ -61998,7 +62089,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816436": {
       "eventId": "401816436",
@@ -62069,7 +62160,7 @@
           "homeTeamPitchingEra": 4.16,
           "homeBullpenEra": 4.19,
           "awayPitcherApiEra": 6.98,
-          "awayPitcherFip": 7.22494,
+          "awayPitcherFip": 7.22475,
           "awayPitcherRecentEra": 8.0,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 4.59,
@@ -62098,9 +62189,9 @@
         "line": -1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 112
+        "odds": 110
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816437": {
       "eventId": "401816437",
@@ -62165,13 +62256,13 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 4.88,
-          "homePitcherFip": 5.57034,
+          "homePitcherFip": 5.57015,
           "homePitcherRecentEra": 9.51,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.15,
           "homeBullpenEra": 4.2,
           "awayPitcherApiEra": 4.54,
-          "awayPitcherFip": 4.95367,
+          "awayPitcherFip": 4.95349,
           "awayPitcherRecentEra": 6.23,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 3.72,
@@ -62200,7 +62291,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816438": {
       "eventId": "401816438",
@@ -62301,7 +62392,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401816435": {
       "eventId": "401816435",
@@ -62372,7 +62463,7 @@
           "homeTeamPitchingEra": 4.37,
           "homeBullpenEra": 4.4,
           "awayPitcherApiEra": 3.38,
-          "awayPitcherFip": 3.87175,
+          "awayPitcherFip": 3.87156,
           "awayPitcherRecentEra": 3.35,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 3.49,
@@ -62402,7 +62493,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:47:31.041395+00:00"
+      "recordedAt": "2026-08-10T11:23:22.646455+00:00"
     },
     "401857122": {
       "eventId": "401857122",
@@ -62482,7 +62573,7 @@
         "pickSide": "home",
         "odds": -115
       },
-      "recordedAt": "2026-08-10T09:53:24.154177+00:00"
+      "recordedAt": "2026-08-10T11:30:34.014315+00:00"
     },
     "401857123": {
       "eventId": "401857123",
@@ -62562,7 +62653,7 @@
         "pickSide": "home",
         "odds": -115
       },
-      "recordedAt": "2026-08-10T09:53:24.154177+00:00"
+      "recordedAt": "2026-08-10T11:30:34.014315+00:00"
     },
     "401857124": {
       "eventId": "401857124",
@@ -62641,7 +62732,7 @@
         "line": 1.5,
         "pickSide": "push"
       },
-      "recordedAt": "2026-08-10T09:53:24.154177+00:00"
+      "recordedAt": "2026-08-10T11:30:34.014315+00:00"
     },
     "1133666": {
       "eventId": "1133666",
@@ -62713,7 +62804,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:54:03.000300+00:00"
+      "recordedAt": "2026-08-10T11:31:00.567059+00:00"
     },
     "1133668": {
       "eventId": "1133668",
@@ -62785,7 +62876,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:54:03.000300+00:00"
+      "recordedAt": "2026-08-10T11:31:00.567059+00:00"
     },
     "1133664": {
       "eventId": "1133664",
@@ -62857,7 +62948,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:54:03.000300+00:00"
+      "recordedAt": "2026-08-10T11:31:00.567059+00:00"
     },
     "1133670": {
       "eventId": "1133670",
@@ -62929,7 +63020,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:54:03.000300+00:00"
+      "recordedAt": "2026-08-10T11:31:00.567059+00:00"
     },
     "401816441": {
       "eventId": "401816441",
@@ -63000,7 +63091,7 @@
           "homeTeamPitchingEra": 3.3,
           "homeBullpenEra": 3.32,
           "awayPitcherApiEra": 2.2,
-          "awayPitcherFip": 2.40408,
+          "awayPitcherFip": 2.40389,
           "awayPitcherRecentEra": 3.94,
           "awayPitcherHand": "L",
           "awayTeamPitchingEra": 3.6,
@@ -63030,7 +63121,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816439": {
       "eventId": "401816439",
@@ -63095,13 +63186,13 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 3.52,
-          "homePitcherFip": 3.77133,
+          "homePitcherFip": 3.77114,
           "homePitcherRecentEra": 0.75,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 3.97,
           "homeBullpenEra": 4.0,
           "awayPitcherApiEra": 2.83,
-          "awayPitcherFip": 3.80504,
+          "awayPitcherFip": 3.80485,
           "awayPitcherRecentEra": 2.5,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 4.53,
@@ -63131,7 +63222,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816440": {
       "eventId": "401816440",
@@ -63232,7 +63323,7 @@
         "pickSide": "home",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816444": {
       "eventId": "401816444",
@@ -63303,7 +63394,7 @@
           "homeTeamPitchingEra": 4.19,
           "homeBullpenEra": 4.21,
           "awayPitcherApiEra": 7.25,
-          "awayPitcherFip": 6.89256,
+          "awayPitcherFip": 6.89238,
           "awayPitcherRecentEra": 9.8,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 4.02,
@@ -63333,7 +63424,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816443": {
       "eventId": "401816443",
@@ -63398,7 +63489,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 4.26,
-          "homePitcherFip": 4.16151,
+          "homePitcherFip": 4.16132,
           "homePitcherRecentEra": 4.06,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.34,
@@ -63434,7 +63525,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816442": {
       "eventId": "401816442",
@@ -63466,7 +63557,7 @@
         "parkEdge": 1.0,
         "h2hDiff": 0.6,
         "travelDiff": 0.324,
-        "handednessDiff": null,
+        "handednessDiff": 1.0,
         "bullpenDiff": -2.7,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
@@ -63488,11 +63579,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 3.76,
+          "homePitcherFip": 3.10124,
+          "homePitcherRecentEra": 3.24,
+          "homePitcherHand": "L",
+          "homeTeamPitchingEra": 4.71,
+          "homeBullpenEra": 4.75,
+          "awayPitcherApiEra": 2.61,
+          "awayPitcherFip": 3.28037,
+          "awayPitcherRecentEra": 3.35,
+          "awayPitcherHand": "R",
+          "awayTeamPitchingEra": 4.48,
+          "awayBullpenEra": 4.51
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": 98.0,
@@ -63517,7 +63626,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816446": {
       "eventId": "401816446",
@@ -63549,7 +63658,7 @@
         "parkEdge": 0.0,
         "h2hDiff": 0.0,
         "travelDiff": 0.33,
-        "handednessDiff": null,
+        "handednessDiff": 0.0,
         "bullpenDiff": -6.8,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
@@ -63571,11 +63680,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 4.41,
+          "homePitcherFip": 4.24542,
+          "homePitcherRecentEra": 1.57,
+          "homePitcherHand": "R",
+          "homeTeamPitchingEra": 4.84,
+          "homeBullpenEra": 4.88,
+          "awayPitcherApiEra": 2.86,
+          "awayPitcherFip": 3.492888588235294,
+          "awayPitcherRecentEra": 1.56,
+          "awayPitcherHand": "R",
+          "awayTeamPitchingEra": 4.05,
+          "awayBullpenEra": 4.09
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": -217.0,
@@ -63600,7 +63727,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816449": {
       "eventId": "401816449",
@@ -63671,7 +63798,7 @@
           "homeTeamPitchingEra": 3.47,
           "homeBullpenEra": 3.49,
           "awayPitcherApiEra": 3.76,
-          "awayPitcherFip": 3.83891,
+          "awayPitcherFip": 3.83872,
           "awayPitcherRecentEra": 1.11,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 4.59,
@@ -63701,7 +63828,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816445": {
       "eventId": "401816445",
@@ -63772,7 +63899,7 @@
           "homeTeamPitchingEra": 4.28,
           "homeBullpenEra": 4.32,
           "awayPitcherApiEra": 3.69,
-          "awayPitcherFip": 3.85866,
+          "awayPitcherFip": 3.85847,
           "awayPitcherRecentEra": 5.45,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 4.19,
@@ -63802,7 +63929,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816447": {
       "eventId": "401816447",
@@ -63834,7 +63961,7 @@
         "parkEdge": 0.0,
         "h2hDiff": 0.1111,
         "travelDiff": 1.247,
-        "handednessDiff": null,
+        "handednessDiff": 1.0,
         "bullpenDiff": -8.8,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 2.3,
@@ -63856,11 +63983,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 3.96,
+          "homePitcherFip": 4.80234,
+          "homePitcherRecentEra": 2.67,
+          "homePitcherHand": "L",
+          "homeTeamPitchingEra": 4.11,
+          "homeBullpenEra": 4.12,
+          "awayPitcherApiEra": 3.55,
+          "awayPitcherFip": 3.41862,
+          "awayPitcherRecentEra": 2.09,
+          "awayPitcherHand": "R",
+          "awayTeamPitchingEra": 3.84,
+          "awayBullpenEra": 3.86
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": 64.0,
@@ -63885,7 +64030,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816448": {
       "eventId": "401816448",
@@ -63956,7 +64101,7 @@
           "homeTeamPitchingEra": 4.14,
           "homeBullpenEra": 4.16,
           "awayPitcherApiEra": 6.63,
-          "awayPitcherFip": 4.65801,
+          "awayPitcherFip": 4.65783,
           "awayPitcherRecentEra": 2.37,
           "awayPitcherHand": "L",
           "awayTeamPitchingEra": 5.48,
@@ -63986,7 +64131,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816450": {
       "eventId": "401816450",
@@ -64087,7 +64232,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816451": {
       "eventId": "401816451",
@@ -64152,7 +64297,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 3.37,
-          "homePitcherFip": 4.16525,
+          "homePitcherFip": 4.16506,
           "homePitcherRecentEra": 3.33,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.16,
@@ -64187,9 +64332,9 @@
         "line": -1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 112
+        "odds": 110
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816452": {
       "eventId": "401816452",
@@ -64260,7 +64405,7 @@
           "homeTeamPitchingEra": 4.15,
           "homeBullpenEra": 4.2,
           "awayPitcherApiEra": 2.65,
-          "awayPitcherFip": 3.43868,
+          "awayPitcherFip": 3.4385,
           "awayPitcherRecentEra": 2.5,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 3.72,
@@ -64289,7 +64434,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401816453": {
       "eventId": "401816453",
@@ -64321,7 +64466,7 @@
         "parkEdge": -5.0,
         "h2hDiff": -0.6,
         "travelDiff": 5.029,
-        "handednessDiff": null,
+        "handednessDiff": 0.0,
         "bullpenDiff": 2.0,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 5.75,
@@ -64343,11 +64488,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 3.68,
+          "homePitcherFip": 3.67015,
+          "homePitcherRecentEra": 3.6,
+          "homePitcherHand": "R",
+          "homeTeamPitchingEra": 3.78,
+          "homeBullpenEra": 3.8,
+          "awayPitcherApiEra": 4.09,
+          "awayPitcherFip": 3.9782805921052633,
+          "awayPitcherRecentEra": 0.0,
+          "awayPitcherHand": "R",
+          "awayTeamPitchingEra": 3.68,
+          "awayBullpenEra": 3.72
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": -65.0,
@@ -64372,7 +64535,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:04.945703+00:00"
+      "recordedAt": "2026-08-10T11:26:55.613632+00:00"
     },
     "401857125": {
       "eventId": "401857125",
@@ -64452,7 +64615,7 @@
         "pickSide": "away",
         "odds": -102
       },
-      "recordedAt": "2026-08-10T09:53:28.753598+00:00"
+      "recordedAt": "2026-08-10T11:30:36.690619+00:00"
     },
     "401857126": {
       "eventId": "401857126",
@@ -64532,7 +64695,7 @@
         "pickSide": "away",
         "odds": -102
       },
-      "recordedAt": "2026-08-10T09:53:28.753598+00:00"
+      "recordedAt": "2026-08-10T11:30:36.690619+00:00"
     },
     "401857127": {
       "eventId": "401857127",
@@ -64612,7 +64775,7 @@
         "pickSide": "home",
         "odds": -115
       },
-      "recordedAt": "2026-08-10T09:53:28.753598+00:00"
+      "recordedAt": "2026-08-10T11:30:36.690619+00:00"
     },
     "1133665": {
       "eventId": "1133665",
@@ -64684,7 +64847,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:54:12.260214+00:00"
+      "recordedAt": "2026-08-10T11:31:05.967435+00:00"
     },
     "1133671": {
       "eventId": "1133671",
@@ -64756,7 +64919,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:54:12.260214+00:00"
+      "recordedAt": "2026-08-10T11:31:05.967435+00:00"
     },
     "1133667": {
       "eventId": "1133667",
@@ -64828,7 +64991,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:54:12.260214+00:00"
+      "recordedAt": "2026-08-10T11:31:05.967435+00:00"
     },
     "401816457": {
       "eventId": "401816457",
@@ -64860,7 +65023,7 @@
         "parkEdge": 1.0,
         "h2hDiff": 0.6667,
         "travelDiff": 0.324,
-        "handednessDiff": 0.0,
+        "handednessDiff": null,
         "bullpenDiff": -2.7,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
@@ -64882,29 +65045,11 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": true,
+          "mlbPitching": false,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {
-          "sources": [
-            "MLB Stats API bullpen",
-            "MLB Stats API pitcher",
-            "MLB Stats API team pitching"
-          ],
-          "homePitcherApiEra": 3.79,
-          "homePitcherFip": 4.1887,
-          "homePitcherRecentEra": 5.07,
-          "homePitcherHand": "R",
-          "homeTeamPitchingEra": 4.71,
-          "homeBullpenEra": 4.75,
-          "awayPitcherApiEra": 4.66,
-          "awayPitcherFip": 5.02249,
-          "awayPitcherRecentEra": 8.04,
-          "awayPitcherHand": "R",
-          "awayTeamPitchingEra": 4.48,
-          "awayBullpenEra": 4.51
-        },
+        "mlbPitching": {},
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": 98.0,
@@ -64929,7 +65074,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816455": {
       "eventId": "401816455",
@@ -65000,7 +65145,7 @@
           "homeTeamPitchingEra": 3.5,
           "homeBullpenEra": 3.52,
           "awayPitcherApiEra": 3.41,
-          "awayPitcherFip": 4.21418,
+          "awayPitcherFip": 4.22418,
           "awayPitcherRecentEra": 5.71,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 5.41,
@@ -65030,7 +65175,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816456": {
       "eventId": "401816456",
@@ -65131,7 +65276,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816458": {
       "eventId": "401816458",
@@ -65202,7 +65347,7 @@
           "homeTeamPitchingEra": 4.34,
           "homeBullpenEra": 4.37,
           "awayPitcherApiEra": 4.13,
-          "awayPitcherFip": 4.28496,
+          "awayPitcherFip": 4.14733,
           "awayPitcherRecentEra": 3.25,
           "awayPitcherHand": "L",
           "awayTeamPitchingEra": 4.11,
@@ -65232,7 +65377,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816459": {
       "eventId": "401816459",
@@ -65297,7 +65442,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 3.32,
-          "homePitcherFip": 2.96993,
+          "homePitcherFip": 2.82928,
           "homePitcherRecentEra": 6.59,
           "homePitcherHand": "L",
           "homeTeamPitchingEra": 4.19,
@@ -65333,7 +65478,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816454": {
       "eventId": "401816454",
@@ -65365,7 +65510,7 @@
         "parkEdge": -3.0,
         "h2hDiff": 0.3333,
         "travelDiff": 6.36,
-        "handednessDiff": 0.0,
+        "handednessDiff": null,
         "bullpenDiff": 2.2,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 4.6,
@@ -65387,29 +65532,11 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": true,
+          "mlbPitching": false,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {
-          "sources": [
-            "MLB Stats API bullpen",
-            "MLB Stats API pitcher",
-            "MLB Stats API team pitching"
-          ],
-          "homePitcherApiEra": 4.78,
-          "homePitcherFip": 3.79812,
-          "homePitcherRecentEra": 10.8,
-          "homePitcherHand": "R",
-          "homeTeamPitchingEra": 3.97,
-          "homeBullpenEra": 4.0,
-          "awayPitcherApiEra": 7.2,
-          "awayPitcherFip": 5.3223,
-          "awayPitcherRecentEra": 8.06,
-          "awayPitcherHand": "R",
-          "awayTeamPitchingEra": 4.53,
-          "awayBullpenEra": 4.58
-        },
+        "mlbPitching": {},
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": 106.0,
@@ -65434,7 +65561,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816461": {
       "eventId": "401816461",
@@ -65466,7 +65593,7 @@
         "parkEdge": 0.0,
         "h2hDiff": -0.3333,
         "travelDiff": 0.33,
-        "handednessDiff": null,
+        "handednessDiff": -1.0,
         "bullpenDiff": -6.8,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 4.6,
@@ -65488,11 +65615,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 2.0,
+          "homePitcherFip": 4.21604,
+          "homePitcherRecentEra": 2.03,
+          "homePitcherHand": "R",
+          "homeTeamPitchingEra": 4.84,
+          "homeBullpenEra": 4.88,
+          "awayPitcherApiEra": 3.5,
+          "awayPitcherFip": 3.95293,
+          "awayPitcherRecentEra": 6.43,
+          "awayPitcherHand": "L",
+          "awayTeamPitchingEra": 4.05,
+          "awayBullpenEra": 4.09
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": -217.0,
@@ -65517,7 +65662,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816462": {
       "eventId": "401816462",
@@ -65549,7 +65694,7 @@
         "parkEdge": 0.0,
         "h2hDiff": 0.2,
         "travelDiff": 1.247,
-        "handednessDiff": null,
+        "handednessDiff": -1.0,
         "bullpenDiff": -8.8,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 2.3,
@@ -65571,11 +65716,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 4.17,
+          "homePitcherFip": 3.4852,
+          "homePitcherRecentEra": 2.5,
+          "homePitcherHand": "R",
+          "homeTeamPitchingEra": 4.11,
+          "homeBullpenEra": 4.12,
+          "awayPitcherApiEra": 3.91,
+          "awayPitcherFip": 4.0224,
+          "awayPitcherRecentEra": 2.67,
+          "awayPitcherHand": "L",
+          "awayTeamPitchingEra": 3.84,
+          "awayBullpenEra": 3.86
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": 64.0,
@@ -65600,7 +65763,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816464": {
       "eventId": "401816464",
@@ -65701,7 +65864,7 @@
         "pickSide": "home",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816463": {
       "eventId": "401816463",
@@ -65766,7 +65929,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 3.64,
-          "homePitcherFip": 4.2172,
+          "homePitcherFip": 4.25349,
           "homePitcherRecentEra": 2.22,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.14,
@@ -65802,7 +65965,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816460": {
       "eventId": "401816460",
@@ -65873,7 +66036,7 @@
           "homeTeamPitchingEra": 4.28,
           "homeBullpenEra": 4.32,
           "awayPitcherApiEra": 4.45,
-          "awayPitcherFip": 4.70543,
+          "awayPitcherFip": 5.06329,
           "awayPitcherRecentEra": 4.68,
           "awayPitcherHand": "L",
           "awayTeamPitchingEra": 4.19,
@@ -65903,7 +66066,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816465": {
       "eventId": "401816465",
@@ -65935,7 +66098,7 @@
         "parkEdge": -4.0,
         "h2hDiff": -0.3333,
         "travelDiff": 4.678,
-        "handednessDiff": null,
+        "handednessDiff": 0.0,
         "bullpenDiff": -1.8,
         "homeInjuryLoad": 1.15,
         "awayInjuryLoad": 3.45,
@@ -65957,11 +66120,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 3.59,
+          "homePitcherFip": 3.29501,
+          "homePitcherRecentEra": 5.0,
+          "homePitcherHand": "R",
+          "homeTeamPitchingEra": 4.37,
+          "homeBullpenEra": 4.4,
+          "awayPitcherApiEra": 1.46,
+          "awayPitcherFip": 3.7762,
+          "awayPitcherRecentEra": 1.78,
+          "awayPitcherHand": "R",
+          "awayTeamPitchingEra": 3.49,
+          "awayBullpenEra": 3.51
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": -150.0,
@@ -65986,7 +66167,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816467": {
       "eventId": "401816467",
@@ -66057,7 +66238,7 @@
           "homeTeamPitchingEra": 4.15,
           "homeBullpenEra": 4.2,
           "awayPitcherApiEra": 3.44,
-          "awayPitcherFip": 4.02718,
+          "awayPitcherFip": 4.13391,
           "awayPitcherRecentEra": 2.12,
           "awayPitcherHand": "L",
           "awayTeamPitchingEra": 3.72,
@@ -66086,7 +66267,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816468": {
       "eventId": "401816468",
@@ -66118,7 +66299,7 @@
         "parkEdge": -5.0,
         "h2hDiff": -0.6667,
         "travelDiff": 5.029,
-        "handednessDiff": null,
+        "handednessDiff": -1.0,
         "bullpenDiff": 2.0,
         "homeInjuryLoad": 4.6,
         "awayInjuryLoad": 5.75,
@@ -66140,11 +66321,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 3.35,
+          "homePitcherFip": 3.7575,
+          "homePitcherRecentEra": 2.09,
+          "homePitcherHand": "R",
+          "homeTeamPitchingEra": 3.78,
+          "homeBullpenEra": 3.8,
+          "awayPitcherApiEra": 4.08,
+          "awayPitcherFip": 3.88147,
+          "awayPitcherRecentEra": 2.73,
+          "awayPitcherHand": "L",
+          "awayTeamPitchingEra": 3.68,
+          "awayBullpenEra": 3.72
+        },
         "leagueMetrics": {
           "league": "mlb",
           "runDiffEdge": -65.0,
@@ -66169,7 +66368,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401816466": {
       "eventId": "401816466",
@@ -66269,9 +66468,9 @@
         "line": -1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 112
+        "odds": 110
       },
-      "recordedAt": "2026-08-10T09:49:51.450747+00:00"
+      "recordedAt": "2026-08-10T11:28:16.317924+00:00"
     },
     "401857128": {
       "eventId": "401857128",
@@ -66351,7 +66550,7 @@
         "pickSide": "away",
         "odds": -112
       },
-      "recordedAt": "2026-08-10T09:53:32.195404+00:00"
+      "recordedAt": "2026-08-10T11:30:39.211595+00:00"
     },
     "401857129": {
       "eventId": "401857129",
@@ -66431,7 +66630,7 @@
         "pickSide": "home",
         "odds": -108
       },
-      "recordedAt": "2026-08-10T09:53:32.195404+00:00"
+      "recordedAt": "2026-08-10T11:30:39.211595+00:00"
     },
     "401857130": {
       "eventId": "401857130",
@@ -66511,7 +66710,7 @@
         "pickSide": "home",
         "odds": -105
       },
-      "recordedAt": "2026-08-10T09:53:32.195404+00:00"
+      "recordedAt": "2026-08-10T11:30:39.211595+00:00"
     },
     "401857131": {
       "eventId": "401857131",
@@ -66591,7 +66790,7 @@
         "pickSide": "away",
         "odds": -115
       },
-      "recordedAt": "2026-08-10T09:53:32.195404+00:00"
+      "recordedAt": "2026-08-10T11:30:39.211595+00:00"
     },
     "401816469": {
       "eventId": "401816469",
@@ -66603,13 +66802,13 @@
       "predictedWinner": "Boston Red Sox",
       "predictedSide": "away",
       "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 65.6,
-      "rawConfidence": 65.6,
-      "rawHomeWinPct": 34.4,
+      "confidence": 65.3,
+      "rawConfidence": 65.3,
+      "rawHomeWinPct": 34.7,
       "probabilityMethod": "fitted",
-      "evPct": 2.17,
-      "kellyPct": 0.0,
-      "pickOdds": -179,
+      "evPct": 4.83,
+      "kellyPct": 0.22,
+      "pickOdds": -165,
       "openingOdds": -173,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
@@ -66635,8 +66834,8 @@
         "awayRest": 1,
         "homeBackToBack": true,
         "awayBackToBack": true,
-        "impliedHome": 37.8,
-        "impliedAway": 62.2,
+        "impliedHome": 38.5,
+        "impliedAway": 61.5,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
@@ -66674,26 +66873,26 @@
           "opsEdge": -0.043,
           "eraEdge": -0.52
         },
-        "trueHome": 34.4,
-        "trueAway": 65.6,
-        "confidence": 65.6,
-        "rawConfidence": 65.6,
-        "rawHomeWinPct": 34.4,
+        "trueHome": 34.7,
+        "trueAway": 65.3,
+        "confidence": 65.3,
+        "rawConfidence": 65.3,
+        "rawHomeWinPct": 34.7,
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
       "total": {
         "line": 8.5,
         "pickSide": "over",
-        "odds": -102
+        "odds": -101
       },
       "spread": {
         "line": 1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 109
+        "odds": 104
       },
-      "recordedAt": "2026-08-10T09:50:16.228651+00:00"
+      "recordedAt": "2026-08-10T11:28:28.135764+00:00"
     },
     "401816470": {
       "eventId": "401816470",
@@ -66709,9 +66908,9 @@
       "rawConfidence": 65.9,
       "rawHomeWinPct": 65.9,
       "probabilityMethod": "fitted",
-      "evPct": 8.22,
-      "kellyPct": 1.06,
-      "pickOdds": -156,
+      "evPct": 10.74,
+      "kellyPct": 1.91,
+      "pickOdds": -147,
       "openingOdds": -157,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
@@ -66737,8 +66936,8 @@
         "awayRest": 1,
         "homeBackToBack": true,
         "awayBackToBack": true,
-        "impliedHome": 58.8,
-        "impliedAway": 41.2,
+        "impliedHome": 58.7,
+        "impliedAway": 41.3,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
@@ -66758,7 +66957,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 3.69,
-          "homePitcherFip": 4.43701,
+          "homePitcherFip": 4.43682,
           "homePitcherRecentEra": 1.05,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 3.6,
@@ -66787,7 +66986,7 @@
       "total": {
         "line": 8.5,
         "pickSide": "over",
-        "odds": -106
+        "odds": -102
       },
       "spread": {
         "line": -1.5,
@@ -66795,7 +66994,7 @@
         "market": "runline",
         "odds": -164
       },
-      "recordedAt": "2026-08-10T09:50:16.228651+00:00"
+      "recordedAt": "2026-08-10T11:28:28.135764+00:00"
     },
     "401816471": {
       "eventId": "401816471",
@@ -66897,7 +67096,7 @@
         "market": "runline",
         "odds": 144
       },
-      "recordedAt": "2026-08-10T09:50:16.228651+00:00"
+      "recordedAt": "2026-08-10T11:28:28.135764+00:00"
     },
     "401816472": {
       "eventId": "401816472",
@@ -66962,7 +67161,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 3.6,
-          "homePitcherFip": 4.36201,
+          "homePitcherFip": 4.36182,
           "homePitcherRecentEra": 2.93,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.14,
@@ -66999,7 +67198,7 @@
         "market": "runline",
         "odds": 146
       },
-      "recordedAt": "2026-08-10T09:50:16.228651+00:00"
+      "recordedAt": "2026-08-10T11:28:28.135764+00:00"
     },
     "401816478": {
       "eventId": "401816478",
@@ -67099,9 +67298,9 @@
         "line": 1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 138
+        "odds": 139
       },
-      "recordedAt": "2026-08-10T09:50:16.228651+00:00"
+      "recordedAt": "2026-08-10T11:28:28.135764+00:00"
     },
     "401816473": {
       "eventId": "401816473",
@@ -67133,7 +67332,7 @@
         "parkEdge": 3.0,
         "h2hDiff": 0.4286,
         "travelDiff": 1.472,
-        "handednessDiff": null,
+        "handednessDiff": 0.0,
         "bullpenDiff": 2.2,
         "homeInjuryLoad": 2.3,
         "awayInjuryLoad": 5.75,
@@ -67155,11 +67354,29 @@
           "advancedStats": true,
           "restData": true,
           "scheduleFlags": true,
-          "mlbPitching": false,
+          "mlbPitching": true,
           "leagueMetrics": true,
           "impliedOdds": true
         },
-        "mlbPitching": {},
+        "mlbPitching": {
+          "sources": [
+            "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
+            "MLB Stats API team pitching"
+          ],
+          "homePitcherApiEra": 3.07,
+          "homePitcherFip": 2.91628,
+          "homePitcherRecentEra": 2.96,
+          "homePitcherHand": "R",
+          "homeTeamPitchingEra": 4.15,
+          "homeBullpenEra": 4.2,
+          "awayPitcherApiEra": 4.25,
+          "awayPitcherFip": 2.64881,
+          "awayPitcherRecentEra": 3.19,
+          "awayPitcherHand": "R",
+          "awayTeamPitchingEra": 5.48,
+          "awayBullpenEra": 5.51
+        },
         "leagueMetrics": {
           "league": "mlb",
           "opsEdge": -0.038,
@@ -67182,9 +67399,9 @@
         "line": -1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": -145
+        "odds": -143
       },
-      "recordedAt": "2026-08-10T09:50:16.228651+00:00"
+      "recordedAt": "2026-08-10T11:28:28.135764+00:00"
     },
     "401816476": {
       "eventId": "401816476",
@@ -67196,13 +67413,13 @@
       "predictedWinner": "Milwaukee Brewers",
       "predictedSide": "away",
       "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 60.5,
-      "rawConfidence": 60.5,
-      "rawHomeWinPct": 39.5,
+      "confidence": 60.7,
+      "rawConfidence": 60.7,
+      "rawHomeWinPct": 39.3,
       "probabilityMethod": "fitted",
-      "evPct": 14.53,
-      "kellyPct": 1.47,
-      "pickOdds": -112,
+      "evPct": 13.57,
+      "kellyPct": 1.14,
+      "pickOdds": -115,
       "openingOdds": -112,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
@@ -67228,8 +67445,8 @@
         "awayRest": 1,
         "homeBackToBack": true,
         "awayBackToBack": false,
-        "impliedHome": 49.4,
-        "impliedAway": 50.6,
+        "impliedHome": 48.8,
+        "impliedAway": 51.2,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
@@ -67267,11 +67484,11 @@
           "opsEdge": -0.037,
           "eraEdge": -0.69
         },
-        "trueHome": 39.5,
-        "trueAway": 60.5,
-        "confidence": 60.5,
-        "rawConfidence": 60.5,
-        "rawHomeWinPct": 39.5,
+        "trueHome": 39.3,
+        "trueAway": 60.7,
+        "confidence": 60.7,
+        "rawConfidence": 60.7,
+        "rawHomeWinPct": 39.3,
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
@@ -67286,7 +67503,7 @@
         "market": "runline",
         "odds": 158
       },
-      "recordedAt": "2026-08-10T09:50:16.228651+00:00"
+      "recordedAt": "2026-08-10T11:28:28.135764+00:00"
     },
     "401816477": {
       "eventId": "401816477",
@@ -67357,7 +67574,7 @@
           "homeTeamPitchingEra": 5.41,
           "homeBullpenEra": 5.47,
           "awayPitcherApiEra": 5.37,
-          "awayPitcherFip": 4.5955340625,
+          "awayPitcherFip": 4.5953440625,
           "awayPitcherRecentEra": 5.03,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 3.68,
@@ -67380,7 +67597,7 @@
       "total": {
         "line": 10.0,
         "pickSide": "under",
-        "odds": -113
+        "odds": -112
       },
       "spread": {
         "line": 1.5,
@@ -67388,7 +67605,7 @@
         "market": "runline",
         "odds": 104
       },
-      "recordedAt": "2026-08-10T09:50:16.228651+00:00"
+      "recordedAt": "2026-08-10T11:28:28.135764+00:00"
     },
     "401816474": {
       "eventId": "401816474",
@@ -67400,13 +67617,13 @@
       "predictedWinner": "Houston Astros",
       "predictedSide": "away",
       "outcomeLabel": "Houston Astros to win",
-      "confidence": 60.5,
-      "rawConfidence": 60.5,
-      "rawHomeWinPct": 39.5,
+      "confidence": 60.1,
+      "rawConfidence": 60.1,
+      "rawHomeWinPct": 39.9,
       "probabilityMethod": "fitted",
-      "evPct": -2.23,
+      "evPct": -1.58,
       "kellyPct": 0.0,
-      "pickOdds": -162,
+      "pickOdds": -157,
       "openingOdds": -156,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
@@ -67432,8 +67649,8 @@
         "awayRest": 1,
         "homeBackToBack": false,
         "awayBackToBack": true,
-        "impliedHome": 40.2,
-        "impliedAway": 59.8,
+        "impliedHome": 41.0,
+        "impliedAway": 59.0,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
@@ -67471,26 +67688,26 @@
           "opsEdge": -0.02,
           "eraEdge": 0.22
         },
-        "trueHome": 39.5,
-        "trueAway": 60.5,
-        "confidence": 60.5,
-        "rawConfidence": 60.5,
-        "rawHomeWinPct": 39.5,
+        "trueHome": 39.9,
+        "trueAway": 60.1,
+        "confidence": 60.1,
+        "rawConfidence": 60.1,
+        "rawHomeWinPct": 39.9,
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
       "total": {
         "line": 8.0,
         "pickSide": "under",
-        "odds": -105
+        "odds": -107
       },
       "spread": {
         "line": 1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 112
+        "odds": 110
       },
-      "recordedAt": "2026-08-10T09:50:16.228651+00:00"
+      "recordedAt": "2026-08-10T11:28:28.135764+00:00"
     },
     "401816475": {
       "eventId": "401816475",
@@ -67561,7 +67778,7 @@
           "homeTeamPitchingEra": 3.72,
           "homeBullpenEra": 3.74,
           "awayPitcherApiEra": 4.37,
-          "awayPitcherFip": 3.72582,
+          "awayPitcherFip": 3.72564,
           "awayPitcherRecentEra": 4.12,
           "awayPitcherHand": "L",
           "awayTeamPitchingEra": 4.84,
@@ -67592,7 +67809,7 @@
         "market": "runline",
         "odds": -139
       },
-      "recordedAt": "2026-08-10T09:50:16.228651+00:00"
+      "recordedAt": "2026-08-10T11:28:28.135764+00:00"
     },
     "401857132": {
       "eventId": "401857132",
@@ -67604,13 +67821,13 @@
       "predictedWinner": "Atlanta Dream",
       "predictedSide": "home",
       "outcomeLabel": "Atlanta Dream to win",
-      "confidence": 90.9,
-      "rawConfidence": 90.9,
-      "rawHomeWinPct": 90.9,
+      "confidence": 90.6,
+      "rawConfidence": 90.6,
+      "rawHomeWinPct": 90.6,
       "probabilityMethod": "fitted",
-      "evPct": 2.22,
-      "kellyPct": 4.45,
-      "pickOdds": -800,
+      "evPct": 2.73,
+      "kellyPct": 5.12,
+      "pickOdds": -750,
       "openingOdds": -675,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
@@ -67636,8 +67853,8 @@
         "awayRest": 3,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 87.7,
-        "impliedAway": 12.3,
+        "impliedHome": 87.0,
+        "impliedAway": 13.0,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
@@ -67654,25 +67871,25 @@
         "leagueMetrics": {
           "league": "wnba"
         },
-        "trueHome": 90.9,
-        "trueAway": 9.1,
-        "confidence": 90.9,
-        "rawConfidence": 90.9,
-        "rawHomeWinPct": 90.9,
+        "trueHome": 90.6,
+        "trueAway": 9.4,
+        "confidence": 90.6,
+        "rawConfidence": 90.6,
+        "rawHomeWinPct": 90.6,
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
       "total": {
-        "line": 186.5,
+        "line": 187.5,
         "pickSide": "under",
-        "odds": -105
+        "odds": -115
       },
       "spread": {
         "line": -13.5,
         "pickSide": "home",
         "odds": -105
       },
-      "recordedAt": "2026-08-10T09:53:34.667571+00:00"
+      "recordedAt": "2026-08-10T11:30:40.843197+00:00"
     },
     "401857133": {
       "eventId": "401857133",
@@ -67752,7 +67969,7 @@
         "pickSide": "away",
         "odds": -120
       },
-      "recordedAt": "2026-08-10T09:53:34.667571+00:00"
+      "recordedAt": "2026-08-10T11:30:40.843197+00:00"
     },
     "401816481": {
       "eventId": "401816481",
@@ -67845,7 +68062,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816483": {
       "eventId": "401816483",
@@ -67916,7 +68133,7 @@
           "homeTeamPitchingEra": 3.97,
           "homeBullpenEra": 4.0,
           "awayPitcherApiEra": 3.96,
-          "awayPitcherFip": 2.90963,
+          "awayPitcherFip": 2.90944,
           "awayPitcherRecentEra": 5.58,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 4.34,
@@ -67938,7 +68155,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816480": {
       "eventId": "401816480",
@@ -68031,7 +68248,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816484": {
       "eventId": "401816484",
@@ -68096,7 +68313,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 3.79,
-          "homePitcherFip": 3.64899,
+          "homePitcherFip": 3.6488,
           "homePitcherRecentEra": 2.94,
           "homePitcherHand": "L",
           "homeTeamPitchingEra": 3.3,
@@ -68124,7 +68341,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816479": {
       "eventId": "401816479",
@@ -68189,7 +68406,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 2.28,
-          "homePitcherFip": 2.20046,
+          "homePitcherFip": 2.20028,
           "homePitcherRecentEra": 2.54,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.02,
@@ -68220,9 +68437,9 @@
         "line": 1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 109
+        "odds": 104
       },
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816482": {
       "eventId": "401816482",
@@ -68320,7 +68537,7 @@
         "market": "runline",
         "odds": -164
       },
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816485": {
       "eventId": "401816485",
@@ -68418,7 +68635,7 @@
         "market": "runline",
         "odds": 144
       },
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816486": {
       "eventId": "401816486",
@@ -68511,7 +68728,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816487": {
       "eventId": "401816487",
@@ -68582,7 +68799,7 @@
           "homeTeamPitchingEra": 4.14,
           "homeBullpenEra": 4.16,
           "awayPitcherApiEra": 2.65,
-          "awayPitcherFip": 2.6928,
+          "awayPitcherFip": 2.69261,
           "awayPitcherRecentEra": 1.68,
           "awayPitcherHand": "L",
           "awayTeamPitchingEra": 4.19,
@@ -68609,7 +68826,7 @@
         "market": "runline",
         "odds": 146
       },
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816493": {
       "eventId": "401816493",
@@ -68701,9 +68918,9 @@
         "line": 1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 138
+        "odds": 139
       },
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816488": {
       "eventId": "401816488",
@@ -68798,9 +69015,9 @@
         "line": -1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": -145
+        "odds": -143
       },
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816491": {
       "eventId": "401816491",
@@ -68898,7 +69115,7 @@
         "market": "runline",
         "odds": 158
       },
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816492": {
       "eventId": "401816492",
@@ -68996,7 +69213,7 @@
         "market": "runline",
         "odds": 104
       },
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816489": {
       "eventId": "401816489",
@@ -69092,9 +69309,9 @@
         "line": 1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 112
+        "odds": 110
       },
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401816490": {
       "eventId": "401816490",
@@ -69192,7 +69409,7 @@
         "market": "runline",
         "odds": -139
       },
-      "recordedAt": "2026-08-10T09:51:18.594666+00:00"
+      "recordedAt": "2026-08-10T11:29:06.044482+00:00"
     },
     "401857134": {
       "eventId": "401857134",
@@ -69272,7 +69489,7 @@
         "pickSide": "away",
         "odds": -115
       },
-      "recordedAt": "2026-08-10T09:53:37.203761+00:00"
+      "recordedAt": "2026-08-10T11:30:42.692694+00:00"
     },
     "401857135": {
       "eventId": "401857135",
@@ -69352,7 +69569,7 @@
         "pickSide": "away",
         "odds": -110
       },
-      "recordedAt": "2026-08-10T09:53:37.203761+00:00"
+      "recordedAt": "2026-08-10T11:30:42.692694+00:00"
     },
     "401857136": {
       "eventId": "401857136",
@@ -69432,7 +69649,7 @@
         "pickSide": "home",
         "odds": -110
       },
-      "recordedAt": "2026-08-10T09:53:37.203761+00:00"
+      "recordedAt": "2026-08-10T11:30:42.692694+00:00"
     },
     "401816500": {
       "eventId": "401816500",
@@ -69530,7 +69747,7 @@
         "market": "runline",
         "odds": 144
       },
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816502": {
       "eventId": "401816502",
@@ -69601,7 +69818,7 @@
           "homeTeamPitchingEra": 4.14,
           "homeBullpenEra": 4.16,
           "awayPitcherApiEra": 2.69,
-          "awayPitcherFip": 3.15952,
+          "awayPitcherFip": 3.15933,
           "awayPitcherRecentEra": 3.16,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 4.19,
@@ -69628,7 +69845,7 @@
         "market": "runline",
         "odds": 146
       },
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816507": {
       "eventId": "401816507",
@@ -69693,7 +69910,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 7.04,
-          "homePitcherFip": 4.75657,
+          "homePitcherFip": 4.75639,
           "homePitcherRecentEra": 8.37,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 5.41,
@@ -69726,7 +69943,7 @@
         "market": "runline",
         "odds": 104
       },
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816503": {
       "eventId": "401816503",
@@ -69791,7 +70008,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 4.88,
-          "homePitcherFip": 5.57034,
+          "homePitcherFip": 5.57015,
           "homePitcherRecentEra": 9.51,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.15,
@@ -69821,9 +70038,9 @@
         "line": -1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": -145
+        "odds": -143
       },
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816504": {
       "eventId": "401816504",
@@ -69890,7 +70107,7 @@
           "homeTeamPitchingEra": 4.37,
           "homeBullpenEra": 4.4,
           "awayPitcherApiEra": 6.98,
-          "awayPitcherFip": 7.22494,
+          "awayPitcherFip": 7.22475,
           "awayPitcherRecentEra": 8.0,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 4.59,
@@ -69915,9 +70132,9 @@
         "line": 1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 112
+        "odds": 110
       },
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816506": {
       "eventId": "401816506",
@@ -70015,7 +70232,7 @@
         "market": "runline",
         "odds": 158
       },
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816496": {
       "eventId": "401816496",
@@ -70080,7 +70297,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 4.17,
-          "homePitcherFip": 4.03727,
+          "homePitcherFip": 4.03708,
           "homePitcherRecentEra": 4.76,
           "homePitcherHand": "L",
           "homeTeamPitchingEra": 3.49,
@@ -70108,7 +70325,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816498": {
       "eventId": "401816498",
@@ -70197,7 +70414,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816495": {
       "eventId": "401816495",
@@ -70268,7 +70485,7 @@
           "homeTeamPitchingEra": 4.71,
           "homeBullpenEra": 4.75,
           "awayPitcherApiEra": 5.35,
-          "awayPitcherFip": 4.077575094339623,
+          "awayPitcherFip": 4.077385094339623,
           "awayPitcherRecentEra": 6.34,
           "awayPitcherHand": "L",
           "awayTeamPitchingEra": 4.05,
@@ -70290,7 +70507,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816499": {
       "eventId": "401816499",
@@ -70361,7 +70578,7 @@
           "homeTeamPitchingEra": 3.3,
           "homeBullpenEra": 3.32,
           "awayPitcherApiEra": 3.08,
-          "awayPitcherFip": 3.83384,
+          "awayPitcherFip": 3.83366,
           "awayPitcherRecentEra": 2.35,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 3.78,
@@ -70383,7 +70600,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816494": {
       "eventId": "401816494",
@@ -70479,9 +70696,9 @@
         "line": 1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 109
+        "odds": 104
       },
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816497": {
       "eventId": "401816497",
@@ -70546,7 +70763,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 4.83,
-          "homePitcherFip": 4.1697923841059605,
+          "homePitcherFip": 4.169602384105961,
           "homePitcherRecentEra": 4.44,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 3.6,
@@ -70579,7 +70796,7 @@
         "market": "runline",
         "odds": -164
       },
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816501": {
       "eventId": "401816501",
@@ -70644,7 +70861,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 5.3,
-          "homePitcherFip": 4.562888102893891,
+          "homePitcherFip": 4.562707717041801,
           "homePitcherRecentEra": 7.32,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.11,
@@ -70672,7 +70889,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816508": {
       "eventId": "401816508",
@@ -70768,9 +70985,9 @@
         "line": 1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 138
+        "odds": 139
       },
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401816505": {
       "eventId": "401816505",
@@ -70835,13 +71052,13 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 4.89,
-          "homePitcherFip": 6.000051050724638,
+          "homePitcherFip": 5.999867101449276,
           "homePitcherRecentEra": 8.11,
           "homePitcherHand": "L",
           "homeTeamPitchingEra": 3.72,
           "homeBullpenEra": 3.74,
           "awayPitcherApiEra": 2.45,
-          "awayPitcherFip": 3.08701,
+          "awayPitcherFip": 3.08682,
           "awayPitcherRecentEra": 2.25,
           "awayPitcherHand": "L",
           "awayTeamPitchingEra": 4.84,
@@ -70868,7 +71085,7 @@
         "market": "runline",
         "odds": -139
       },
-      "recordedAt": "2026-08-10T09:52:09.690920+00:00"
+      "recordedAt": "2026-08-10T11:30:08.019602+00:00"
     },
     "401857137": {
       "eventId": "401857137",
@@ -70940,7 +71157,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:53:39.722766+00:00"
+      "recordedAt": "2026-08-10T11:30:44.585189+00:00"
     },
     "401857138": {
       "eventId": "401857138",
@@ -71012,7 +71229,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:53:39.722766+00:00"
+      "recordedAt": "2026-08-10T11:30:44.585189+00:00"
     },
     "401857139": {
       "eventId": "401857139",
@@ -71084,7 +71301,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:53:39.722766+00:00"
+      "recordedAt": "2026-08-10T11:30:44.585189+00:00"
     },
     "401816511": {
       "eventId": "401816511",
@@ -71149,7 +71366,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 3.38,
-          "homePitcherFip": 3.87175,
+          "homePitcherFip": 3.87156,
           "homePitcherRecentEra": 3.35,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 3.49,
@@ -71177,7 +71394,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:52:43.963622+00:00"
+      "recordedAt": "2026-08-10T11:30:12.464793+00:00"
     },
     "401816512": {
       "eventId": "401816512",
@@ -71242,7 +71459,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 3.47,
-          "homePitcherFip": 4.60844,
+          "homePitcherFip": 4.60825,
           "homePitcherRecentEra": 0.0,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 3.97,
@@ -71270,7 +71487,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:52:43.963622+00:00"
+      "recordedAt": "2026-08-10T11:30:12.464793+00:00"
     },
     "401816513": {
       "eventId": "401816513",
@@ -71363,7 +71580,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:52:43.963622+00:00"
+      "recordedAt": "2026-08-10T11:30:12.464793+00:00"
     },
     "401816514": {
       "eventId": "401816514",
@@ -71430,7 +71647,7 @@
           "homeTeamPitchingEra": 4.11,
           "homeBullpenEra": 4.12,
           "awayPitcherApiEra": 3.92,
-          "awayPitcherFip": 4.68804,
+          "awayPitcherFip": 4.68786,
           "awayPitcherRecentEra": 3.31,
           "awayPitcherHand": "L",
           "awayTeamPitchingEra": 4.48,
@@ -71452,7 +71669,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:52:43.963622+00:00"
+      "recordedAt": "2026-08-10T11:30:12.464793+00:00"
     },
     "401816509": {
       "eventId": "401816509",
@@ -71517,7 +71734,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 7.25,
-          "homePitcherFip": 6.89256,
+          "homePitcherFip": 6.89238,
           "homePitcherRecentEra": 9.8,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.02,
@@ -71548,9 +71765,9 @@
         "line": 1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 109
+        "odds": 104
       },
-      "recordedAt": "2026-08-10T09:52:43.963622+00:00"
+      "recordedAt": "2026-08-10T11:30:12.464793+00:00"
     },
     "401816510": {
       "eventId": "401816510",
@@ -71621,7 +71838,7 @@
           "homeTeamPitchingEra": 4.71,
           "homeBullpenEra": 4.75,
           "awayPitcherApiEra": 4.29,
-          "awayPitcherFip": 3.533663151364764,
+          "awayPitcherFip": 3.533473151364764,
           "awayPitcherRecentEra": 1.58,
           "awayPitcherHand": "R",
           "awayTeamPitchingEra": 4.05,
@@ -71643,7 +71860,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:52:43.963622+00:00"
+      "recordedAt": "2026-08-10T11:30:12.464793+00:00"
     },
     "401816525": {
       "eventId": "401816525",
@@ -71708,7 +71925,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 3.76,
-          "homePitcherFip": 3.83891,
+          "homePitcherFip": 3.83872,
           "homePitcherRecentEra": 1.11,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.59,
@@ -71736,7 +71953,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:52:43.963622+00:00"
+      "recordedAt": "2026-08-10T11:30:12.464793+00:00"
     },
     "401816516": {
       "eventId": "401816516",
@@ -71801,7 +72018,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 2.83,
-          "homePitcherFip": 3.80504,
+          "homePitcherFip": 3.80485,
           "homePitcherRecentEra": 2.5,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 4.53,
@@ -71832,9 +72049,9 @@
         "line": 1.5,
         "pickSide": "away",
         "market": "runline",
-        "odds": 138
+        "odds": 139
       },
-      "recordedAt": "2026-08-10T09:52:43.963622+00:00"
+      "recordedAt": "2026-08-10T11:30:12.464793+00:00"
     },
     "401816515": {
       "eventId": "401816515",
@@ -71899,7 +72116,7 @@
             "MLB Stats API team pitching"
           ],
           "homePitcherApiEra": 4.54,
-          "homePitcherFip": 4.95367,
+          "homePitcherFip": 4.95349,
           "homePitcherRecentEra": 6.23,
           "homePitcherHand": "R",
           "homeTeamPitchingEra": 3.72,
@@ -71927,7 +72144,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:52:43.963622+00:00"
+      "recordedAt": "2026-08-10T11:30:12.464793+00:00"
     },
     "401873272": {
       "eventId": "401873272",
@@ -71939,13 +72156,13 @@
       "predictedWinner": "Cincinnati Bengals",
       "predictedSide": "home",
       "outcomeLabel": "Cincinnati Bengals to win",
-      "confidence": 60.7,
-      "rawConfidence": 60.7,
-      "rawHomeWinPct": 60.7,
+      "confidence": 60.3,
+      "rawConfidence": 60.3,
+      "rawHomeWinPct": 60.3,
       "probabilityMethod": "fitted",
-      "evPct": -18.32,
+      "evPct": -17.95,
       "kellyPct": 0.0,
-      "pickOdds": -290,
+      "pickOdds": -278,
       "openingOdds": -290,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
@@ -71971,8 +72188,8 @@
         "awayRest": null,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 72.7,
-        "impliedAway": 27.3,
+        "impliedHome": 71.9,
+        "impliedAway": 28.1,
         "hasLineup": false,
         "dataCoverage": {
           "lineup": false,
@@ -71989,11 +72206,11 @@
         "leagueMetrics": {
           "league": "nfl"
         },
-        "trueHome": 60.7,
-        "trueAway": 39.3,
-        "confidence": 60.7,
-        "rawConfidence": 60.7,
-        "rawHomeWinPct": 60.7,
+        "trueHome": 60.3,
+        "trueAway": 39.7,
+        "confidence": 60.3,
+        "rawConfidence": 60.3,
+        "rawHomeWinPct": 60.3,
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
@@ -72005,9 +72222,9 @@
       "spread": {
         "line": -7.0,
         "pickSide": "away",
-        "odds": -110
+        "odds": -115
       },
-      "recordedAt": "2026-08-10T09:53:01.211233+00:00"
+      "recordedAt": "2026-08-10T11:30:23.279281+00:00"
     },
     "401873275": {
       "eventId": "401873275",
@@ -72087,7 +72304,7 @@
         "pickSide": "home",
         "odds": -115
       },
-      "recordedAt": "2026-08-10T09:53:01.211233+00:00"
+      "recordedAt": "2026-08-10T11:30:23.279281+00:00"
     },
     "401873273": {
       "eventId": "401873273",
@@ -72167,7 +72384,7 @@
         "pickSide": "home",
         "odds": -105
       },
-      "recordedAt": "2026-08-10T09:53:01.211233+00:00"
+      "recordedAt": "2026-08-10T11:30:23.279281+00:00"
     },
     "401873640": {
       "eventId": "401873640",
@@ -72247,7 +72464,7 @@
         "pickSide": "home",
         "odds": -108
       },
-      "recordedAt": "2026-08-10T09:53:01.211233+00:00"
+      "recordedAt": "2026-08-10T11:30:23.279281+00:00"
     },
     "401873274": {
       "eventId": "401873274",
@@ -72327,7 +72544,7 @@
         "pickSide": "home",
         "odds": -108
       },
-      "recordedAt": "2026-08-10T09:53:01.211233+00:00"
+      "recordedAt": "2026-08-10T11:30:23.279281+00:00"
     },
     "401874392": {
       "eventId": "401874392",
@@ -72407,7 +72624,7 @@
         "pickSide": "home",
         "odds": -115
       },
-      "recordedAt": "2026-08-10T09:53:01.211233+00:00"
+      "recordedAt": "2026-08-10T11:30:23.279281+00:00"
     },
     "401857140": {
       "eventId": "401857140",
@@ -72479,7 +72696,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:53:42.946893+00:00"
+      "recordedAt": "2026-08-10T11:30:46.585766+00:00"
     },
     "401857141": {
       "eventId": "401857141",
@@ -72551,7 +72768,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:53:42.946893+00:00"
+      "recordedAt": "2026-08-10T11:30:46.585766+00:00"
     },
     "401857142": {
       "eventId": "401857142",
@@ -72623,7 +72840,7 @@
       },
       "total": null,
       "spread": null,
-      "recordedAt": "2026-08-10T09:53:42.946893+00:00"
+      "recordedAt": "2026-08-10T11:30:46.585766+00:00"
     }
   }
 }
