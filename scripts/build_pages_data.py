@@ -258,12 +258,22 @@ def report_injury_scorer(payloads: dict[str, dict]) -> None:
         print("Injury scorer: no teams with injuries to score", flush=True)
         return
 
+    from data_providers.injury_severity import last_failure
+
     if counts["llm"]:
         print(
             f"Injury scorer: LLM rated {counts['llm']}/{scored} teams "
             f"({counts['deterministic']} fell back) -- NVIDIA_API_KEY is working",
             flush=True,
         )
+        # Working is not the same as correct. api_key() will rejoin a key that
+        # got wrapped across lines rather than fail a build over a line break,
+        # and returning here without saying so would leave the secret quietly
+        # depending on that recovery -- until the day the paste breaks
+        # differently and the whole thing goes deterministic again.
+        note = last_failure()
+        if note:
+            print(f"::warning title=Injury scorer::{note}", flush=True)
         return
 
     # Name the actual cause. "absent, rejected or out of quota" was three
@@ -276,8 +286,6 @@ def report_injury_scorer(payloads: dict[str, dict]) -> None:
             flush=True,
         )
         return
-
-    from data_providers.injury_severity import last_failure
 
     reason = last_failure()
     print(

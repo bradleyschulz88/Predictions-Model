@@ -419,10 +419,28 @@ class ApiKeyHygieneTests(unittest.TestCase):
         self.assertIn("Invalid header value", str(caught.exception))
 
     def test_interior_whitespace_is_refused_with_its_own_reason(self) -> None:
-        with self._with("nvapi-abc 123"):
+        """Two keys end to end: joining them makes a longer wrong key, not a right one."""
+        doubled = "nvapi-abc123 nvapi-def456"
+        with self._with(doubled):
             self.assertIsNone(self.module.api_key())
         self.assertIn("single line", self.module.last_failure())
 
+    def test_one_key_split_across_lines_is_rejoined(self) -> None:
+        """A wrapped paste is recoverable, and failing a build over it is silly.
+
+        The discriminator is the prefix count: one key broken in half still has
+        a single `nvapi-`, two keys pasted end to end have two.
+        """
+        with self._with("nvapi-abc123\ndef456"):
+            self.assertEqual(self.module.api_key(), "nvapi-abc123def456")
+
+    def test_a_rejoined_key_still_says_to_fix_the_secret(self) -> None:
+        """Recovered is not correct. It must not go quiet."""
+        with self._with("nvapi-abc123\ndef456"):
+            self.module.api_key()
+        reason = self.module.last_failure()
+        self.assertIn("re-paste", reason)
+        self.assertIn("single line", reason)
     def test_whitespace_only_is_refused(self) -> None:
         with self._with("   "):
             self.assertIsNone(self.module.api_key())
@@ -463,6 +481,63 @@ class ApiKeyHygieneTests(unittest.TestCase):
             with self.subTest(key):
                 with self._with(key):
                     self.assertEqual(self.module.api_key(), key)
+
+
+class KeyShapeReportTests(unittest.TestCase):
+    """A rejected secret has to describe itself, because nobody else can see it.
+
+    Once saved, a GitHub secret is write-only -- the build is the only thing
+    that can look at the value. "Contains a space or line break" was true and
+    useless: a key wrapped across two lines, two keys pasted end to end, and a
+    whole line of source code in the field all produce it, and all three need a
+    different fix. So the reason now reports the value's shape.
+
+    Nothing reported is the key. A length, an offset, a character class, and
+    whether the published `nvapi-` prefix is present.
+    """
+
+    def setUp(self) -> None:
+        from data_providers import injury_severity
+
+        self.module = injury_severity
+        injury_severity.reset_failure()
+
+    def _reason(self, value):
+        import os
+        from unittest import mock
+
+        with mock.patch.dict(os.environ, {"NVIDIA_API_KEY": value}):
+            self.module.api_key()
+        return self.module.last_failure()
+
+    def test_it_names_the_kind_of_whitespace(self) -> None:
+        self.assertIn("line break", self._reason("nvapi-a\nb nvapi-c"))
+        self.module.reset_failure()
+        self.assertIn("a space", self._reason("nvapi-a b nvapi-c"))
+
+    def test_a_non_breaking_space_is_called_out_by_name(self) -> None:
+        """The signature of copying out of a rendered page rather than a field."""
+        self.assertIn("non-breaking", self._reason("nvapi-a\xa0b nvapi-c"))
+
+    def test_it_gives_a_length_and_a_position(self) -> None:
+        reason = self._reason("nvapi-abc def nvapi-x")
+        self.assertIn("21 characters", reason)
+        self.assertIn("position 9", reason)
+
+    def test_two_keys_are_named_as_two_keys(self) -> None:
+        reason = self._reason("nvapi-abc123 nvapi-def456")
+        self.assertIn("two keys, not one", reason)
+
+    def test_a_value_that_is_not_a_key_at_all_says_so(self) -> None:
+        """`api_key = "nvapi-..."` pasted whole is the obvious way to get here."""
+        reason = self._reason('api_key = "nvapi-abc123"')
+        self.assertIn("does not start with", reason)
+
+    def test_the_report_never_contains_the_key_itself(self) -> None:
+        """The whole point: diagnosable without being readable."""
+        reason = self._reason("nvapi-SECRETPART1 nvapi-SECRETPART2")
+        self.assertNotIn("SECRETPART", reason)
+
 
 
 if __name__ == "__main__":
