@@ -45,7 +45,7 @@ from typing import Any, NamedTuple
 
 from data_providers.utils import team_match_score
 from market import decimal_to_american
-from sbr_client import SBRClientError, get_text
+from sbr_client import SBRClientError, get_text_with_headers
 
 API_BASE = "https://api.the-odds-api.com/v4/sports"
 
@@ -179,8 +179,47 @@ def is_configured() -> bool:
 
 
 def quota_status() -> dict[str, Any]:
-    """Whatever the last call reported about the remaining monthly budget."""
+    """Whatever the last call reported about the remaining monthly budget.
+
+    Empty when nothing has been fetched this run -- a cache hit costs no credit
+    and reports no headers, so an empty dict means "no call was made", not "no
+    budget left".
+    """
     return dict(_QUOTA)
+
+
+# What the API reports about the budget, and what to call each one here. Values
+# arrive as strings; anything that will not parse as an integer is dropped
+# rather than published as a number that is not one.
+QUOTA_HEADERS = {
+    "x-requests-remaining": "remaining",
+    "x-requests-used": "used",
+    "x-requests-last": "lastCallCost",
+}
+
+
+def _record_quota(headers: dict[str, str]) -> None:
+    """Pull the credit balance out of a response.
+
+    This is the only place the budget becomes visible. Before it existed the
+    module declared `_QUOTA`, exposed `quota_status()` and had the build print
+    the result, but no code ever wrote to the dict -- `get_text` returns a body
+    and discards the response -- so the quota line never printed once. The spend
+    was invisible for as long as the provider had been live.
+    """
+    # Lower-cased again here rather than trusting the fetcher to have done it.
+    # HTTP header names are case-insensitive, this is the only reader of them,
+    # and getting it wrong costs a silent empty dict that looks exactly like
+    # "no call was made" -- which is the failure this function exists to end.
+    folded = {str(key).lower(): value for key, value in headers.items()}
+    for header, name in QUOTA_HEADERS.items():
+        raw = folded.get(header)
+        if raw is None:
+            continue
+        try:
+            _QUOTA[name] = int(float(str(raw).strip()))
+        except (TypeError, ValueError):
+            continue
 
 
 def clear_cache() -> None:
@@ -227,7 +266,9 @@ def fetch_league_odds(
         f"&apiKey={os.environ['ODDS_API_KEY'].strip()}"
     )
     try:
-        payload = json.loads(get_text(url, retries=2, verify_ssl=verify_ssl))
+        body, headers = get_text_with_headers(url, retries=2, verify_ssl=verify_ssl)
+        _record_quota(headers)
+        payload = json.loads(body)
     except (SBRClientError, json.JSONDecodeError, ValueError, OSError):
         # Cache the failure briefly too. A key that has run out of credits
         # fails on every call, and retrying it every build helps nobody.

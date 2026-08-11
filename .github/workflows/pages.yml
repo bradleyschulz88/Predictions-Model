@@ -50,7 +50,8 @@ jobs:
     timeout-minutes: 45
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      # Whichever attempt got there. The first is empty when it timed out.
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -218,25 +219,48 @@ jobs:
         with:
           path: docs
 
-      # The action's default timeout is 600000ms, and on 2026-08-06 that became
-      # the difference between a green build and a red one rather than a real
-      # signal. GitHub's Pages deployments slowed from ~6 seconds the day
-      # before to the best part of ten minutes:
+      # The action's timeout is 600000ms and that is also its ceiling. On
+      # 2026-08-06 it became the difference between a green build and a red one
+      # rather than a real signal -- GitHub's Pages deployments slowed from ~6
+      # seconds the day before to the best part of ten minutes:
       #
       #   14:58Z run  deploy took 9m39s  -> succeeded with 21 seconds to spare
       #   12:28Z run  deploy took 10m02s -> "Timeout reached, aborting!"
       #
       # Everything before the deploy succeeded in both: tests, refit, build,
       # and the data commit. The only difference between them was which side of
-      # the default a queue happened to land on, and losing that coin flip
+      # ten minutes a queue happened to land on, and losing that coin flip
       # cancelled a deployment that was otherwise on its way.
       #
-      # Twenty minutes is headroom over the worst observed, not a fix for a
-      # hang: the step still fails loudly if the deployment genuinely never
-      # lands, which is the case worth seeing. Runs sit hours apart in
-      # practice, so holding the concurrency group longer costs nothing.
+      # Raising the timeout was the obvious fix and it does not work. `timeout:
+      # 1200000` shipped, and every run since has logged
+      #
+      #   Warning: timeout value is greater than the allowed maximum -
+      #   timeout set to the maximum of 600000 milliseconds
+      #
+      # so the value was clamped straight back to ten minutes. The stated
+      # twenty minutes of headroom never existed. Do not raise this again; the
+      # action will not honour it. tests/test_deploy_timeout.py pins that.
+      #
+      # A second attempt is what is actually available. On timeout the action
+      # cancels the deployment it was waiting on, so the retry starts clean
+      # rather than racing a live one, and it buys the same ten minutes over
+      # again against a queue that has had ten minutes to drain. `timeout-minutes:
+      # 45` on the job leaves room for both. If the retry fails too, the job
+      # fails -- a deployment that never lands in twenty minutes of waiting is
+      # the case worth seeing red.
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+        # So a timed-out first attempt reaches the retry below instead of
+        # ending the job here.
+        continue-on-error: true
         with:
-          timeout: 1200000
+          timeout: 600000
+
+      - name: Retry the Pages deployment
+        id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        with:
+          timeout: 600000
