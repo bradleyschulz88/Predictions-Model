@@ -27,6 +27,31 @@ const $ = (s, r = document) => r.querySelector(s);
    else would notice them drifting apart. */
 const STALE_AFTER_MINUTES = 150;
 
+/* One line saying what the board is, sized from its own record.
+
+   This page names picks "worth backing" and prints a Kelly stake against them,
+   and until now said nothing at all about what that rests on. A stake size
+   reads as a recommendation, and the record behind it is thinner than the
+   confident presentation suggests: measured 2026-08-07, +2.0% over 802 graded
+   picks overall, while totals ran 48.6% on 70 priced picks and the spread
+   record rested on 13.
+
+   The numbers come from accuracy.json rather than being written into the
+   markup, so this cannot drift into flattering the model the way a hardcoded
+   figure would. Deliberately not a wall of legal text -- one sentence a reader
+   will actually read, stating the return and the sample it came from. */
+function standingCaveat(accuracy) {
+  const all = accuracy?.summary?.allTime || {};
+  const n = all.total;
+  const roi = all.roiPct;
+  if (!n) return `Model output, not betting advice. Stakes are Kelly-sized from a fitted model.`;
+  const record = roi == null
+    ? `measured over ${n} graded picks`
+    : `showing ${roi > 0 ? "+" : ""}${roi}% return across ${n} graded picks`;
+  return `Model output, not betting advice — Kelly-sized from a fitted model ` +
+    `${record}. Individual markets are thinner than that, and some lose.`;
+}
+
 /* How old this data is, in words, appended to the absolute timestamp.
 
    The footer used to show the build time alone. That is the right fact and
@@ -2000,7 +2025,8 @@ async function boot() {
   $("#foot").innerHTML = accuracy
     ? `Built ${new Date(accuracy.updatedAt).toLocaleString(undefined, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}` +
       `${buildAge(accuracy.updatedAt)}<br>` +
-      `${(accuracy.summary?.allTime || {}).total ?? 0} graded picks`
+      `${(accuracy.summary?.allTime || {}).total ?? 0} graded picks<br>` +
+      standingCaveat(accuracy)
     : "Data unavailable";
 
   renderBoard();
