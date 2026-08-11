@@ -193,12 +193,98 @@ def api_key() -> str | None:
         _note_failure("NVIDIA_API_KEY is set but contains only whitespace")
         return None
     if any(character.isspace() for character in key):
+        joined = "".join(key.split())
+        # One key that got wrapped across lines somewhere between NVIDIA's page
+        # and the secrets field is recoverable, and the difference from a
+        # doubled paste is visible: two keys concatenated contain the prefix
+        # twice. Recover it and say so loudly rather than failing a build over
+        # a line break, but do not pretend the secret is right.
+        if joined.startswith(KEY_PREFIX) and joined.count(KEY_PREFIX) == 1:
+            _note_failure(
+                "NVIDIA_API_KEY had a line break inside it and was joined back into "
+                f"one key ({_describe_shape(key)}). It worked this time; re-paste the "
+                "secret as a single line so it does not depend on this"
+            )
+            return joined
         _note_failure(
             "NVIDIA_API_KEY contains a space or line break inside it, so it is a "
-            "partial or doubled paste -- copy the key again as a single line"
+            f"partial or doubled paste -- copy the key again as a single line. "
+            f"What is stored: {_describe_shape(key)}"
+        )
+        return None
+    if _looks_like_an_unexpanded_variable(key):
+        _note_failure(
+            f"NVIDIA_API_KEY is set to the literal text {key!r}, not a key. NVIDIA's "
+            "sample code writes api_key=\"$NVIDIA_API_KEY\" as a placeholder, and "
+            "Python does not expand $NAME inside quotes -- paste the nvapi- key itself"
         )
         return None
     return key
+
+
+# Every NVIDIA API key starts with this. It is a public format marker, not a
+# secret, which is what makes it safe to count and report on.
+KEY_PREFIX = "nvapi-"
+
+# What to call the whitespace characters, so a report says "a newline" rather
+# than an escape code nobody reads at a glance.
+_WHITESPACE_NAMES = {
+    "\n": "a line break",
+    "\r": "a carriage return",
+    "\t": "a tab",
+    " ": "a space",
+    "\xa0": "a non-breaking space (typical of a copy out of a rendered web page)",
+}
+
+
+def _describe_shape(key: str) -> str:
+    """Say what is wrong with a bad key without printing any of it.
+
+    "Contains a space or line break inside it" is true and not actionable: it
+    does not distinguish a key that got wrapped across two lines from two keys
+    pasted end to end from a whole line of source code pasted into the field,
+    and all three need different fixes. Nobody can tell which from the outside,
+    because a secret is write-only once saved -- so the build is the only thing
+    that can see the value, and it has to describe it without leaking it.
+
+    Length, a position, and a character class are not the key. The `nvapi-`
+    prefix is a published format marker rather than a secret, so whether it is
+    present is safe to state and is the fastest way to spot a paste that picked
+    up surrounding text.
+    """
+    first = next((index for index, char in enumerate(key) if char.isspace()), None)
+    kind = _WHITESPACE_NAMES.get(key[first], "whitespace") if first is not None else "whitespace"
+    runs = len(key.split()) - 1
+    parts = [
+        f"{len(key)} characters",
+        f"first {kind} at position {first}",
+        f"{runs} break{'s' if runs != 1 else ''} in total",
+    ]
+    if not key.startswith(KEY_PREFIX):
+        parts.append(f"and it does not start with {KEY_PREFIX!r} -- something else got copied")
+    elif key.count(KEY_PREFIX) > 1:
+        parts.append(f"and {KEY_PREFIX!r} appears {key.count(KEY_PREFIX)} times -- two keys, not one")
+    return ", ".join(parts)
+
+
+# `$NVIDIA_API_KEY`, `${NVIDIA_API_KEY}`, `%NVIDIA_API_KEY%`: a variable reference
+# that nothing ever substituted.
+_UNEXPANDED = re.compile(r"^(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?|%[A-Za-z_][A-Za-z0-9_]*%)$")
+
+
+def _looks_like_an_unexpanded_variable(key: str) -> bool:
+    """Whether the "key" is really the name of where the key should have come from.
+
+    NVIDIA's quick-start snippet reads `api_key = "$NVIDIA_API_KEY"`, which is a
+    placeholder in shell clothing -- Python sends those fifteen characters
+    verbatim. Copying that line into a secret is an easy mistake and produces a
+    plain 401, indistinguishable from a revoked key, so the advice it earns
+    ("rotate the key") is the one thing that cannot help.
+
+    Deliberately narrow: an entire value that is nothing but a variable
+    reference. A real key that merely contains a dollar sign is untouched.
+    """
+    return bool(_UNEXPANDED.match(key))
 
 
 def llm_enabled() -> bool:

@@ -47,6 +47,15 @@ def _game():
             "awayTeam": "Collingwood Magpies", "lines": []}
 
 
+def _ok(body: str, headers: dict[str, str] | None = None):
+    """What get_text_with_headers hands back: the body, then the headers.
+
+    Most tests here care only about the body, so the headers default to none at
+    all -- which is also a real case, since an origin is free not to send them.
+    """
+    return body, dict(headers or {})
+
+
 class ConfigurationTests(unittest.TestCase):
     """Without a key this must be inert, not broken."""
 
@@ -57,7 +66,7 @@ class ConfigurationTests(unittest.TestCase):
         games = [_game()]
         with patch.dict("os.environ", {}, clear=False) as _, \
              patch.object(odds_api.os, "environ", {}), \
-             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+             patch.object(odds_api, "get_text_with_headers", side_effect=AssertionError("must not call")):
             stats = odds_api.attach_odds_to_games(games, league="afl")
         self.assertFalse(stats["configured"])
         self.assertEqual(stats["priced"], 0)
@@ -71,7 +80,7 @@ class ConfigurationTests(unittest.TestCase):
         SportsBookReview supplies that for free.
         """
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+             patch.object(odds_api, "get_text_with_headers", side_effect=AssertionError("must not call")):
             for league in ("nba", "nfl", "wnba", "epl"):
                 stats = odds_api.attach_odds_to_games([_game()], league=league)
                 self.assertEqual(stats["priced"], 0, msg=league)
@@ -85,7 +94,7 @@ class ConfigurationTests(unittest.TestCase):
         have quietly opened this path too.
         """
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+             patch.object(odds_api, "get_text_with_headers", side_effect=AssertionError("must not call")):
             stats = odds_api.attach_odds_to_games([_game()], league="mlb")
         self.assertEqual(stats["priced"], 0)
 
@@ -100,20 +109,20 @@ class BudgetTests(unittest.TestCase):
         priced = _game()
         priced["lines"] = [{"viewType": "MoneyLine", "currentLine": {"home": "-120", "away": "+100"}}]
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+             patch.object(odds_api, "get_text_with_headers", side_effect=AssertionError("must not call")):
             stats = odds_api.attach_odds_to_games([priced], league="afl")
         self.assertEqual(stats["considered"], 0)
 
     def test_repeat_builds_inside_the_window_share_one_call(self) -> None:
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", return_value=json.dumps(_payload())) as fetch:
+             patch.object(odds_api, "get_text_with_headers", return_value=_ok(json.dumps(_payload()))) as fetch:
             for _ in range(5):
                 odds_api.attach_odds_to_games([_game()], league="afl")
         self.assertEqual(fetch.call_count, 1, "each build must not cost its own credits")
 
     def test_the_cache_expires_so_prices_do_not_go_stale_forever(self) -> None:
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", return_value=json.dumps(_payload())) as fetch:
+             patch.object(odds_api, "get_text_with_headers", return_value=_ok(json.dumps(_payload()))) as fetch:
             odds_api.fetch_league_odds("afl", now=0.0)
             odds_api.fetch_league_odds("afl", now=odds_api.CACHE_TTL_SECONDS + 1)
         self.assertEqual(fetch.call_count, 2)
@@ -121,14 +130,14 @@ class BudgetTests(unittest.TestCase):
     def test_a_failure_is_cached_too(self) -> None:
         """A key out of credits fails every call; retrying each build helps nobody."""
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", side_effect=OSError("quota")) as fetch:
+             patch.object(odds_api, "get_text_with_headers", side_effect=OSError("quota")) as fetch:
             for _ in range(4):
                 odds_api.attach_odds_to_games([_game()], league="afl")
         self.assertEqual(fetch.call_count, 1)
 
     def test_a_failure_never_raises(self) -> None:
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", side_effect=OSError("down")):
+             patch.object(odds_api, "get_text_with_headers", side_effect=OSError("down")):
             self.assertEqual(odds_api.fetch_league_odds("afl"), [])
 
 
@@ -141,7 +150,7 @@ class LineShapeTests(unittest.TestCase):
     def _lines(self):
         games = [_game()]
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", return_value=json.dumps(_payload())):
+             patch.object(odds_api, "get_text_with_headers", return_value=_ok(json.dumps(_payload()))):
             odds_api.attach_odds_to_games(games, league="afl")
         return {line["viewType"]: line["currentLine"] for line in games[0]["lines"]}
 
@@ -154,7 +163,7 @@ class LineShapeTests(unittest.TestCase):
 
         games = [_game()]
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", return_value=json.dumps(_payload())):
+             patch.object(odds_api, "get_text_with_headers", return_value=_ok(json.dumps(_payload()))):
             odds_api.attach_odds_to_games(games, league="afl")
         lines = games[0]["lines"]
         self.assertEqual(extract_total_price(lines, "over"), -110)
@@ -165,7 +174,7 @@ class LineShapeTests(unittest.TestCase):
 
         games = [_game()]
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", return_value=json.dumps(_payload())):
+             patch.object(odds_api, "get_text_with_headers", return_value=_ok(json.dumps(_payload()))):
             odds_api.attach_odds_to_games(games, league="afl")
         self.assertAlmostEqual(extract_spread_line(games[0]["lines"]), -5.5)
         self.assertAlmostEqual(extract_total_line(games[0]["lines"]), 165.5)
@@ -176,7 +185,7 @@ class LineShapeTests(unittest.TestCase):
 
         games = [_game()]
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", return_value=json.dumps(_payload())):
+             patch.object(odds_api, "get_text_with_headers", return_value=_ok(json.dumps(_payload()))):
             odds_api.attach_odds_to_games(games, league="afl")
         apply_predictions(games)
         value = games[0]["prediction"].get("value")
@@ -202,7 +211,7 @@ class MatchingTests(unittest.TestCase):
         games = [_game()]
         other = _payload(home="Geelong", away="Hawthorn")
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", return_value=json.dumps(other)):
+             patch.object(odds_api, "get_text_with_headers", return_value=_ok(json.dumps(other))):
             stats = odds_api.attach_odds_to_games(games, league="afl")
         self.assertEqual(stats["priced"], 0)
         self.assertEqual(games[0]["lines"], [])
@@ -254,7 +263,7 @@ class SpreadFillTests(unittest.TestCase):
         """The bug this exists for: the game looks covered and is not."""
         games = [self._mlb_game()]
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", return_value=json.dumps(self._mlb_payload())):
+             patch.object(odds_api, "get_text_with_headers", return_value=_ok(json.dumps(self._mlb_payload()))):
             stats = odds_api.fill_missing_spread_prices(games, league="mlb")
         self.assertEqual(stats["considered"], 1)
         self.assertEqual(stats["priced"], 1)
@@ -265,7 +274,7 @@ class SpreadFillTests(unittest.TestCase):
 
         games = [self._mlb_game()]
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", return_value=json.dumps(self._mlb_payload())):
+             patch.object(odds_api, "get_text_with_headers", return_value=_ok(json.dumps(self._mlb_payload()))):
             odds_api.fill_missing_spread_prices(games, league="mlb")
         self.assertEqual(extract_spread_price(games[0]["lines"], "home"), 105)
         self.assertEqual(extract_spread_price(games[0]["lines"], "away"), -125)
@@ -278,7 +287,7 @@ class SpreadFillTests(unittest.TestCase):
             {"key": "h2h", "outcomes": [{"name": self.HOME, "price": 1.5},
                                         {"name": self.AWAY, "price": 2.6}]})
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", return_value=json.dumps(payload)):
+             patch.object(odds_api, "get_text_with_headers", return_value=_ok(json.dumps(payload))):
             odds_api.fill_missing_spread_prices(games, league="mlb")
         views = [line["viewType"] for line in games[0]["lines"]]
         self.assertEqual(views.count("MoneyLine"), 1)
@@ -288,21 +297,21 @@ class SpreadFillTests(unittest.TestCase):
         game = self._mlb_game()
         game["lines"][1]["currentLine"] = {"home": "-1.5 (+105)", "away": "+1.5 (-125)"}
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+             patch.object(odds_api, "get_text_with_headers", side_effect=AssertionError("must not call")):
             stats = odds_api.fill_missing_spread_prices([game], league="mlb")
         self.assertEqual(stats["considered"], 0)
         self.assertEqual(stats["priced"], 0)
 
     def test_no_key_means_no_call(self) -> None:
         with patch.object(odds_api.os, "environ", {}), \
-             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+             patch.object(odds_api, "get_text_with_headers", side_effect=AssertionError("must not call")):
             stats = odds_api.fill_missing_spread_prices([self._mlb_game()], league="mlb")
         self.assertFalse(stats["configured"])
         self.assertEqual(stats["priced"], 0)
 
     def test_a_league_without_a_spreads_market_never_calls(self) -> None:
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+             patch.object(odds_api, "get_text_with_headers", side_effect=AssertionError("must not call")):
             for league in ("nba", "nfl", "wnba", "epl"):
                 stats = odds_api.fill_missing_spread_prices([self._mlb_game()], league=league)
                 self.assertEqual(stats["priced"], 0, msg=league)
@@ -370,7 +379,7 @@ class CachePersistenceTests(unittest.TestCase):
         odds_api.load_cache()
         with patch.object(odds_api.os, "environ",
                           {"ODDS_API_KEY": "k", odds_api.CACHE_FILE_ENV: str(self.path)}), \
-             patch.object(odds_api, "get_text", side_effect=AssertionError("must not call")):
+             patch.object(odds_api, "get_text_with_headers", side_effect=AssertionError("must not call")):
             events = odds_api.fetch_league_odds("mlb")
         self.assertEqual(events, [{"id": "m1"}])
 
@@ -491,10 +500,112 @@ class FixtureOrientationTests(unittest.TestCase):
                     {"name": "New York Yankees", "price": 1.8, "point": 1.5}]}]}],
         }]
         with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
-             patch.object(odds_api, "get_text", return_value=json.dumps(reversed_event)):
+             patch.object(odds_api, "get_text_with_headers", return_value=_ok(json.dumps(reversed_event))):
             stats = odds_api.fill_missing_spread_prices([game], league="mlb")
         self.assertEqual(stats["priced"], 0)
         self.assertEqual([line["viewType"] for line in game["lines"]], ["MoneyLine"])
+
+
+class QuotaReportingTests(unittest.TestCase):
+    """The credit balance has to leave the response and reach the log.
+
+    It did not, for the whole time this provider had been live. The module
+    declared `_QUOTA`, exposed `quota_status()`, and `scripts/build_pages_data`
+    printed `Odds API quota: {...}` whenever that came back non-empty -- but
+    nothing ever wrote to the dict, because `get_text` returns a body and drops
+    the response object that carries the headers. So the line never printed
+    once, and the 11 Aug 2026 build spent credits on 7 slates with no record of
+    what was left. Verified against that run's log: no quota line appears.
+
+    That matters more here than it would elsewhere. The free plan is 500 credits
+    a month and the failure mode of running out is silent -- every call fails,
+    the failure is cached, and prices simply stop appearing.
+    """
+
+    def setUp(self) -> None:
+        odds_api.clear_cache()
+
+    def _fetch(self, headers):
+        with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
+             patch.object(odds_api, "get_text_with_headers",
+                          return_value=_ok(json.dumps(_payload()), headers)):
+            odds_api.fetch_league_odds("afl")
+        return odds_api.quota_status()
+
+    def test_the_balance_is_read_off_the_response(self) -> None:
+        quota = self._fetch({"x-requests-remaining": "472", "x-requests-used": "28"})
+        self.assertEqual(quota["remaining"], 472)
+        self.assertEqual(quota["used"], 28)
+
+    def test_the_cost_of_the_last_call_is_recorded(self) -> None:
+        """Three for AFL, one for MLB -- worth seeing rather than assuming."""
+        self.assertEqual(self._fetch({"x-requests-last": "3"})["lastCallCost"], 3)
+
+    def test_headers_are_matched_whatever_case_they_arrive_in(self) -> None:
+        self.assertEqual(self._fetch({"X-Requests-Remaining": "5"}).get("remaining"), 5)
+
+    def test_numbers_are_numbers_and_nonsense_is_dropped(self) -> None:
+        quota = self._fetch({"x-requests-remaining": "not a number", "x-requests-used": "9"})
+        self.assertNotIn("remaining", quota)
+        self.assertEqual(quota["used"], 9)
+
+    def test_nothing_fetched_means_no_claim_about_the_budget(self) -> None:
+        """Empty must read as "no call made", never as "no credits left"."""
+        self.assertEqual(odds_api.quota_status(), {})
+
+    def test_a_cache_hit_leaves_the_last_known_balance_alone(self) -> None:
+        """A cached slate costs nothing, so it reports nothing new."""
+        self._fetch({"x-requests-remaining": "400"})
+        with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
+             patch.object(odds_api, "get_text_with_headers",
+                          side_effect=AssertionError("must not call")):
+            odds_api.fetch_league_odds("afl")
+        self.assertEqual(odds_api.quota_status()["remaining"], 400)
+
+    def test_a_credit_spent_on_an_unreadable_reply_is_still_counted(self) -> None:
+        """The charge lands when the request does, not when the JSON parses."""
+        with patch.object(odds_api.os, "environ", {"ODDS_API_KEY": "k"}), \
+             patch.object(odds_api, "get_text_with_headers",
+                          return_value=_ok("<html>rate limited</html>",
+                                           {"x-requests-remaining": "0"})):
+            self.assertEqual(odds_api.fetch_league_odds("afl"), [])
+        self.assertEqual(odds_api.quota_status()["remaining"], 0)
+
+    def test_the_build_prints_what_it_reads(self) -> None:
+        """Capturing the number is only half of it; it has to be visible."""
+        source = (ROOT / "scripts" / "build_pages_data.py").read_text(encoding="utf-8")
+        self.assertIn("Odds API quota", source)
+
+
+class ResponseHeaderTests(unittest.TestCase):
+    """`get_text` had no way to hand a caller the headers, hence the bug above."""
+
+    def test_the_plain_fetcher_still_returns_just_the_text(self) -> None:
+        """Every other scraper in the project calls it and wants a string."""
+        import sbr_client
+
+        with patch.object(sbr_client, "get_text_with_headers", return_value=("body", {})):
+            self.assertEqual(sbr_client.get_text("https://example.test"), "body")
+
+    def test_header_names_are_lower_cased_for_the_caller(self) -> None:
+        """So a caller never has to guess how an origin capitalised them."""
+        import sbr_client
+
+        class _Response:
+            headers = {"X-Requests-Remaining": "12"}
+
+            def read(self):
+                return b"{}"
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                return False
+
+        with patch.object(sbr_client.urllib.request, "urlopen", return_value=_Response()):
+            _, headers = sbr_client.get_text_with_headers("https://example.test")
+        self.assertEqual(headers, {"x-requests-remaining": "12"})
 
 
 if __name__ == "__main__":

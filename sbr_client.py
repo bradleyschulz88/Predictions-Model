@@ -60,7 +60,7 @@ def _ssl_context(verify_ssl: bool) -> ssl.SSLContext | None:
         return None
 
 
-def get_text(
+def get_text_with_headers(
     url: str,
     *,
     timeout: int = 30,
@@ -68,8 +68,22 @@ def get_text(
     retry_delay: float = 1.0,
     user_agent: str = DEFAULT_USER_AGENT,
     verify_ssl: bool = True,
-) -> str:
-    """Fetch page HTML with retries and basic rate-limit spacing."""
+) -> tuple[str, dict[str, str]]:
+    """Fetch page text with retries, and the response headers alongside it.
+
+    Every scraper here wants the body and nothing else, which is why `get_text`
+    existed alone for so long. Metered APIs are the exception: The Odds API
+    reports the remaining monthly credit balance only in `x-requests-remaining`,
+    so a client that throws the headers away cannot see its own budget. That was
+    the state of `data_providers/odds_api.py` until this existed -- it declared a
+    `_QUOTA` dict, exposed `quota_status()`, and printed the result in the build,
+    but nothing ever wrote to it, so the line never appeared and the spend was
+    invisible.
+
+    Header names are lower-cased on the way out. `http.client` matches them
+    case-insensitively, but the dict handed back does not, and the casing an
+    origin chooses is not something a caller should have to know.
+    """
     last_error: Exception | None = None
     context = _ssl_context(verify_ssl)
 
@@ -81,6 +95,7 @@ def get_text(
         try:
             with urllib.request.urlopen(req, timeout=timeout, context=context) as response:
                 raw = response.read()
+                headers = {k.lower(): v for k, v in response.headers.items()}
         except urllib.error.HTTPError as exc:
             last_error = SBRFetchError(f"HTTP {exc.code} for {url}")
             continue
@@ -89,13 +104,34 @@ def get_text(
             continue
 
         try:
-            return raw.decode("utf-8")
+            return raw.decode("utf-8"), headers
         except UnicodeDecodeError:
             last_error = SBRFetchError(f"Invalid UTF-8 response from {url}")
             continue
 
     assert last_error is not None
     raise last_error
+
+
+def get_text(
+    url: str,
+    *,
+    timeout: int = 30,
+    retries: int = 3,
+    retry_delay: float = 1.0,
+    user_agent: str = DEFAULT_USER_AGENT,
+    verify_ssl: bool = True,
+) -> str:
+    """Fetch page HTML with retries and basic rate-limit spacing."""
+    text, _ = get_text_with_headers(
+        url,
+        timeout=timeout,
+        retries=retries,
+        retry_delay=retry_delay,
+        user_agent=user_agent,
+        verify_ssl=verify_ssl,
+    )
+    return text
 
 
 def extract_next_data(html_text: str) -> dict[str, Any]:
