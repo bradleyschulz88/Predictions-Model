@@ -206,5 +206,75 @@ class ThresholdAgreementTests(unittest.TestCase):
             self.assertNotIn("minutes < 150", source, name)
 
 
+CAVEAT_BLOCK = re.compile(r"^function standingCaveat\(accuracy\) \{.*?^\}$", re.S | re.M)
+
+
+def _caveat(accuracy) -> str:
+    """Run the real standingCaveat out of board.js."""
+    match = CAVEAT_BLOCK.search(BOARD_JS.read_text(encoding="utf-8"))
+    assert match, "could not find standingCaveat in board.js"
+    script = (
+        match.group(0)
+        + f"\nconsole.log(JSON.stringify(standingCaveat({json.dumps(accuracy)})));"
+    )
+    out = subprocess.run(
+        [_node(), "-e", script], capture_output=True, text=True, timeout=30, check=True
+    )
+    return json.loads(out.stdout)
+
+
+@unittest.skipUnless(_node(), "node is required to execute the dashboard helper")
+class StandingCaveatTests(unittest.TestCase):
+    """A page that prints a stake size has to say what it is.
+
+    The board names picks "worth backing" and puts a Kelly stake against them,
+    and said nothing about what that rests on. A stake reads as a
+    recommendation, and the record behind it is thinner than the presentation:
+    measured 2026-08-07, +2.0% over 802 graded picks overall, while totals ran
+    48.6% on 70 priced picks and the whole spread record rested on 13.
+
+    The figures are read from accuracy.json rather than written into the
+    markup, so the line cannot drift into flattering the model.
+    """
+
+    def _full(self, total, roi):
+        return {"summary": {"allTime": {"total": total, "roiPct": roi}}}
+
+    def test_it_says_what_the_output_is(self) -> None:
+        self.assertIn("not betting advice", _caveat(self._full(802, 2.0)))
+
+    def test_it_quotes_the_real_return_and_sample(self) -> None:
+        note = _caveat(self._full(802, 2.0))
+        self.assertIn("802 graded picks", note)
+        self.assertIn("+2% return", note)
+
+    def test_a_losing_record_is_stated_as_losing(self) -> None:
+        """The number is read from the data, so it cannot be quietly flattering."""
+        self.assertIn("-3.4% return", _caveat(self._full(120, -3.4)))
+
+    def test_it_warns_that_individual_markets_are_thinner(self) -> None:
+        """Totals at 48.6% on 70 picks sit behind that headline."""
+        self.assertIn("thinner", _caveat(self._full(802, 2.0)))
+
+    def test_a_missing_roi_still_reads_as_a_sentence(self) -> None:
+        note = _caveat({"summary": {"allTime": {"total": 40}}})
+        self.assertIn("40 graded picks", note)
+        self.assertNotIn("showing measured", note)
+        self.assertNotIn("showing across", note)
+
+    def test_no_record_falls_back_without_inventing_numbers(self) -> None:
+        for payload in ({}, None, {"summary": {}}):
+            note = _caveat(payload)
+            self.assertIn("not betting advice", note)
+            self.assertNotIn("undefined", note)
+            self.assertNotIn("NaN", note)
+            self.assertNotIn("graded picks", note)
+
+    def test_the_footer_actually_renders_it(self) -> None:
+        """Wired in, not just defined -- the mistake this file already caught once."""
+        source = BOARD_JS.read_text(encoding="utf-8")
+        self.assertIn("standingCaveat(accuracy)", source)
+
+
 if __name__ == "__main__":
     unittest.main()
