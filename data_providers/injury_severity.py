@@ -198,7 +198,34 @@ def api_key() -> str | None:
             "partial or doubled paste -- copy the key again as a single line"
         )
         return None
+    if _looks_like_an_unexpanded_variable(key):
+        _note_failure(
+            f"NVIDIA_API_KEY is set to the literal text {key!r}, not a key. NVIDIA's "
+            "sample code writes api_key=\"$NVIDIA_API_KEY\" as a placeholder, and "
+            "Python does not expand $NAME inside quotes -- paste the nvapi- key itself"
+        )
+        return None
     return key
+
+
+# `$NVIDIA_API_KEY`, `${NVIDIA_API_KEY}`, `%NVIDIA_API_KEY%`: a variable reference
+# that nothing ever substituted.
+_UNEXPANDED = re.compile(r"^(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?|%[A-Za-z_][A-Za-z0-9_]*%)$")
+
+
+def _looks_like_an_unexpanded_variable(key: str) -> bool:
+    """Whether the "key" is really the name of where the key should have come from.
+
+    NVIDIA's quick-start snippet reads `api_key = "$NVIDIA_API_KEY"`, which is a
+    placeholder in shell clothing -- Python sends those fifteen characters
+    verbatim. Copying that line into a secret is an easy mistake and produces a
+    plain 401, indistinguishable from a revoked key, so the advice it earns
+    ("rotate the key") is the one thing that cannot help.
+
+    Deliberately narrow: an entire value that is nothing but a variable
+    reference. A real key that merely contains a dollar sign is untouched.
+    """
+    return bool(_UNEXPANDED.match(key))
 
 
 def llm_enabled() -> bool:

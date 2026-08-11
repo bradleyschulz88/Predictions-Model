@@ -436,6 +436,34 @@ class ApiKeyHygieneTests(unittest.TestCase):
             ctx.__exit__(None, None, None)
         self.assertIsNone(self.module.last_failure())
 
+    def test_the_placeholder_from_nvidias_own_snippet_is_caught(self) -> None:
+        """NVIDIA's quick-start reads `api_key = "$NVIDIA_API_KEY"`.
+
+        That is shell syntax in a Python string literal: nothing expands it, so
+        the fifteen characters go out as the credential and come back 401 --
+        indistinguishable from a revoked key, which sends you to rotate a key
+        that was never the problem.
+        """
+        for placeholder in ("$NVIDIA_API_KEY", "${NVIDIA_API_KEY}", "%NVIDIA_API_KEY%"):
+            with self.subTest(placeholder):
+                self.module.reset_failure()
+                with self._with(placeholder):
+                    self.assertIsNone(self.module.api_key())
+                self.assertIn("literal text", self.module.last_failure())
+
+    def test_the_advice_names_the_actual_fix(self) -> None:
+        """Not "rotate the key" -- the key does not exist yet."""
+        with self._with("$NVIDIA_API_KEY"):
+            self.module.api_key()
+        self.assertIn("nvapi-", self.module.last_failure())
+
+    def test_a_real_key_containing_a_dollar_sign_is_left_alone(self) -> None:
+        """The check is for a value that is only a variable reference."""
+        for key in ("nvapi-ab$cd", "$nvapi-abc-def", "nvapi-$"):
+            with self.subTest(key):
+                with self._with(key):
+                    self.assertEqual(self.module.api_key(), key)
+
 
 if __name__ == "__main__":
     unittest.main()
