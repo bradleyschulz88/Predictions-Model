@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import math
+import statistics
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -235,8 +236,17 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
             # measurable, and CLV predicts long-run profitability better than
             # win rate does.
             opening_odds = existing.get("openingOdds")
+            opening_at = existing.get("openingOddsAt")
             if opening_odds is None:
                 opening_odds = current_odds
+                # When the first price was taken. Without it there is no way to
+                # ask how far ahead of the game the model committed, which is
+                # the leading explanation for its negative closing line value:
+                # a side taken days early and drifting out is what an adverse
+                # CLV looks like, and that is a timing problem rather than a
+                # modelling one. Only meaningful next to scheduleDate.
+                if current_odds is not None:
+                    opening_at = payload.get("fetchedAt")
             opening_side = existing.get("openingSide") or prediction.get("predictedSide")
 
             # Two ways the closing price was being destroyed, both silent.
@@ -265,6 +275,26 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
             else:
                 pick_odds = current_odds
 
+            # The path between open and close, not just its two endpoints.
+            #
+            # Line movement is among the most predictive publicly available
+            # signals, and this project discarded it on every build: each run
+            # fetched a price, compared it to nothing, and overwrote. The feed
+            # is already paid for, so keeping the path costs storage and
+            # nothing else. Unlike a feature that can be derived later from
+            # data on disk, history not recorded now cannot be recovered --
+            # which is why this went in before the analysis that will use it.
+            #
+            # Placed after `started` deliberately: an in-play quote is not part
+            # of the pre-game path and would corrupt exactly the measurement
+            # this exists to support.
+            price_history = _extend_price_history(
+                existing.get("priceHistory"),
+                current_odds,
+                payload.get("fetchedAt"),
+                started=started,
+            )
+
             log["predictions"][event_id] = {
                 "eventId": event_id,
                 "league": league,
@@ -289,7 +319,10 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 # closing line. openingOdds is pinned to the first one.
                 "pickOdds": pick_odds,
                 "openingOdds": opening_odds,
+                "openingOddsAt": opening_at,
                 "openingSide": opening_side,
+                # Every distinct pre-game price seen, oldest first.
+                "priceHistory": price_history,
                 # When the price stopped being updated. Present means this is a
                 # genuine pre-game close rather than the latest quote seen.
                 "pickOddsFrozenAt": frozen_at,
@@ -461,6 +494,39 @@ def _prune_log(log: dict[str, Any]) -> None:
         reverse=True,
     )
     log["predictions"] = dict(ordered[:MAX_LOGGED_PREDICTIONS])
+
+
+# Distinct pre-game prices kept per event. A line that moves more than this in
+# one game is not a line, it is a data fault, and the endpoints are preserved
+# regardless because openingOdds and pickOdds are stored separately.
+MAX_PRICE_OBSERVATIONS = 40
+
+
+def _extend_price_history(
+    existing: Any, odds: Any, at: str | None, *, started: bool
+) -> list[dict[str, Any]]:
+    """Append a price observation, but only when it is new and pre-game.
+
+    Deduplicated on change rather than sampled per build, which is what keeps
+    this affordable. Builds land roughly hourly and a baseball line is
+    unchanged across most of them, so storing every observation would grow
+    predictions_log.json by thousands of identical rows a week to record
+    nothing. Storing only the moves keeps the same information.
+
+    Never appends once the game is under way: an in-play quote is not part of
+    the pre-game path, and letting one in would corrupt the exact measurement
+    this series exists to support.
+    """
+    history = [
+        entry for entry in (existing or [])
+        if isinstance(entry, dict) and entry.get("odds") is not None
+    ]
+    if started or odds is None:
+        return history[-MAX_PRICE_OBSERVATIONS:]
+    if history and history[-1].get("odds") == odds:
+        return history[-MAX_PRICE_OBSERVATIONS:]
+    history.append({"at": at, "odds": odds})
+    return history[-MAX_PRICE_OBSERVATIONS:]
 
 
 def closing_line_value(record: dict[str, Any]) -> float | None:
@@ -647,51 +713,99 @@ def _winner_from_game(game: dict[str, Any]) -> str | None:
     return game.get("homeTeam") if home > away else game.get("awayTeam")
 
 
-def clv_summary(window: list[dict[str, Any]]) -> dict[str, Any]:
+def _clv_block(values: list[float]) -> dict[str, Any]:
+    """Rate, median and mean for one population of confirmed CLV readings.
+
+    Reports both tails of the coin-flip test. There used to be only
+    `beatsCoinFlip`, which asks whether the model is provably good and answers
+    False for "provably bad" and "too thin to say" alike -- so a rate two
+    standard errors on the wrong side read exactly like no evidence at all.
+    That is how 38.9% over 90 picks sat unremarked next to a +2.6% return.
+    """
+    if not values:
+        return {
+            "picks": 0, "medianPct": None, "avgPct": None, "beatCloseP": None,
+            "beatCloseStdErrPct": None, "beatsCoinFlip": None,
+            "worseThanCoinFlip": None, "unmoved": 0,
+        }
+    beat = sum(1 for value in values if value > 0)
+    # A line that never moved is not a loss. Only 3 picks in 90 as measured, so
+    # it does not drive the headline -- but counting a non-event as a defeat is
+    # the kind of quiet bias that is much harder to find later than now.
+    unmoved = sum(1 for value in values if value == 0)
+    rate = beat / len(values) * 100
+    std_err = math.sqrt(0.25 / len(values)) * 100
+    return {
+        "picks": len(values),
+        # Median first, deliberately. The mean is dragged toward zero by a
+        # handful of large favourable moves: over the full record it reads
+        # -0.16% against a median of -0.61%, which is the difference between
+        # "roughly break-even" and "consistently the wrong side of the close".
+        "medianPct": round(statistics.median(values), 2),
+        "avgPct": round(statistics.fmean(values), 2),
+        "beatCloseP": round(rate, 1),
+        "beatCloseStdErrPct": round(std_err, 1),
+        "beatsCoinFlip": rate - 1.96 * std_err > 50.0,
+        "worseThanCoinFlip": rate + 1.96 * std_err < 50.0,
+        "unmoved": unmoved,
+    }
+
+
+def clv_summary(
+    all_results: list[dict[str, Any]], recent: list[dict[str, Any]] | None = None
+) -> dict[str, Any]:
     """Closing line value over picks that actually have a closing line.
 
     Only picks whose price was frozen at kick-off have one. The rest carry the
     latest quote seen, which is not a close, and averaging the two together
-    produced a headline that could not be acted on -- it read -0.52% over 96
-    picks with no way to tell how many were genuine. Beating the close is a
-    coin flip under the null, so the standard error is reported alongside the
-    rate and beatsCoinFlip requires the interval to clear 50, not the point.
+    produced a headline that could not be acted on.
+
+    Scored over the **whole** confirmed record rather than the recent window.
+    The two disagree in a way that matters: measured 12 Aug the window read
+    42.3% over 71 picks, an interval that spans 50 and licenses "not
+    conclusive", while the full 90 read 38.9% with an interval of 28.5-49.3
+    that does not. The window is still reported, under `last7Days`, because a
+    trend is worth seeing -- it is just not the headline.
+
+    Split by league for the same reason the market records are split: pooling
+    hides that MLB (35.4%, n=65) and WNBA (56.2%, n=16) point opposite ways,
+    and only one of them has the sample to mean anything.
     """
-    confirmed = [
-        float(item["clvPct"])
-        for item in window
-        if item.get("clvPct") is not None and item.get("pickOddsFrozenAt")
-    ]
-    provisional = sum(
+    def _confirmed(rows: list[dict[str, Any]]) -> list[float]:
+        return [
+            float(item["clvPct"])
+            for item in rows
+            if item.get("clvPct") is not None and item.get("pickOddsFrozenAt")
+        ]
+
+    confirmed = _confirmed(all_results)
+    summary = _clv_block(confirmed)
+
+    by_league: dict[str, dict[str, Any]] = {}
+    leagues = {item.get("league") or "unknown" for item in all_results}
+    for league in sorted(leagues):
+        values = _confirmed([r for r in all_results if (r.get("league") or "unknown") == league])
+        if values:
+            by_league[league] = _clv_block(values)
+    summary["byLeague"] = by_league
+
+    if recent is not None:
+        summary["last7Days"] = _clv_block(_confirmed(recent))
+
+    # Picks with a price but no confirmed close yet. Excluded above rather than
+    # silently mixed in.
+    summary["provisionalPicks"] = sum(
         1
-        for item in window
+        for item in all_results
         if item.get("clvPct") is not None and not item.get("pickOddsFrozenAt")
     )
-    beat_rate = (
-        sum(1 for value in confirmed if value > 0) / len(confirmed) * 100 if confirmed else None
+    summary["note"] = (
+        "Closing line value predicts long-run profitability better than win rate. "
+        "Measured only on picks whose price was frozen when the game started, over "
+        "the whole graded record rather than the recent window. Median is the "
+        "headline figure; the mean is pulled by a few large favourable moves."
     )
-    return {
-        "picks": len(confirmed),
-        "avgPct": round(sum(confirmed) / len(confirmed), 2) if confirmed else None,
-        "beatCloseP": round(beat_rate, 1) if beat_rate is not None else None,
-        # Binomial standard error against the 50% null, so a rate near 50 on a
-        # thin sample cannot be read as evidence either way.
-        "beatCloseStdErrPct": (
-            round(math.sqrt(0.25 / len(confirmed)) * 100, 1) if confirmed else None
-        ),
-        "beatsCoinFlip": (
-            None
-            if not confirmed
-            else beat_rate - 1.96 * math.sqrt(0.25 / len(confirmed)) * 100 > 50.0
-        ),
-        # Picks with a price but no confirmed close yet. Excluded above rather
-        # than silently mixed in.
-        "provisionalPicks": provisional,
-        "note": (
-            "Closing line value predicts long-run profitability better than win rate. "
-            "Measured only on picks whose price was frozen when the game started."
-        ),
-    }
+    return summary
 
 
 def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, Any]:
@@ -907,7 +1021,8 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
         1 for item in pending_picks if (item.get("scheduleDate") or "") >= earliest_cutoff
     )
 
-    clv_summary_payload = clv_summary(window)
+    # Whole record, with the recent window alongside rather than instead of it.
+    clv_summary_payload = clv_summary(all_results, window)
 
     streak = _compute_streak(recent_results)
 

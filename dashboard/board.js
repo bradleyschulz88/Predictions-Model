@@ -48,8 +48,19 @@ function standingCaveat(accuracy) {
   const record = roi == null
     ? `measured over ${n} graded picks`
     : `showing ${roi > 0 ? "+" : ""}${roi}% return across ${n} graded picks`;
+  /* The return is the flattering half. Closing line value predicts long-run
+     profit better than realised return does over a few hundred bets, and when
+     it is significantly negative the return is the number most likely to be
+     variance -- so the caveat has to carry both or it is selectively quoting
+     the model's own evidence. Only stated when the interval clears 50, never
+     on a thin or ambiguous reading. */
+  const clv = accuracy?.summary?.closingLineValue;
+  const clvWarning = clv?.worseThanCoinFlip
+    ? ` It beats the closing line on only ${clv.beatCloseP}% of ${clv.picks} priced picks, ` +
+      `which is a stronger long-run signal than the return above and points the other way.`
+    : "";
   return `Model output, not betting advice — Kelly-sized from a fitted model ` +
-    `${record}. Individual markets are thinner than that, and some lose.`;
+    `${record}. Individual markets are thinner than that, and some lose.${clvWarning}`;
 }
 
 /* How old this data is, in words, appended to the absolute timestamp.
@@ -1319,8 +1330,26 @@ function verdictPanel(A, E) {
   }
   const clv = (A.summary || {}).closingLineValue;
   if (clv && clv.picks) {
-    bits.push(`<p><b>Watch:</b> closing line value is ${sgn(clv.avgPct, 2)}% over ${clv.picks} picks, ` +
-      `beating the close ${pct(clv.beatCloseP)} of the time. CLV tracks long-run profit better than hit rate does.</p>`);
+    /* Promoted from "Watch" to "Known problem" when it is actually one. CLV is
+       the metric that predicts long-run profit, so a significantly negative
+       reading is the most important thing on this page, not a footnote under
+       the hit rate. */
+    const worstLeague = Object.entries(clv.byLeague || {})
+      .filter(([, b]) => b.worseThanCoinFlip)
+      .sort((a, b) => b[1].picks - a[1].picks)[0];
+    if (clv.worseThanCoinFlip) {
+      bits.push(`<p><b>Known problem:</b> the model beats the closing line on only ` +
+        `${pct(clv.beatCloseP)} ±${clv.beatCloseStdErrPct} of ${clv.picks} confirmed picks, ` +
+        `median ${sgn(clv.medianPct, 2)}%. That is significantly worse than a coin flip. ` +
+        `CLV predicts long-run profit better than hit rate does, so read it ahead of the ` +
+        `headline return` +
+        (worstLeague ? `, and note it is concentrated in ${worstLeague[0].toUpperCase()} ` +
+          `(${pct(worstLeague[1].beatCloseP)} on ${worstLeague[1].picks})` : "") + `.</p>`);
+    } else {
+      bits.push(`<p><b>Watch:</b> closing line value has a median of ${sgn(clv.medianPct, 2)}% over ` +
+        `${clv.picks} picks, beating the close ${pct(clv.beatCloseP)} of the time. ` +
+        `CLV tracks long-run profit better than hit rate does.</p>`);
+    }
   }
   const nGraded = (A.summary?.allTime || {}).total;
   const nEval = (E?.overall || {}).n;
@@ -1571,13 +1600,23 @@ function cardsPanel(A, E) {
   if (clv && clv.picks) {
     const beat = clv.beatCloseP;
     const err = clv.beatCloseStdErrPct;
+    /* Three states, not two. `beatsCoinFlip` alone answered False for
+       "provably worse" and "too thin to say" alike, so a rate two standard
+       errors the wrong side of 50 rendered as the same mild shrug as no
+       evidence -- which is how 38.9% over 90 picks sat on the board next to a
+       +2.6% return without contradicting it. */
     const verdict = clv.beatsCoinFlip
       ? "clears a coin flip"
-      : "not yet distinguishable from a coin flip";
-    cards.appendChild(card("Closing line value", sgn(clv.avgPct, 2) + "%",
-      `${clv.picks} confirmed closes, beat the close ${pct(beat)}` +
+      : clv.worseThanCoinFlip
+        ? "significantly WORSE than a coin flip"
+        : "not yet distinguishable from a coin flip";
+    /* Median, not mean. The mean is dragged toward zero by a few large
+       favourable moves and read -0.16% while the median read -0.61%. */
+    const headline = clv.medianPct != null ? clv.medianPct : clv.avgPct;
+    cards.appendChild(card("Closing line value", sgn(headline, 2) + "%",
+      `Median over ${clv.picks} confirmed closes. Beat the close ${pct(beat)}` +
       (err != null ? ` ±${err}` : "") + ` of the time -- ${verdict}.`,
-      clv.avgPct > 0 ? "var(--good)" : "var(--bad)"));
+      clv.worseThanCoinFlip ? "var(--bad)" : headline > 0 ? "var(--good)" : "var(--bad)"));
   } else if (clv && clv.provisionalPicks) {
     cards.appendChild(card("Closing line value", "--",
       `${clv.provisionalPicks} picks priced, none with a confirmed closing line yet. ` +
