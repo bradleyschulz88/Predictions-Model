@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-12T02:44:55.591001+00:00",
+  "updatedAt": "2026-08-12T02:53:34.200887+00:00",
   "summary": {
     "last7Days": {
       "correct": 267,
@@ -17,7 +17,7 @@
       "units": 26.479,
       "roiPct": 3.0,
       "pending": 54,
-      "voided": 18
+      "voided": 17
     },
     "byLeague": {
       "wnba": {
@@ -89,12 +89,67 @@
     },
     "closingLineValue": {
       "picks": 86,
+      "medianPct": -0.4,
       "avgPct": 0.3,
       "beatCloseP": 39.5,
       "beatCloseStdErrPct": 5.4,
       "beatsCoinFlip": false,
-      "provisionalPicks": 97,
-      "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started."
+      "worseThanCoinFlip": false,
+      "unmoved": 3,
+      "byLeague": {
+        "afl": {
+          "picks": 7,
+          "medianPct": 0.0,
+          "avgPct": 4.33,
+          "beatCloseP": 42.9,
+          "beatCloseStdErrPct": 18.9,
+          "beatsCoinFlip": false,
+          "worseThanCoinFlip": false,
+          "unmoved": 1
+        },
+        "mlb": {
+          "picks": 63,
+          "medianPct": -0.6,
+          "avgPct": -0.69,
+          "beatCloseP": 36.5,
+          "beatCloseStdErrPct": 6.3,
+          "beatsCoinFlip": false,
+          "worseThanCoinFlip": true,
+          "unmoved": 0
+        },
+        "nfl": {
+          "picks": 1,
+          "medianPct": -1.01,
+          "avgPct": -1.01,
+          "beatCloseP": 0.0,
+          "beatCloseStdErrPct": 50.0,
+          "beatsCoinFlip": false,
+          "worseThanCoinFlip": false,
+          "unmoved": 0
+        },
+        "wnba": {
+          "picks": 15,
+          "medianPct": 1.18,
+          "avgPct": 2.68,
+          "beatCloseP": 53.3,
+          "beatCloseStdErrPct": 12.9,
+          "beatsCoinFlip": false,
+          "worseThanCoinFlip": false,
+          "unmoved": 2
+        }
+      },
+      "last7Days": {
+        "picks": 86,
+        "medianPct": -0.4,
+        "avgPct": 0.3,
+        "beatCloseP": 39.5,
+        "beatCloseStdErrPct": 5.4,
+        "beatsCoinFlip": false,
+        "worseThanCoinFlip": false,
+        "unmoved": 3
+      },
+      "provisionalPicks": 111,
+      "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started, over the whole graded record rather than the recent window. Median is the headline figure; the mean is pulled by a few large favourable moves."
     },
     "totals": {
       "graded": 168,
@@ -33298,7 +33353,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "voided",
       "actual": null,
