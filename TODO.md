@@ -91,10 +91,35 @@ picks**, ±12.8. The lower bound is under 45%. Now that the key is in and
 runlines price, this sample grows by roughly a slate a day and the number will
 move; do not read it until it has.
 
-**CLV has just started reporting.** 3 confirmed picks, +1.05% average, against
-97 still provisional. Too few to read. This is the metric that will actually
-say whether the model is profitable long-run, so it is the one worth waiting
-for — a fortnight of games should make it meaningful.
+**CLV is now readable, and it is negative.** This has moved out of "watch" and
+is the most important number on the project.
+
+Over all **90 confirmed closes**: the model beats the closing line **38.9%
+±5.3** of the time, 95% interval **28.5–49.3**, which excludes 50. Median CLV
+**−0.61%**. It concentrates in the league with the sample and the coverage:
+
+| League | n | Beat close | Median CLV |
+|---|---:|---:|---:|
+| MLB | 65 | **35.4% ±6.2** | −0.82% |
+| WNBA | 16 | 56.2% ±12.5 | +1.52% |
+| AFL | 8 | 37.5% ±17.7 | −0.52% |
+
+The measurement was audited before this was believed: sign, side-guarding,
+freeze-at-first-pitch and provisional exclusion all check out, and no-movement
+ties account for 3 picks in 90. The finding is real.
+
+Two reporting defects were hiding it. The headline used the **mean** (−0.16%,
+dragged toward zero by a few large favourable moves) rather than the median,
+and over a **71-pick window** whose interval spans 50 rather than the full
+record whose interval does not. Both fixed. `beatsCoinFlip` also had no
+negative counterpart, so "provably bad" and "too thin to say" both rendered as
+the same shrug — there is now a `worseThanCoinFlip` flag and the board says it.
+
+A negative CLV means the closing implied probability is lower than the one
+paid: the side drifts out after the model takes it. That is what buying early
+into a price the market later corrects looks like, so the next question is
+timing, not features. `openingOddsAt` and `priceHistory` now record when each
+price was taken and how it moved, which is what makes that testable.
 
 ## Done since the last list
 
