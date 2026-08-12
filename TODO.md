@@ -28,10 +28,14 @@ already played, so the API no longer carries them. Nothing to fix.
 
 At *Settings → Secrets and variables → Actions*.
 
-**`NVIDIA_API_KEY`** — set, but with a space or line break inside it, so it
-fails to authenticate and injury severity falls back to its deterministic
-score. The build says so explicitly now: *"the key is set but the LLM step
-scored 0 of 24 teams"*. Re-paste it as a single line.
+**`NVIDIA_API_KEY`** — the secret holds the whole Python snippet from
+build.nvidia.com, not the key. The 03:01Z build measured it: *534 characters,
+first a space at position 4, 38 breaks in total, and it does not start with
+'nvapi-'*. Position 4 is the space after `from` in `from openai import OpenAI`.
+
+Fix: delete the secret and add it back with only the ~70 characters between the
+quotes on the `api_key = "..."` line. Until then injury severity runs on its
+deterministic score, which is a supported mode — the build stays green.
 
 ## Two things I got wrong, now fixed
 
@@ -41,17 +45,38 @@ back non-empty — but nothing ever wrote to it, because `get_text` returns a bo
 and drops the response that carries the headers. So the credit balance was
 invisible from the day the provider shipped, and the 11 Aug build spent credits
 on 7 slates with no record of what was left. `get_text_with_headers` now exists
-and the balance is read off `x-requests-remaining`. **The next build is the
-first that will print a real number** — that is the one to check the ~320/month
-estimate against.
+and the balance is read off `x-requests-remaining`.
+
+Reading the headers turned out to be necessary and not sufficient. Six builds
+sampled across 11 Aug — 03:01, 05:19, 07:50, 09:11 and 23:53Z — were **all pure
+cache hits**, each opening with *"restored 2 cached Odds API slates"*. A cache
+hit makes no call, so it reads no headers, so it can report nothing. Correct
+behaviour that added up to exactly the invisibility the reading was meant to
+end.
+
+The balance now rides in the cache file next to the slates and is stamped with
+when it was taken, so every build prints it:
+
+```
+Odds API quota: {"remaining": 463, "used": 37, "lastCallCost": 3} (read 4.2h ago)
+```
+
+Unknown is stated as unknown rather than shown as zero. **Still no measured
+number** — the first build after this lands is the one to read, and any figure
+it shows will be carried rather than live until a fetch happens.
+
+That the cache absorbs most builds is the budget mechanism working, not a
+problem: it is the difference between ~320 credits a month and the entire free
+tier gone inside a week.
 
 **The deploy timeout fix did nothing.** `timeout: 1200000` shipped as "twenty
 minutes of headroom" and `actions/deploy-pages` clamps the input at 600000ms:
-every run since has logged *"timeout value is greater than the allowed maximum"*
+every run since had logged *"timeout value is greater than the allowed maximum"*
 and waited exactly the ten minutes that failed on 6 Aug. The value is now the
 real maximum, with a second attempt behind it — the only headroom actually
 available — and `tests/test_deploy_timeout.py` fails the build if anyone raises
-it again.
+it again. Confirmed on the 03:01Z build: no warning, deploy in 6 seconds, retry
+step correctly skipped.
 
 ## Watch, do not act yet
 
