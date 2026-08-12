@@ -40,6 +40,19 @@ const STALE_AFTER_MINUTES = 150;
    markup, so this cannot drift into flattering the model the way a hardcoded
    figure would. Deliberately not a wall of legal text -- one sentence a reader
    will actually read, stating the return and the sample it came from. */
+/* The league whose closing line value is provably bad on a sample worth
+   quoting, or null. Shared so the caveat and the analysis notes cannot drift
+   into disagreeing about whether there is a problem.
+
+   Thirty picks is the floor for quoting one: below that the interval is wide
+   enough that "significant" is mostly luck of the draw. NFL sitting at 0% on a
+   single pick is exactly what this excludes. */
+function clvProblemLeague(clv) {
+  return Object.entries(clv?.byLeague || {})
+    .filter(([, b]) => b.worseThanCoinFlip && b.picks >= 30)
+    .sort((a, b) => b[1].picks - a[1].picks)[0] || null;
+}
+
 function standingCaveat(accuracy) {
   const all = accuracy?.summary?.allTime || {};
   const n = all.total;
@@ -55,7 +68,7 @@ function standingCaveat(accuracy) {
      the model's own evidence. Only stated when the interval clears 50, never
      on a thin or ambiguous reading. */
   const clv = accuracy?.summary?.closingLineValue;
-  const clvWarning = clv?.worseThanCoinFlip
+  const clvWarning = (clv?.worseThanCoinFlip || clvProblemLeague(clv))
     ? ` It beats the closing line on only ${clv.beatCloseP}% of ${clv.picks} priced picks, ` +
       `which is a stronger long-run signal than the return above and points the other way.`
     : "";
@@ -1334,17 +1347,29 @@ function verdictPanel(A, E) {
        the metric that predicts long-run profit, so a significantly negative
        reading is the most important thing on this page, not a footnote under
        the hit rate. */
-    const worstLeague = Object.entries(clv.byLeague || {})
-      .filter(([, b]) => b.worseThanCoinFlip)
-      .sort((a, b) => b[1].picks - a[1].picks)[0];
-    if (clv.worseThanCoinFlip) {
-      bits.push(`<p><b>Known problem:</b> the model beats the closing line on only ` +
-        `${pct(clv.beatCloseP)} ±${clv.beatCloseStdErrPct} of ${clv.picks} confirmed picks, ` +
-        `median ${sgn(clv.medianPct, 2)}%. That is significantly worse than a coin flip. ` +
-        `CLV predicts long-run profit better than hit rate does, so read it ahead of the ` +
-        `headline return` +
-        (worstLeague ? `, and note it is concentrated in ${worstLeague[0].toUpperCase()} ` +
-          `(${pct(worstLeague[1].beatCloseP)} on ${worstLeague[1].picks})` : "") + `.</p>`);
+    /* A pooled figure can hide a league that is provably bad, which is the
+       same defect in the presentation that the per-league split just fixed in
+       the data. Measured 12 Aug: pooled 39.5% +/-5.4 has an upper bound of
+       50.08 and so does NOT flag, while MLB inside it reads 36.5% +/-6.3, an
+       upper bound of 48.8, and does -- on 63 of the 86 picks. Averaging a bad
+       MLB against a good WNBA is not a verdict on either. So escalate on the
+       pooled reading or on any league with enough picks to mean something. */
+    const worstLeague = clvProblemLeague(clv);
+    if (clv.worseThanCoinFlip || worstLeague) {
+      /* Lead with whichever population actually clears significance. Saying
+         "significantly worse" about a pooled figure whose interval still
+         spans 50 would be the same overclaiming this section exists to stop. */
+      const lead = clv.worseThanCoinFlip
+        ? `the model beats the closing line on only ${pct(clv.beatCloseP)} ` +
+          `±${clv.beatCloseStdErrPct} of ${clv.picks} confirmed picks, ` +
+          `median ${sgn(clv.medianPct, 2)}% — significantly worse than a coin flip`
+        : `in ${worstLeague[0].toUpperCase()} the model beats the closing line on only ` +
+          `${pct(worstLeague[1].beatCloseP)} ±${worstLeague[1].beatCloseStdErrPct} of ` +
+          `${worstLeague[1].picks} confirmed picks, median ${sgn(worstLeague[1].medianPct, 2)}% — ` +
+          `significantly worse than a coin flip, on most of the record ` +
+          `(${clv.picks} picks overall, ${pct(clv.beatCloseP)})`;
+      bits.push(`<p><b>Known problem:</b> ${lead}. CLV predicts long-run profit better than ` +
+        `hit rate does, so read it ahead of the headline return.</p>`);
     } else {
       bits.push(`<p><b>Watch:</b> closing line value has a median of ${sgn(clv.medianPct, 2)}% over ` +
         `${clv.picks} picks, beating the close ${pct(clv.beatCloseP)} of the time. ` +

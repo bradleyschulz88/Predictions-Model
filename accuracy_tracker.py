@@ -1021,8 +1021,12 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
         1 for item in pending_picks if (item.get("scheduleDate") or "") >= earliest_cutoff
     )
 
-    # Whole record, with the recent window alongside rather than instead of it.
-    clv_summary_payload = clv_summary(all_results, window)
+    # Every pick with a frozen close, graded or not, with the recent graded
+    # window alongside. CLV is a fact about the price, not about the result --
+    # a pick whose close was captured at first pitch has a measurable CLV the
+    # moment the game starts, and waiting for the outcome only delays the one
+    # metric that is supposed to read faster than realised return.
+    clv_summary_payload = clv_summary(list(picks_by_event.values()), window)
 
     streak = _compute_streak(recent_results)
 
