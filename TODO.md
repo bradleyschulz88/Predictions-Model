@@ -47,13 +47,25 @@ invisible from the day the provider shipped, and the 11 Aug build spent credits
 on 7 slates with no record of what was left. `get_text_with_headers` now exists
 and the balance is read off `x-requests-remaining`.
 
-It has still not printed a number, and that is correct rather than a second
-bug: the 03:01Z build opened with *"restored 2 cached Odds API slates"* and made
-no call at all, so there were no headers to read. Empty means "no call was
-made", never "no budget left". The first real figure needs a build that actually
-spends a credit — the six-hour TTL on the 02:06Z fetch expires around 08:06Z.
+Reading the headers turned out to be necessary and not sufficient. Six builds
+sampled across 11 Aug — 03:01, 05:19, 07:50, 09:11 and 23:53Z — were **all pure
+cache hits**, each opening with *"restored 2 cached Odds API slates"*. A cache
+hit makes no call, so it reads no headers, so it can report nothing. Correct
+behaviour that added up to exactly the invisibility the reading was meant to
+end.
 
-That the cache absorbed a whole build is the budget mechanism working, not a
+The balance now rides in the cache file next to the slates and is stamped with
+when it was taken, so every build prints it:
+
+```
+Odds API quota: {"remaining": 463, "used": 37, "lastCallCost": 3} (read 4.2h ago)
+```
+
+Unknown is stated as unknown rather than shown as zero. **Still no measured
+number** — the first build after this lands is the one to read, and any figure
+it shows will be carried rather than live until a fetch happens.
+
+That the cache absorbs most builds is the budget mechanism working, not a
 problem: it is the difference between ~320 credits a month and the entire free
 tier gone inside a week.
 

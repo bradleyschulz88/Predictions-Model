@@ -577,6 +577,98 @@ class QuotaReportingTests(unittest.TestCase):
         self.assertIn("Odds API quota", source)
 
 
+class QuotaSurvivesBetweenBuildsTests(unittest.TestCase):
+    """The balance has to outlive the interpreter, or it is invisible in practice.
+
+    Reading the headers was necessary and not sufficient. A build that answers
+    entirely from the disk cache makes no call, so it has no headers and can say
+    nothing about the budget -- and because the cache is doing its job, that is
+    most builds. Six sampled builds on 11 Aug between 03:01Z and 23:53Z were all
+    cache hits, so the figure still never appeared in a log.
+
+    So the balance is written into the cache file alongside the slates and read
+    back on the next build, stamped with when it was actually taken.
+    """
+
+    def setUp(self) -> None:
+        odds_api.clear_cache()
+        self.dir = tempfile.mkdtemp()
+        self.path = str(Path(self.dir) / "odds-api.json")
+        patcher = patch.dict("os.environ", {odds_api.CACHE_FILE_ENV: self.path})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        self.addCleanup(odds_api.clear_cache)
+
+    def _fetch_with(self, headers):
+        # patch.dict rather than replacing os.environ wholesale: the cache path
+        # is an environment variable too, and swapping the mapping would take
+        # it with it -- leaving the file this whole class is about unwritten.
+        with patch.dict("os.environ", {"ODDS_API_KEY": "k"}), \
+             patch.object(odds_api, "get_text_with_headers",
+                          return_value=_ok(json.dumps(_payload()), headers)):
+            odds_api.fetch_league_odds("afl")
+
+    def test_the_balance_is_written_to_disk(self) -> None:
+        self._fetch_with({"x-requests-remaining": "463"})
+        odds_api.save_cache()
+        written = json.loads(Path(self.path).read_text(encoding="utf-8"))
+        self.assertEqual(written["quota"]["remaining"], 463)
+
+    def test_a_later_build_reads_it_back_without_spending_a_credit(self) -> None:
+        self._fetch_with({"x-requests-remaining": "463", "x-requests-used": "37"})
+        odds_api.save_cache()
+
+        odds_api.clear_cache()  # a fresh interpreter, as CI gives every build
+        self.assertEqual(odds_api.quota_status(), {}, "precondition: starts empty")
+        odds_api.load_cache()
+        self.assertEqual(odds_api.quota_status()["remaining"], 463)
+        self.assertEqual(odds_api.quota_status()["used"], 37)
+
+    def test_the_carried_balance_says_when_it_was_taken(self) -> None:
+        """So a figure from six hours ago cannot pass as a live one."""
+        self._fetch_with({"x-requests-remaining": "463"})
+        stamped = odds_api.quota_status()["asOf"]
+        odds_api.save_cache()
+        odds_api.clear_cache()
+        odds_api.load_cache()
+        self.assertEqual(odds_api.quota_status()["asOf"], stamped)
+
+    def test_the_stamp_only_moves_when_a_call_actually_reports(self) -> None:
+        self._fetch_with({"x-requests-remaining": "463"})
+        first = odds_api.quota_status()["asOf"]
+        # A response carrying no quota headers must not restamp the old figure.
+        odds_api._record_quota({"content-type": "application/json"})
+        self.assertEqual(odds_api.quota_status()["asOf"], first)
+        self.assertEqual(odds_api.quota_status()["remaining"], 463)
+
+    def test_expired_slates_do_not_take_the_balance_with_them(self) -> None:
+        """Prices go stale in six hours. A credit count does not."""
+        Path(self.path).write_text(json.dumps({
+            "entries": {"aussierules_afl": {
+                "fetchedAt": time.time() - odds_api.CACHE_TTL_SECONDS - 60,
+                "events": [],
+            }},
+            "quota": {"remaining": 400, "asOf": int(time.time()) - 99999},
+        }), encoding="utf-8")
+        self.assertEqual(odds_api.load_cache(), 0, "the slate should have expired")
+        self.assertEqual(odds_api.quota_status()["remaining"], 400)
+
+    def test_a_junk_quota_block_is_ignored_rather_than_fatal(self) -> None:
+        for junk in ("not a dict", None, {"remaining": "lots"}, {"remaining": True}):
+            with self.subTest(junk=junk):
+                odds_api.clear_cache()
+                Path(self.path).write_text(
+                    json.dumps({"entries": {}, "quota": junk}), encoding="utf-8"
+                )
+                odds_api.load_cache()
+                self.assertNotIn("remaining", odds_api.quota_status())
+
+    def test_the_build_distinguishes_unknown_from_exhausted(self) -> None:
+        """Empty must never read as "no credits left"."""
+        source = (ROOT / "scripts" / "build_pages_data.py").read_text(encoding="utf-8")
+        self.assertIn("not known yet", source)
+
+
 class ResponseHeaderTests(unittest.TestCase):
     """`get_text` had no way to hand a caller the headers, hence the bug above."""
 

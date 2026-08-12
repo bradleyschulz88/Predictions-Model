@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -295,6 +296,39 @@ def report_injury_scorer(payloads: dict[str, dict]) -> None:
     )
 
 
+def _report_odds_api_quota() -> None:
+    """Print the remaining credit balance, live or carried.
+
+    The free plan is 500 credits a month and running out is silent: calls start
+    failing, the failure is cached, prices just stop appearing. So the balance
+    needs to be in the log of every build, not only the one build in six that
+    actually spends a credit.
+
+    Measured across 11 Aug, six sampled builds between 03:01Z and 23:53Z were
+    all pure cache hits. None made a call, so none had headers, so the figure
+    never appeared -- correct behaviour that added up to the same invisibility
+    the reading was added to end. The balance now carries in the disk cache and
+    is stamped with when it was taken.
+    """
+    quota = odds_api_quota()
+    if not quota:
+        print(
+            "Odds API quota: not known yet -- no call has been made since the cache "
+            "was last cleared, so the API has not reported a balance",
+            flush=True,
+        )
+        return
+
+    taken = quota.get("asOf")
+    if taken:
+        hours = (time.time() - taken) / 3600
+        age = "read this build" if hours < 0.5 else f"read {hours:.1f}h ago"
+    else:
+        age = "age unknown"
+    figures = {key: value for key, value in quota.items() if key != "asOf"}
+    print(f"Odds API quota: {json.dumps(figures)} ({age})", flush=True)
+
+
 def main() -> int:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -442,9 +476,7 @@ def main() -> int:
     saved_api = save_odds_api_cache()
     if saved_api:
         print(f"Odds: saved {saved_api} Odds API slates for the next build", flush=True)
-    quota = odds_api_quota()
-    if quota:
-        print(f"Odds API quota: {json.dumps(quota)}", flush=True)
+    _report_odds_api_quota()
 
     print("Done.", flush=True)
     return 0
