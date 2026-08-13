@@ -138,10 +138,12 @@ CANDIDATE_FEATURES = (
 
 # Features that carry the result of the game they are supposed to predict.
 #
-# `accuracy_tracker` overwrites a logged row's `features` on every build, and
-# the build re-enriches dates that have already been played -- so anything read
-# from a source that updates after a game encodes that game's outcome by the
-# time it is scored.
+# `accuracy_tracker` used to overwrite a logged row's `features` on every build,
+# and the build re-enriches dates that have already been played -- so anything
+# read from a source that updates after a game encoded that game's outcome by
+# the time it was scored. Features are now frozen at first pitch, so rows logged
+# from 13 Aug 2026 carry `featuresFrozenAt` and are clean; every row before that
+# is not, and no amount of later care recovers them.
 #
 # h2hDiff is the severe case and was caught the day ablate_each first ran. It
 # reads ESPN's season-series summary ("Dodgers lead series 2-1"), and a series
@@ -702,14 +704,26 @@ def _blocks_are_consistent(payload: dict[str, Any]) -> bool:
 
 
 class Sample:
-    __slots__ = ("values", "label", "league", "date", "has_market")
+    __slots__ = ("values", "label", "league", "date", "has_market", "frozen")
 
-    def __init__(self, values: dict[str, float | None], label: int, league: str, date: str) -> None:
+    def __init__(
+        self,
+        values: dict[str, float | None],
+        label: int,
+        league: str,
+        date: str,
+        frozen: bool = False,
+    ) -> None:
         self.values = values
         self.label = label
         self.league = league
         self.date = date
         self.has_market = values.get("marketLogit") is not None
+        # Whether the feature vector was pinned before the game started. False
+        # means it was recomputed afterwards and may carry the result -- see
+        # the freeze comment in accuracy_tracker. Every row logged before
+        # 13 Aug 2026 is False, because nothing was pinning them.
+        self.frozen = frozen
 
 
 def load_history_samples(data_dir: Path) -> list[tuple[dict[str, Any], int, str, str]]:
@@ -760,18 +774,20 @@ def samples_from_log(data_dir: Path) -> tuple[list[Sample], float]:
                 label,
                 merged.get("league") or "unknown",
                 merged.get("date") or merged.get("scheduleDate") or "",
+                bool(merged.get("featuresFrozenAt")),
             )
         )
 
-    centre = measure_split_diff_centre([features for features, _, _, _ in raw])
+    centre = measure_split_diff_centre([features for features, _, _, _, _ in raw])
     samples = [
         Sample(
             values=build_feature_dict(features, split_diff_centre=centre),
             label=label,
             league=league,
             date=date,
+            frozen=frozen,
         )
-        for features, label, league, date in raw
+        for features, label, league, date, frozen in raw
     ]
     return samples, centre
 
@@ -1208,9 +1224,17 @@ def ablate_and_write(
     """
     if samples is None:
         samples, _centre = samples_from_log(data_dir)
+    frozen = sum(1 for sample in samples if sample.frozen)
     payload = {
         "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "nSamples": len(samples),
+        # How many rows were fitted on features pinned before the game started.
+        # Everything logged before 13 Aug 2026 was recomputed afterwards and may
+        # carry the result, so until this reaches a usable size the fit is
+        # trained on contaminated history and its weights are too large for the
+        # signal those features actually carry pre-game. This number is the
+        # countdown to a re-baseline; it cannot be backfilled.
+        "frozenSamples": frozen,
         "shippedSize": len(ANCHORED_FEATURES),
         "rows": ablate(samples),
         # The nested sweep above cannot tell "useless" from "useless behind

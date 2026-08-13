@@ -81,6 +81,29 @@ available — and `tests/test_deploy_timeout.py` fails the build if anyone raise
 it again. Confirmed on the 03:01Z build: no warning, deploy in 6 seconds, retry
 step correctly skipped.
 
+## The leak, and what it actually cost
+
+Features are now frozen at first pitch, exactly as the closing price is. Before
+that, `accuracy_tracker` overwrote a row's `features` on every build against a
+build that re-enriches dates already played, so anything read from a source
+that updates on a result encoded it.
+
+**I said last turn that published picks were unaffected. That was half right.**
+The features the board predicts on were always clean — at pick time the game
+has not happened. The *weights* were not. A fit trained on rows where
+`strengthDiff` scored an AUC of 0.682 will over-weight it against the ~0.62 it
+is really worth pre-game, and that weight is then applied to live games. The
+leak degraded predictions, not only the reports.
+
+Freezing stops new contamination. It cannot repair the **947 rows already
+logged**, and no later care will — `ablation.json` now carries `frozenSamples`
+as the countdown to a re-baseline. It reads 0 today.
+
+This is also the most likely explanation of the contradiction that has been
+running through everything: the backtest claims +0.0075 log loss over the
+market while CLV says the model takes worse prices than the close 61% of the
+time. A contaminated fit and an honest CLV look exactly like that.
+
 ## Phase 1 results
 
 **B1 — coverage. Answered, and it corrects my own earlier diagnosis.** No

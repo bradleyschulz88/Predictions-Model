@@ -275,6 +275,36 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
             else:
                 pick_odds = current_odds
 
+            # Freeze the feature vector when the game starts, exactly as the
+            # closing price is frozen, and for the same reason.
+            #
+            # This used to be a plain overwrite on every build. The build
+            # re-enriches dates that have already been played, so a graded
+            # row's features were whatever the sources said *after* the result
+            # -- and anything computed from a source that updates on a result
+            # therefore encoded it. h2hDiff was the severe case, reading a
+            # season-series score that a single game moves by a third: it
+            # reached a standalone AUC of 0.855 against the closing line's
+            # 0.640. strengthDiff, which ships, sits at 0.682 on the same test.
+            #
+            # The consequence is not confined to the reports. The fit trains on
+            # these rows and then predicts on clean pre-game ones, so a weight
+            # learned from an inflated feature is too large for the value that
+            # feature actually carries before a game. Leaked evaluation and
+            # degraded predictions, from one missing line.
+            #
+            # Frozen at the last pre-game observation rather than the first,
+            # which is what pickOdds does: the first build to see a game days
+            # out may have no odds and thin enrichment, and there is no reason
+            # to prefer that to the fullest picture available at first pitch.
+            previous_features = existing.get("features")
+            features_frozen_at = existing.get("featuresFrozenAt")
+            if started and previous_features:
+                pinned_features = previous_features
+                features_frozen_at = features_frozen_at or payload.get("fetchedAt")
+            else:
+                pinned_features = prediction.get("features") or previous_features
+
             # The path between open and close, not just its two endpoints.
             #
             # Line movement is among the most predictive publicly available
@@ -338,7 +368,11 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 # False means the model made this pick but the board withheld
                 # it. Kept for training; excluded from the published record.
                 "published": published,
-                "features": prediction.get("features"),
+                "features": pinned_features,
+                # Present means these features are the last pre-game state and
+                # can be trained on. Absent means they were recomputed after
+                # the result was known and cannot -- see the comment above.
+                "featuresFrozenAt": features_frozen_at,
                 # Separate markets on the same game. Logged so they can be
                 # graded, which none of them ever has been -- the totals
                 # heuristic has been shown on the board since the start without
