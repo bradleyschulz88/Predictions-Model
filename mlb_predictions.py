@@ -1318,15 +1318,11 @@ def _probability_components(
     return components
 
 
-def _best_price_for_side(lines: list[dict[str, Any]], side: str) -> int | None:
-    """Best available American price for one side, across every book quoted.
-
-    Best means the largest payout, which is the highest decimal odds -- not the
-    highest American number, since -110 beats -150 but +120 beats both.
-    """
+def _moneyline_quotes(lines: list[dict[str, Any]], side: str) -> list[int]:
+    """Every usable book quote for one side, outliers already dropped."""
     key = {"home": ("home", "homeOdds"), "away": ("away", "awayOdds"), "draw": ("draw", "drawOdds")}.get(side)
     if not key:
-        return None
+        return []
 
     quotes: list[int] = []
     for line in lines or []:
@@ -1339,10 +1335,74 @@ def _best_price_for_side(lines: list[dict[str, Any]], side: str) -> int | None:
         if odds is not None:
             quotes.append(int(odds))
 
-    quotes = _usable_quotes(quotes)
+    return _usable_quotes(quotes)
+
+
+def _best_price_for_side(lines: list[dict[str, Any]], side: str) -> int | None:
+    """Best available American price for one side, across every book quoted.
+
+    Best means the largest payout, which is the highest decimal odds -- not the
+    highest American number, since -110 beats -150 but +120 beats both.
+    """
+    quotes = _moneyline_quotes(lines, side)
     if not quotes:
         return None
     return max(quotes, key=lambda odds: american_to_decimal(odds))
+
+
+def quote_spread(lines: list[dict[str, Any]], side: str) -> dict[str, Any] | None:
+    """How much taking the best book is worth, against taking a typical one.
+
+    The build already shops: `_best_price_for_side` returns the best quote
+    across every book on the game. What it does not do is record what the
+    alternatives were, so the value of shopping has never been measurable --
+    the comparison exists for a few microseconds inside one build and is then
+    discarded.
+
+    That matters because the coverage is uneven. The Odds API emits every book
+    it has, so those games are genuinely shopped; ESPN core reports a single
+    book -- every pricing line in the logs reads "via DraftKings" -- and
+    SportsBookReview is one board. On the single-book games there is nothing to
+    shop, and no way to know what is being left behind without a record of what
+    a multi-book game looks like.
+
+    `gainPct` is the difference in implied probability between the best quote
+    and the median one, in percentage points. That unit is chosen so it lands
+    on the same scale as closing line value, which is also implied-probability
+    points -- and that comparison is the point. CLV currently runs at a median
+    of -0.4 points, so a shopping gain of even one point would more than cover
+    the ground the model loses to the close, and it would do so mechanically,
+    with no modelling risk at all.
+
+    None when the game carries no usable quote. A single-book game returns a
+    spread of zero rather than None, because "one book, nothing to gain" is a
+    finding and an absent record is not.
+    """
+    quotes = _moneyline_quotes(lines, side)
+    if not quotes:
+        return None
+    best = max(quotes, key=lambda odds: american_to_decimal(odds))
+    ordered = sorted(quotes, key=lambda odds: american_to_decimal(odds))
+    middle = len(ordered) // 2
+    median = (
+        ordered[middle]
+        if len(ordered) % 2
+        # Two books have no middle quote; the worse of the pair is the honest
+        # stand-in for "what you would have got without shopping".
+        else ordered[middle - 1]
+    )
+    best_implied = american_odds_to_implied(best)
+    median_implied = american_odds_to_implied(median)
+    gain = None
+    if best_implied is not None and median_implied is not None:
+        gain = round((median_implied - best_implied) * 100, 3)
+    return {
+        "books": len(quotes),
+        "best": best,
+        "median": median,
+        "worst": ordered[0],
+        "gainPct": gain,
+    }
 
 
 # Books disagree by a point or two on a moneyline, not by tens of points. A

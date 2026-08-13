@@ -81,6 +81,42 @@ available — and `tests/test_deploy_timeout.py` fails the build if anyone raise
 it again. Confirmed on the 03:01Z build: no warning, deploy in 6 seconds, retry
 step correctly skipped.
 
+## Phase 1 results
+
+**B1 — coverage. Answered, and it corrects my own earlier diagnosis.** No
+provider is broken. The 25–33% figures I reported were an artefact of averaging
+across a log that starts 18 June while every one of those features was added
+24–26 July. Measured since each first appeared:
+
+| feature | since added | last 200 rows |
+|---|---:|---:|
+| eloEdge | 94% | 96% |
+| travelDiff | 89% | 92% |
+| h2hDiff | 89% | 86% |
+| parkEdge | 75% | **99% of MLB rows** |
+| bullpenDiff | 75% | **100% of MLB rows** |
+| handednessDiff | 74% | **97% of MLB rows** |
+
+The last three are baseball-only, and MLB is 72% of the recent slate — so their
+"70%" was the league mix, not a gap. **This workstream was waiting, not work,
+and the wait is already over.** It also means the corrected ablation is judging
+these on near-full coverage, so its verdicts can be trusted.
+
+**B3 — lineup-conditioned edge. Cannot be answered, and the reason matters.**
+`hasLineup` is True on 1,023 of 1,042 rows. There is no variation to split on,
+because the build re-enriches played dates and by then a lineup always exists —
+the same overwrite that produced the h2h leak. Blocked on pinning features at
+pick time, not on data.
+
+**A3 — line shopping. Not measurable retroactively; now instrumented.** The
+build already takes the best quote across books, but never recorded the
+alternatives, so the value of shopping existed for microseconds inside a build
+and was discarded. `priceSpread` now pins books, best, median, worst and
+`gainPct` at pick time. The unit is implied-probability points, the same scale
+as CLV — which runs at a median of −0.4, so a shopping gain of one point would
+more than cover what the model loses to the close, mechanically. Needs a week
+of games.
+
 ## Watch, do not act yet
 
 **Totals are the weakest market on the board.** 43-37-4 overall, but **48.6%

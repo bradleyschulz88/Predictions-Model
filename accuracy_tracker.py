@@ -11,7 +11,7 @@ from typing import Any
 
 from data_providers.utils import team_match_score
 from espn_client import fetch_scoreboard, parse_scoreboard
-from mlb_predictions import _best_price_for_side, american_odds_to_implied
+from mlb_predictions import _best_price_for_side, american_odds_to_implied, quote_spread
 from calibration_params import is_publishable_pick
 from schedule_dates import league_schedule_date
 from sports_config import list_league_ids
@@ -318,6 +318,15 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 # pickOdds is the latest price seen; by grade time it is the
                 # closing line. openingOdds is pinned to the first one.
                 "pickOdds": pick_odds,
+                # What shopping was worth on this game: how many books quoted
+                # it, and the gap in implied probability between the best and
+                # the median. The build already takes the best price; until now
+                # it never recorded what the alternatives were, so the value of
+                # doing so could not be measured. Pinned like openingOdds --
+                # written once, because after the game the books are gone.
+                "priceSpread": existing.get("priceSpread") or quote_spread(
+                    game.get("lines") or [], prediction.get("predictedSide")
+                ),
                 "openingOdds": opening_odds,
                 "openingOddsAt": opening_at,
                 "openingSide": opening_side,
