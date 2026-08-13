@@ -587,26 +587,45 @@ def market_is_validated(market: str) -> bool:
 
     Two conditions, because they answer different questions. Enough PRICED
     picks says the market is actually bettable and its return is measurable;
-    a hit rate above the break-even those prices imply says the record at
-    least points the right way.
+    a priced hit rate clearing the break-even those prices imply, by more than
+    its own error bar, says the record actually points the right way.
 
-    Deliberately not a 95% significance test. At these sample sizes almost
-    nothing clears that bar -- neither market does today -- so requiring it
-    would mean no side market is ever backed, which is a different product
-    than the one asked for. The uncertainty is not hidden instead: the record
-    carries stdErrPct and beatsBreakEven, and the card prints them beside any
-    side market it recommends, so "best available" never reads as "proven".
+    Both halves of that were wrong before, and in the same direction.
+
+    It compared `pct`, the hit rate over EVERY graded pick, against a
+    break-even that only applies to the PRICED ones -- the same blended-versus-
+    priced confusion already fixed in the accuracy report, still sitting in the
+    one place that decides whether to stake real money. Measured 13 Aug it was
+    live: spreads read 57.1% blended and passed, while the priced record it
+    would actually be staked at was 52.3% against a 53.4% break-even. The gate
+    was backing a market on the strength of picks that carried no price.
+
+    And it compared on the point estimate alone. Totals cleared its break-even
+    by a tenth of a percentage point -- 52.3 against 52.2, on a standard error
+    near four -- which is not evidence of anything. Requiring one standard
+    error of daylight is not a significance test, which would need roughly two;
+    it is the weaker claim that the record has some room to spare rather than
+    sitting on the line.
+
+    An earlier version of this docstring argued against any such margin on the
+    grounds that no side market would ever be backed. That is now the correct
+    outcome rather than an over-strict one: neither side market has a priced
+    record above its break-even, so backing either would be staking on a
+    number that says nothing. They stay ranked, priced and visible on the card
+    -- publish-only, not hidden -- and the gate reopens on its own if a record
+    earns it.
     """
     if market == "moneyline":
         return True
     record = market_record(market)
     if market_priced_history(market) < MIN_MARKET_HISTORY:
         return False
-    pct = record.get("pct")
+    pct = record.get("pricedPct")
+    std_err = record.get("pricedStdErrPct")
     break_even = record.get("breakEvenPct")
-    if not isinstance(pct, (int, float)) or not isinstance(break_even, (int, float)):
+    if not all(isinstance(value, (int, float)) for value in (pct, std_err, break_even)):
         return False
-    return pct > break_even
+    return pct - std_err > break_even
 
 
 def _get_calibration_params() -> dict[str, Any]:
@@ -2513,9 +2532,13 @@ def _market_options(prediction: dict[str, Any]) -> list[dict[str, Any]]:
                 # The record behind this market, with its error bar, so the
                 # card can say how thin the evidence is rather than presenting
                 # a hit rate on 70-odd picks as a settled fact.
+                # pricedPct and pricedStdErrPct are the pair the gate now reads,
+                # so the card shows the same numbers the decision was made on
+                # rather than the flattering blended ones beside them.
                 "record": None if market == "moneyline" else {
                     key: record.get(key)
-                    for key in ("pct", "stdErrPct", "breakEvenPct", "beatsBreakEven",
+                    for key in ("pct", "stdErrPct", "pricedPct", "pricedStdErrPct",
+                                "breakEvenPct", "beatsBreakEven",
                                 "decided", "priced", "pricedRoiPct")
                 } if (record := market_record(market)) else None,
             }

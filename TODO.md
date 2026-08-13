@@ -140,6 +140,43 @@ as CLV — which runs at a median of −0.4, so a shopping gain of one point wou
 more than cover what the model loses to the close, mechanically. Needs a week
 of games.
 
+## Side markets are publish-only
+
+Both are now gated out of staking, and the gate had two bugs pointing the same
+way.
+
+It compared `pct` — the hit rate over **every** graded pick — against a
+break-even that only applies to the **priced** ones. Live on 13 Aug: spreads
+read 57.1% blended and passed, while the priced record it would actually be
+staked at was 52.3% against a 53.4% break-even. It was backing a market on the
+strength of picks that carried no price.
+
+It also compared on the point estimate alone. Totals cleared by **a tenth of a
+point** — 52.3 against 52.2, on a standard error near four.
+
+Now: priced hit rate, and it must clear the bar by at least one standard error.
+Not a significance test, which would want roughly two — the weaker claim that
+the record has room to spare rather than sitting on the line.
+
+| market | priced | break-even | stakeable |
+|---|---|---|---|
+| totals | 52.3% ±4.1 | 52.2% | no |
+| spreads | 52.3% ±5.3 | 53.4% | no |
+
+Both stay ranked, priced and visible on the card with their EV — publish-only,
+not hidden — and the gate reopens on its own if a record earns it.
+
+## Odds API: run it to empty, deliberately
+
+Decision taken to keep AFL on all three markets and spend the remaining budget
+rather than cut back. At ~16 credits a day the 303 remaining run out around
+**1 September**, roughly ten days before the period resets.
+
+That degrades safely: calls fail, the failure is cached for six hours, and
+prices stop appearing rather than anything breaking. The quota line prints
+`remaining` every build, and the build now warns once it drops under 60 so the
+last week is visible in advance rather than in hindsight.
+
 ## Watch, do not act yet
 
 **Totals are the weakest market on the board.** 43-37-4 overall, but **48.6%
