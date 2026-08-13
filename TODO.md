@@ -24,18 +24,21 @@ Confirmed on the 02:06Z build of 2026-08-11, the first with the key in place:
 One caveat on the older slates: 1/15 priced on 7–9 August. Those are games
 already played, so the API no longer carries them. Nothing to fix.
 
-## Blocked on you: one secret
+## Nothing is blocked on a secret any more
 
-At *Settings → Secrets and variables → Actions*.
+**`NVIDIA_API_KEY` is gone.** The injury-importance scorer that needed it has
+been removed, so no key is required and the secret can be deleted from the
+repository settings. The ablation is the reason: `injuryDiff` and
+`injurySeverityDiff` both made walk-forward log loss worse at every sample size
+measured — 0.6438 rising to 0.6459 as they went in. Carrying a metered external
+dependency for a feature the data kept declining was not a trade worth making.
 
-**`NVIDIA_API_KEY`** — the secret holds the whole Python snippet from
-build.nvidia.com, not the key. The 03:01Z build measured it: *534 characters,
-first a space at position 4, 38 breaks in total, and it does not start with
-'nvapi-'*. Position 4 is the space after `from` in `from openai import OpenAI`.
+The deterministic injury score stays. It costs nothing and is what the board
+has in practice always shown, since the key was never successfully configured.
 
-Fix: delete the secret and add it back with only the ~70 characters between the
-quotes on the `api_key = "..."` line. Until then injury severity runs on its
-deterministic score, which is a supported mode — the build stays green.
+One reference remains, in `youtube_intel.py` — an offline tool run by hand,
+never in CI, whose `videoIntelDiff` feature has zero coverage in the graded log.
+It is orphaned rather than active. Worth deleting; say the word.
 
 ## Two things I got wrong, now fixed
 
