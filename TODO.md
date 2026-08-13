@@ -81,6 +81,49 @@ available — and `tests/test_deploy_timeout.py` fails the build if anyone raise
 it again. Confirmed on the 03:01Z build: no warning, deploy in 6 seconds, retry
 step correctly skipped.
 
+## NFL preseason: a one-game sample wearing a power rating
+
+Found 13 Aug when the preseason started. The model was publishing **92.3%** on
+Colts @ Patriots where the market implied **41.2%**, and **95.0%** — the
+`MAX_PROB` clamp — on Panthers @ Cardinals against 45.5%.
+
+| league | n | median gap | >15pts |
+|---|---:|---:|---:|
+| **NFL** | 10 | **27.2 pts** | **70%** |
+| MLB | 658 | 8.2 pts | 25% |
+| WNBA | 50 | 4.5 pts | 6% |
+| AFL | 6 | 5.6 pts | 0% |
+
+The original review opened on median 25 pts with 77% over 15. That was fixed —
+*in baseball*. `recordDiff` is None in August, so strength fell through to
+`powerRating` built on one or two preseason games: `homePower 0.80` against
+`awayPower 0.00` is one club that won its opener against one that lost.
+`MIN_GAMES_BEFORE_USABLE` guards the fit; nothing guarded the feature.
+
+Three fixes, all general rather than NFL-specific, because the same defect
+arrives in MLB every April and the NBA every October:
+
+- **`strengthGames`** — how many games the estimate rests on, from the thinner
+  of the two records. Preseason reports zero, so exhibitions fall out of the
+  same arithmetic with no second code path.
+- **Shrinkage** at `n/(n+10)`, the same rule already used for league
+  intercepts. One game carries 9%, twenty carries two thirds, a full season is
+  untouched. Rows logged before the fix have no `strengthGames` and are left
+  exactly as they were rather than having a sample size guessed for them.
+- **A per-league divergence gate** in `check_regression.py`, failing the build
+  above 15 points on 10+ picks. Every working league sits at 4.5–8.2.
+
+Walk-forward after the change: 0.6382 against a 0.6359 baseline — within
+tolerance and near-identical, which is what a correct shrinkage does to mature
+records.
+
+**Why it went unseen:** the published divergence figure is pooled and baseball
+dominates it. It read 3.7 points while NFL sat at 27.2. That is the third time
+this week a pooled statistic concealed a subgroup contradicting it — after CLV
+hiding MLB behind WNBA, and the staking gate comparing a blended hit rate to a
+priced break-even. The gate is the answer to the pattern, not just to this
+instance.
+
 ## The leak, and what it actually cost
 
 Features are now frozen at first pitch, exactly as the closing price is. Before

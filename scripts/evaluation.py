@@ -427,9 +427,19 @@ def divergence_report(observations: Sequence[Observation]) -> dict[str, Any]:
     """
     paired = [item for item in observations if item.market is not None and item.model is not None]
     report = _divergence_stats(paired)
-    report["current"] = _divergence_stats(
-        [item for item in paired if getattr(item, "current_pipeline", False)]
-    )
+    current = [item for item in paired if getattr(item, "current_pipeline", False)]
+    report["current"] = _divergence_stats(current)
+
+    # Per league, because the pooled figure is dominated by whichever league
+    # has the most games and will hide any other. On 13 Aug 2026 it read 3.7
+    # points overall while NFL preseason sat at 27.2 with 70% of games over 15
+    # -- the exact defect this project was built to remove, invisible behind
+    # baseball. scripts/check_regression.py fails the build on this block, so
+    # the next such league is caught by a gate rather than by someone asking.
+    report["byLeague"] = {
+        league: _divergence_stats([item for item in current if item.league == league])
+        for league in sorted({item.league for item in current})
+    }
     return report
 
 

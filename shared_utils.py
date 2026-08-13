@@ -59,6 +59,20 @@ def win_pct_from_record(
     return wins / total if total else default
 
 
+def games_played(record: str | None) -> int:
+    """How many games are behind a record string, or 0 when there are none.
+
+    The sample size a win percentage rests on, which the model had no way to
+    ask for. A club at 1-0 and a club at 12-4 both produced a win percentage
+    and nothing distinguished them, so one preseason result was read with the
+    same authority as a third of a season.
+    """
+    parsed = parse_record(record)
+    if not parsed:
+        return 0
+    return sum(parsed[:3]) if len(parsed) == 3 else sum(parsed[:2])
+
+
 def win_pct_or_none(record: str | None, *, league: str | None = None) -> float | None:
     """Win percentage, or None when the club has not played yet.
 
