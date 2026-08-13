@@ -129,13 +129,45 @@ CANDIDATE_FEATURES = (
     "eloDiff",
     "b2bDiff",
     "videoIntelDiff",
-    "h2hDiff",
     "parkDiff",
     "travelDiff",
     "handednessDiff",
     "bullpenDiff",
     "formDiff",
 )
+
+# Features that carry the result of the game they are supposed to predict.
+#
+# `accuracy_tracker` overwrites a logged row's `features` on every build, and
+# the build re-enriches dates that have already been played -- so anything read
+# from a source that updates after a game encodes that game's outcome by the
+# time it is scored.
+#
+# h2hDiff is the severe case and was caught the day ablate_each first ran. It
+# reads ESPN's season-series summary ("Dodgers lead series 2-1"), and a series
+# is three or four games, so one result moves it by a third. Measured 13 Aug
+# over 268 graded rows it scored a standalone AUC of 0.855 and its sign agreed
+# with the outcome on 79.9% of non-zero rows. For scale, the de-vigged closing
+# line -- the best public pre-game estimator there is -- manages 0.640 on the
+# same log, and the whole fitted model manages 0.665. No genuine head-to-head
+# signal in baseball is worth 0.855.
+#
+# The nested ablation had been hiding this by accident: h2hDiff sat at position
+# 11, behind eight features that had already degraded the fit, so it never got
+# a chance to show what it was. Judged on its own it improves walk-forward log
+# loss by 0.0370 -- five times the model's entire measured edge over the
+# market, which is what a leak looks like rather than a discovery.
+#
+# Listed rather than deleted so the reason survives, and so a future candidate
+# read from a post-game source has somewhere obvious to go.
+LEAKING_FEATURES = ("h2hDiff",)
+
+# Any candidate scoring above this standalone is not a pre-game signal. The
+# market sits at 0.640 and is the ceiling for public information; a comfortable
+# margin over it still leaves room for a genuinely strong feature without
+# admitting anything that has seen the result.
+# tests/test_feature_leakage.py enforces it.
+MAX_PLAUSIBLE_FEATURE_AUC = 0.75
 
 # Shrinkage constant for per-league intercepts: a league needs ~K graded games
 # before its own home-field estimate outweighs the pooled one.
@@ -1053,31 +1085,112 @@ def choose_anchored_penalties(
     return best
 
 
+def _best_over_ridge(
+    samples: Sequence[Sample], features: Sequence[str]
+) -> dict[str, Any] | None:
+    """Walk-forward score for one feature set, at its best ridge."""
+    anchored = tuple(features)
+    standalone = tuple(name for name in anchored if name != "marketLogit")
+    best: dict[str, Any] | None = None
+    for l2 in (1.0, 3.0, 10.0, 30.0):
+        scores = walk_forward_scores(
+            samples,
+            l2=l2,
+            anchored_features=anchored,
+            standalone_features=standalone,
+        )
+        if scores.get("logLoss") is None:
+            continue
+        if best is None or scores["logLoss"] < best["logLoss"]:
+            best = {**scores, "l2": l2}
+    return best
+
+
 def ablate(samples: Sequence[Sample]) -> list[dict[str, Any]]:
     """Walk-forward score of each nested feature set, best ridge per set.
 
     Keeps feature selection honest and repeatable: as the graded log grows, a
     feature that cannot beat its own absence should not be in the model.
+
+    Nested prefixes answer one question and are routinely read as answering a
+    different one -- see `ablate_each` below, which supplies the other two.
     """
     results: list[dict[str, Any]] = []
     for size in range(1, len(CANDIDATE_FEATURES) + 1):
-        anchored = CANDIDATE_FEATURES[:size]
-        standalone = tuple(name for name in anchored if name != "marketLogit")
-        best: dict[str, Any] | None = None
-        for l2 in (1.0, 3.0, 10.0, 30.0):
-            scores = walk_forward_scores(
-                samples,
-                l2=l2,
-                anchored_features=anchored,
-                standalone_features=standalone,
-            )
-            if scores.get("logLoss") is None:
-                continue
-            if best is None or scores["logLoss"] < best["logLoss"]:
-                best = {**scores, "l2": l2}
+        best = _best_over_ridge(samples, CANDIDATE_FEATURES[:size])
         if best:
-            results.append({"features": list(anchored), **best})
+            results.append({"features": list(CANDIDATE_FEATURES[:size]), **best})
     return results
+
+
+def ablate_each(samples: Sequence[Sample]) -> dict[str, list[dict[str, Any]]]:
+    """Judge every candidate on its own merits, twice.
+
+    The nested sweep above tests prefixes of a fixed, prior-ordered list, so a
+    candidate at position five is only ever scored with the four ahead of it
+    already in the model, and once an early feature hurts, everything after it
+    inherits the damage. Measured 12 Aug the shape was exactly that: log loss
+    improved to 0.6401 at position three and then degraded monotonically for
+    all thirteen features behind it.
+
+    Read casually, that says "no candidate helps". What it actually licenses is
+    "no candidate helps when stacked behind everything ahead of it in an
+    arbitrary order", which is a much weaker claim and not the one feature
+    selection needs. A genuinely useful feature sitting at position nine cannot
+    demonstrate anything from there.
+
+    Two sweeps fix it, both reusing the same walk-forward machinery:
+
+    * **added** -- the shipped set plus one candidate, each independently. This
+      is the question actually being asked: does this feature earn a place
+      next to what already ships?
+    * **removed** -- the full candidate set minus one, each independently. This
+      catches the opposite error, a feature that only looks useless because
+      another one is standing in for it.
+
+    Both are scored against the shipped baseline, so a row's `delta` is the
+    change in walk-forward log loss it causes. Negative is an improvement.
+    """
+    shipped = _best_over_ridge(samples, ANCHORED_FEATURES)
+    baseline = shipped["logLoss"] if shipped else None
+
+    added: list[dict[str, Any]] = []
+    for name in CANDIDATE_FEATURES:
+        if name in ANCHORED_FEATURES:
+            continue
+        scored = _best_over_ridge(samples, (*ANCHORED_FEATURES, name))
+        if scored:
+            added.append({
+                "feature": name,
+                "delta": None if baseline is None else round(scored["logLoss"] - baseline, 5),
+                **scored,
+            })
+    added.sort(key=lambda row: (row["delta"] is None, row["delta"]))
+
+    full = _best_over_ridge(samples, CANDIDATE_FEATURES)
+    full_loss = full["logLoss"] if full else None
+    removed: list[dict[str, Any]] = []
+    for name in CANDIDATE_FEATURES:
+        if name in ANCHORED_FEATURES:
+            continue
+        remaining = tuple(f for f in CANDIDATE_FEATURES if f != name)
+        scored = _best_over_ridge(samples, remaining)
+        if scored:
+            # Positive means dropping it made things worse, i.e. it was pulling
+            # its weight inside the full set.
+            removed.append({
+                "feature": name,
+                "delta": None if full_loss is None else round(scored["logLoss"] - full_loss, 5),
+                **scored,
+            })
+    removed.sort(key=lambda row: (row["delta"] is None, -(row["delta"] or 0.0)))
+
+    return {
+        "shippedBaseline": shipped,
+        "fullSet": full,
+        "added": added,
+        "removed": removed,
+    }
 
 
 def ablate_and_write(
@@ -1100,6 +1213,9 @@ def ablate_and_write(
         "nSamples": len(samples),
         "shippedSize": len(ANCHORED_FEATURES),
         "rows": ablate(samples),
+        # The nested sweep above cannot tell "useless" from "useless behind
+        # seven others". These two can. See ablate_each.
+        "perFeature": ablate_each(samples),
     }
     (data_dir / ABLATION_FILE).write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return payload
