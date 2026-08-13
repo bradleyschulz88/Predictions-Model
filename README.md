@@ -345,7 +345,7 @@ transcript comes back empty. The script says so explicitly if that happens.
 export YOUTUBE_CLIENT_ID=...        # Google Cloud OAuth client (Desktop app)
 export YOUTUBE_CLIENT_SECRET=...
 export YOUTUBE_REFRESH_TOKEN=...    # one-time consent, scope youtube.readonly
-export NVIDIA_API_KEY=nvapi-...     # optional; without it no news is extracted
+export NVIDIA_API_KEY=nvapi-...     # only youtube_intel.py still reads this
 
 python youtube_intel.py             # writes docs/data/video_intel.json
 git add docs/data/video_intel.json && git commit -m "Refresh video intel"
@@ -511,19 +511,19 @@ head-to-head the least.
 `data_providers/injury_severity.py` scores how much an injury list costs a team
 from availability (`60-Day-IL` vs `Day-To-Day`) and seriousness (`Surgery` vs
 `Soreness`). The feed carries no position or role, so player importance is the
-one thing it cannot infer. Setting an API key adds that step:
+one thing it cannot infer.
 
-```bash
-export NVIDIA_API_KEY=nvapi-...          # https://build.nvidia.com (free tier)
-export NVIDIA_INJURY_MODEL=meta/llama-3.1-8b-instruct   # optional
-```
+There used to be an optional LLM pass over NVIDIA's API that supplied exactly
+that. It has been removed, along with the `NVIDIA_API_KEY` it needed. The
+ablation is why: `injuryDiff` and `injurySeverityDiff` both made walk-forward
+log loss *worse* at every sample size measured — 0.6438 rising to 0.6459 as
+they went in. A metered external dependency, a rate limiter, a per-team cache
+and several hundred lines of key handling were being carried to feed a feature
+the data kept declining.
 
-In CI, add it at **Settings > Secrets and variables > Actions** as
-`NVIDIA_API_KEY`. The workflow passes it to the build step only. Never commit a
-key — put it in `.env` locally, which is gitignored.
-
-It is off by default and degrades to the deterministic score on any failure, so
-a missing key, a timeout, a 429 or an unparseable reply cannot break a build.
+**No API key of any kind is needed for injuries.** The deterministic score is
+the only one, it costs nothing, and it is what the board has always in practice
+been showing — the key was never successfully configured in CI.
 Requests are cached per team and sent at temperature 0, so the same slate scores
 the same way across builds.
 

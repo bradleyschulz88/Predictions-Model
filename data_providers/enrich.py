@@ -202,9 +202,10 @@ def enrich_games_with_providers(
         # settles it instead of another round of guessing.
         _note_series_shape(series, home_h2h, away_h2h)
 
-        # Weighted cost of who is unavailable, as an ablation candidate. The
-        # LLM importance step is off unless NVIDIA_API_KEY is set; without it
-        # this is still a better read than counting absences.
+        # Weighted cost of who is unavailable, read from status and injury
+        # description. Better than counting absences, which is what it
+        # replaced, and worse than knowing who the player is -- the pass that
+        # would have supplied that is gone, along with the key it needed.
         for side, team_name in (("home", home_team), ("away", away_team)):
             enrichment[f"{side}InjurySeverity"] = team_injury_severity(
                 enrichment.get(f"{side}MajorInjuries"),

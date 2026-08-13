@@ -148,11 +148,14 @@ jobs:
         env:
           ESPN_SIDE_MARKET_CACHE: .cache/side-market-odds.json
           ODDS_API_CACHE: .cache/odds-api.json
-          # Optional. When the secret is absent this is empty, injury severity
-          # falls back to its deterministic score, and the build is unaffected.
-          # Add it at Settings > Secrets and variables > Actions.
-          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
-          # Also optional, and the only price source that covers AFL -- it has
+          # NVIDIA_API_KEY used to be passed here for the injury-importance
+          # scorer. That scorer is gone: injuryDiff and injurySeverityDiff both
+          # made walk-forward log loss worse at every sample size measured, so
+          # a metered external dependency was being carried to feed a feature
+          # the data kept declining. The deterministic score remains and needs
+          # no key. The secret can be deleted from the repository settings.
+          #
+          # The only price source that covers AFL -- it has
           # no SportsBookReview board and nothing in ESPN core, so without this
           # every AFL pick stays unpriced and cannot be valued or ranked.
           # Free plan at the-odds-api.com is 500 credits a month; the provider

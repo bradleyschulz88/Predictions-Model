@@ -237,63 +237,28 @@ def build_overview(payloads: dict[str, dict]) -> dict:
 
 
 def report_injury_scorer(payloads: dict[str, dict]) -> None:
-    """Say whether the LLM importance step actually ran.
+    """Say how many teams carried an injury score.
 
-    The NVIDIA key is optional by design: without it team_injury_severity falls
-    back to a deterministic score and the build succeeds either way. That makes
-    a green run worthless as evidence the key works, and means an expired key or
-    an exhausted quota degrades in total silence. This prints the split so the
-    answer is in the log.
+    This used to report whether the NVIDIA importance step ran, because the key
+    was optional and a green build was therefore worthless as evidence it
+    worked. That scorer is gone -- injuryDiff and injurySeverityDiff both made
+    walk-forward log loss worse, so the metered dependency was feeding a feature
+    the data kept declining -- and the deterministic score cannot silently fail
+    the way a remote call could. What is left is a coverage count, which is
+    still worth having: zero teams scored would mean the injury feed broke.
     """
-    counts = {"llm": 0, "deterministic": 0, "none": 0}
+    scored = 0
     for payload in payloads.values():
         for game in payload.get("games") or []:
             enrichment = game.get("enrichment") or {}
             for side in ("home", "away"):
-                source = (enrichment.get(f"{side}InjurySeverity") or {}).get("source")
-                if source in counts:
-                    counts[source] += 1
+                if (enrichment.get(f"{side}InjurySeverity") or {}).get("source") == "deterministic":
+                    scored += 1
 
-    scored = counts["llm"] + counts["deterministic"]
     if not scored:
         print("Injury scorer: no teams with injuries to score", flush=True)
         return
-
-    from data_providers.injury_severity import last_failure
-
-    if counts["llm"]:
-        print(
-            f"Injury scorer: LLM rated {counts['llm']}/{scored} teams "
-            f"({counts['deterministic']} fell back) -- NVIDIA_API_KEY is working",
-            flush=True,
-        )
-        # Working is not the same as correct. api_key() will rejoin a key that
-        # got wrapped across lines rather than fail a build over a line break,
-        # and returning here without saying so would leave the secret quietly
-        # depending on that recovery -- until the day the paste breaks
-        # differently and the whole thing goes deterministic again.
-        note = last_failure()
-        if note:
-            print(f"::warning title=Injury scorer::{note}", flush=True)
-        return
-
-    # Name the actual cause. "absent, rejected or out of quota" was three
-    # different problems with three different fixes wearing one message, so a
-    # rotated key that still failed looked identical to no key at all.
-    if not os.environ.get("NVIDIA_API_KEY"):
-        print(
-            f"Injury scorer: deterministic on all {scored} teams -- NVIDIA_API_KEY is "
-            f"not set, so the LLM step never ran (this is a supported mode, not an error)",
-            flush=True,
-        )
-        return
-
-    reason = last_failure()
-    print(
-        f"::warning title=Injury scorer::the key is set but the LLM step scored 0 of "
-        f"{scored} teams: {reason or 'no call was attempted'}",
-        flush=True,
-    )
+    print(f"Injury scorer: {scored} teams scored", flush=True)
 
 
 def _report_odds_api_quota() -> None:

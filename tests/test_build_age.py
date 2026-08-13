@@ -207,14 +207,22 @@ class ThresholdAgreementTests(unittest.TestCase):
 
 
 CAVEAT_BLOCK = re.compile(r"^function standingCaveat\(accuracy\) \{.*?^\}$", re.S | re.M)
+# standingCaveat calls this, so lifting one without the other gives a
+# ReferenceError rather than a test result. Shared with the analysis notes so
+# the two cannot drift into disagreeing about whether there is a problem.
+PROBLEM_LEAGUE_BLOCK = re.compile(r"^function clvProblemLeague\(clv\) \{.*?^\}$", re.S | re.M)
 
 
 def _caveat(accuracy) -> str:
-    """Run the real standingCaveat out of board.js."""
-    match = CAVEAT_BLOCK.search(BOARD_JS.read_text(encoding="utf-8"))
+    """Run the real standingCaveat out of board.js, with its dependency."""
+    source = BOARD_JS.read_text(encoding="utf-8")
+    match = CAVEAT_BLOCK.search(source)
     assert match, "could not find standingCaveat in board.js"
+    helper = PROBLEM_LEAGUE_BLOCK.search(source)
+    assert helper, "could not find clvProblemLeague in board.js"
     script = (
-        match.group(0)
+        helper.group(0) + "\n"
+        + match.group(0)
         + f"\nconsole.log(JSON.stringify(standingCaveat({json.dumps(accuracy)})));"
     )
     out = subprocess.run(
@@ -274,6 +282,64 @@ class StandingCaveatTests(unittest.TestCase):
         """Wired in, not just defined -- the mistake this file already caught once."""
         source = BOARD_JS.read_text(encoding="utf-8")
         self.assertIn("standingCaveat(accuracy)", source)
+
+
+@unittest.skipUnless(_node(), "node is required to execute the dashboard helper")
+class ClvInTheCaveatTests(unittest.TestCase):
+    """The return is the flattering half; the caveat has to carry both.
+
+    Closing line value predicts long-run profit better than realised return
+    over a few hundred bets. When it points the other way, a caveat that quotes
+    only "+2.6% return across 874 graded picks" is selectively citing the
+    model's own evidence.
+
+    The pooled reading is not enough on its own. Measured 12 Aug 2026 the
+    pooled rate was 39.5% +/-5.4 -- an upper bound of 50.08, so it does not
+    clear significance -- while MLB inside it read 36.5% +/-6.3 on 63 of the 86
+    picks and does. Averaging a bad MLB against a good WNBA is a verdict on
+    neither, which is the same pooling defect the per-league split fixed in the
+    data one commit earlier.
+    """
+
+    def _clv(self, **kw):
+        base = {"picks": 86, "beatCloseP": 39.5, "beatCloseStdErrPct": 5.4,
+                "medianPct": -0.4, "worseThanCoinFlip": False, "byLeague": {}}
+        base.update(kw)
+        return {"summary": {"allTime": {"total": 874, "roiPct": 2.6},
+                            "closingLineValue": base}}
+
+    def test_a_significant_pooled_reading_reaches_the_caveat(self) -> None:
+        note = _caveat(self._clv(worseThanCoinFlip=True))
+        self.assertIn("beats the closing line on only", note)
+        self.assertIn("points the other way", note)
+
+    def test_a_significant_league_reaches_it_even_when_pooled_does_not(self) -> None:
+        """The live shape exactly: pooled clears 50 by 0.08, MLB does not."""
+        note = _caveat(self._clv(byLeague={
+            "mlb": {"picks": 63, "beatCloseP": 36.5, "worseThanCoinFlip": True},
+            "wnba": {"picks": 15, "beatCloseP": 53.3, "worseThanCoinFlip": False},
+        }))
+        self.assertIn("beats the closing line on only", note)
+
+    def test_a_thin_league_does_not_trigger_it(self) -> None:
+        """NFL at 0% on one pick is noise, and quoting it would be silly."""
+        note = _caveat(self._clv(byLeague={
+            "nfl": {"picks": 1, "beatCloseP": 0.0, "worseThanCoinFlip": True},
+        }))
+        self.assertNotIn("beats the closing line on only", note)
+
+    def test_a_healthy_record_carries_no_clv_warning(self) -> None:
+        note = _caveat(self._clv(beatCloseP=56.0, worseThanCoinFlip=False, byLeague={
+            "mlb": {"picks": 63, "beatCloseP": 56.0, "worseThanCoinFlip": False},
+        }))
+        self.assertNotIn("closing line", note)
+        self.assertIn("not betting advice", note)
+
+    def test_it_still_reads_as_a_sentence_with_no_clv_at_all(self) -> None:
+        note = _caveat({"summary": {"allTime": {"total": 874, "roiPct": 2.6}}})
+        self.assertIn("not betting advice", note)
+        self.assertNotIn("undefined", note)
+        self.assertNotIn("NaN", note)
 
 
 if __name__ == "__main__":

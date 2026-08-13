@@ -238,6 +238,25 @@ class NegativeClvIsReportableTests(unittest.TestCase):
         self.assertEqual(summary["last7Days"]["picks"], 20)
         self.assertTrue(summary["worseThanCoinFlip"])
 
+    def test_an_ungraded_pick_with_a_frozen_close_still_counts(self) -> None:
+        """CLV is a fact about the price, not about the result.
+
+        A pick whose close was captured at first pitch has a measurable CLV the
+        moment the game starts. Scoring only graded picks withheld readings for
+        no reason and slowed down the one metric that is supposed to read
+        faster than realised return -- 86 counted against 90 available.
+        """
+        picks = [
+            {"clvPct": -1.0, "pickOddsFrozenAt": "t", "league": "mlb", "status": "graded"},
+            {"clvPct": -1.0, "pickOddsFrozenAt": "t", "league": "mlb", "status": "pending"},
+        ]
+        self.assertEqual(clv_summary(picks)["picks"], 2)
+
+    def test_the_call_site_passes_every_pick_not_only_graded_ones(self) -> None:
+        import accuracy_tracker
+        source = Path(accuracy_tracker.__file__).read_text(encoding="utf-8")
+        self.assertIn("clv_summary(list(picks_by_event.values())", source)
+
     def test_an_empty_record_claims_nothing_either_way(self) -> None:
         summary = clv_summary([])
         self.assertIsNone(summary["worseThanCoinFlip"])
