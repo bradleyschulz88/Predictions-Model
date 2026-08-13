@@ -587,26 +587,45 @@ def market_is_validated(market: str) -> bool:
 
     Two conditions, because they answer different questions. Enough PRICED
     picks says the market is actually bettable and its return is measurable;
-    a hit rate above the break-even those prices imply says the record at
-    least points the right way.
+    a priced hit rate clearing the break-even those prices imply, by more than
+    its own error bar, says the record actually points the right way.
 
-    Deliberately not a 95% significance test. At these sample sizes almost
-    nothing clears that bar -- neither market does today -- so requiring it
-    would mean no side market is ever backed, which is a different product
-    than the one asked for. The uncertainty is not hidden instead: the record
-    carries stdErrPct and beatsBreakEven, and the card prints them beside any
-    side market it recommends, so "best available" never reads as "proven".
+    Both halves of that were wrong before, and in the same direction.
+
+    It compared `pct`, the hit rate over EVERY graded pick, against a
+    break-even that only applies to the PRICED ones -- the same blended-versus-
+    priced confusion already fixed in the accuracy report, still sitting in the
+    one place that decides whether to stake real money. Measured 13 Aug it was
+    live: spreads read 57.1% blended and passed, while the priced record it
+    would actually be staked at was 52.3% against a 53.4% break-even. The gate
+    was backing a market on the strength of picks that carried no price.
+
+    And it compared on the point estimate alone. Totals cleared its break-even
+    by a tenth of a percentage point -- 52.3 against 52.2, on a standard error
+    near four -- which is not evidence of anything. Requiring one standard
+    error of daylight is not a significance test, which would need roughly two;
+    it is the weaker claim that the record has some room to spare rather than
+    sitting on the line.
+
+    An earlier version of this docstring argued against any such margin on the
+    grounds that no side market would ever be backed. That is now the correct
+    outcome rather than an over-strict one: neither side market has a priced
+    record above its break-even, so backing either would be staking on a
+    number that says nothing. They stay ranked, priced and visible on the card
+    -- publish-only, not hidden -- and the gate reopens on its own if a record
+    earns it.
     """
     if market == "moneyline":
         return True
     record = market_record(market)
     if market_priced_history(market) < MIN_MARKET_HISTORY:
         return False
-    pct = record.get("pct")
+    pct = record.get("pricedPct")
+    std_err = record.get("pricedStdErrPct")
     break_even = record.get("breakEvenPct")
-    if not isinstance(pct, (int, float)) or not isinstance(break_even, (int, float)):
+    if not all(isinstance(value, (int, float)) for value in (pct, std_err, break_even)):
         return False
-    return pct > break_even
+    return pct - std_err > break_even
 
 
 def _get_calibration_params() -> dict[str, Any]:
@@ -1318,15 +1337,11 @@ def _probability_components(
     return components
 
 
-def _best_price_for_side(lines: list[dict[str, Any]], side: str) -> int | None:
-    """Best available American price for one side, across every book quoted.
-
-    Best means the largest payout, which is the highest decimal odds -- not the
-    highest American number, since -110 beats -150 but +120 beats both.
-    """
+def _moneyline_quotes(lines: list[dict[str, Any]], side: str) -> list[int]:
+    """Every usable book quote for one side, outliers already dropped."""
     key = {"home": ("home", "homeOdds"), "away": ("away", "awayOdds"), "draw": ("draw", "drawOdds")}.get(side)
     if not key:
-        return None
+        return []
 
     quotes: list[int] = []
     for line in lines or []:
@@ -1339,10 +1354,74 @@ def _best_price_for_side(lines: list[dict[str, Any]], side: str) -> int | None:
         if odds is not None:
             quotes.append(int(odds))
 
-    quotes = _usable_quotes(quotes)
+    return _usable_quotes(quotes)
+
+
+def _best_price_for_side(lines: list[dict[str, Any]], side: str) -> int | None:
+    """Best available American price for one side, across every book quoted.
+
+    Best means the largest payout, which is the highest decimal odds -- not the
+    highest American number, since -110 beats -150 but +120 beats both.
+    """
+    quotes = _moneyline_quotes(lines, side)
     if not quotes:
         return None
     return max(quotes, key=lambda odds: american_to_decimal(odds))
+
+
+def quote_spread(lines: list[dict[str, Any]], side: str) -> dict[str, Any] | None:
+    """How much taking the best book is worth, against taking a typical one.
+
+    The build already shops: `_best_price_for_side` returns the best quote
+    across every book on the game. What it does not do is record what the
+    alternatives were, so the value of shopping has never been measurable --
+    the comparison exists for a few microseconds inside one build and is then
+    discarded.
+
+    That matters because the coverage is uneven. The Odds API emits every book
+    it has, so those games are genuinely shopped; ESPN core reports a single
+    book -- every pricing line in the logs reads "via DraftKings" -- and
+    SportsBookReview is one board. On the single-book games there is nothing to
+    shop, and no way to know what is being left behind without a record of what
+    a multi-book game looks like.
+
+    `gainPct` is the difference in implied probability between the best quote
+    and the median one, in percentage points. That unit is chosen so it lands
+    on the same scale as closing line value, which is also implied-probability
+    points -- and that comparison is the point. CLV currently runs at a median
+    of -0.4 points, so a shopping gain of even one point would more than cover
+    the ground the model loses to the close, and it would do so mechanically,
+    with no modelling risk at all.
+
+    None when the game carries no usable quote. A single-book game returns a
+    spread of zero rather than None, because "one book, nothing to gain" is a
+    finding and an absent record is not.
+    """
+    quotes = _moneyline_quotes(lines, side)
+    if not quotes:
+        return None
+    best = max(quotes, key=lambda odds: american_to_decimal(odds))
+    ordered = sorted(quotes, key=lambda odds: american_to_decimal(odds))
+    middle = len(ordered) // 2
+    median = (
+        ordered[middle]
+        if len(ordered) % 2
+        # Two books have no middle quote; the worse of the pair is the honest
+        # stand-in for "what you would have got without shopping".
+        else ordered[middle - 1]
+    )
+    best_implied = american_odds_to_implied(best)
+    median_implied = american_odds_to_implied(median)
+    gain = None
+    if best_implied is not None and median_implied is not None:
+        gain = round((median_implied - best_implied) * 100, 3)
+    return {
+        "books": len(quotes),
+        "best": best,
+        "median": median,
+        "worst": ordered[0],
+        "gainPct": gain,
+    }
 
 
 # Books disagree by a point or two on a moneyline, not by tens of points. A
@@ -2453,9 +2532,13 @@ def _market_options(prediction: dict[str, Any]) -> list[dict[str, Any]]:
                 # The record behind this market, with its error bar, so the
                 # card can say how thin the evidence is rather than presenting
                 # a hit rate on 70-odd picks as a settled fact.
+                # pricedPct and pricedStdErrPct are the pair the gate now reads,
+                # so the card shows the same numbers the decision was made on
+                # rather than the flattering blended ones beside them.
                 "record": None if market == "moneyline" else {
                     key: record.get(key)
-                    for key in ("pct", "stdErrPct", "breakEvenPct", "beatsBreakEven",
+                    for key in ("pct", "stdErrPct", "pricedPct", "pricedStdErrPct",
+                                "breakEvenPct", "beatsBreakEven",
                                 "decided", "priced", "pricedRoiPct")
                 } if (record := market_record(market)) else None,
             }

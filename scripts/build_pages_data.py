@@ -30,6 +30,11 @@ from sports_config import get_league, list_league_ids  # noqa: E402
 
 OUTPUT_DIR = ROOT / "docs" / "data"
 
+# Warn below this many Odds API credits. Roughly three to four days at the
+# measured burn of ~16 a day, which is enough notice to act on and rare enough
+# not to become background noise.
+ODDS_API_LOW_BALANCE = 60
+
 
 def dates_for_league(league: str) -> list[str]:
     return schedule_dates_for_league(league)
@@ -292,6 +297,23 @@ def _report_odds_api_quota() -> None:
         age = "age unknown"
     figures = {key: value for key, value in quota.items() if key != "asOf"}
     print(f"Odds API quota: {json.dumps(figures)} ({age})", flush=True)
+
+    # Running the free tier to empty is a deliberate choice rather than an
+    # oversight -- the alternative was cutting AFL from three markets to one,
+    # and the call was to spend the budget and wait for the reset. What that
+    # needs is notice. A number counting down among several hundred log lines
+    # is not notice; the day AFL prices stop appearing should not be the first
+    # anyone hears of it. Measured burn is ~16 credits a day, so this fires
+    # with roughly the last three or four days in hand.
+    remaining = quota.get("remaining")
+    if isinstance(remaining, (int, float)) and remaining < ODDS_API_LOW_BALANCE:
+        print(
+            f"::warning title=Odds API::{int(remaining)} credits left, about "
+            f"{max(1, int(remaining // 16))} days at the current rate. When it "
+            f"reaches zero AFL loses its only price source and MLB runlines stop "
+            f"pricing, until the monthly allowance resets.",
+            flush=True,
+        )
 
 
 def main() -> int:
