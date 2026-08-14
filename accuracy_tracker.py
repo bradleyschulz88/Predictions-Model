@@ -468,7 +468,7 @@ def _market_summary(results: list[dict[str, Any]], key: str) -> dict[str, Any]:
         "pct": pct,
         "stdErrPct": std_err,
         "pricedDecided": priced_decided,
-        "pricedPct": priced_pct,
+        "pricedHitPct": priced_pct,
         "pricedStdErrPct": priced_std_err,
         "breakEvenPct": break_even,
         "beatsBreakEven": beats_break_even,
@@ -1023,9 +1023,20 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
     all_time = _summary_bucket()
     by_league: dict[str, dict[str, Any]] = {}
 
+    # The same population split the market records already carry, applied to
+    # the headline. `pct` is over every graded pick including the ones that
+    # never had a price, so it is not the number any break-even or return
+    # applies to -- the identical blended-versus-priced confusion already fixed
+    # in totals, in spreads and in the staking gate, left standing in the
+    # biggest figure on the accuracy page. AFL is the demonstration: a 74.4%
+    # hit rate and a -4.5% return, because 8 of its 39 picks carried a price.
+    priced_all_time = _summary_bucket()
+
     for item in all_results:
         if item.get("status") == "graded":
             _accumulate_summary(all_time, item)
+            if item.get("pickOdds") is not None:
+                _accumulate_summary(priced_all_time, item)
         elif item.get("status") == "pending":
             all_time["pending"] = all_time.get("pending", 0) + 1
         elif item.get("status") == "voided":
@@ -1055,7 +1066,7 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
         priced = bucket.get("priced", 0)
         bucket["priced"] = priced
         bucket["unpriced"] = bucket["total"] - priced
-        bucket["pricedPct"] = round(priced / bucket["total"] * 100, 1) if bucket["total"] else None
+        bucket["pricedSharePct"] = round(priced / bucket["total"] * 100, 1) if bucket["total"] else None
         if not priced:
             bucket["roiPct"] = None
             bucket["roiNote"] = "No odds available for this league; ROI is not measurable."
@@ -1078,6 +1089,9 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
         "summary": {
             "last7Days": last7,
             "allTime": all_time,
+            # Graded picks that actually carried a price. The only population a
+            # return or a break-even means anything against.
+            "allTimePriced": priced_all_time,
             "byLeague": by_league,
             "streak": streak,
             "closingLineValue": clv_summary_payload,

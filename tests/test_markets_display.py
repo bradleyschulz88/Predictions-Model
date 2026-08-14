@@ -346,7 +346,7 @@ class BestBetSelectionTests(unittest.TestCase):
     def test_enough_priced_history_and_a_winning_record_opens_the_gate(self) -> None:
         report = {"summary": {"totals": {
             "graded": 60, "priced": mlb_predictions.MIN_MARKET_HISTORY,
-            "pricedPct": 61.6, "pricedStdErrPct": 4.0, "breakEvenPct": 52.3,
+            "pricedHitPct": 61.6, "pricedStdErrPct": 4.0, "breakEvenPct": 52.3,
         }}}
         with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
             self.assertTrue(mlb_predictions.market_is_validated("total"))
@@ -356,7 +356,7 @@ class BestBetSelectionTests(unittest.TestCase):
         has hit under the break-even its own prices imply has shown the
         opposite, and no amount of it should promote the market."""
         report = {"summary": {"totals": {
-            "graded": 900, "priced": 800, "pricedPct": 48.0,
+            "graded": 900, "priced": 800, "pricedHitPct": 48.0,
             "pricedStdErrPct": 1.8, "breakEvenPct": 52.3,
         }}}
         with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
@@ -366,9 +366,9 @@ class BestBetSelectionTests(unittest.TestCase):
         """Not a hardcoded 52.4%. The same 55% hit rate passes against -110
         runline-style pricing and fails against a bar the real prices set
         higher, which is what happens once MLB runlines carry odds."""
-        cheap = {"summary": {"totals": {"graded": 90, "priced": 90, "pricedPct": 58.0,
+        cheap = {"summary": {"totals": {"graded": 90, "priced": 90, "pricedHitPct": 58.0,
                                         "pricedStdErrPct": 4.0, "breakEvenPct": 52.4}}}
-        dear = {"summary": {"totals": {"graded": 90, "priced": 90, "pricedPct": 58.0,
+        dear = {"summary": {"totals": {"graded": 90, "priced": 90, "pricedHitPct": 58.0,
                                        "pricedStdErrPct": 4.0, "breakEvenPct": 58.0}}}
         with patch.object(mlb_predictions, "_get_accuracy_report", return_value=cheap):
             self.assertTrue(mlb_predictions.market_is_validated("total"))
@@ -388,7 +388,7 @@ class BestBetSelectionTests(unittest.TestCase):
         report = {"summary": {"spreads": {
             "graded": 153, "priced": 88,
             "pct": 57.1,            # flattering, and irrelevant to the bar
-            "pricedPct": 52.3, "pricedStdErrPct": 5.3,
+            "pricedHitPct": 52.3, "pricedStdErrPct": 5.3,
             "breakEvenPct": 53.4,
         }}}
         with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
@@ -398,7 +398,7 @@ class BestBetSelectionTests(unittest.TestCase):
         """Totals cleared by a tenth of a point on a standard error near four."""
         report = {"summary": {"totals": {
             "graded": 165, "priced": 158,
-            "pricedPct": 52.3, "pricedStdErrPct": 3.9, "breakEvenPct": 52.2,
+            "pricedHitPct": 52.3, "pricedStdErrPct": 3.9, "breakEvenPct": 52.2,
         }}}
         with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
             self.assertFalse(mlb_predictions.market_is_validated("total"))
@@ -408,7 +408,7 @@ class BestBetSelectionTests(unittest.TestCase):
         claim that the record has room to spare rather than sitting on the line."""
         report = {"summary": {"totals": {
             "graded": 200, "priced": 200,
-            "pricedPct": 58.0, "pricedStdErrPct": 3.5, "breakEvenPct": 52.2,
+            "pricedHitPct": 58.0, "pricedStdErrPct": 3.5, "breakEvenPct": 52.2,
         }}}
         with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
             self.assertTrue(mlb_predictions.market_is_validated("total"))
@@ -427,7 +427,7 @@ class BestBetSelectionTests(unittest.TestCase):
         invite exactly the misreading the gate was just fixed to avoid."""
         report = {"summary": {"spreads": {
             "graded": 153, "priced": 88, "pct": 57.1,
-            "pricedPct": 52.3, "pricedStdErrPct": 5.3, "breakEvenPct": 53.4,
+            "pricedHitPct": 52.3, "pricedStdErrPct": 5.3, "breakEvenPct": 53.4,
         }}}
         with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
             record = mlb_predictions.market_record("spread")
@@ -436,11 +436,11 @@ class BestBetSelectionTests(unittest.TestCase):
             "spread": {"value": {"evPct": 4.0, "odds": -110}, "pick": "X"},
         })
         spread = next(o for o in options if o["market"] == "spread")
-        self.assertIn("pricedPct", spread["record"])
+        self.assertIn("pricedHitPct", spread["record"])
         self.assertIn("pricedStdErrPct", spread["record"])
 
     def test_a_record_with_no_hit_rate_yet_stays_gated(self) -> None:
-        report = {"summary": {"totals": {"graded": 60, "priced": 60, "pricedPct": None}}}
+        report = {"summary": {"totals": {"graded": 60, "priced": 60, "pricedHitPct": None}}}
         with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
             self.assertFalse(mlb_predictions.market_is_validated("total"))
 
