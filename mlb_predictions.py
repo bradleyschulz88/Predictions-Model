@@ -31,7 +31,13 @@ from elo import load_ratings, rating_edge
 from market import american_to_decimal, assess_price, devig_power, devig_proportional
 from youtube_intel import intel_edge, load_intel
 from model_core import resolve_probabilities
-from shared_utils import parse_record, win_pct_from_record, win_pct_or_none, format_win_pct
+from shared_utils import (
+    games_played,
+    parse_record,
+    win_pct_from_record,
+    win_pct_or_none,
+    format_win_pct,
+)
 
 HOME_FIELD_LOGIT = {
     "mlb": 0.28,
@@ -888,6 +894,11 @@ def _pct_diff(
     return round(home - away, 4)
 
 
+# ESPN's season type for an exhibition. 2 is the regular season, 3 the
+# postseason.
+PRESEASON_SEASON_TYPE = 1
+
+
 def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
     """Features the probability model reads, computed before any prediction exists.
 
@@ -932,6 +943,27 @@ def extract_model_inputs(game: dict[str, Any]) -> dict[str, Any]:
         ),
         "homePower": home_adv.get("powerRating"),
         "awayPower": away_adv.get("powerRating"),
+        # How many games the strength estimate actually rests on, taken from the
+        # thinner of the two clubs. Without it a 1-0 record and a 12-4 record
+        # were the same input, and one preseason result carried the authority of
+        # a third of a season -- measured 13 Aug on NFL preseason, where a 0.80
+        # to 0.00 power gap off a single game produced 92% confidence against a
+        # market at 41%.
+        #
+        # Preseason counts as zero regardless of games played. Starters barely
+        # appear -- the average starting quarterback threw 10.1 passes across an
+        # entire preseason -- so the result is decided by third-string players
+        # and a coaching decision about risk, and says nothing about the clubs.
+        # Reporting it as zero evidence lets one shrinkage rule handle both the
+        # exhibition case and every ordinary cold start, with no second path.
+        "strengthGames": (
+            0
+            if game.get("seasonType") == PRESEASON_SEASON_TYPE
+            else min(
+                games_played(game.get("homeRecord")),
+                games_played(game.get("awayRecord")),
+            )
+        ),
         # Park run index, centred on zero. Logged even though it is expected to
         # fail the moneyline ablation -- a park inflates scoring for both teams,
         # so it should barely move who wins. It is here because the honest way

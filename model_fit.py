@@ -175,6 +175,17 @@ MAX_PLAUSIBLE_FEATURE_AUC = 0.75
 # before its own home-field estimate outweighs the pooled one.
 LEAGUE_INTERCEPT_PRIOR = 50.0
 
+# Games a club needs before its record carries half the weight of the league
+# mean in strengthDiff. Ten is about a sixth of a basketball season, a
+# fortnight of baseball and most of an NFL year -- which is the right shape,
+# because ten NFL games is genuinely more informative about a football team
+# than ten baseball games are about a baseball one.
+#
+# Rows logged before 13 Aug 2026 carry no strengthGames and are left alone, so
+# the fit sees them exactly as before rather than having a guess imputed for
+# them. See build_feature_dict.
+STRENGTH_SHRINK_GAMES = 10.0
+
 # Probabilities are never published outside this band. Baseball in particular
 # has no 95% games; the old 0.05/0.95 clamp let stacked features run to the rail.
 MIN_PROB = 0.05
@@ -349,6 +360,32 @@ def build_feature_dict(
         strength_parts.append(home_power - away_power)
 
     strength = sum(strength_parts) / len(strength_parts) if strength_parts else None
+
+    # Shrink toward the league mean by how many games the estimate rests on.
+    #
+    # A 1-0 record and a 12-4 record both produced a win percentage and nothing
+    # told them apart, so one result was read with the authority of a third of
+    # a season. It was not hypothetical: on 13 Aug 2026 NFL preseason picks ran
+    # a median 27.2 points from the market with 70% over 15 -- against 8.2 and
+    # 25% for baseball -- because a 0.80 to 0.00 power gap off single opening
+    # games dominated a market anchor fitted on mature records. Three picks sat
+    # at 87-95% confidence where the market said 41-45%, one of them pinned to
+    # the MAX_PROB clamp.
+    #
+    # `count / (count + k)` is the same shrinkage already used for per-league
+    # intercepts, and the same reason: an estimate earns its weight from its
+    # sample. At one game and k=10 a club's own record carries 9%; by twenty
+    # games it carries two thirds; by a full season it is essentially untouched,
+    # which is why this is close to a no-op on the leagues that already work.
+    #
+    # It is deliberately general rather than an NFL rule. The same defect
+    # arrives in MLB every April and the NBA every October, and a league gate
+    # would have to be remembered each time. Preseason reports zero games, so
+    # exhibitions fall out of the same arithmetic with no second code path.
+    if strength is not None:
+        games = _first_number(features.get("strengthGames"))
+        if games is not None:
+            strength *= games / (games + STRENGTH_SHRINK_GAMES)
 
     implied_home = _first_number(features.get("impliedHome"))
     market_logit = logit(implied_home / 100.0) if implied_home is not None else None

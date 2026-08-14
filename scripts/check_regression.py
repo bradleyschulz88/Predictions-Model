@@ -40,6 +40,14 @@ WEIGHTS_FILE = ROOT / "docs" / "data" / "model_weights.json"
 # check, so a unit test could only ever assert against a file that never ships.
 MAX_RESIDUAL_INTERCEPT = 0.25
 
+# A league further than this from the market, in percentage points of median
+# absolute gap, fails the build. Measured 13 Aug 2026: WNBA 4.5, AFL 5.6, MLB
+# 8.2 -- and NFL 27.2. Set to catch the second kind without ever bothering the
+# first.
+MAX_LEAGUE_DIVERGENCE_PTS = 15.0
+# Below this many picks a median is too easily thrown by one game to act on.
+MIN_DIVERGENCE_SAMPLE = 10
+
 # Absolute tolerances on walk-forward metrics, lower is better for both.
 LOG_LOSS_TOLERANCE = 0.02
 BRIER_TOLERANCE = 0.01
@@ -80,11 +88,54 @@ def check_intercepts(weights: dict[str, Any] | None = None) -> list[str]:
     return failures
 
 
+def check_divergence(evaluation: dict[str, Any] | None = None) -> list[str]:
+    """No league may sit this far from the market without failing the build.
+
+    Divergence from the closing line is the model's own headline claim about
+    itself, and nothing tested it per league. The published figure -- median
+    3.7 points with 1.9% over 15 -- is pooled and dominated by baseball, and on
+    13 Aug 2026 it was concealing NFL preseason running at 27.2 points with 70%
+    over 15. That is the defect the whole project was built to remove, alive in
+    the one league nobody had looked at, found only because someone asked.
+
+    The threshold is deliberately loose. This is not a quality bar, it is a
+    tripwire for a league whose inputs have gone wrong -- a cold start, a
+    provider returning nonsense, an exhibition read as a real fixture. Every
+    working league sits between 4.5 and 8.2, so 15 leaves plenty of room for a
+    genuine disagreement and still catches the case that matters.
+
+    Small samples are exempt: a league with a handful of picks can post a wild
+    median honestly, and failing the build over three games would train
+    everyone to ignore this.
+    """
+    report = evaluation if evaluation is not None else _load(EVALUATION_FILE)
+    per_league = (report.get("divergence") or {}).get("byLeague") or {}
+    failures: list[str] = []
+    for league, stats in sorted(per_league.items()):
+        median = stats.get("medianGapPct")
+        count = stats.get("n") or 0
+        if median is None or count < MIN_DIVERGENCE_SAMPLE:
+            continue
+        if median > MAX_LEAGUE_DIVERGENCE_PTS:
+            failures.append(
+                f"{league} sits a median {median:.1f}pts from the market on {count} picks "
+                f"(limit {MAX_LEAGUE_DIVERGENCE_PTS}); its inputs are probably wrong, not its opinion"
+            )
+    return failures
+
+
 def check(*, update: bool = False) -> int:
     intercept_failures = check_intercepts()
     if intercept_failures:
         print("FAIL: a fitted intercept has grown past a residual")
         for failure in intercept_failures:
+            print(f"  - {failure}")
+        return 1
+
+    divergence_failures = check_divergence()
+    if divergence_failures:
+        print("FAIL: a league has drifted away from the market")
+        for failure in divergence_failures:
             print(f"  - {failure}")
         return 1
 

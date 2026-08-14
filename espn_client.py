@@ -206,6 +206,12 @@ def parse_scoreboard(scoreboard: dict[str, Any], *, league: LeagueConfig | str) 
             "league": league_config.id,
             "leagueLabel": league_config.label,
             "eventId": event.get("id"),
+            # 1 preseason, 2 regular, 3 post. ESPN has always published this and
+            # the parser has always discarded it, which left the model unable to
+            # tell an exhibition from a game that counts -- and it treated them
+            # alike, reading a 1-0 preseason record as team strength and pinning
+            # NFL picks to the 95% clamp against a market at 41%.
+            "seasonType": ((event.get("season") or {}).get("type")),
             "startDate": competition.get("date") or event.get("date"),
             "awayTeam": away_team,
             "homeTeam": home_team,
