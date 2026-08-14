@@ -1284,13 +1284,37 @@ function renderAccuracy() {
     new Date(A.updatedAt || Date.now()).toLocaleDateString(undefined, { day: "numeric", month: "long" });
 
   const topForecaster = ((E?.overall || {}).forecasters || [])[0] || {};
+  const priced = sum.allTimePriced || {};
+  const clvTop = sum.closingLineValue || {};
+  /* Closing line value leads, because it is the metric that predicts long-run
+     profit and the page's own verdict panel already says to read it ahead of
+     the return. The strip used to open with hit rate and ROI -- both outcome
+     statistics over a mixed population -- so a reader scanning it took away
+     "61.8%, +2.6%" and stopped, while a significantly negative CLV sat in a
+     card further down.
+
+     The hit rate shown is the PRICED one. `allTime.pct` is over every graded
+     pick including those that never carried a price, which is not the
+     population any break-even or return applies to. AFL is the demonstration:
+     74.4% and -4.5%, on 8 priced picks out of 39. */
   readings($("#accReadings"), [
-    { v: all.total ?? "—", k: "Graded picks" },
-    { v: pct(all.pct), k: "Hit rate" },
-    { v: all.units == null ? "—" : sgn(all.units, 1) + "u", k: "Units" },
+    {
+      v: clvTop.medianPct == null ? "—" : sgn(clvTop.medianPct, 2) + "%",
+      k: "Closing line value",
+    },
+    { v: pct(priced.pct ?? all.pct), k: `Hit rate (${priced.total ?? all.total ?? 0} priced)` },
     { v: all.roiPct == null ? "—" : sgn(all.roiPct) + "%", k: "ROI" },
+    { v: all.total ?? "—", k: "Graded picks" },
     { v: topForecaster.logLoss == null ? "—" : topForecaster.logLoss.toFixed(4), k: "Log loss" },
   ]);
+
+  /* Everything below is fitted on rows whose features were recomputed after
+     the result was known, so it is known to be optimistic and the page has to
+     say so. Removed automatically once enough rows carry a frozen feature
+     vector -- `frozenSamples` in ablation.json is the countdown, and it cannot
+     be backfilled. */
+  const contamination = contaminationNote(S.ablation);
+  if (contamination) host.appendChild(contamination);
 
   /* ---- verdict, written from the numbers rather than around them ---- */
   host.appendChild(verdictPanel(A, E));
@@ -1302,11 +1326,48 @@ function renderAccuracy() {
     host.appendChild(reliabilityPanel(E));
     host.appendChild(forecasterPanel(E));
   }
-  host.appendChild(leaguePanel(sum.byLeague || {}));
+  const clvTrend = clvTrendPanel(A);
+  if (clvTrend) host.appendChild(clvTrend);
+  host.appendChild(leaguePanel(sum.byLeague || {}, E));
   if (E) host.appendChild(chartsPanel(A, E));
   host.appendChild(cardsPanel(A, E));
   host.appendChild(suggestions("accuracy"));
 }
+
+/* Rows a fit needs before its numbers stop being known-optimistic. Well under
+   the 947 already logged, because the point is to lift the warning once the
+   clean sample can carry a re-baseline rather than to wait for parity. */
+const CLEAN_SAMPLE_TARGET = 300;
+
+function contaminationNote(ablation) {
+  const frozen = ablation?.frozenSamples;
+  const total = ablation?.nSamples;
+  if (frozen == null || total == null) return null;
+  if (frozen >= CLEAN_SAMPLE_TARGET) return null;
+
+  const p = el("div", "panel");
+  p.style.borderLeft = "4px solid var(--bad)";
+  p.appendChild(el("div", "phead",
+    `<h2>These figures are known to be optimistic</h2><span class="n">${frozen} of ${total} rows are clean</span>`));
+  const body = el("div", "");
+  body.style.cssText = "padding:12px 16px 16px;font-size:13.5px;line-height:1.55";
+  body.innerHTML =
+    `<p>Until 13 August the feature vector on a logged pick was overwritten on every ` +
+    `build, and the build re-enriches dates that have already been played. So any ` +
+    `feature read from a source that updates on a result — a season record, an Elo ` +
+    `rating, a series score — carried that result by the time the model was fitted ` +
+    `on it.</p>` +
+    `<p style="margin-top:8px">The measurable part: <b>strengthDiff</b>, which ships, scores an AUC of ` +
+    `<b>0.682</b> against the closing line's 0.640 on the same games. A feature cannot ` +
+    `beat the market at ranking results using only information the market already has. ` +
+    `Log loss, Brier, AUC and reliability below are all fitted on those rows.</p>` +
+    `<p style="margin-top:8px">Features are frozen at first pitch now, so new rows are clean. The old ones ` +
+    `cannot be repaired, only outgrown — <b>${frozen}</b> of a target ${CLEAN_SAMPLE_TARGET} so far. ` +
+    `The picks themselves were never affected: at pick time the game has not been played.</p>`;
+  p.appendChild(body);
+  return p;
+}
+
 
 function verdictPanel(A, E) {
   const p = el("div", "panel");
@@ -1479,17 +1540,100 @@ function forecasterPanel(E) {
   return p;
 }
 
-function leaguePanel(byLeague) {
+/* Closing line value over time, which nothing on this page could show.
+   Everything else here is all-time or last-seven-days, so while CLV is
+   negative the only question that matters -- is it getting better? -- had no
+   answer. Plotted as a rolling median because single-pick CLV is noisy and the
+   headline figure is a median too, so the line and the number agree.
+
+   Reads picksByEventId, which already carries clvPct and pickOddsFrozenAt per
+   pick, so no new data is collected for this. */
+const CLV_WINDOW = 20;
+
+function clvTrendPanel(A) {
+  const picks = Object.values(A.picksByEventId || {})
+    .filter((r) => r && r.clvPct != null && r.pickOddsFrozenAt)
+    .sort((a, b) => String(a.pickOddsFrozenAt).localeCompare(String(b.pickOddsFrozenAt)));
+  if (picks.length < CLV_WINDOW * 2) return null;
+
+  const median = (xs) => {
+    const v = xs.slice().sort((a, b) => a - b);
+    const m = Math.floor(v.length / 2);
+    return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2;
+  };
+  const series = [];
+  for (let i = CLV_WINDOW - 1; i < picks.length; i++) {
+    series.push(median(picks.slice(i - CLV_WINDOW + 1, i + 1).map((r) => Number(r.clvPct))));
+  }
+
+  const w = 560, h = 130, pad = 8;
+  const lo = Math.min(-1, ...series), hi = Math.max(1, ...series);
+  const x = (i) => pad + (i / Math.max(1, series.length - 1)) * (w - pad * 2);
+  const y = (v) => pad + (1 - (v - lo) / (hi - lo)) * (h - pad * 2);
+  const path = series.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
+  const last = series[series.length - 1];
+
+  const p = el("div", "panel");
+  p.appendChild(el("div", "phead",
+    `<h2>Is closing line value improving?</h2>` +
+    `<span class="n">rolling median of ${CLV_WINDOW} picks</span>`));
+  const body = el("div", "");
+  body.style.cssText = "padding:14px 16px 16px";
+  body.innerHTML =
+    `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block" role="img" ` +
+    `aria-label="Rolling median closing line value across ${picks.length} confirmed picks, ` +
+    `currently ${last.toFixed(2)} percent">` +
+      `<line x1="${pad}" x2="${w - pad}" y1="${y(0).toFixed(1)}" y2="${y(0).toFixed(1)}" ` +
+        `stroke="var(--rule)" stroke-width="1" stroke-dasharray="3 3"></line>` +
+      `<path d="${path}" fill="none" stroke="${last > 0 ? "var(--good)" : "var(--bad)"}" ` +
+        `stroke-width="2" stroke-linejoin="round"></path>` +
+      `<circle cx="${x(series.length - 1).toFixed(1)}" cy="${y(last).toFixed(1)}" r="3.5" ` +
+        `fill="${last > 0 ? "var(--good)" : "var(--bad)"}"></circle>` +
+    `</svg>` +
+    `<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px">` +
+      `<span>oldest of ${picks.length} confirmed closes</span>` +
+      `<span>now ${sgn(last, 2)}%</span></div>`;
+  p.appendChild(body);
+  const note = el("div", "",
+    "The dashed line is break-even against the close. Above it the model is taking " +
+    "prices the market later agreed were good; below it the price drifted the other " +
+    "way after the pick was made. This is a leading indicator, so it should turn " +
+    "before the return does.");
+  note.style.cssText = "padding:12px 16px 15px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--rule)";
+  p.appendChild(note);
+  return p;
+}
+
+
+function leaguePanel(byLeague, E) {
   const p = el("div", "panel");
   p.appendChild(el("div", "phead",
     `<h2>By league</h2><span class="n">priced and unpriced kept apart</span>`));
-  let html = `<thead><tr><th>League</th><th>Picks</th><th>Hit rate</th><th>Priced</th><th>Units</th><th>ROI</th></tr></thead><tbody>`;
+  /* Divergence per league, because the pooled figure is dominated by whichever
+     league has the most games. It read 3.7pts overall while NFL preseason sat
+     at 27.2 with 70% of games over 15 -- the defect this project was built to
+     remove, invisible behind baseball until someone asked. */
+  const gaps = (E?.divergence || {}).byLeague || {};
+  let html = `<thead><tr><th>League</th><th>Picks</th><th>Hit rate</th><th>Priced</th>` +
+    `<th>Gap to market</th><th>Units</th><th>ROI</th></tr></thead><tbody>`;
   Object.entries(byLeague).forEach(([k, v]) => {
-    const mostlyUnpriced = (v.pricedPct ?? 0) < 50;
+    /* `pricedPct` was split into pricedSharePct (coverage) and pricedHitPct
+       (a hit rate) because one name meant both. The old key is read as a
+       fallback so the page renders correctly against the last accuracy.json
+       written before the rename, rather than flagging every league as mostly
+       unpriced for one build cycle. */
+    const shareOfPicksPriced = v.pricedSharePct ?? v.pricedPct ?? 0;
+    const mostlyUnpriced = shareOfPicksPriced < 50;
+    const gap = (gaps[k] || {}).medianGapPct;
+    const gapN = (gaps[k] || {}).n || 0;
+    const wild = gap != null && gapN >= 10 && gap > 15;
     html += `<tr><td>${esc(k.toUpperCase())}` +
       (mostlyUnpriced ? ` <span class="chip warn" style="margin-left:6px">mostly unpriced</span>` : "") +
       `</td><td class="n">${v.total}</td><td class="n">${pct(v.pct)}</td>` +
       `<td class="n">${v.priced ?? "—"}/${v.total}</td>` +
+      `<td class="n" style="color:${wild ? "var(--bad)" : "inherit"}">` +
+        `${gap == null ? "—" : gap.toFixed(1) + "pts"}` +
+        (wild ? ` <span class="chip warn">inputs suspect</span>` : "") + `</td>` +
       `<td class="n">${v.units == null ? "—" : sgn(v.units, 2)}</td>` +
       `<td class="n" style="color:${v.roiPct == null ? "var(--muted)" : v.roiPct > 0 ? "var(--good)" : "var(--bad)"}">` +
         `${v.roiPct == null ? "not measurable" : sgn(v.roiPct) + "%"}</td></tr>`;
@@ -1679,7 +1823,7 @@ function cardsPanel(A, E) {
     // losing 7.2% -- the two numbers covered different picks. When the priced
     // rate differs, it goes on screen beside the blended one.
     const pricedRate = (m.pricedPct != null && m.pricedPct !== m.pct)
-      ? ` ${pct(m.pricedPct)}${m.pricedStdErrPct == null ? "" : ` ±${m.pricedStdErrPct}`}`
+      ? ` ${pct(m.pricedHitPct ?? m.pricedPct)}${m.pricedStdErrPct == null ? "" : ` ±${m.pricedStdErrPct}`}`
         + ` on the ${m.pricedDecided} priced.`
       : "";
     const verdict = m.beatsBreakEven === true
@@ -1687,8 +1831,18 @@ function cardsPanel(A, E) {
       : m.beatsBreakEven === false
         ? ` Not yet distinguishable from the ${pct(m.breakEvenPct)} break-even.`
         : "";
+    /* Neither side market is staked any more: the gate needs the PRICED hit
+       rate to clear its break-even by at least a standard error, and neither
+       does. Rendering the record without saying so leaves a reader to assume
+       these are live bets when the board has stopped placing them. */
+    const pricedHit = m.pricedHitPct ?? m.pricedPct;
+    const staked = pricedHit != null && m.pricedStdErrPct != null
+      && m.breakEvenPct != null
+      && pricedHit - m.pricedStdErrPct > m.breakEvenPct;
+    const stance = staked ? "" :
+      ` <b>Published, not staked</b> — the priced record does not clear its break-even by more than its own error.`;
     return card(title, record,
-      `${pct(m.pct)}${err} on ${m.decided ?? m.graded} decided.${pricedRate} ${roi}${verdict} ${m.note}`,
+      `${pct(m.pct)}${err} on ${m.decided ?? m.graded} decided.${pricedRate} ${roi}${verdict}${stance} ${m.note}`,
       m.priced && m.roiPct != null ? (m.roiPct > 0 ? "var(--good)" : m.roiPct < 0 ? "var(--bad)" : undefined) : undefined);
   };
   const totalsCard = marketCard("Totals", sum.totals);

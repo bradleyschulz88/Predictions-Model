@@ -99,7 +99,7 @@ class UnpricedLeagueTests(unittest.TestCase):
             priced = bucket.get("priced", 0)
             bucket["priced"] = priced
             bucket["unpriced"] = bucket["total"] - priced
-            bucket["pricedPct"] = round(priced / bucket["total"] * 100, 1) if bucket["total"] else None
+            bucket["pricedSharePct"] = round(priced / bucket["total"] * 100, 1) if bucket["total"] else None
             if not priced:
                 bucket["roiPct"] = None
                 bucket["roiNote"] = "No odds available for this league; ROI is not measurable."
@@ -118,7 +118,7 @@ class UnpricedLeagueTests(unittest.TestCase):
             [{"league": "mlb", "correct": True, "pickOdds": -110, "units": 0.909} for _ in range(20)]
         )
         self.assertIsNotNone(result["mlb"]["roiPct"])
-        self.assertEqual(result["mlb"]["pricedPct"], 100.0)
+        self.assertEqual(result["mlb"]["pricedSharePct"], 100.0)
 
     def test_partial_coverage_is_reported(self) -> None:
         picks = [{"league": "mlb", "correct": True, "pickOdds": -110, "units": 0.9} for _ in range(6)]
@@ -126,7 +126,7 @@ class UnpricedLeagueTests(unittest.TestCase):
         result = self._grade(picks)
         self.assertEqual(result["mlb"]["priced"], 6)
         self.assertEqual(result["mlb"]["unpriced"], 4)
-        self.assertEqual(result["mlb"]["pricedPct"], 60.0)
+        self.assertEqual(result["mlb"]["pricedSharePct"], 60.0)
 
 
 class StdlibOnlyTests(unittest.TestCase):

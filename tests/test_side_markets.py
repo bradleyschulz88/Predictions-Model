@@ -512,7 +512,7 @@ class PricedPopulationTests(unittest.TestCase):
     def test_the_priced_rate_is_reported_alongside_the_blended_one(self) -> None:
         summary = accuracy_tracker._market_summary(self._observed(), "totalResult")
         self.assertAlmostEqual(summary["pct"], 53.2, delta=0.3)
-        self.assertAlmostEqual(summary["pricedPct"], 47.8, delta=0.3)
+        self.assertAlmostEqual(summary["pricedHitPct"], 47.8, delta=0.3)
         self.assertEqual(summary["pricedDecided"], 67)
         self.assertIsNotNone(summary["pricedStdErrPct"])
 
@@ -520,7 +520,7 @@ class PricedPopulationTests(unittest.TestCase):
         """The defect itself: blended 53.2% clears a 52.4% bar, priced 47.8% does not."""
         summary = accuracy_tracker._market_summary(self._observed(), "totalResult")
         self.assertGreater(summary["pct"], summary["breakEvenPct"])
-        self.assertLess(summary["pricedPct"], summary["breakEvenPct"])
+        self.assertLess(summary["pricedHitPct"], summary["breakEvenPct"])
         self.assertFalse(summary["beatsBreakEven"])
 
     def test_a_losing_return_never_sits_beside_a_winning_verdict(self) -> None:
@@ -546,7 +546,7 @@ class PricedPopulationTests(unittest.TestCase):
         )
         summary = accuracy_tracker._market_summary(rows, "spreadResult")
         self.assertAlmostEqual(summary["pct"], 64.2, delta=0.3)
-        self.assertAlmostEqual(summary["pricedPct"], 69.2, delta=0.3)
+        self.assertAlmostEqual(summary["pricedHitPct"], 69.2, delta=0.3)
         self.assertGreater(summary["pricedStdErrPct"], 10.0)
         self.assertFalse(summary["beatsBreakEven"])
 
@@ -555,7 +555,7 @@ class PricedPopulationTests(unittest.TestCase):
         rows = self._rows("totalResult", priced_wins=30, priced_losses=20,
                           unpriced_wins=0, unpriced_losses=0)
         summary = accuracy_tracker._market_summary(rows, "totalResult")
-        self.assertEqual(summary["pct"], summary["pricedPct"])
+        self.assertEqual(summary["pct"], summary["pricedHitPct"])
         self.assertEqual(summary["decided"], summary["pricedDecided"])
         self.assertNotIn("break-even applies to", summary["note"])
 
@@ -564,7 +564,7 @@ class PricedPopulationTests(unittest.TestCase):
                           unpriced_wins=6, unpriced_losses=4)
         summary = accuracy_tracker._market_summary(rows, "totalResult")
         self.assertIsNotNone(summary["pct"])
-        self.assertIsNone(summary["pricedPct"])
+        self.assertIsNone(summary["pricedHitPct"])
         self.assertEqual(summary["pricedDecided"], 0)
         self.assertFalse(summary["beatsBreakEven"])
 
@@ -574,7 +574,7 @@ class PricedPopulationTests(unittest.TestCase):
         rows += [{"totalResult": {"outcome": "push", "odds": -110, "units": 0.0}}]
         summary = accuracy_tracker._market_summary(rows, "totalResult")
         self.assertEqual(summary["pricedDecided"], 20)
-        self.assertEqual(summary["pricedPct"], 50.0)
+        self.assertEqual(summary["pricedHitPct"], 50.0)
 
 
 if __name__ == "__main__":

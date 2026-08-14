@@ -626,7 +626,7 @@ def market_is_validated(market: str) -> bool:
     record = market_record(market)
     if market_priced_history(market) < MIN_MARKET_HISTORY:
         return False
-    pct = record.get("pricedPct")
+    pct = record.get("pricedHitPct")
     std_err = record.get("pricedStdErrPct")
     break_even = record.get("breakEvenPct")
     if not all(isinstance(value, (int, float)) for value in (pct, std_err, break_even)):
@@ -2564,12 +2564,12 @@ def _market_options(prediction: dict[str, Any]) -> list[dict[str, Any]]:
                 # The record behind this market, with its error bar, so the
                 # card can say how thin the evidence is rather than presenting
                 # a hit rate on 70-odd picks as a settled fact.
-                # pricedPct and pricedStdErrPct are the pair the gate now reads,
+                # pricedHitPct and pricedStdErrPct are the pair the gate now reads,
                 # so the card shows the same numbers the decision was made on
                 # rather than the flattering blended ones beside them.
                 "record": None if market == "moneyline" else {
                     key: record.get(key)
-                    for key in ("pct", "stdErrPct", "pricedPct", "pricedStdErrPct",
+                    for key in ("pct", "stdErrPct", "pricedHitPct", "pricedStdErrPct",
                                 "breakEvenPct", "beatsBreakEven",
                                 "decided", "priced", "pricedRoiPct")
                 } if (record := market_record(market)) else None,
