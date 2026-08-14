@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-14T18:13:45.712082+00:00",
+  "updatedAt": "2026-08-14T19:16:34.274892+00:00",
   "summary": {
     "last7Days": {
       "correct": 268,
@@ -16,8 +16,8 @@
       "pct": 61.7,
       "units": 19.384,
       "roiPct": 2.1,
-      "pending": 57,
-      "voided": 11
+      "pending": 56,
+      "voided": 12
     },
     "allTimePriced": {
       "correct": 423,
@@ -6191,16 +6191,16 @@
       "date": "2026-08-14"
     },
     {
-      "eventId": "401816527",
+      "eventId": "401816526",
       "league": "mlb",
       "scheduleDate": "2026-08-14",
-      "matchup": "St. Louis Cardinals @ Chicago Cubs",
-      "predicted": "Chicago Cubs",
+      "matchup": "Seattle Mariners @ Houston Astros",
+      "predicted": "Houston Astros",
       "predictedSide": "home",
-      "outcomeLabel": "Chicago Cubs to win",
-      "confidence": 61.0,
-      "rawConfidence": 61.0,
-      "rawHomeWinPct": 61.0,
+      "outcomeLabel": "Houston Astros to win",
+      "confidence": 56.6,
+      "rawConfidence": 56.6,
+      "rawHomeWinPct": 56.6,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -35241,14 +35241,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-14"
+      "date": "2026-08-14",
+      "voidReason": "voided"
     },
     "401816521": {
       "eventId": "401816521",
