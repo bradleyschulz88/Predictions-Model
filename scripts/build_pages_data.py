@@ -307,9 +307,10 @@ def _report_odds_api_quota() -> None:
     # with roughly the last three or four days in hand.
     remaining = quota.get("remaining")
     if isinstance(remaining, (int, float)) and remaining < ODDS_API_LOW_BALANCE:
+        days = max(1, int(remaining // 16))
         print(
             f"::warning title=Odds API::{int(remaining)} credits left, about "
-            f"{max(1, int(remaining // 16))} days at the current rate. When it "
+            f"{days} day{'' if days == 1 else 's'} at the current rate. When it "
             f"reaches zero AFL loses its only price source and MLB runlines stop "
             f"pricing, until the monthly allowance resets.",
             flush=True,

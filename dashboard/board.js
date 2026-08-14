@@ -1822,8 +1822,8 @@ function cardsPanel(A, E) {
     // it made totals look like they beat break-even (53.2% vs 52.4%) while
     // losing 7.2% -- the two numbers covered different picks. When the priced
     // rate differs, it goes on screen beside the blended one.
-    const pricedRate = (m.pricedPct != null && m.pricedPct !== m.pct)
-      ? ` ${pct(m.pricedHitPct ?? m.pricedPct)}${m.pricedStdErrPct == null ? "" : ` ±${m.pricedStdErrPct}`}`
+    const pricedRate = (pricedHit != null && pricedHit !== m.pct)
+      ? ` ${pct(pricedHit)}${m.pricedStdErrPct == null ? "" : ` ±${m.pricedStdErrPct}`}`
         + ` on the ${m.pricedDecided} priced.`
       : "";
     const verdict = m.beatsBreakEven === true

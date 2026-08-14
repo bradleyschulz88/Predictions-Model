@@ -1962,7 +1962,8 @@ function renderAccuracyView() {
     ? `<span class="lineup-note">${escapeHtml(leagueStats.roiNote)}</span>`
     : leagueStats?.roiPct != null
       ? `<span class="lineup-note">${leagueStats.roiPct > 0 ? "+" : ""}${leagueStats.roiPct}% ROI${
-          leagueStats.pricedPct != null && leagueStats.pricedPct < 100
+          (leagueStats.pricedSharePct ?? leagueStats.pricedPct) != null
+          && (leagueStats.pricedSharePct ?? leagueStats.pricedPct) < 100
             ? ` · ${leagueStats.priced}/${leagueStats.total} priced`
             : ""
         }</span>`
