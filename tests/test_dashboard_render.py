@@ -51,6 +51,11 @@ CHROMIUM_CANDIDATES = (
 )
 
 
+# A page that renders in four seconds everywhere else does not need three
+# minutes. Shorter, so a hung browser is retried rather than eating the job.
+RENDER_TIMEOUT_SECONDS = 90
+
+
 def find_chromium() -> str | None:
     for candidate in CHROMIUM_CANDIDATES:
         if Path(candidate).is_file():
@@ -59,6 +64,17 @@ def find_chromium() -> str | None:
         found = shutil.which(name)
         if found:
             return found
+    # Playwright keeps its browsers outside PATH, under a versioned directory
+    # named by PLAYWRIGHT_BROWSERS_PATH. Development containers commonly have
+    # one and nothing else, and without this the layout checks skip -- which
+    # unittest reports as a pass in quiet mode, so a change can be described as
+    # "render tests green" when no browser ever started. That happened on
+    # 14 Aug 2026 and the real failure surfaced in CI instead.
+    root = os.environ.get("PLAYWRIGHT_BROWSERS_PATH")
+    if root:
+        for binary in sorted(Path(root).glob("chromium*/chrome-linux/chrome")):
+            if binary.is_file():
+                return str(binary)
     return None
 
 
@@ -299,13 +315,29 @@ class DashboardRenderTests(unittest.TestCase):
         cls._tmp = tempfile.TemporaryDirectory()
         target = Path(cls._tmp.name)
         build_fixture(target)
-        result = subprocess.run(
-            [find_chromium(), "--headless", "--no-sandbox", "--disable-gpu",
-             "--hide-scrollbars", "--window-size=1200,1000",
-             "--dump-dom", "--virtual-time-budget=8000",
-             (target / "index.html").as_uri()],
-            capture_output=True, text=True, timeout=180,
-        )
+        # Retried once, because a headless browser that never exits is an
+        # infrastructure event and not a layout regression. Seen 14 Aug 2026:
+        # the runner's chromium hung for the full 180 seconds and failed a
+        # build whose page rendered in four seconds everywhere else, taking the
+        # deploy with it. A second attempt costs seconds when the page is fine
+        # and still fails loudly when it is not.
+        argv = [find_chromium(), "--headless", "--no-sandbox", "--disable-gpu",
+                "--hide-scrollbars", "--window-size=1200,1000",
+                "--dump-dom", "--virtual-time-budget=8000",
+                (target / "index.html").as_uri()]
+        for attempt in (1, 2):
+            try:
+                result = subprocess.run(
+                    argv, capture_output=True, text=True, timeout=RENDER_TIMEOUT_SECONDS
+                )
+                break
+            except subprocess.TimeoutExpired:
+                if attempt == 2:
+                    raise
+                print(
+                    f"chromium did not exit within {RENDER_TIMEOUT_SECONDS}s; retrying once",
+                    flush=True,
+                )
         match = re.search(r"PROBE:(\{.*?\})</pre>", result.stdout, re.S)
         if not match:
             raise AssertionError(
