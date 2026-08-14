@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-14T23:04:06.658662+00:00",
+  "updatedAt": "2026-08-14T23:37:55.804670+00:00",
   "summary": {
     "last7Days": {
       "correct": 269,
@@ -16,8 +16,8 @@
       "pct": 61.8,
       "units": 19.94,
       "roiPct": 2.2,
-      "pending": 54,
-      "voided": 13
+      "pending": 51,
+      "voided": 17
     },
     "allTimePriced": {
       "correct": 424,
@@ -5698,6 +5698,35 @@
       "date": "2026-08-15"
     },
     {
+      "eventId": "401816538",
+      "league": "mlb",
+      "scheduleDate": "2026-08-15",
+      "matchup": "San Diego Padres @ Cleveland Guardians",
+      "predicted": "San Diego Padres",
+      "predictedSide": "away",
+      "outcomeLabel": "San Diego Padres to win",
+      "confidence": 56.0,
+      "rawConfidence": 56.0,
+      "rawHomeWinPct": 44.0,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-15"
+    },
+    {
       "eventId": "401816537",
       "league": "mlb",
       "scheduleDate": "2026-08-15",
@@ -6172,35 +6201,6 @@
       "confidence": 58.4,
       "rawConfidence": 58.4,
       "rawHomeWinPct": 58.4,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-14"
-    },
-    {
-      "eventId": "401816526",
-      "league": "mlb",
-      "scheduleDate": "2026-08-14",
-      "matchup": "Seattle Mariners @ Houston Astros",
-      "predicted": "Houston Astros",
-      "predictedSide": "home",
-      "outcomeLabel": "Houston Astros to win",
-      "confidence": 56.6,
-      "rawConfidence": 56.6,
-      "rawHomeWinPct": 56.6,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -35377,14 +35377,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-14"
+      "date": "2026-08-14",
+      "voidReason": "voided"
     },
     "401816523": {
       "eventId": "401816523",
@@ -35406,14 +35407,15 @@
       "pickOddsFrozenAt": null,
       "published": false,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-14"
+      "date": "2026-08-14",
+      "voidReason": "voided"
     },
     "401816524": {
       "eventId": "401816524",
@@ -35435,14 +35437,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-14"
+      "date": "2026-08-14",
+      "voidReason": "voided"
     },
     "401816517": {
       "eventId": "401816517",
@@ -35464,14 +35467,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-14"
+      "date": "2026-08-14",
+      "voidReason": "voided"
     },
     "401816522": {
       "eventId": "401816522",
@@ -35493,14 +35497,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-14"
+      "date": "2026-08-14",
+      "voidReason": "voided"
     },
     "401816526": {
       "eventId": "401816526",
@@ -36158,7 +36163,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
