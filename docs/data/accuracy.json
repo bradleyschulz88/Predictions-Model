@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-14T00:21:10.013550+00:00",
+  "updatedAt": "2026-08-14T01:12:48.917877+00:00",
   "summary": {
     "last7Days": {
       "correct": 264,
@@ -16,8 +16,17 @@
       "pct": 61.7,
       "units": 20.472,
       "roiPct": 2.2,
-      "pending": 55,
-      "voided": 15
+      "pending": 52,
+      "voided": 16
+    },
+    "allTimePriced": {
+      "correct": 417,
+      "total": 693,
+      "pct": 60.2,
+      "units": 7.472,
+      "roiPct": 1.1,
+      "pending": 0,
+      "voided": 0
     },
     "byLeague": {
       "mlb": {
@@ -30,7 +39,7 @@
         "voided": 0,
         "priced": 291,
         "unpriced": 21,
-        "pricedPct": 93.3
+        "pricedSharePct": 93.3
       },
       "wnba": {
         "correct": 54,
@@ -42,7 +51,7 @@
         "voided": 0,
         "priced": 40,
         "unpriced": 26,
-        "pricedPct": 60.6
+        "pricedSharePct": 60.6
       },
       "afl": {
         "correct": 25,
@@ -54,7 +63,7 @@
         "voided": 0,
         "priced": 8,
         "unpriced": 26,
-        "pricedPct": 23.5
+        "pricedSharePct": 23.5
       },
       "nfl": {
         "correct": 1,
@@ -66,7 +75,7 @@
         "voided": 0,
         "priced": 1,
         "unpriced": 0,
-        "pricedPct": 100.0
+        "pricedSharePct": 100.0
       },
       "worldcup": {
         "correct": 0,
@@ -78,7 +87,7 @@
         "voided": 0,
         "priced": 1,
         "unpriced": 1,
-        "pricedPct": 50.0
+        "pricedSharePct": 50.0
       }
     },
     "streak": {
@@ -160,7 +169,7 @@
       "pct": 52.4,
       "stdErrPct": 3.7,
       "pricedDecided": 177,
-      "pricedPct": 50.3,
+      "pricedHitPct": 50.3,
       "pricedStdErrPct": 3.8,
       "breakEvenPct": 52.2,
       "beatsBreakEven": false,
@@ -181,7 +190,7 @@
       "pct": 55.4,
       "stdErrPct": 3.6,
       "pricedDecided": 112,
-      "pricedPct": 50.0,
+      "pricedHitPct": 50.0,
       "pricedStdErrPct": 4.7,
       "breakEvenPct": 53.3,
       "beatsBreakEven": false,
@@ -6182,25 +6191,25 @@
       "date": "2026-08-14"
     },
     {
-      "eventId": "401874392",
-      "league": "nfl",
+      "eventId": "401857142",
+      "league": "wnba",
       "scheduleDate": "2026-08-13",
-      "matchup": "Tennessee Titans @ San Francisco 49ers",
-      "predicted": "San Francisco 49ers",
-      "predictedSide": "home",
-      "outcomeLabel": "San Francisco 49ers to win",
-      "confidence": 63.1,
-      "rawConfidence": 63.1,
-      "rawHomeWinPct": 63.1,
+      "matchup": "Washington Mystics @ Las Vegas Aces",
+      "predicted": "Washington Mystics",
+      "predictedSide": "away",
+      "outcomeLabel": "Washington Mystics to win",
+      "confidence": 61.4,
+      "rawConfidence": 61.4,
+      "rawHomeWinPct": 38.6,
       "probabilityMethod": "fitted",
-      "evPct": 41.26,
-      "kellyPct": 4.95,
-      "pickOdds": 124,
-      "openingOdds": 124,
-      "openingSide": "home",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
       "pickOddsFrozenAt": null,
       "published": true,
-      "clvPct": 0.0,
+      "clvPct": null,
       "status": "pending",
       "actual": null,
       "correct": null,
@@ -34780,7 +34789,7 @@
       "openingOdds": -125,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": 0.0,
       "status": "voided",
       "actual": null,
@@ -34810,16 +34819,17 @@
       "openingOdds": -135,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-13"
+      "date": "2026-08-13",
+      "voidReason": "voided"
     },
     "401873274": {
       "eventId": "401873274",
@@ -34841,14 +34851,15 @@
       "pickOddsFrozenAt": null,
       "published": false,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-13"
+      "date": "2026-08-13",
+      "voidReason": "voided"
     },
     "401874392": {
       "eventId": "401874392",
@@ -34870,14 +34881,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-13"
+      "date": "2026-08-13",
+      "voidReason": "voided"
     },
     "401857140": {
       "eventId": "401857140",
@@ -34929,14 +34941,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-13"
+      "date": "2026-08-13",
+      "voidReason": "voided"
     },
     "401857142": {
       "eventId": "401857142",
