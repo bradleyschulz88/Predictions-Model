@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-15T17:38:28.605929+00:00",
+  "updatedAt": "2026-08-15T17:59:14.084371+00:00",
   "summary": {
     "last7Days": {
       "correct": 274,
@@ -7,7 +7,7 @@
       "pct": 62.8,
       "units": 6.215,
       "roiPct": 1.4,
-      "pending": 48,
+      "pending": 46,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 61.5,
       "units": 14.525,
       "roiPct": 1.5,
-      "pending": 48,
-      "voided": 12
+      "pending": 46,
+      "voided": 14
     },
     "allTimePriced": {
       "correct": 432,
@@ -5698,35 +5698,6 @@
       "date": "2026-08-16"
     },
     {
-      "eventId": "401874393",
-      "league": "nfl",
-      "scheduleDate": "2026-08-15",
-      "matchup": "Cleveland Browns @ Chicago Bears",
-      "predicted": "Cleveland Browns",
-      "predictedSide": "away",
-      "outcomeLabel": "Cleveland Browns to win",
-      "confidence": 50.7,
-      "rawConfidence": 50.7,
-      "rawHomeWinPct": 49.3,
-      "probabilityMethod": "fitted",
-      "evPct": -10.28,
-      "kellyPct": 0.0,
-      "pickOdds": -130,
-      "openingOdds": -130,
-      "openingSide": "away",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-15"
-    },
-    {
       "eventId": "401873284",
       "league": "nfl",
       "scheduleDate": "2026-08-15",
@@ -5743,35 +5714,6 @@
       "pickOdds": -166,
       "openingOdds": -166,
       "openingSide": "away",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-15"
-    },
-    {
-      "eventId": "401873282",
-      "league": "nfl",
-      "scheduleDate": "2026-08-15",
-      "matchup": "Carolina Panthers @ Buffalo Bills",
-      "predicted": "Buffalo Bills",
-      "predictedSide": "home",
-      "outcomeLabel": "Buffalo Bills to win",
-      "confidence": 67.9,
-      "rawConfidence": 67.9,
-      "rawHomeWinPct": 67.9,
-      "probabilityMethod": "fitted",
-      "evPct": 22.22,
-      "kellyPct": 4.24,
-      "pickOdds": -125,
-      "openingOdds": -125,
-      "openingSide": "home",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
@@ -36693,14 +36635,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-15"
+      "date": "2026-08-15",
+      "voidReason": "voided"
     },
     "401874393": {
       "eventId": "401874393",
@@ -36722,14 +36665,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-15"
+      "date": "2026-08-15",
+      "voidReason": "voided"
     },
     "401873280": {
       "eventId": "401873280",
@@ -36751,14 +36695,15 @@
       "pickOddsFrozenAt": null,
       "published": false,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-15"
+      "date": "2026-08-15",
+      "voidReason": "voided"
     },
     "401873283": {
       "eventId": "401873283",
