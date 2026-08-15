@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-15T06:03:55.000712+00:00",
+  "updatedAt": "2026-08-15T06:58:35.548862+00:00",
   "summary": {
     "last7Days": {
       "correct": 271,
@@ -16,8 +16,8 @@
       "pct": 61.4,
       "units": 14.625,
       "roiPct": 1.6,
-      "pending": 52,
-      "voided": 11
+      "pending": 50,
+      "voided": 13
     },
     "allTimePriced": {
       "correct": 429,
@@ -6206,22 +6206,22 @@
       "date": "2026-08-15"
     },
     {
-      "eventId": "1133676",
+      "eventId": "1133675",
       "league": "afl",
       "scheduleDate": "2026-08-15",
-      "matchup": "Geelong Cats @ North Melbourne",
-      "predicted": "Geelong Cats",
-      "predictedSide": "away",
-      "outcomeLabel": "Geelong Cats to win",
-      "confidence": 80.9,
-      "rawConfidence": 80.9,
-      "rawHomeWinPct": 19.1,
+      "matchup": "Collingwood @ Hawthorn",
+      "predicted": "Hawthorn",
+      "predictedSide": "home",
+      "outcomeLabel": "Hawthorn to win",
+      "confidence": 63.2,
+      "rawConfidence": 63.2,
+      "rawHomeWinPct": 63.2,
       "probabilityMethod": "fitted",
-      "evPct": 6.8,
-      "kellyPct": 3.27,
-      "pickOdds": -312,
-      "openingOdds": -312,
-      "openingSide": "away",
+      "evPct": -12.83,
+      "kellyPct": 0.0,
+      "pickOdds": -263,
+      "openingOdds": -263,
+      "openingSide": "home",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
@@ -36176,14 +36176,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-15"
+      "date": "2026-08-15",
+      "voidReason": "voided"
     },
     "1133672": {
       "eventId": "1133672",
@@ -36205,14 +36206,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-15"
+      "date": "2026-08-15",
+      "voidReason": "voided"
     },
     "1133675": {
       "eventId": "1133675",
