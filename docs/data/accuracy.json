@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-16T05:08:01.727538+00:00",
+  "updatedAt": "2026-08-16T05:44:09.420581+00:00",
   "summary": {
     "last7Days": {
       "correct": 281,
@@ -7,7 +7,7 @@
       "pct": 63.1,
       "units": 6.317,
       "roiPct": 1.4,
-      "pending": 41,
+      "pending": 42,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 61.5,
       "units": 13.627,
       "roiPct": 1.4,
-      "pending": 41,
+      "pending": 42,
       "voided": 12
     },
     "allTimePriced": {
@@ -5795,6 +5795,35 @@
       "confidence": 51.3,
       "rawConfidence": 51.3,
       "rawHomeWinPct": 48.7,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-16"
+    },
+    {
+      "eventId": "401816553",
+      "league": "mlb",
+      "scheduleDate": "2026-08-16",
+      "matchup": "San Diego Padres @ Cleveland Guardians",
+      "predicted": "San Diego Padres",
+      "predictedSide": "away",
+      "outcomeLabel": "San Diego Padres to win",
+      "confidence": 55.8,
+      "rawConfidence": 55.8,
+      "rawHomeWinPct": 44.2,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -37464,7 +37493,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
