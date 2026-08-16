@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-16T17:58:13.274910+00:00",
+  "updatedAt": "2026-08-16T18:49:04.459164+00:00",
   "summary": {
     "last7Days": {
       "correct": 283,
@@ -7,7 +7,7 @@
       "pct": 63.3,
       "units": 6.377,
       "roiPct": 1.4,
-      "pending": 37,
+      "pending": 36,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 61.5,
       "units": 13.687,
       "roiPct": 1.4,
-      "pending": 37,
+      "pending": 36,
       "voided": 15
     },
     "allTimePriced": {
@@ -5808,35 +5808,6 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-16"
-    },
-    {
-      "eventId": "401816555",
-      "league": "mlb",
-      "scheduleDate": "2026-08-16",
-      "matchup": "Philadelphia Phillies @ Minnesota Twins",
-      "predicted": "Philadelphia Phillies",
-      "predictedSide": "away",
-      "outcomeLabel": "Philadelphia Phillies to win",
-      "confidence": 51.3,
-      "rawConfidence": 51.3,
-      "rawHomeWinPct": 48.7,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -37470,7 +37441,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
