@@ -206,6 +206,46 @@ class SideMarketStanceTests(unittest.TestCase):
         self.assertIn("pricedHit - m.pricedStdErrPct > m.breakEvenPct", board)
 
 
+class NoConsumerLeftOnTheOldNameTests(unittest.TestCase):
+    """A rename that misses a reader fails silently, and both of these did.
+
+    Found 14 Aug by grepping for the old key after the split. `board.js` kept
+    the priced hit rate behind a guard still testing `m.pricedPct`, so once the
+    tracker wrote `pricedHitPct` the guard went false and the card dropped the
+    number the staking gate decides on -- the number added to that card the day
+    before for exactly that reason. `app.js` read `pricedPct` for the coverage
+    share, so the "N/M priced" note simply stopped appearing, and that note is
+    what stops a reader comparing an unpriced ROI to a priced one.
+
+    Neither threw. Both just quietly showed less, which is the failure mode a
+    test suite catches and a green build does not.
+    """
+
+    CONSUMERS = ("dashboard/board.js", "dashboard/app.js")
+
+    def test_no_consumer_reads_the_split_key_without_a_fallback(self) -> None:
+        for name in self.CONSUMERS:
+            source = (ROOT / name).read_text(encoding="utf-8")
+            for line_no, line in enumerate(source.split("\n"), 1):
+                if "pricedPct" not in line:
+                    continue
+                stripped = line.strip()
+                if stripped.startswith("//") or stripped.startswith("*"):
+                    continue
+                self.assertTrue(
+                    "pricedSharePct" in line or "pricedHitPct" in line,
+                    f"{name}:{line_no} reads the old `pricedPct` with no fallback "
+                    f"to either replacement, so it will silently render nothing: {stripped}",
+                )
+
+    def test_the_fallbacks_are_present_where_the_old_key_survives(self) -> None:
+        """Kept deliberately, so the page renders against a pre-rename file."""
+        board = (ROOT / "dashboard" / "board.js").read_text(encoding="utf-8")
+        self.assertIn("m.pricedHitPct ?? m.pricedPct", board)
+        app = (ROOT / "dashboard" / "app.js").read_text(encoding="utf-8")
+        self.assertIn("leagueStats.pricedSharePct ?? leagueStats.pricedPct", app)
+
+
 class LivePayloadTests(unittest.TestCase):
     """The page reads keys the tracker actually writes."""
 

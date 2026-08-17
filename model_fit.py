@@ -20,6 +20,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Protocol, Sequence
 
+from shared_utils import write_json
+
 WEIGHTS_FILE = "model_weights.json"
 ABLATION_FILE = "ablation.json"
 
@@ -195,7 +197,29 @@ MAX_PROB = 0.95
 DEFAULT_SPLIT_DIFF_CENTRE = 0.0457
 
 
+# A probability that is not a number carries no information, so both maps
+# below send it to the middle rather than to an end.
+#
+# That is not what they did. `logit` clamped with `max(1e-6, min(1 - 1e-6, p))`,
+# and every comparison against NaN is False, so `min(0.999999, nan)` returns
+# 0.999999 and the clamp came out at its CEILING. A NaN probability became
+# logit 13.8, `apply_platt` returned 0.999999, and the board would have carried
+# a 100.0% pick -- which also maximises the Kelly stake. Which end it landed on
+# was decided by the order of the arguments to `min`: swap them and the same
+# input clamps to the floor instead.
+#
+# Neither end is right. An input that means "no idea" must read as 0.5, which
+# is below every publication threshold and stakes nothing.
+NEUTRAL_PROBABILITY = 0.5
+
+
 def sigmoid(value: float) -> float:
+    if not math.isfinite(value):
+        # An infinite logit is a real saturation and maps to the end it points
+        # at; only NaN is the absence of an answer.
+        if math.isnan(value):
+            return NEUTRAL_PROBABILITY
+        return 1.0 if value > 0 else 0.0
     if value >= 0:
         return 1.0 / (1.0 + math.exp(-value))
     exp_value = math.exp(value)
@@ -203,8 +227,14 @@ def sigmoid(value: float) -> float:
 
 
 def logit(prob: float) -> float:
-    prob = max(1e-6, min(1.0 - 1e-6, prob))
-    return math.log(prob / (1.0 - prob))
+    try:
+        value = float(prob)
+    except (TypeError, ValueError):
+        value = NEUTRAL_PROBABILITY
+    if not math.isfinite(value):
+        value = NEUTRAL_PROBABILITY
+    value = max(1e-6, min(1.0 - 1e-6, value))
+    return math.log(value / (1.0 - value))
 
 
 # --------------------------------------------------------------------------
@@ -267,6 +297,29 @@ def fit_logistic(
     """
     if not rows:
         return []
+    if len(rows) != len(labels):
+        # `zip` below would silently truncate to the shorter of the two, which
+        # means training on a subset while reporting the full count. A caller
+        # that has lost the correspondence between a row and its outcome has a
+        # bug worth stopping for.
+        raise ValueError(f"{len(rows)} rows but {len(labels)} labels")
+
+    # One non-finite value anywhere poisons the whole fit, not just its own
+    # row: it enters the gradient and the Hessian, and every coefficient comes
+    # back NaN. Dropping the row costs one observation. `_first_number` should
+    # already have caught these upstream, so this is the backstop for a row
+    # built by some other path.
+    usable = [
+        (row, label)
+        for row, label in zip(rows, labels)
+        if all(isinstance(x, (int, float)) and math.isfinite(x) for x in row)
+        and label is not None
+    ]
+    if not usable:
+        return []
+    rows = [row for row, _ in usable]
+    labels = [label for _, label in usable]
+
     width = len(rows[0])
     if isinstance(l2, (int, float)):
         penalties = [0.0] + [float(l2)] * (width - 1)
@@ -319,13 +372,28 @@ def predict_row(weights: Sequence[float], row: Sequence[float]) -> float:
 
 
 def _first_number(*values: Any) -> float | None:
+    """The first value that converts to a real number, else None.
+
+    Non-finite floats are treated as absent rather than passed through.
+    `float("nan")` converts without complaint, and one NaN reaching the fit is
+    not a degraded row -- IRLS propagates it through the gradient and the
+    Hessian, so every coefficient comes back NaN and the model stops making
+    predictions at all. Measured: ten NaN rows among twenty returned
+    `[nan, nan]` for a two-weight fit.
+
+    None is a shape the pipeline already knows how to handle: it means the
+    feature was not available for this game, which is exactly what an
+    unusable number amounts to.
+    """
     for value in values:
         if value is None:
             continue
         try:
-            return float(value)
+            number = float(value)
         except (TypeError, ValueError):
             continue
+        if math.isfinite(number):
+            return number
     return None
 
 
@@ -1278,7 +1346,7 @@ def ablate_and_write(
         # seven others". These two can. See ablate_each.
         "perFeature": ablate_each(samples),
     }
-    (data_dir / ABLATION_FILE).write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    write_json(data_dir / ABLATION_FILE, payload)
     return payload
 
 
@@ -1298,7 +1366,7 @@ def fit_and_write(data_dir: Path, *, l2: float | None = None) -> dict[str, Any]:
     chosen_l2 = choose_anchored_penalties(samples) if l2 is None else l2
     payload = fit_from_observations(samples, l2=chosen_l2, split_diff_centre=centre)
     payload["walkForward"] = walk_forward_scores(samples, l2=chosen_l2)
-    (data_dir / WEIGHTS_FILE).write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    write_json(data_dir / WEIGHTS_FILE, payload)
     return payload
 
 

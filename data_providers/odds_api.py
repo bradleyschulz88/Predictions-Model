@@ -44,7 +44,7 @@ import time
 from typing import Any, NamedTuple
 
 from data_providers.utils import team_match_score
-from market import decimal_to_american
+from market import decimal_to_american, is_valid_american_odds
 from sbr_client import SBRClientError, get_text_with_headers
 
 API_BASE = "https://api.the-odds-api.com/v4/sports"
@@ -264,7 +264,15 @@ def _decimal_to_american(price: Any) -> int | None:
         return None
     if value <= 1.0:
         return None
-    return int(decimal_to_american(value))
+    try:
+        converted = decimal_to_american(value)
+    except (OverflowError, ValueError):
+        # round() on an infinity raises OverflowError, and a price field
+        # carrying one should cost this outcome, not the whole fetch.
+        return None
+    if not is_valid_american_odds(converted):
+        return None
+    return int(converted)
 
 
 def fetch_league_odds(

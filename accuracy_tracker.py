@@ -14,6 +14,7 @@ from espn_client import fetch_scoreboard, parse_scoreboard
 from mlb_predictions import _best_price_for_side, american_odds_to_implied, quote_spread
 from calibration_params import is_publishable_pick
 from schedule_dates import league_schedule_date
+from shared_utils import write_json
 from sports_config import list_league_ids
 
 ACCURACY_FILE = "accuracy.json"
@@ -107,6 +108,23 @@ def _summary_bucket() -> dict[str, Any]:
     }
 
 
+def _row_units(item: dict[str, Any]) -> float:
+    """One row's profit, as a number that can safely be added to a running sum.
+
+    A non-finite value here does not cost the row its contribution, it costs
+    the reader the page: NaN propagates through the bucket total into `roiPct`,
+    `json.dumps` writes the bare literal `NaN`, and `JSON.parse` throws on it,
+    so nothing in `accuracy.json` renders at all. `write_json` now catches that
+    at the file boundary; treating it as zero here keeps the rest of the bucket
+    honest instead of blanking every figure derived from the same sum.
+    """
+    try:
+        value = float(item.get("units") or 0.0)
+    except (TypeError, ValueError):
+        return 0.0
+    return value if math.isfinite(value) else 0.0
+
+
 def _accumulate_summary(bucket: dict[str, Any], item: dict[str, Any]) -> None:
     if item.get("status") != "graded":
         bucket["pending"] = bucket.get("pending", 0) + 1
@@ -114,7 +132,7 @@ def _accumulate_summary(bucket: dict[str, Any], item: dict[str, Any]) -> None:
     bucket["total"] += 1
     if item.get("correct"):
         bucket["correct"] += 1
-    bucket["units"] = round(bucket.get("units", 0.0) + float(item.get("units") or 0.0), 3)
+    bucket["units"] = round(bucket.get("units", 0.0) + _row_units(item), 3)
     if bucket["total"]:
         bucket["pct"] = round(bucket["correct"] / bucket["total"] * 100, 1)
         bucket["roiPct"] = round(bucket["units"] / bucket["total"] * 100, 1)
@@ -185,6 +203,36 @@ def _build_pick_record(
     return record
 
 
+def _merge_features(previous: Any, current: Any) -> dict[str, Any] | None:
+    """Newest value per field, but never let a gap overwrite a known one.
+
+    Pre-game the feature vector was replaced wholesale on every build, so a run
+    that lost a provider -- and the build log carries those most days, "provider
+    enrichment unavailable", "ESPN core down" -- wrote None over a value an
+    earlier run had already recorded. That was survivable while every build
+    recomputed from scratch. It stopped being survivable when features started
+    freezing at first pitch, because now the LAST pre-game build decides the row
+    permanently, and a provider blip in the final hour poisons it for good.
+
+    This is the same defect already fixed one field over, for prices: "any build
+    where the odds fetch came back empty wrote None straight over a price
+    already recorded, losing it for good." Same shape, same fix -- a recorded
+    value is never replaced by nothing.
+
+    Coverage only ever grows pre-game, and a feature that genuinely changes,
+    like a moving market, still takes the newer number.
+    """
+    if not isinstance(current, dict):
+        return previous if isinstance(previous, dict) else current
+    if not isinstance(previous, dict):
+        return current
+    merged = dict(previous)
+    for key, value in current.items():
+        if value is not None or key not in merged:
+            merged[key] = value
+    return merged
+
+
 def _load_json(path: Path, default: Any) -> Any:
     if not path.is_file():
         return default
@@ -196,7 +244,7 @@ def _load_json(path: Path, default: Any) -> Any:
 
 def _save_json(path: Path, data: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2, default=str), encoding="utf-8")
+    write_json(path, data)
 
 
 def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | list[dict[str, Any]]) -> None:
@@ -303,7 +351,9 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 pinned_features = previous_features
                 features_frozen_at = features_frozen_at or payload.get("fetchedAt")
             else:
-                pinned_features = prediction.get("features") or previous_features
+                pinned_features = _merge_features(
+                    previous_features, prediction.get("features")
+                )
 
             # The path between open and close, not just its two endpoints.
             #
@@ -411,8 +461,8 @@ def _market_summary(results: list[dict[str, Any]], key: str) -> dict[str, Any]:
     decided = wins + losses
     priced_rows = [row for row in graded if row.get("odds") is not None]
     priced = len(priced_rows)
-    units = round(sum(float(row.get("units") or 0.0) for row in graded), 3)
-    priced_units = round(sum(float(row.get("units") or 0.0) for row in priced_rows), 3)
+    units = round(sum(_row_units(row) for row in graded), 3)
+    priced_units = round(sum(_row_units(row) for row in priced_rows), 3)
 
     # The bar these picks actually had to clear, from the prices they were
     # really taken at rather than an assumed -110. It matters as soon as MLB
@@ -772,12 +822,24 @@ def _clv_block(values: list[float]) -> dict[str, Any]:
             "worseThanCoinFlip": None, "unmoved": 0,
         }
     beat = sum(1 for value in values if value > 0)
-    # A line that never moved is not a loss. Only 3 picks in 90 as measured, so
-    # it does not drive the headline -- but counting a non-event as a defeat is
-    # the kind of quiet bias that is much harder to find later than now.
+    # A line that never moved is not a loss, and it must not be counted as one.
+    # Excluded from the rate entirely, the way a push is excluded from any
+    # other record -- it is an absence of evidence, not evidence of being
+    # wrong. Counting them as defeats produced a real absurdity: thirty picks
+    # on lines that all held steady scored 0.0% and were reported as
+    # "significantly worse than a coin flip", a verdict the board puts in its
+    # standing caveat.
     unmoved = sum(1 for value in values if value == 0)
-    rate = beat / len(values) * 100
-    std_err = math.sqrt(0.25 / len(values)) * 100
+    decided = len(values) - unmoved
+    if not decided:
+        return {
+            "picks": len(values), "medianPct": round(statistics.median(values), 2),
+            "avgPct": round(statistics.fmean(values), 2), "beatCloseP": None,
+            "beatCloseStdErrPct": None, "beatsCoinFlip": None,
+            "worseThanCoinFlip": None, "unmoved": unmoved,
+        }
+    rate = beat / decided * 100
+    std_err = math.sqrt(0.25 / decided) * 100
     return {
         "picks": len(values),
         # Median first, deliberately. The mean is dragged toward zero by a
@@ -1052,7 +1114,7 @@ def grade_predictions(data_dir: Path, *, verify_ssl: bool = True) -> dict[str, A
         bucket["total"] += 1
         if item.get("correct"):
             bucket["correct"] += 1
-        bucket["units"] = round(bucket.get("units", 0.0) + float(item.get("units") or 0.0), 3)
+        bucket["units"] = round(bucket.get("units", 0.0) + _row_units(item), 3)
         if item.get("pickOdds") is not None:
             bucket["priced"] = bucket.get("priced", 0) + 1
         if bucket["total"]:

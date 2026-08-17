@@ -23,6 +23,38 @@ from typing import Any, Sequence
 MIN_PRICE_PROB = 1e-4
 
 
+def is_valid_american_odds(value: Any) -> bool:
+    """American odds are undefined strictly between -100 and +100.
+
+    The notation is two half-scales that meet at even money: on the plus side
+    the number is what a 100 stake wins, on the minus side it is what must be
+    staked to win 100. +100 and -100 are the same price -- decimal 2.0 -- and
+    nothing lies between them. No book quotes -50 or +7; such a value is always
+    a mis-parse.
+
+    The arithmetic below does not notice. `american_to_implied(0)` returns
+    exactly 1.0, a certainty, and `american_to_decimal(-1)` returns 101.0, the
+    largest payout either branch can produce -- which is exactly what a
+    "best price" selection maximises. So a single misparsed field does not
+    degrade a price, it wins the shop and publishes an enormous fake edge. That
+    is the same failure the outlier guard was added for after a +575 quote
+    published +278.9% EV, except an outlier guard cannot catch it: with one
+    book there is nothing to disagree with.
+
+    Guarding the band at every boundary where a price enters is cheaper than
+    reasoning about which paths a bad value can reach.
+    """
+    try:
+        odds = float(value)
+    except (TypeError, ValueError):
+        return False
+    # NaN fails both comparisons below on its own, but infinities pass one of
+    # them, and an infinite price is not a price.
+    if odds in (float("inf"), float("-inf")):
+        return False
+    return odds >= 100.0 or odds <= -100.0
+
+
 def american_to_decimal(odds: float) -> float:
     """-155 -> 1.645 (stake 1 returns 1.645 including stake)."""
     value = float(odds)
@@ -151,12 +183,9 @@ def assess_price(
     """
     if probability is None or american_odds is None:
         return None
-    try:
-        odds = float(american_odds)
-    except (TypeError, ValueError):
+    if not is_valid_american_odds(american_odds):
         return None
-    if odds == 0:
-        return None
+    odds = float(american_odds)
 
     value = expected_value(probability, odds)
     break_even = break_even_probability(odds)

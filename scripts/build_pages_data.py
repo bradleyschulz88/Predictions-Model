@@ -27,6 +27,7 @@ from data_providers.odds_api import (  # noqa: E402
 from scripts.backtest_model import write_calibration_report  # noqa: E402
 from schedule_dates import default_game_date, get_schedule_timezone, schedule_dates_for_league  # noqa: E402
 from sports_config import get_league, list_league_ids  # noqa: E402
+from shared_utils import write_json  # noqa: E402
 
 OUTPUT_DIR = ROOT / "docs" / "data"
 
@@ -307,9 +308,10 @@ def _report_odds_api_quota() -> None:
     # with roughly the last three or four days in hand.
     remaining = quota.get("remaining")
     if isinstance(remaining, (int, float)) and remaining < ODDS_API_LOW_BALANCE:
+        days = max(1, int(remaining // 16))
         print(
             f"::warning title=Odds API::{int(remaining)} credits left, about "
-            f"{max(1, int(remaining // 16))} days at the current rate. When it "
+            f"{days} day{'' if days == 1 else 's'} at the current rate. When it "
             f"reaches zero AFL loses its only price source and MLB runlines stop "
             f"pricing, until the monthly allowance resets.",
             flush=True,
@@ -383,7 +385,7 @@ def main() -> int:
             display_payload = strip_betting_lines_for_display(payload)
             dated_name = f"{league}_{date_value}.json"
             dated_path = OUTPUT_DIR / dated_name
-            dated_path.write_text(json.dumps(display_payload, indent=2, default=str), encoding="utf-8")
+            write_json(dated_path, display_payload)
             date_files[date_value] = f"data/{dated_name}"
             print(f"Wrote {dated_path} ({payload.get('gameCount', 0)} games)", flush=True)
             if payload.get("gameCount", 0) > 0:
@@ -392,10 +394,7 @@ def main() -> int:
 
             if date_value == default_date:
                 primary_payload = display_payload
-                (OUTPUT_DIR / f"{league}.json").write_text(
-                    json.dumps(display_payload, indent=2, default=str),
-                    encoding="utf-8",
-                )
+                write_json(OUTPUT_DIR / f"{league}.json", display_payload)
 
         if primary_payload is None:
             primary_payload = {
@@ -453,8 +452,8 @@ def main() -> int:
         "Predictions refresh every 30 minutes on GitHub Actions. Live scores auto-refresh every 90s in your browser."
     )
 
-    (OUTPUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    (OUTPUT_DIR / "overview.json").write_text(json.dumps(overview, indent=2), encoding="utf-8")
+    write_json(OUTPUT_DIR / "manifest.json", manifest)
+    write_json(OUTPUT_DIR / "overview.json", overview)
 
     saved = save_side_market_cache()
     if saved:

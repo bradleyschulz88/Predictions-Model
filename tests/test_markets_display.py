@@ -429,15 +429,21 @@ class BestBetSelectionTests(unittest.TestCase):
             "graded": 153, "priced": 88, "pct": 57.1,
             "pricedHitPct": 52.3, "pricedStdErrPct": 5.3, "breakEvenPct": 53.4,
         }}}
+        # Inside the patch. Built outside it, this read the real accuracy.json
+        # and asserted only that two keys existed, so it passed whatever the
+        # fixture said -- a test that tested nothing about its own setup.
         with patch.object(mlb_predictions, "_get_accuracy_report", return_value=report):
-            record = mlb_predictions.market_record("spread")
-        options = mlb_predictions._market_options({
-            "value": {"evPct": 1.0, "odds": -110},
-            "spread": {"value": {"evPct": 4.0, "odds": -110}, "pick": "X"},
-        })
+            options = mlb_predictions._market_options({
+                "value": {"evPct": 1.0, "odds": -110},
+                "spread": {"value": {"evPct": 4.0, "odds": -110}, "pick": "X"},
+            })
         spread = next(o for o in options if o["market"] == "spread")
-        self.assertIn("pricedHitPct", spread["record"])
-        self.assertIn("pricedStdErrPct", spread["record"])
+        self.assertEqual(spread["record"]["pricedHitPct"], 52.3)
+        self.assertEqual(spread["record"]["pricedStdErrPct"], 5.3)
+        # The blended figure travels too, so the card can show both -- but it
+        # must not be the one the gate acted on.
+        self.assertEqual(spread["record"]["pct"], 57.1)
+        self.assertFalse(spread["validated"], "52.3 does not clear 53.4")
 
     def test_a_record_with_no_hit_rate_yet_stays_gated(self) -> None:
         report = {"summary": {"totals": {"graded": 60, "priced": 60, "pricedHitPct": None}}}
