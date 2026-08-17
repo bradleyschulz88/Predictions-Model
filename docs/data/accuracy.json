@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-17T19:40:32.620773+00:00",
+  "updatedAt": "2026-08-17T20:03:57.842720+00:00",
   "summary": {
     "last7Days": {
       "correct": 278,
@@ -7,7 +7,7 @@
       "pct": 63.3,
       "units": 7.037,
       "roiPct": 1.6,
-      "pending": 40,
+      "pending": 41,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 61.5,
       "units": 13.976,
       "roiPct": 1.4,
-      "pending": 40,
+      "pending": 41,
       "voided": 12
     },
     "allTimePriced": {
@@ -5655,6 +5655,35 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-18"
+    },
+    {
+      "eventId": "401816573",
+      "league": "mlb",
+      "scheduleDate": "2026-08-18",
+      "matchup": "Miami Marlins @ Philadelphia Phillies",
+      "predicted": "Philadelphia Phillies",
+      "predictedSide": "home",
+      "outcomeLabel": "Philadelphia Phillies to win",
+      "confidence": 54.6,
+      "rawConfidence": 54.6,
+      "rawHomeWinPct": 54.6,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "home",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -38537,7 +38566,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
