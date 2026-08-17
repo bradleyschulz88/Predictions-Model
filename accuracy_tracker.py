@@ -427,7 +427,14 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 # graded, which none of them ever has been -- the totals
                 # heuristic has been shown on the board since the start without
                 # a single scored result behind it.
-                "total": _side_market(prediction.get("total"), ("line", "pickSide", "odds")),
+                # marketOverPct / modelOverPct / overPct carry the three numbers
+                # behind the pick, so the blend weight in predict_total can be
+                # measured once a few hundred of these grade. Without them the
+                # record says only that totals lose, never which half is wrong.
+                "total": _side_market(
+                    prediction.get("total"),
+                    ("line", "pickSide", "odds", "marketOverPct", "modelOverPct", "overPct", "marketAnchored"),
+                ),
                 "spread": _side_market(
                     prediction.get("spread"), ("line", "pickSide", "market", "odds")
                 ),
@@ -735,6 +742,17 @@ def grade_total(pick: dict[str, Any] | None, home_score: Any, away_score: Any) -
         "outcome": outcome,
         "odds": odds,
         "units": units,
+        # What the market said, what the model's own read said, and what was
+        # published after blending them. Recorded because the graded record
+        # previously kept only line, side and outcome, which is enough to say
+        # totals lose money and not enough to say why -- the model picked over
+        # on 67.6% of 324 graded totals, and nothing stored could attribute
+        # that to a term. These three make the blend weight measurable instead
+        # of arguable. None on rows predicted before this was added.
+        "marketOverPct": pick.get("marketOverPct"),
+        "modelOverPct": pick.get("modelOverPct"),
+        "publishedOverPct": pick.get("overPct"),
+        "marketAnchored": pick.get("marketAnchored"),
     }
 
 
