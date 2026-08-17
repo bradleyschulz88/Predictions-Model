@@ -197,7 +197,29 @@ MAX_PROB = 0.95
 DEFAULT_SPLIT_DIFF_CENTRE = 0.0457
 
 
+# A probability that is not a number carries no information, so both maps
+# below send it to the middle rather than to an end.
+#
+# That is not what they did. `logit` clamped with `max(1e-6, min(1 - 1e-6, p))`,
+# and every comparison against NaN is False, so `min(0.999999, nan)` returns
+# 0.999999 and the clamp came out at its CEILING. A NaN probability became
+# logit 13.8, `apply_platt` returned 0.999999, and the board would have carried
+# a 100.0% pick -- which also maximises the Kelly stake. Which end it landed on
+# was decided by the order of the arguments to `min`: swap them and the same
+# input clamps to the floor instead.
+#
+# Neither end is right. An input that means "no idea" must read as 0.5, which
+# is below every publication threshold and stakes nothing.
+NEUTRAL_PROBABILITY = 0.5
+
+
 def sigmoid(value: float) -> float:
+    if not math.isfinite(value):
+        # An infinite logit is a real saturation and maps to the end it points
+        # at; only NaN is the absence of an answer.
+        if math.isnan(value):
+            return NEUTRAL_PROBABILITY
+        return 1.0 if value > 0 else 0.0
     if value >= 0:
         return 1.0 / (1.0 + math.exp(-value))
     exp_value = math.exp(value)
@@ -205,8 +227,14 @@ def sigmoid(value: float) -> float:
 
 
 def logit(prob: float) -> float:
-    prob = max(1e-6, min(1.0 - 1e-6, prob))
-    return math.log(prob / (1.0 - prob))
+    try:
+        value = float(prob)
+    except (TypeError, ValueError):
+        value = NEUTRAL_PROBABILITY
+    if not math.isfinite(value):
+        value = NEUTRAL_PROBABILITY
+    value = max(1e-6, min(1.0 - 1e-6, value))
+    return math.log(value / (1.0 - value))
 
 
 # --------------------------------------------------------------------------
