@@ -115,8 +115,19 @@ const american = (o) => (o == null ? "—" : (o > 0 ? "+" : "") + o);
 
 /* American odds -> implied probability. These must never be subtracted from
    one another: the scale is discontinuous at zero, so -112 to +100 differs by
-   2.8 points of probability and not by "212" of anything. */
-const impliedFrom = (o) => (o == null ? null : (o > 0 ? 100 / (o + 100) : -o / (-o + 100)) * 100);
+   2.8 points of probability and not by "212" of anything.
+
+   Nothing lies strictly between -100 and +100 -- the two half-scales meet at
+   even money -- and the formula does not know it: 0 returns a probability of
+   100%. The build rejects that band at every point a price enters, so a value
+   from it should never reach a payload; null here rather than a certainty is
+   what makes that assumption visible instead of silently plausible. */
+const impliedFrom = (o) => {
+  if (o == null || !Number.isFinite(Number(o))) return null;
+  const odds = Number(o);
+  if (odds > -100 && odds < 100) return null;
+  return (odds > 0 ? 100 / (odds + 100) : -odds / (-odds + 100)) * 100;
+};
 
 const teamShort = (n) => {
   const parts = String(n || "").trim().split(" ");

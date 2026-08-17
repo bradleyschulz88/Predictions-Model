@@ -52,6 +52,7 @@ from pathlib import Path
 from typing import Any
 
 from espn_client import ESPN_USER_AGENT
+from market import is_valid_american_odds
 from sbr_client import SBRClientError, get_text
 from sports_config import LeagueConfig, get_league
 
@@ -99,22 +100,28 @@ def _american(value: Any) -> int | None:
 
     ESPN gives integers on some feeds and strings like "+120" or "EVEN" on
     others, and uses 0 as a null.
+
+    Anything outside the valid American range is rejected, not just 0. The band
+    between -100 and +100 is not a price at all (see
+    `market.is_valid_american_odds`), and a value from it does not merely look
+    odd downstream -- it wins the best-price shop and publishes a fake edge.
     """
     if value is None:
         return None
     if isinstance(value, bool):
         return None
     if isinstance(value, (int, float)):
-        return int(value) or None
+        return int(value) if is_valid_american_odds(value) else None
     text = str(value).strip().replace("+", "")
     if not text:
         return None
     if text.upper() in {"EVEN", "EV", "PK"}:
         return 100
     try:
-        return int(float(text)) or None
+        parsed = float(text)
     except ValueError:
         return None
+    return int(parsed) if is_valid_american_odds(parsed) else None
 
 
 def _side_moneyline(block: Any) -> int | None:

@@ -28,7 +28,13 @@ from data_providers.travel import travel_edge
 from data_providers.schedule_advanced import schedule_flags_logit_adjustment
 from data_providers.enrich import enrich_games_with_providers
 from elo import load_ratings, rating_edge
-from market import american_to_decimal, assess_price, devig_power, devig_proportional
+from market import (
+    american_to_decimal,
+    assess_price,
+    devig_power,
+    devig_proportional,
+    is_valid_american_odds,
+)
 from youtube_intel import intel_edge, load_intel
 from model_core import resolve_probabilities
 from shared_utils import (
@@ -69,7 +75,17 @@ _EVALUATION_REPORT: dict[str, Any] | None = None
 MIN_KELLY_BAND_SAMPLE = 30
 
 
-def american_odds_to_implied(odds: int | float) -> float:
+def american_odds_to_implied(odds: int | float) -> float | None:
+    """Implied probability of an American price, or None if it is not one.
+
+    Returns None rather than a number for anything outside the valid range --
+    see `market.is_valid_american_odds` for why the band between -100 and +100
+    is not merely unusual but arithmetically dangerous. Two of this function's
+    callers already tested the result for None before it could ever be None,
+    which is the shape the code was written expecting.
+    """
+    if not is_valid_american_odds(odds):
+        return None
     value = float(odds)
     if value < 0:
         return abs(value) / (abs(value) + 100.0)
@@ -77,21 +93,30 @@ def american_odds_to_implied(odds: int | float) -> float:
 
 
 def _line_odds_value(line: dict[str, Any], *keys: str) -> int | float | None:
-    """Read American odds from SBR (homeOdds) or ESPN (home) line shapes."""
+    """Read American odds from SBR (homeOdds) or ESPN (home) line shapes.
+
+    A value that is not a valid American price is skipped rather than returned,
+    so the rest of the pricing path never sees one. Skipping rather than
+    aborting matters because the keys are tried in order: an ESPN `home` field
+    carrying junk should not stop the SBR `homeOdds` field beside it from being
+    read.
+    """
     for key in keys:
         value = line.get(key)
         if value is None:
             continue
-        if isinstance(value, (int, float)) and value == 0:
-            continue
         if isinstance(value, str):
             text = value.strip().replace("+", "")
             try:
-                return int(text)
+                parsed: int | float = int(text)
             except ValueError:
                 continue
-        if isinstance(value, (int, float)):
-            return value
+        elif isinstance(value, (int, float)) and not isinstance(value, bool):
+            parsed = value
+        else:
+            continue
+        if is_valid_american_odds(parsed):
+            return parsed
     return None
 
 
@@ -109,7 +134,9 @@ def _moneyline_from_line(line: dict[str, Any]) -> dict[str, Any] | None:
     draw_ml = _line_odds_value(current, "draw", "drawOdds")
     raw_home = american_odds_to_implied(home_ml)
     raw_away = american_odds_to_implied(away_ml)
-    raw_draw = american_odds_to_implied(draw_ml) if draw_ml is not None else 0.0
+    if raw_home is None or raw_away is None:
+        return None
+    raw_draw = (american_odds_to_implied(draw_ml) or 0.0) if draw_ml is not None else 0.0
     raw_total = raw_home + raw_away + raw_draw
     if raw_total <= 0:
         return None
@@ -380,6 +407,8 @@ def compute_total_implied_probabilities(lines: list[dict[str, Any]]) -> dict[str
         else:
             over_imp = american_odds_to_implied(over_odds)
             under_imp = american_odds_to_implied(under_odds)
+        if over_imp is None or under_imp is None:
+            continue
         total = over_imp + under_imp
         if total <= 0:
             continue
@@ -510,7 +539,7 @@ def extract_total_price(lines: list[dict[str, Any]], side: str) -> int | None:
         if value is None:
             continue
         match = _PRICE_IN_PARENS.search(str(value))
-        if match:
+        if match and is_valid_american_odds(match.group(1)):
             return int(match.group(1))
     return None
 
@@ -529,7 +558,7 @@ def extract_spread_price(lines: list[dict[str, Any]], side: str) -> int | None:
         if value is None:
             continue
         match = _PRICE_IN_PARENS.search(str(value))
-        if match:
+        if match and is_valid_american_odds(match.group(1)):
             return int(match.group(1))
     return None
 
@@ -1474,16 +1503,22 @@ def _usable_quotes(quotes: list[int]) -> list[int]:
     against it. With exactly two there is no way to tell which one is wrong,
     so a wild disagreement discards both: an unpriced game is honest, a
     confidently wrong price is not.
+
+    Quotes that are not valid American odds are dropped first, before the
+    count is taken. The order matters: everything below needs two quotes to
+    compare, so the early return hands a lone quote back unexamined, and a lone
+    quote is exactly the case a single-book game produces.
     """
+    quotes = [odds for odds in quotes if is_valid_american_odds(odds)]
     if len(quotes) < 2:
         return quotes
-    implied = sorted(american_odds_to_implied(odds) * 100 for odds in quotes)
+    implied = sorted((american_odds_to_implied(odds) or 0.0) * 100 for odds in quotes)
     if len(quotes) == 2:
         return [] if implied[1] - implied[0] > MAX_QUOTE_DISAGREEMENT_PTS else quotes
     middle = implied[len(implied) // 2]
     return [
         odds for odds in quotes
-        if abs(american_odds_to_implied(odds) * 100 - middle) <= MAX_QUOTE_DISAGREEMENT_PTS
+        if abs((american_odds_to_implied(odds) or 0.0) * 100 - middle) <= MAX_QUOTE_DISAGREEMENT_PTS
     ]
 
 
