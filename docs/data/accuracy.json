@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-17T14:43:56.732311+00:00",
+  "updatedAt": "2026-08-17T16:46:05.568678+00:00",
   "summary": {
     "last7Days": {
       "correct": 278,
@@ -7,7 +7,7 @@
       "pct": 63.3,
       "units": 7.037,
       "roiPct": 1.6,
-      "pending": 39,
+      "pending": 40,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 61.5,
       "units": 13.976,
       "roiPct": 1.4,
-      "pending": 39,
+      "pending": 40,
       "voided": 11
     },
     "allTimePriced": {
@@ -4796,6 +4796,35 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-21"
+    },
+    {
+      "eventId": "401873286",
+      "league": "nfl",
+      "scheduleDate": "2026-08-20",
+      "matchup": "Las Vegas Raiders @ Houston Texans",
+      "predicted": "Las Vegas Raiders",
+      "predictedSide": "away",
+      "outcomeLabel": "Las Vegas Raiders to win",
+      "confidence": 51.3,
+      "rawConfidence": 51.3,
+      "rawHomeWinPct": 48.7,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-20"
     },
     {
       "eventId": "401857160",
@@ -39783,7 +39812,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
