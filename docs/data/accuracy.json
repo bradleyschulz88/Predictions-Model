@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-17T13:56:32.891166+00:00",
+  "updatedAt": "2026-08-17T14:43:56.732311+00:00",
   "summary": {
     "last7Days": {
       "correct": 278,
@@ -7,7 +7,7 @@
       "pct": 63.3,
       "units": 7.037,
       "roiPct": 1.6,
-      "pending": 38,
+      "pending": 39,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 61.5,
       "units": 13.976,
       "roiPct": 1.4,
-      "pending": 38,
+      "pending": 39,
       "voided": 11
     },
     "allTimePriced": {
@@ -157,7 +157,7 @@
         "worseThanCoinFlip": true,
         "unmoved": 4
       },
-      "provisionalPicks": 121,
+      "provisionalPicks": 122,
       "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started, over the whole graded record rather than the recent window. Median is the headline figure; the mean is pulled by a few large favourable moves."
     },
     "totals": {
@@ -4768,6 +4768,35 @@
     }
   ],
   "pendingPicks": [
+    {
+      "eventId": "1133681",
+      "league": "afl",
+      "scheduleDate": "2026-08-21",
+      "matchup": "Brisbane Lions @ Collingwood",
+      "predicted": "Brisbane Lions",
+      "predictedSide": "away",
+      "outcomeLabel": "Brisbane Lions to win",
+      "confidence": 67.4,
+      "rawConfidence": 67.4,
+      "rawHomeWinPct": 32.6,
+      "probabilityMethod": "fitted",
+      "evPct": -13.09,
+      "kellyPct": 0.0,
+      "pickOdds": -345,
+      "openingOdds": -345,
+      "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-21"
+    },
     {
       "eventId": "401857160",
       "league": "wnba",
@@ -39880,6 +39909,35 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-20"
+    },
+    "1133681": {
+      "eventId": "1133681",
+      "league": "afl",
+      "scheduleDate": "2026-08-21",
+      "matchup": "Brisbane Lions @ Collingwood",
+      "predicted": "Brisbane Lions",
+      "predictedSide": "away",
+      "outcomeLabel": "Brisbane Lions to win",
+      "confidence": 67.4,
+      "rawConfidence": 67.4,
+      "rawHomeWinPct": 32.6,
+      "probabilityMethod": "fitted",
+      "evPct": -13.09,
+      "kellyPct": 0.0,
+      "pickOdds": -345,
+      "openingOdds": -345,
+      "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-21"
     }
   },
   "skippedDates": []
