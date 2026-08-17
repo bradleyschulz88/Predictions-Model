@@ -37,6 +37,7 @@ from market import (
 )
 from youtube_intel import intel_edge, load_intel
 from model_core import resolve_probabilities
+from model_fit import logit, sigmoid
 from shared_utils import (
     games_played,
     parse_record,
@@ -1289,22 +1290,86 @@ def run_environment(game: dict[str, Any], enrichment: dict[str, Any]) -> dict[st
     }
 
 
+# How much of the model's own read to keep once the market has been priced in.
+#
+# The market total is the single most efficient estimate available: books move
+# it on the same information this model has plus the money, and it is set so
+# both sides are close to even. Starting anywhere else means claiming to know
+# better before looking, which is exactly what the unanchored version did --
+# and it lost money doing it. Measured over 324 graded totals:
+#
+#     picked OVER on 219 of 324 (67.6%)
+#     over  104/219  47.5%
+#     under  58/105  55.2%
+#     priced hit rate 47.3% +/- 3.3 against a 52.3% break-even, ROI -8.7%
+#
+# A model with a real read does not pick one side two times in three. That
+# split is a level error, and it is what a scoring function that begins at 0.5
+# and adds mostly-positive nudges produces. The under picks doing fine is the
+# tell: when the signals were strong enough to overcome the drift, they were
+# right.
+#
+# 0.25 is a prior, not a fit. There are no logged totals features to fit on --
+# the graded record stores line, side and outcome, and nothing about what the
+# model or the market thought -- so this build starts recording
+# marketOverPct / modelOverPct alongside the blend, and the weight can be
+# measured against the next few hundred games instead of argued about. It is
+# set low deliberately: the honest reading of 47.3% on 235 priced picks is that
+# the residual has shown no value yet, so it gets a quarter of a vote until it
+# earns more.
+TOTAL_MODEL_WEIGHT = 0.25
+
+# Cap on how far the residual may drag the market, in logit points. 0.6 is
+# about 14 points of probability at an even total -- large enough to express a
+# genuine disagreement, small enough that no single nudge can manufacture the
+# 30/70 swing the old clamp allowed.
+MAX_TOTAL_RESIDUAL_LOGIT = 0.6
+
+
+def _total_market_anchor(lines: list[dict[str, Any]]) -> float | None:
+    """The market's own de-vigged over probability, or None if unpriced."""
+    consensus = compute_total_implied_probabilities(lines)
+    if not consensus:
+        return None
+    over_pct = consensus.get("overPct")
+    if over_pct is None:
+        return None
+    return over_pct / 100.0
+
+
 def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment: dict[str, Any]) -> dict[str, Any] | None:
+    """Model the residual against the market total, not the total itself.
+
+    Every signal below is a nudge away from a starting point. What changed is
+    the starting point: it was a flat 0.5, meaning "no idea", and it is now the
+    market's own de-vigged read where one exists. A coin flip is not the best
+    available estimate of whether a game goes over -- the price is -- and
+    treating it as one is how a model ends up 67.6% on one side.
+
+    Falls back to 0.5 when the line carries no price, which is a real case:
+    SportsBookReview publishes the number without odds. Those games are flagged
+    `marketAnchored: false` so an unanchored read is never averaged in with an
+    anchored one.
+    """
     total_line = extract_total_line(lines)
     if total_line is None:
         return None
 
     league = _league_id(game)
-    over_lean = 0.5
+    # Nudges are accumulated in probability space, as they always have been,
+    # and converted to a logit residual once. Mixing the two would make each
+    # nudge's effect depend on the market's level, which is not what any of
+    # these hand-set constants was chosen to mean.
+    lean_shift = 0.0
     detail_parts: list[str] = []
 
     pace = _scoring_pace_from_form(enrichment)
     if pace is not None:
         if pace >= total_line + 0.8:
-            over_lean += 0.20
+            lean_shift += 0.20
             detail_parts.append(f"Recent scoring pace ({pace:.1f}) runs hot vs the {total_line} line.")
         elif pace <= total_line - 0.8:
-            over_lean -= 0.20
+            lean_shift -= 0.20
             detail_parts.append(f"Recent scoring pace ({pace:.1f}) runs cool vs the {total_line} line.")
 
     home_pitcher = game.get("homePitcher") or {}
@@ -1312,15 +1377,15 @@ def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment:
     if home_pitcher.get("era") is not None and away_pitcher.get("era") is not None:
         avg_era = (home_pitcher["era"] + away_pitcher["era"]) / 2
         if avg_era <= 3.6:
-            over_lean -= 0.12
+            lean_shift -= 0.12
             detail_parts.append(f"Strong pitching matchup (avg ERA {avg_era:.2f}) favors the under.")
         elif avg_era >= 4.6:
-            over_lean += 0.12
+            lean_shift += 0.12
             detail_parts.append(f"Weaker pitching matchup (avg ERA {avg_era:.2f}) favors the over.")
 
     environment = run_environment(game, enrichment)
     if environment:
-        over_lean += environment["shift"]
+        lean_shift += environment["shift"]
         detail_parts.extend(environment["notes"])
 
     home_adv = enrichment.get("homeAdvanced") or {}
@@ -1328,25 +1393,43 @@ def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment:
     if home_adv.get("runsPerGame") is not None and away_adv.get("runsPerGame") is not None:
         combined = home_adv["runsPerGame"] + away_adv["runsPerGame"]
         if combined >= total_line + 1.5:
-            over_lean += 0.10
+            lean_shift += 0.10
             detail_parts.append(f"Season scoring pace ({combined:.1f} combined R/G) leans over.")
         elif combined <= total_line - 1.5:
-            over_lean -= 0.10
+            lean_shift -= 0.10
             detail_parts.append(f"Season scoring pace ({combined:.1f} combined R/G) leans under.")
 
     if league in {"nba", "wnba", "afl"}:
+        # This was one-sided: two strong records added 0.08 toward the over and
+        # nothing ever subtracted, so it could only ever push one way. A signal
+        # that cannot fire in both directions is a bias with a reason attached.
+        # Two weak records is the same evidence pointing the other way.
         home_overall = win_pct_from_record(game.get("homeRecord"))
         away_overall = win_pct_from_record(game.get("awayRecord"))
         if home_overall + away_overall > 1.05:
-            over_lean += 0.08
+            lean_shift += 0.08
             detail_parts.append("Both teams have strong records — higher-scoring game possible.")
+        elif home_overall + away_overall < 0.95:
+            lean_shift -= 0.08
+            detail_parts.append("Both teams have weak records — lower-scoring game possible.")
 
-    # Wider clamp range for more decisive predictions (30-70% instead of 35-65%)
-    over_lean = clamp(over_lean, 0.30, 0.70)
+    market_over = _total_market_anchor(lines)
+    anchored = market_over is not None
+    base_logit = logit(market_over) if anchored else 0.0
+
+    # dp = 0.25 * dlogit near even money, so a probability nudge is worth four
+    # times as much in logit space. Converting keeps each constant meaning what
+    # it meant before the anchor existed.
+    residual = clamp(lean_shift * 4.0 * TOTAL_MODEL_WEIGHT, -MAX_TOTAL_RESIDUAL_LOGIT, MAX_TOTAL_RESIDUAL_LOGIT)
+    over_lean = clamp(sigmoid(base_logit + residual), 0.30, 0.70)
+
     under_lean = 1.0 - over_lean
     pick = "Over" if over_lean >= under_lean else "Under"
     confidence = max(over_lean, under_lean) * 100
     pick_side = pick.lower()
+
+    if anchored and detail_parts:
+        detail_parts.insert(0, f"Market prices the over at {market_over * 100:.1f}%.")
 
     return {
         "line": total_line,
@@ -1355,6 +1438,12 @@ def predict_total(game: dict[str, Any], lines: list[dict[str, Any]], enrichment:
         "overPct": round(over_lean * 100, 1),
         "underPct": round(under_lean * 100, 1),
         "confidence": round(confidence, 1),
+        # Recorded so the weight above can be measured rather than argued
+        # about. `modelOverPct` is what the residual alone would have said,
+        # which is the number the old code published.
+        "marketAnchored": anchored,
+        "marketOverPct": round(market_over * 100, 1) if anchored else None,
+        "modelOverPct": round(clamp(0.5 + lean_shift, 0.30, 0.70) * 100, 1),
         # None on an SBR-sourced line, which has nowhere to carry a price.
         # Present when ESPN core supplied it -- see extract_total_price.
         "odds": extract_total_price(lines, pick_side),
