@@ -269,6 +269,29 @@ def fit_logistic(
     """
     if not rows:
         return []
+    if len(rows) != len(labels):
+        # `zip` below would silently truncate to the shorter of the two, which
+        # means training on a subset while reporting the full count. A caller
+        # that has lost the correspondence between a row and its outcome has a
+        # bug worth stopping for.
+        raise ValueError(f"{len(rows)} rows but {len(labels)} labels")
+
+    # One non-finite value anywhere poisons the whole fit, not just its own
+    # row: it enters the gradient and the Hessian, and every coefficient comes
+    # back NaN. Dropping the row costs one observation. `_first_number` should
+    # already have caught these upstream, so this is the backstop for a row
+    # built by some other path.
+    usable = [
+        (row, label)
+        for row, label in zip(rows, labels)
+        if all(isinstance(x, (int, float)) and math.isfinite(x) for x in row)
+        and label is not None
+    ]
+    if not usable:
+        return []
+    rows = [row for row, _ in usable]
+    labels = [label for _, label in usable]
+
     width = len(rows[0])
     if isinstance(l2, (int, float)):
         penalties = [0.0] + [float(l2)] * (width - 1)
@@ -321,13 +344,28 @@ def predict_row(weights: Sequence[float], row: Sequence[float]) -> float:
 
 
 def _first_number(*values: Any) -> float | None:
+    """The first value that converts to a real number, else None.
+
+    Non-finite floats are treated as absent rather than passed through.
+    `float("nan")` converts without complaint, and one NaN reaching the fit is
+    not a degraded row -- IRLS propagates it through the gradient and the
+    Hessian, so every coefficient comes back NaN and the model stops making
+    predictions at all. Measured: ten NaN rows among twenty returned
+    `[nan, nan]` for a two-weight fit.
+
+    None is a shape the pipeline already knows how to handle: it means the
+    feature was not available for this game, which is exactly what an
+    unusable number amounts to.
+    """
     for value in values:
         if value is None:
             continue
         try:
-            return float(value)
+            number = float(value)
         except (TypeError, ValueError):
             continue
+        if math.isfinite(number):
+            return number
     return None
 
 
