@@ -50,8 +50,8 @@ jobs:
     timeout-minutes: 45
     environment:
       name: github-pages
-      # Whichever attempt got there. The first is empty when it timed out.
-      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}
+      # Whichever attempt got there. Each earlier one is empty when it failed.
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url || steps.deployment_last.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -77,6 +77,11 @@ jobs:
           cp dashboard/board.css dashboard/board.js docs/
           cp dashboard/app.js dashboard/styles.css docs/
           cp dashboard/manifest.json dashboard/sw.js docs/
+          # The service worker evicts a previous build by cache name, so the
+          # name has to change whenever a shipped asset does. Deriving it from
+          # the files themselves removes the manual bump that had already been
+          # missed for 23 commits -- see scripts/stamp_service_worker.py.
+          python scripts/stamp_service_worker.py docs
 
       # tests/test_dashboard_render.py drives headless Chromium to check real
       # geometry -- column clipping, alignment, horizontal overflow -- which
@@ -249,21 +254,56 @@ jobs:
       # cancels the deployment it was waiting on, so the retry starts clean
       # rather than racing a live one, and it buys the same ten minutes over
       # again against a queue that has had ten minutes to drain. `timeout-minutes:
-      # 45` on the job leaves room for both. If the retry fails too, the job
-      # fails -- a deployment that never lands in twenty minutes of waiting is
-      # the case worth seeing red.
+      # 45` on the job leaves room for all three attempts below.
+      #
+      # The retry originally followed the first attempt with no delay, which
+      # made it useless against the failure that actually turned up. That
+      # reasoning above only holds for a TIMEOUT, where ten minutes have
+      # already elapsed before the retry starts. A Pages API outage does not
+      # time out -- it answers immediately:
+      #
+      #   17:44:42.15  Failed to create deployment (status: 503)
+      #   17:44:43.90  Failed to create deployment (status: 503)
+      #
+      # 1.75 seconds apart, against an outage that lasted over two hours (runs
+      # 1058, 1059 and 1061 on 2026-08-17). Two attempts inside two seconds is
+      # one attempt with extra logging.
+      #
+      # So the wait is now explicit and escalating. It costs nothing on the
+      # normal path -- these steps only run after a failure -- and it is the
+      # difference between riding out a blip and reporting it as a broken
+      # build. Worst case is 6 min of build + 10 + 1 + 10 + 2 + 10 = 39 min,
+      # inside the job's 45.
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
-        # So a timed-out first attempt reaches the retry below instead of
+        # So a failed first attempt reaches the retries below instead of
         # ending the job here.
         continue-on-error: true
         with:
           timeout: 600000
 
+      - name: Wait before the first retry
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 60
+
       - name: Retry the Pages deployment
         id: deployment_retry
         if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+        with:
+          timeout: 600000
+
+      - name: Wait before the last retry
+        if: steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'
+        run: sleep 120
+
+      # No continue-on-error: if a deployment cannot land in three attempts
+      # across three minutes of backoff, that is the case worth seeing red.
+      - name: Last retry of the Pages deployment
+        id: deployment_last
+        if: steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'
         uses: actions/deploy-pages@v5
         with:
           timeout: 600000

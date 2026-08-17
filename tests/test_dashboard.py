@@ -347,9 +347,18 @@ class ProductNameTests(OfflineTestCase):
         self.assertEqual(manifest["name"], "Edge Board")
         self.assertEqual(manifest["short_name"], "Edge Board")
 
-    def test_service_worker_cache_was_bumped(self) -> None:
-        """A stale cache serves the old name to everyone who already installed."""
-        self.assertIn("edge-board-v", self._read("dashboard", "sw.js"))
+    def test_service_worker_cache_belongs_to_this_app(self) -> None:
+        """A stale cache serves the old build to everyone who already installed.
+
+        This used to assert the manual `edge-board-vNN` convention. Asserting
+        the name has the right shape never caught the thing that went wrong --
+        v53 was a perfectly well-shaped name for three weeks while board.js and
+        app.js moved 23 commits underneath it. The name is now derived from the
+        shell's contents at build time, so what is worth pinning here is only
+        that it still identifies this app; whether it tracks the files is
+        test_service_worker_cache.py's job.
+        """
+        self.assertIn("edge-board-", self._read("dashboard", "sw.js"))
 
     def test_overview_carries_the_product_name(self) -> None:
         """The cross-sport board is the product, not a mode of it."""

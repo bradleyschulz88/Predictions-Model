@@ -66,6 +66,56 @@ class DeployTimeoutTests(unittest.TestCase):
         self.assertIn("Retry the Pages deployment", self.source)
         self.assertIn("steps.deployment.outcome == 'failure'", self.source)
 
+    def test_every_retry_waits_before_it_runs(self) -> None:
+        """A retry with no delay is one attempt with extra logging.
+
+        The original pair fired 1.75 seconds apart against a Pages API outage
+        that lasted over two hours. The comment reasoned about timeouts, where
+        ten minutes have already elapsed -- but a 503 answers immediately, so
+        nothing had changed by the time the retry ran.
+        """
+        for attempt, previous in (
+            ("Retry the Pages deployment", "Wait before the first retry"),
+            ("Last retry of the Pages deployment", "Wait before the last retry"),
+        ):
+            self.assertIn(previous, self.source, f"{attempt} has no wait before it")
+            self.assertLess(
+                self.source.index(previous), self.source.index(f"- name: {attempt}"),
+                f"{previous} must come before {attempt}",
+            )
+
+    def test_the_waits_escalate(self) -> None:
+        sleeps = [int(v) for v in re.findall(r"^\s+run: sleep (\d+)\s*$", self.source, re.M)]
+        self.assertEqual(len(sleeps), 2, f"expected two backoff waits, found {sleeps}")
+        self.assertGreater(sleeps[1], sleeps[0], "the second wait should be longer")
+        self.assertGreaterEqual(sleeps[0], 30, "too short to outlast a transient outage")
+
+    def test_the_middle_attempt_does_not_end_the_job(self) -> None:
+        """Without this the last retry is unreachable, which is the same bug
+        the first attempt already had `continue-on-error` for."""
+        block = self.source[self.source.index("- name: Retry the Pages deployment"):]
+        block = block[: block.index("- name: Wait before the last retry")]
+        self.assertIn("continue-on-error: true", block)
+
+    def test_the_final_attempt_is_allowed_to_fail_the_build(self) -> None:
+        """Three attempts across three minutes is enough to mean something."""
+        block = self.source[self.source.index("- name: Last retry of the Pages deployment"):]
+        self.assertNotIn("continue-on-error", block)
+
+    def test_the_last_retry_only_runs_after_both_others_failed(self) -> None:
+        self.assertIn(
+            "steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'",
+            self.source,
+        )
+
+    def test_the_waits_cost_nothing_on_a_healthy_build(self) -> None:
+        """Each sleep is gated on a failure, so the normal path never waits."""
+        for line_no, line in enumerate(self.source.split("\n")):
+            if not re.match(r"^\s+run: sleep \d+\s*$", line):
+                continue
+            window = "\n".join(self.source.split("\n")[max(0, line_no - 4):line_no])
+            self.assertIn("outcome == 'failure'", window, f"unguarded sleep at line {line_no + 1}")
+
     def test_the_first_attempt_does_not_end_the_job(self) -> None:
         """Without this the retry is unreachable and the step is decoration."""
         deploy = self.source[self.source.index("- name: Deploy to GitHub Pages"):]
@@ -76,12 +126,19 @@ class DeployTimeoutTests(unittest.TestCase):
         """The first step publishes no page_url when it timed out."""
         self.assertIn("steps.deployment_retry.outputs.page_url", self.source)
 
-    def test_the_job_allows_time_for_both_attempts(self) -> None:
+    def test_the_job_allows_time_for_every_attempt(self) -> None:
         found = re.search(r"timeout-minutes:\s*(\d+)", self.source)
         self.assertIsNotNone(found, "the job has no timeout-minutes")
         minutes = int(found.group(1))
-        # Two ten-minute waits plus the ~5 minutes the build itself takes.
-        self.assertGreaterEqual(minutes, 25, "a retry would be cut off by the job timeout")
+        sleeps = sum(int(v) for v in re.findall(r"^\s+run: sleep (\d+)\s*$", self.source, re.M))
+        attempts = len(self._timeouts())
+        # Worst case: every attempt runs to its ceiling, every backoff elapses,
+        # and the build itself takes the ~8 minutes its slowest recent run did.
+        worst_case = attempts * (MAX_DEPLOY_TIMEOUT_MS / 60_000) + sleeps / 60 + 8
+        self.assertGreaterEqual(
+            minutes, worst_case,
+            f"{attempts} attempts plus {sleeps}s of backoff needs {worst_case:.0f} min, job allows {minutes}",
+        )
 
     def test_the_workflow_records_why_the_timeout_is_not_raised_again(self) -> None:
         """The comment claiming twenty minutes is what made this invisible."""

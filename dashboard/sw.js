@@ -1,7 +1,15 @@
-// Bump on any app-shell change. `activate` deletes every cache that is not this
-// one, so a bump is what evicts a previous build's index.html/app.js/styles.css
-// from a browser that already has them.
-const CACHE = "edge-board-v53";
+// Replaced at build time by scripts/stamp_service_worker.py with a hash of the
+// files in ASSETS below. `activate` deletes every cache that is not the current
+// one, so this name is what evicts a previous build's index.html/app.js/
+// styles.css from a browser that already has them.
+//
+// It used to be bumped by hand, and the comment saying so was the whole
+// mechanism. It sat at v53 from 2026-07-30 while 23 commits changed board.js
+// and app.js, so the eviction path did not run for three weeks. Network-first
+// fetching hid it while the network answered; a Pages outage is when it would
+// not have. The value below is only the local-development fallback -- what
+// ships is derived.
+const CACHE = "edge-board-dev";
 const ASSETS = [
   "./",
   "./index.html",
