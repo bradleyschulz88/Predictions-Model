@@ -185,6 +185,36 @@ def _build_pick_record(
     return record
 
 
+def _merge_features(previous: Any, current: Any) -> dict[str, Any] | None:
+    """Newest value per field, but never let a gap overwrite a known one.
+
+    Pre-game the feature vector was replaced wholesale on every build, so a run
+    that lost a provider -- and the build log carries those most days, "provider
+    enrichment unavailable", "ESPN core down" -- wrote None over a value an
+    earlier run had already recorded. That was survivable while every build
+    recomputed from scratch. It stopped being survivable when features started
+    freezing at first pitch, because now the LAST pre-game build decides the row
+    permanently, and a provider blip in the final hour poisons it for good.
+
+    This is the same defect already fixed one field over, for prices: "any build
+    where the odds fetch came back empty wrote None straight over a price
+    already recorded, losing it for good." Same shape, same fix -- a recorded
+    value is never replaced by nothing.
+
+    Coverage only ever grows pre-game, and a feature that genuinely changes,
+    like a moving market, still takes the newer number.
+    """
+    if not isinstance(current, dict):
+        return previous if isinstance(previous, dict) else current
+    if not isinstance(previous, dict):
+        return current
+    merged = dict(previous)
+    for key, value in current.items():
+        if value is not None or key not in merged:
+            merged[key] = value
+    return merged
+
+
 def _load_json(path: Path, default: Any) -> Any:
     if not path.is_file():
         return default
@@ -303,7 +333,9 @@ def record_predictions(data_dir: Path, payloads: dict[str, dict[str, Any]] | lis
                 pinned_features = previous_features
                 features_frozen_at = features_frozen_at or payload.get("fetchedAt")
             else:
-                pinned_features = prediction.get("features") or previous_features
+                pinned_features = _merge_features(
+                    previous_features, prediction.get("features")
+                )
 
             # The path between open and close, not just its two endpoints.
             #
@@ -772,12 +804,24 @@ def _clv_block(values: list[float]) -> dict[str, Any]:
             "worseThanCoinFlip": None, "unmoved": 0,
         }
     beat = sum(1 for value in values if value > 0)
-    # A line that never moved is not a loss. Only 3 picks in 90 as measured, so
-    # it does not drive the headline -- but counting a non-event as a defeat is
-    # the kind of quiet bias that is much harder to find later than now.
+    # A line that never moved is not a loss, and it must not be counted as one.
+    # Excluded from the rate entirely, the way a push is excluded from any
+    # other record -- it is an absence of evidence, not evidence of being
+    # wrong. Counting them as defeats produced a real absurdity: thirty picks
+    # on lines that all held steady scored 0.0% and were reported as
+    # "significantly worse than a coin flip", a verdict the board puts in its
+    # standing caveat.
     unmoved = sum(1 for value in values if value == 0)
-    rate = beat / len(values) * 100
-    std_err = math.sqrt(0.25 / len(values)) * 100
+    decided = len(values) - unmoved
+    if not decided:
+        return {
+            "picks": len(values), "medianPct": round(statistics.median(values), 2),
+            "avgPct": round(statistics.fmean(values), 2), "beatCloseP": None,
+            "beatCloseStdErrPct": None, "beatsCoinFlip": None,
+            "worseThanCoinFlip": None, "unmoved": unmoved,
+        }
+    rate = beat / decided * 100
+    std_err = math.sqrt(0.25 / decided) * 100
     return {
         "picks": len(values),
         # Median first, deliberately. The mean is dragged toward zero by a

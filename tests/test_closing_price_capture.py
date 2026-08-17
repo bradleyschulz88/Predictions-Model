@@ -188,9 +188,18 @@ class NegativeClvIsReportableTests(unittest.TestCase):
                 + [self._pick(0.0, league=league)] * unmoved)
 
     def test_a_significantly_bad_rate_is_flagged_as_bad(self) -> None:
-        """The live shape: 35 of 90, interval clears 50 on the low side."""
-        summary = clv_summary(self._record(35, 52, 3))
-        self.assertEqual(summary["picks"], 90)
+        """The live shape on 14 Aug: 49 of 136 decided, interval clears 50 low.
+
+        Updated from the 12 Aug shape of 35 beat / 52 lost / 3 unmoved, which
+        no longer flags once ties are excluded from the rate: 35 of 87 is 40.2%
+        with an interval reaching 50.7. Counting the three unmoved lines as
+        defeats had put it at 38.9% over 90 and just inside significance, so
+        that reading was marginally overstated at the time. It holds on the
+        larger sample -- MLB alone is 32.7% on 107 -- but on its own arithmetic
+        rather than on ties.
+        """
+        summary = clv_summary(self._record(49, 87, 3))
+        self.assertEqual(summary["picks"], 139)
         self.assertTrue(summary["worseThanCoinFlip"])
         self.assertFalse(summary["beatsCoinFlip"])
 
@@ -206,11 +215,16 @@ class NegativeClvIsReportableTests(unittest.TestCase):
         self.assertFalse(summary["worseThanCoinFlip"])
 
     def test_an_unmoved_line_is_not_counted_as_a_defeat(self) -> None:
-        """A line that never moved is a non-event, not a loss."""
+        """A line that never moved is a non-event, not a loss.
+
+        This asserted 25.0 -- five of twenty -- which recorded the bug rather
+        than the intent the name states. Ten of the twenty never moved, so the
+        rate is five of the ten that did.
+        """
         summary = clv_summary(self._record(5, 5, unmoved=10))
         self.assertEqual(summary["unmoved"], 10)
-        self.assertEqual(summary["beatCloseP"], 25.0)  # 5 of 20, as computed
-        self.assertEqual(summary["picks"], 20)
+        self.assertEqual(summary["beatCloseP"], 50.0)
+        self.assertEqual(summary["picks"], 20, "all twenty are still observations")
 
     def test_the_median_is_reported_and_survives_a_skewed_mean(self) -> None:
         """The exact trap in the live data: mean near zero, median clearly negative."""
@@ -349,6 +363,113 @@ class PriceHistoryTests(unittest.TestCase):
         source = Path(accuracy_tracker.__file__).read_text(encoding="utf-8")
         self.assertIn('"openingOddsAt": opening_at', source)
         self.assertIn('"priceHistory": price_history', source)
+
+
+class UnmovedLinesAreNotDefeatsTests(unittest.TestCase):
+    """A line that never moved is no evidence, and was being read as bad news.
+
+    Found 14 Aug by probing the arithmetic rather than the data. Thirty picks
+    on lines that all held steady scored `beatCloseP` 0.0% and
+    `worseThanCoinFlip` True -- a verdict that reaches the board's standing
+    caveat, its CLV card and its "known problem" panel. Nothing had moved; that
+    is an absence of evidence, not proof the model is picking badly.
+
+    Live it was only 3 picks in 139, so it never drove the headline. It would
+    have, in any market thin enough that prices sit still.
+    """
+
+    @staticmethod
+    def _pick(clv):
+        return {"clvPct": clv, "pickOddsFrozenAt": "t", "league": "mlb"}
+
+    def test_a_market_that_never_moves_claims_nothing(self) -> None:
+        summary = clv_summary([self._pick(0.0)] * 30)
+        self.assertEqual(summary["picks"], 30)
+        self.assertEqual(summary["unmoved"], 30)
+        self.assertIsNone(summary["beatCloseP"])
+        self.assertIsNone(summary["worseThanCoinFlip"])
+        self.assertIsNone(summary["beatsCoinFlip"])
+
+    def test_ties_leave_the_rate_rather_than_dragging_it_down(self) -> None:
+        """8 of 10 moved, 4 of those in our favour: 50%, not 40%."""
+        picks = [self._pick(1.0)] * 4 + [self._pick(-1.0)] * 4 + [self._pick(0.0)] * 2
+        summary = clv_summary(picks)
+        self.assertEqual(summary["beatCloseP"], 50.0)
+        self.assertEqual(summary["unmoved"], 2)
+        self.assertFalse(summary["worseThanCoinFlip"])
+
+    def test_the_error_bar_shrinks_to_the_decided_sample(self) -> None:
+        """Ten picks with eight decided is an eight-pick error bar."""
+        import math
+
+        picks = [self._pick(1.0)] * 4 + [self._pick(-1.0)] * 4 + [self._pick(0.0)] * 2
+        summary = clv_summary(picks)
+        self.assertAlmostEqual(
+            summary["beatCloseStdErrPct"], round(math.sqrt(0.25 / 8) * 100, 1), places=1
+        )
+
+    def test_the_median_still_counts_every_pick(self) -> None:
+        """An unmoved line is a real observation of the distribution, just not
+        of the win/loss rate."""
+        summary = clv_summary([self._pick(0.0)] * 30)
+        self.assertEqual(summary["medianPct"], 0.0)
+        self.assertEqual(summary["picks"], 30)
+
+    def test_a_genuinely_bad_record_is_still_called_bad(self) -> None:
+        """The fix must not disarm the detector it was found inside."""
+        picks = [self._pick(1.0)] * 30 + [self._pick(-1.0)] * 70 + [self._pick(0.0)] * 5
+        self.assertTrue(clv_summary(picks)["worseThanCoinFlip"])
+
+
+class FeatureMergeTests(unittest.TestCase):
+    """A provider blip must not overwrite what an earlier build already knew.
+
+    Pre-game the feature vector was replaced wholesale every build, so a run
+    that lost a provider wrote None over values an earlier run had recorded.
+    Survivable while every build recomputed from scratch; not survivable once
+    features freeze at first pitch, because the last pre-game build then decides
+    the row permanently and an outage in the final hour poisons it for good.
+
+    Exactly the defect already fixed for prices one field over.
+    """
+
+    @staticmethod
+    def _merge(previous, current):
+        from accuracy_tracker import _merge_features
+
+        return _merge_features(previous, current)
+
+    def test_a_gap_never_overwrites_a_known_value(self) -> None:
+        rich = {"homePower": 0.6, "eloEdge": 0.2}
+        thin = {"homePower": None, "eloEdge": None}
+        self.assertEqual(self._merge(rich, thin), rich)
+
+    def test_a_newer_value_still_wins(self) -> None:
+        """Markets move; the freshest number is the right one."""
+        merged = self._merge({"impliedHome": 55.0}, {"impliedHome": 57.0})
+        self.assertEqual(merged["impliedHome"], 57.0)
+
+    def test_a_field_only_the_new_build_has_is_added(self) -> None:
+        self.assertEqual(self._merge({"a": 1}, {"a": None, "b": 2}), {"a": 1, "b": 2})
+
+    def test_coverage_only_grows(self) -> None:
+        first = {"a": 1, "b": None}
+        second = {"a": None, "b": 2, "c": 3}
+        merged = self._merge(first, second)
+        self.assertEqual(merged, {"a": 1, "b": 2, "c": 3})
+
+    def test_missing_input_on_either_side_is_handled(self) -> None:
+        self.assertEqual(self._merge(None, {"a": 1}), {"a": 1})
+        self.assertEqual(self._merge({"a": 1}, None), {"a": 1})
+        self.assertIsNone(self._merge(None, None))
+
+    def test_the_tracker_uses_it(self) -> None:
+        from pathlib import Path
+
+        source = (Path(__file__).resolve().parent.parent / "accuracy_tracker.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("pinned_features = _merge_features(", source)
 
 
 class BoardReportsNegativeClvTests(unittest.TestCase):
