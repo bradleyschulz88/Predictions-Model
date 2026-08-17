@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-17T20:42:54.679031+00:00",
+  "updatedAt": "2026-08-17T21:44:24.782484+00:00",
   "summary": {
     "last7Days": {
       "correct": 279,
@@ -7,7 +7,7 @@
       "pct": 63.4,
       "units": 7.899,
       "roiPct": 1.8,
-      "pending": 41,
+      "pending": 42,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 61.5,
       "units": 14.838,
       "roiPct": 1.5,
-      "pending": 41,
+      "pending": 42,
       "voided": 11
     },
     "allTimePriced": {
@@ -5653,6 +5653,35 @@
       "confidence": 57.8,
       "rawConfidence": 57.8,
       "rawHomeWinPct": 42.2,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-18"
+    },
+    {
+      "eventId": "401816574",
+      "league": "mlb",
+      "scheduleDate": "2026-08-18",
+      "matchup": "New York Yankees @ Baltimore Orioles",
+      "predicted": "New York Yankees",
+      "predictedSide": "away",
+      "outcomeLabel": "New York Yankees to win",
+      "confidence": 55.9,
+      "rawConfidence": 55.9,
+      "rawHomeWinPct": 44.1,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -38532,7 +38561,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
