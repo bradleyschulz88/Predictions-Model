@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-17T06:09:51.114399+00:00",
+  "updatedAt": "2026-08-17T07:18:35.384160+00:00",
   "summary": {
     "last7Days": {
       "correct": 278,
@@ -7,7 +7,7 @@
       "pct": 63.3,
       "units": 7.037,
       "roiPct": 1.6,
-      "pending": 39,
+      "pending": 38,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 61.5,
       "units": 13.976,
       "roiPct": 1.4,
-      "pending": 39,
+      "pending": 38,
       "voided": 11
     },
     "allTimePriced": {
@@ -5852,35 +5852,6 @@
       "confidence": 69.9,
       "rawConfidence": 69.9,
       "rawHomeWinPct": 69.9,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-17"
-    },
-    {
-      "eventId": "401816562",
-      "league": "mlb",
-      "scheduleDate": "2026-08-17",
-      "matchup": "Arizona Diamondbacks @ Boston Red Sox",
-      "predicted": "Boston Red Sox",
-      "predictedSide": "home",
-      "outcomeLabel": "Boston Red Sox to win",
-      "confidence": 52.9,
-      "rawConfidence": 52.9,
-      "rawHomeWinPct": 52.9,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -38246,7 +38217,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
