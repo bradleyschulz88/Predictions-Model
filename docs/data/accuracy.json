@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-17T22:04:09.086875+00:00",
+  "updatedAt": "2026-08-17T22:42:13.641853+00:00",
   "summary": {
     "last7Days": {
       "correct": 279,
@@ -7,7 +7,7 @@
       "pct": 63.4,
       "units": 7.899,
       "roiPct": 1.8,
-      "pending": 42,
+      "pending": 41,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 61.5,
       "units": 14.838,
       "roiPct": 1.5,
-      "pending": 42,
-      "voided": 11
+      "pending": 41,
+      "voided": 12
     },
     "allTimePriced": {
       "correct": 448,
@@ -5943,35 +5943,6 @@
       "confidence": 52.7,
       "rawConfidence": 52.7,
       "rawHomeWinPct": 52.7,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-17"
-    },
-    {
-      "eventId": "401816563",
-      "league": "mlb",
-      "scheduleDate": "2026-08-17",
-      "matchup": "Baltimore Orioles @ Tampa Bay Rays",
-      "predicted": "Tampa Bay Rays",
-      "predictedSide": "home",
-      "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 69.9,
-      "rawConfidence": 69.9,
-      "rawHomeWinPct": 69.9,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -38244,14 +38215,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-17"
+      "date": "2026-08-17",
+      "voidReason": "voided"
     },
     "401816565": {
       "eventId": "401816565",
