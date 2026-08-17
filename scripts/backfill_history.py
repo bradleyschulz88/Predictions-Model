@@ -61,6 +61,7 @@ sys.path.insert(0, str(ROOT))
 from data_providers.park_factors import park_run_environment  # noqa: E402
 from data_providers.travel import travel_edge  # noqa: E402
 from espn_client import fetch_scoreboard, parse_scoreboard  # noqa: E402
+from shared_utils import write_json  # noqa: E402
 
 HISTORY_FILE = "history_features.json"
 
@@ -337,10 +338,7 @@ def main() -> int:
         existing[row["eventId"]] = row
 
     data_dir.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        json.dumps({"rows": sorted(existing.values(), key=lambda r: r["date"])}, indent=2),
-        encoding="utf-8",
-    )
+    write_json(path, {"rows": sorted(existing.values(), key=lambda r: r["date"])})
 
     home_wins = sum(row["homeWon"] for row in rows)
     print(f"  {len(rows)} usable games this run; {len(existing)} total in {path.name}")

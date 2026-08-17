@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import json
+import math
 import re
+from pathlib import Path
+from typing import Any
 
 
 def parse_record(summary: str | None) -> tuple[int, ...] | None:
@@ -119,3 +123,52 @@ def format_win_pct(record: str | None) -> str:
     """Format a record string as a win percentage string (e.g., '66.7%')."""
     pct = win_pct_from_record(record)
     return f"{pct * 100:.1f}%"
+
+
+# --------------------------------------------------------------------------
+# Writing JSON the browser can actually read
+# --------------------------------------------------------------------------
+#
+# `json.dumps` emits the bare literals `NaN`, `Infinity` and `-Infinity` by
+# default. None of the three is JSON: `JSON.parse` throws on the first one it
+# meets. So a single non-finite float anywhere in a payload does not render a
+# dash where a number should be -- it takes down the whole page that reads the
+# file, because nothing after the throw runs.
+#
+# The build had twelve separate `json.dumps` calls and no shared writer, so
+# that failure was one arithmetic accident away in twelve places. It is
+# reachable: `_accumulate_summary` sums `float(item.get("units") or 0.0)` over
+# stored rows, and a NaN in any one of them poisons the bucket total, the ROI
+# derived from it, and then `accuracy.json`. NaN also round-trips -- Python's
+# loader accepts the literal it wrote -- so a bad value persists across builds
+# rather than clearing on the next one.
+#
+# Replacing the value with null loses one figure and the page shows a dash.
+# That is the right trade against losing the page.
+
+
+def json_safe(value: Any) -> Any:
+    """Recursively replace non-finite floats with None. Everything else passes."""
+    if isinstance(value, float):
+        return value if math.isfinite(value) else None
+    if isinstance(value, dict):
+        return {key: json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [json_safe(item) for item in value]
+    return value
+
+
+def dumps_json(payload: Any, *, indent: int | None = 2, default: Any = str) -> str:
+    """`json.dumps` that cannot emit a document the browser refuses to parse.
+
+    `allow_nan=False` is kept on deliberately after the sanitising pass. It
+    should now be unreachable, and if it ever raises, the sanitiser missed a
+    path -- which is worth a loud failure in a build rather than a quiet blank
+    page for a reader.
+    """
+    return json.dumps(json_safe(payload), indent=indent, default=default, allow_nan=False)
+
+
+def write_json(path: Path | str, payload: Any, *, indent: int | None = 2, default: Any = str) -> None:
+    """Write a payload as JSON that `JSON.parse` will accept."""
+    Path(path).write_text(dumps_json(payload, indent=indent, default=default), encoding="utf-8")

@@ -20,6 +20,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Protocol, Sequence
 
+from shared_utils import write_json
+
 WEIGHTS_FILE = "model_weights.json"
 ABLATION_FILE = "ablation.json"
 
@@ -1278,7 +1280,7 @@ def ablate_and_write(
         # seven others". These two can. See ablate_each.
         "perFeature": ablate_each(samples),
     }
-    (data_dir / ABLATION_FILE).write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    write_json(data_dir / ABLATION_FILE, payload)
     return payload
 
 
@@ -1298,7 +1300,7 @@ def fit_and_write(data_dir: Path, *, l2: float | None = None) -> dict[str, Any]:
     chosen_l2 = choose_anchored_penalties(samples) if l2 is None else l2
     payload = fit_from_observations(samples, l2=chosen_l2, split_diff_centre=centre)
     payload["walkForward"] = walk_forward_scores(samples, l2=chosen_l2)
-    (data_dir / WEIGHTS_FILE).write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    write_json(data_dir / WEIGHTS_FILE, payload)
     return payload
 
 

@@ -54,6 +54,7 @@ from typing import Any
 from espn_client import ESPN_USER_AGENT
 from market import is_valid_american_odds
 from sbr_client import SBRClientError, get_text
+from shared_utils import write_json
 from sports_config import LeagueConfig, get_league
 
 _PRICE_IN_PARENS = __import__('re').compile(r'\(([+-]\d+)\)')
@@ -457,7 +458,7 @@ def save_side_market_cache() -> int:
     }
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps({"entries": entries}), encoding="utf-8")
+        write_json(path, {"entries": entries}, indent=None)
     except OSError:
         return 0
     return len(entries)

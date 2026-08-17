@@ -75,7 +75,7 @@ _EVALUATION_REPORT: dict[str, Any] | None = None
 MIN_KELLY_BAND_SAMPLE = 30
 
 
-def american_odds_to_implied(odds: int | float) -> float | None:
+def american_odds_to_implied(odds: int | float | str | None) -> float | None:
     """Implied probability of an American price, or None if it is not one.
 
     Returns None rather than a number for anything outside the valid range --
@@ -384,7 +384,46 @@ def _probability_edge(
     }
 
 
+def _total_side_price(current: dict[str, Any], side: str) -> int | float | None:
+    """One side's price off a Total line, in either shape a source writes it.
+
+    Two disjoint conventions are in use and each parser here only understood
+    one of them, which is why this had to be pulled out and shared:
+
+      "o8.5 (-108)"   ESPN core, the Odds API and ESPN enrichment all build
+                      the line and its price into a single display string.
+      -108            SportsBookReview keeps them in separate fields.
+
+    `_line_odds_value` handles only the second: `int("o8.5 (-108)")` raises and
+    the key is skipped, so on the parenthetical shape it returns None. The
+    parenthetical shape is what every current producer writes.
+    """
+    direct = _line_odds_value(current, side, f"{side}Odds")
+    if direct is not None:
+        return direct
+    for key in (side, f"{side}Odds"):
+        value = current.get(key)
+        if value is None:
+            continue
+        match = _PRICE_IN_PARENS.search(str(value))
+        if match and is_valid_american_odds(match.group(1)):
+            return int(match.group(1))
+    return None
+
+
 def compute_total_implied_probabilities(lines: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """The market's own de-vigged over/under, averaged across books.
+
+    Not currently called by anything. It arrived with the initial import, has
+    never had a caller or a test, and until now could not read the line shape
+    every producer writes -- so wiring it up would have returned None on every
+    game and looked like missing data rather than a broken parser.
+
+    Kept rather than deleted because the job it does is one the totals model
+    still needs: `predict_total` starts from a flat 0.5 and never anchors to
+    the market, which is precisely the defect the moneyline path was rebuilt to
+    remove.
+    """
     overs: list[float] = []
     unders: list[float] = []
     for line in lines or []:
@@ -393,20 +432,8 @@ def compute_total_implied_probabilities(lines: list[dict[str, Any]]) -> dict[str
         current = line.get("currentLine") or line.get("openingLine")
         if not isinstance(current, dict):
             continue
-        over_odds = _line_odds_value(current, "over", "overOdds")
-        under_odds = _line_odds_value(current, "under", "underOdds")
-        if over_odds is None or under_odds is None:
-            continue
-        if isinstance(over_odds, str):
-            over_match = re.search(r"\(([+-]?\d+)\)", over_odds)
-            under_match = re.search(r"\(([+-]?\d+)\)", under_odds)
-            if not over_match or not under_match:
-                continue
-            over_imp = american_odds_to_implied(int(over_match.group(1)))
-            under_imp = american_odds_to_implied(int(under_match.group(1)))
-        else:
-            over_imp = american_odds_to_implied(over_odds)
-            under_imp = american_odds_to_implied(under_odds)
+        over_imp = american_odds_to_implied(_total_side_price(current, "over"))
+        under_imp = american_odds_to_implied(_total_side_price(current, "under"))
         if over_imp is None or under_imp is None:
             continue
         total = over_imp + under_imp

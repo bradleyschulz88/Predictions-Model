@@ -19,6 +19,7 @@ from calibration_params import compute_calibration_params, compute_platt_params 
 from mlb_predictions import apply_predictions  # noqa: E402
 import model_fit  # noqa: E402
 from scripts import evaluation  # noqa: E402
+from shared_utils import dumps_json, write_json  # noqa: E402
 
 CALIBRATION_FILE = "calibration.json"
 EVALUATION_FILE = "evaluation.json"
@@ -199,7 +200,7 @@ def summarize_predictions(data_dir: Path) -> dict[str, Any]:
 def write_calibration_report(data_dir: Path) -> dict[str, Any]:
     report = summarize_predictions(data_dir)
     output_path = data_dir / CALIBRATION_FILE
-    output_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    write_json(output_path, report)
     return report
 
 
@@ -273,7 +274,7 @@ def _fitted_walk_forward(data_dir: Path) -> dict[str, Any]:
 
 def write_evaluation_report(data_dir: Path) -> dict[str, Any]:
     report = build_evaluation_report(data_dir)
-    (data_dir / EVALUATION_FILE).write_text(json.dumps(report, indent=2), encoding="utf-8")
+    write_json(data_dir / EVALUATION_FILE, report)
     return report
 
 
@@ -491,7 +492,7 @@ def main() -> int:
     if args.evaluate:
         report = write_evaluation_report(args.data_dir) if args.write else build_evaluation_report(args.data_dir)
         if args.json:
-            print(json.dumps(report, indent=2))
+            print(dumps_json(report))
         else:
             print_evaluation(report)
             if args.write:
@@ -503,13 +504,13 @@ def main() -> int:
             print("Snapshot replay requires --date YYYY-MM-DD", file=sys.stderr)
             return 2
         report = replay_snapshot(args.data_dir, league=args.league, schedule_date=args.schedule_date)
-        print(json.dumps(report, indent=2))
+        print(dumps_json(report))
         return 0
 
     report = write_calibration_report(args.data_dir) if args.write else summarize_predictions(args.data_dir)
     if args.json or args.write:
         if not args.write:
-            print(json.dumps(report, indent=2))
+            print(dumps_json(report))
         else:
             print(f"Wrote {args.data_dir / CALIBRATION_FILE}")
         return 0

@@ -21,6 +21,8 @@ import math
 from pathlib import Path
 from typing import Any, Iterable
 
+from shared_utils import write_json
+
 START_RATING = 1500.0
 
 # K controls how fast ratings move. Baseball is mostly noise -- even the best
@@ -247,5 +249,5 @@ def build_and_write(data_dir: Path) -> dict[str, Any]:
             for league, table in sorted(tables.items())
         },
     }
-    (data_dir / RATINGS_FILE).write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    write_json(data_dir / RATINGS_FILE, payload)
     return payload
