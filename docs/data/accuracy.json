@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-19T18:03:34.773087+00:00",
+  "updatedAt": "2026-08-19T18:57:29.178914+00:00",
   "summary": {
     "last7Days": {
       "correct": 268,
@@ -17,7 +17,7 @@
       "units": 16.184,
       "roiPct": 1.6,
       "pending": 71,
-      "voided": 14
+      "voided": 15
     },
     "allTimePriced": {
       "correct": 466,
@@ -6241,13 +6241,13 @@
       "date": "2026-08-21"
     },
     {
-      "eventId": "401873285",
+      "eventId": "401873286",
       "league": "nfl",
       "scheduleDate": "2026-08-20",
-      "matchup": "San Francisco 49ers @ Los Angeles Chargers",
-      "predicted": "San Francisco 49ers",
+      "matchup": "Las Vegas Raiders @ Houston Texans",
+      "predicted": "Las Vegas Raiders",
       "predictedSide": "away",
-      "outcomeLabel": "San Francisco 49ers to win",
+      "outcomeLabel": "Las Vegas Raiders to win",
       "confidence": 51.3,
       "rawConfidence": 51.3,
       "rawHomeWinPct": 48.7,
@@ -6270,16 +6270,16 @@
       "date": "2026-08-20"
     },
     {
-      "eventId": "401857160",
-      "league": "wnba",
+      "eventId": "401873285",
+      "league": "nfl",
       "scheduleDate": "2026-08-20",
-      "matchup": "Atlanta Dream @ Los Angeles Sparks",
-      "predicted": "Atlanta Dream",
+      "matchup": "San Francisco 49ers @ Los Angeles Chargers",
+      "predicted": "San Francisco 49ers",
       "predictedSide": "away",
-      "outcomeLabel": "Atlanta Dream to win",
-      "confidence": 67.4,
-      "rawConfidence": 67.4,
-      "rawHomeWinPct": 32.6,
+      "outcomeLabel": "San Francisco 49ers to win",
+      "confidence": 51.3,
+      "rawConfidence": 51.3,
+      "rawHomeWinPct": 48.7,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -40118,14 +40118,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-19"
+      "date": "2026-08-19",
+      "voidReason": "voided"
     },
     "401816586": {
       "eventId": "401816586",
@@ -40812,7 +40813,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
