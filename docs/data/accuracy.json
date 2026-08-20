@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-20T22:47:35.984997+00:00",
+  "updatedAt": "2026-08-20T23:41:21.093019+00:00",
   "summary": {
     "last7Days": {
       "correct": 269,
@@ -16,8 +16,8 @@
       "pct": 61.6,
       "units": 16.031,
       "roiPct": 1.6,
-      "pending": 72,
-      "voided": 11
+      "pending": 71,
+      "voided": 12
     },
     "allTimePriced": {
       "correct": 478,
@@ -145,7 +145,7 @@
         "worseThanCoinFlip": true,
         "unmoved": 8
       },
-      "provisionalPicks": 150,
+      "provisionalPicks": 151,
       "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started, over the whole graded record rather than the recent window. Median is the headline figure; the mean is pulled by a few large favourable moves."
     },
     "totals": {
@@ -41270,14 +41270,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-20"
+      "date": "2026-08-20",
+      "voidReason": "voided"
     },
     "401816609": {
       "eventId": "401816609",
@@ -43975,6 +43976,35 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-23"
+    },
+    "401879318": {
+      "eventId": "401879318",
+      "league": "epl",
+      "scheduleDate": "2026-08-24",
+      "matchup": "Chelsea @ Fulham",
+      "predicted": "Chelsea",
+      "predictedSide": "away",
+      "outcomeLabel": "Chelsea to win",
+      "confidence": 45.7,
+      "rawConfidence": 67.1,
+      "rawHomeWinPct": 32.9,
+      "probabilityMethod": "fitted",
+      "evPct": -10.85,
+      "kellyPct": 0.0,
+      "pickOdds": -105,
+      "openingOdds": -105,
+      "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": false,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-24"
     }
   },
   "skippedDates": []
