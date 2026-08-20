@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-19T23:38:32.204427+00:00",
+  "updatedAt": "2026-08-20T00:00:37.865559+00:00",
   "summary": {
     "last7Days": {
       "correct": 269,
@@ -16,7 +16,7 @@
       "pct": 61.4,
       "units": 12.838,
       "roiPct": 1.3,
-      "pending": 68,
+      "pending": 67,
       "voided": 15
     },
     "allTimePriced": {
@@ -40446,16 +40446,17 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-19"
+      "date": "2026-08-19",
+      "voidReason": "voided"
     },
     "401816598": {
       "eventId": "401816598",
