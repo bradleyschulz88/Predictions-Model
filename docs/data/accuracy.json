@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-23T10:43:01.765491+00:00",
+  "updatedAt": "2026-08-23T11:04:28.342021+00:00",
   "summary": {
     "last7Days": {
       "correct": 285,
@@ -7,7 +7,7 @@
       "pct": 66.0,
       "units": 17.464,
       "roiPct": 4.0,
-      "pending": 47,
+      "pending": 46,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 62.0,
       "units": 21.427,
       "roiPct": 2.0,
-      "pending": 47,
-      "voided": 11
+      "pending": 46,
+      "voided": 12
     },
     "allTimePriced": {
       "correct": 514,
@@ -6412,35 +6412,6 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-23"
-    },
-    {
-      "eventId": "1133689",
-      "league": "afl",
-      "scheduleDate": "2026-08-23",
-      "matchup": "Hawthorn @ West Coast Eagles",
-      "predicted": "Hawthorn",
-      "predictedSide": "away",
-      "outcomeLabel": "Hawthorn to win",
-      "confidence": 94.0,
-      "rawConfidence": 94.0,
-      "rawHomeWinPct": 6.0,
-      "probabilityMethod": "fitted",
-      "evPct": 4.34,
-      "kellyPct": 9.86,
-      "pickOdds": -909,
-      "openingOdds": -909,
-      "openingSide": "away",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": 0.0,
       "status": "pending",
       "actual": null,
       "correct": null,
@@ -44705,14 +44676,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-23"
+      "date": "2026-08-23",
+      "voidReason": "voided"
     },
     "401879297": {
       "eventId": "401879297",
