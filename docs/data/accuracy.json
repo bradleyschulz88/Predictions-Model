@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-23T05:51:57.404791+00:00",
+  "updatedAt": "2026-08-23T07:03:34.214960+00:00",
   "summary": {
     "last7Days": {
       "correct": 284,
@@ -7,7 +7,7 @@
       "pct": 65.9,
       "units": 16.617,
       "roiPct": 3.9,
-      "pending": 48,
+      "pending": 47,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 62.0,
       "units": 20.58,
       "roiPct": 1.9,
-      "pending": 48,
-      "voided": 11
+      "pending": 47,
+      "voided": 12
     },
     "allTimePriced": {
       "correct": 513,
@@ -6434,35 +6434,6 @@
       "pickOdds": -909,
       "openingOdds": -909,
       "openingSide": "away",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-23"
-    },
-    {
-      "eventId": "1133687",
-      "league": "afl",
-      "scheduleDate": "2026-08-23",
-      "matchup": "North Melbourne @ Sydney Swans",
-      "predicted": "Sydney Swans",
-      "predictedSide": "home",
-      "outcomeLabel": "Sydney Swans to win",
-      "confidence": 62.6,
-      "rawConfidence": 62.6,
-      "rawHomeWinPct": 62.6,
-      "probabilityMethod": "fitted",
-      "evPct": 39.62,
-      "kellyPct": 3.79,
-      "pickOdds": 123,
-      "openingOdds": 123,
-      "openingSide": "home",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
@@ -44680,14 +44651,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-23"
+      "date": "2026-08-23",
+      "voidReason": "voided"
     },
     "1133689": {
       "eventId": "1133689",
