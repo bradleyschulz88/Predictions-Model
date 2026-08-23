@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-23T15:38:49.810293+00:00",
+  "updatedAt": "2026-08-23T16:01:51.629254+00:00",
   "summary": {
     "last7Days": {
       "correct": 287,
@@ -7,7 +7,7 @@
       "pct": 66.0,
       "units": 17.457,
       "roiPct": 4.0,
-      "pending": 47,
+      "pending": 46,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 62.1,
       "units": 21.42,
       "roiPct": 2.0,
-      "pending": 47,
+      "pending": 46,
       "voided": 11
     },
     "allTimePriced": {
@@ -6155,35 +6155,6 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-23"
-    },
-    {
-      "eventId": "401816651",
-      "league": "mlb",
-      "scheduleDate": "2026-08-23",
-      "matchup": "Chicago Cubs @ Seattle Mariners",
-      "predicted": "Chicago Cubs",
-      "predictedSide": "away",
-      "outcomeLabel": "Chicago Cubs to win",
-      "confidence": 56.7,
-      "rawConfidence": 56.7,
-      "rawHomeWinPct": 43.3,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -44798,14 +44769,15 @@
       "pickOddsFrozenAt": null,
       "published": false,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-23"
+      "date": "2026-08-23",
+      "voidReason": "voided"
     },
     "401873297": {
       "eventId": "401873297",
@@ -45260,7 +45232,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
