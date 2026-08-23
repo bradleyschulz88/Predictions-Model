@@ -177,6 +177,15 @@ MAX_PLAUSIBLE_FEATURE_AUC = 0.75
 # before its own home-field estimate outweighs the pooled one.
 LEAGUE_INTERCEPT_PRIOR = 50.0
 
+# Below this a league gets no intercept of its own at all. The soft threshold
+# in _league_intercepts is measured in standard errors, and a standard error
+# needs at least two observations to exist -- with one game EPL produced a raw
+# residual of +0.9996 and nothing to compare it against. 10 is well under the
+# 30 this codebase uses for "enough to conclude from", because the soft
+# threshold is doing the real work; this only rules out samples too small to
+# threshold at all.
+MIN_LEAGUE_INTERCEPT_SAMPLE = 10
+
 # Games a club needs before its record carries half the weight of the league
 # mean in strengthDiff. Ten is about a sixth of a basketball season, a
 # fortnight of baseball and most of an NFL year -- which is the right shape,
@@ -963,6 +972,33 @@ def _league_intercepts(
 
     A league with 46 graded games should barely move its own intercept; one with
     478 should move it most of the way.
+
+    Count-based shrinkage alone was not enough, and the ordering of the shipped
+    intercepts said so plainly -- they came out almost perfectly inverse to
+    sample size:
+
+        nfl        21 rows   -0.2722        afl        73 rows   +0.0077
+        worldcup   60 rows   +0.1884        mlb       824 rows   -0.0137
+        wnba      164 rows   +0.1333
+
+    `n/(n+50)` does shrink a thin league harder, but a thin league's raw
+    estimate is also enormous -- NFL's was -0.9203 -- and 30% of an enormous
+    number is still an edge rather than a correction. It tripped
+    check_regression's 0.25 ceiling and failed every scheduled build.
+
+    The missing term is the estimate's own uncertainty. `evaluation.py` already
+    reports NFL's home bias as "+18.8 +/- 12.5pts -- within noise" off the same
+    data, so the fitter was writing a coefficient the project's own reporting
+    called noise. Soft-thresholding at one standard error is the standard
+    estimator for a mean that might be zero: it keeps only the part of the
+    residual that exceeds what chance would produce, and returns exactly zero
+    when nothing does. The count shrinkage still applies on top.
+
+    NFL's residual is the case worth naming. It is marginally significant taken
+    alone (z=2.25) but it is 21 PRESEASON games, tested alongside five other
+    leagues -- one of six clearing p<0.05 by chance about a quarter of the
+    time. Preseason rests starters and does not carry the regular season's home
+    advantage, which is the same reason `strengthGames` exists.
     """
     by_league: dict[str, list[Sample]] = {}
     for sample in samples:
@@ -970,21 +1006,33 @@ def _league_intercepts(
 
     intercepts: dict[str, float] = {}
     for league, league_samples in by_league.items():
-        residual_sum = 0.0
-        count = 0
+        residuals: list[float] = []
         for sample in league_samples:
             block = anchored if (sample.has_market and anchored) else standalone
             if not block:
                 continue
             row = to_row(sample.values, block["features"], block["means"], block["scales"])
-            predicted = predict_row(block["weights"], row)
-            residual_sum += sample.label - predicted
-            count += 1
-        if not count:
+            residuals.append(sample.label - predict_row(block["weights"], row))
+
+        count = len(residuals)
+        # One game cannot estimate its own spread, so it cannot clear a
+        # threshold built from one either -- it would keep its full residual.
+        if count < MIN_LEAGUE_INTERCEPT_SAMPLE:
             continue
+
+        mean_residual = sum(residuals) / count
+        variance = sum((value - mean_residual) ** 2 for value in residuals) / (count - 1)
+        std_error = math.sqrt(variance / count)
+
+        # Keep only what exceeds the noise, and keep its sign.
+        excess = max(0.0, abs(mean_residual) - std_error)
+        if excess <= 0.0:
+            intercepts[league] = 0.0
+            continue
+        signed = math.copysign(excess, mean_residual)
+
         # One Newton step on the intercept alone, then shrink toward zero.
-        mean_residual = residual_sum / count
-        raw = mean_residual / 0.25  # 0.25 is the max of p(1-p); a conservative step.
+        raw = signed / 0.25  # 0.25 is the max of p(1-p); a conservative step.
         shrink = count / (count + LEAGUE_INTERCEPT_PRIOR)
         intercepts[league] = round(raw * shrink, 4)
     return intercepts
