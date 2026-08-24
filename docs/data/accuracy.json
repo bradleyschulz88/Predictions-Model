@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-24T20:49:33.779331+00:00",
+  "updatedAt": "2026-08-24T21:46:53.359432+00:00",
   "summary": {
     "last7Days": {
       "correct": 292,
@@ -97,10 +97,10 @@
       "bestLoss": 4
     },
     "closingLineValue": {
-      "picks": 343,
-      "medianPct": -0.66,
+      "picks": 344,
+      "medianPct": -0.67,
       "avgPct": -0.68,
-      "beatCloseP": 36.6,
+      "beatCloseP": 36.4,
       "beatCloseStdErrPct": 2.8,
       "beatsCoinFlip": false,
       "worseThanCoinFlip": true,
@@ -117,11 +117,11 @@
           "unmoved": 3
         },
         "epl": {
-          "picks": 7,
+          "picks": 8,
           "medianPct": 0.0,
-          "avgPct": 0.09,
-          "beatCloseP": 50.0,
-          "beatCloseStdErrPct": 25.0,
+          "avgPct": -0.23,
+          "beatCloseP": 40.0,
+          "beatCloseStdErrPct": 22.4,
           "beatsCoinFlip": false,
           "worseThanCoinFlip": false,
           "unmoved": 3
@@ -167,7 +167,7 @@
         "worseThanCoinFlip": true,
         "unmoved": 16
       },
-      "provisionalPicks": 121,
+      "provisionalPicks": 120,
       "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started, over the whole graded record rather than the recent window. Median is the headline figure; the mean is pulled by a few large favourable moves."
     },
     "totals": {
@@ -45654,26 +45654,39 @@
       "predicted": "Chelsea",
       "predictedSide": "away",
       "outcomeLabel": "Chelsea to win",
-      "confidence": 45.7,
-      "rawConfidence": 67.1,
-      "rawHomeWinPct": 32.9,
+      "confidence": 48.9,
+      "rawConfidence": 70.8,
+      "rawHomeWinPct": 29.2,
       "probabilityMethod": "fitted",
-      "evPct": -10.85,
-      "kellyPct": 0.0,
-      "pickOdds": -105,
+      "evPct": 0.15,
+      "kellyPct": 0.03,
+      "pickOdds": 105,
       "openingOdds": -105,
       "openingSide": "away",
-      "pickOddsFrozenAt": null,
+      "pickOddsFrozenAt": "2026-08-24T21:45:55.400248+00:00",
       "published": false,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-24"
+      "clvPct": -2.44,
+      "status": "graded",
+      "actual": "Chelsea",
+      "correct": true,
+      "units": 1.05,
+      "homeScore": "2",
+      "awayScore": "3",
+      "gradedAt": "2026-08-24T21:46:30.428779+00:00",
+      "date": "2026-08-24",
+      "totalResult": {
+        "line": 2.5,
+        "pickSide": "over",
+        "actual": 5,
+        "outcome": "win",
+        "odds": -115,
+        "units": 0.87,
+        "marketOverPct": 51.1,
+        "modelOverPct": 50.0,
+        "publishedOverPct": 51.1,
+        "marketAnchored": true
+      },
+      "spreadResult": null
     },
     "401816655": {
       "eventId": "401816655",
