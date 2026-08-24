@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-23T23:39:23.013444+00:00",
+  "updatedAt": "2026-08-24T00:00:13.426757+00:00",
   "summary": {
     "last7Days": {
       "correct": 299,
@@ -7,7 +7,7 @@
       "pct": 66.7,
       "units": 24.093,
       "roiPct": 5.4,
-      "pending": 39,
+      "pending": 38,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 62.4,
       "units": 28.056,
       "roiPct": 2.6,
-      "pending": 39,
-      "voided": 12
+      "pending": 38,
+      "voided": 13
     },
     "allTimePriced": {
       "correct": 528,
@@ -6155,35 +6155,6 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-23"
-    },
-    {
-      "eventId": "401857168",
-      "league": "wnba",
-      "scheduleDate": "2026-08-23",
-      "matchup": "Indiana Fever @ Chicago Sky",
-      "predicted": "Indiana Fever",
-      "predictedSide": "away",
-      "outcomeLabel": "Indiana Fever to win",
-      "confidence": 69.6,
-      "rawConfidence": 69.6,
-      "rawHomeWinPct": 30.4,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -44687,14 +44658,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-23"
+      "date": "2026-08-23",
+      "voidReason": "voided"
     },
     "401857169": {
       "eventId": "401857169",
