@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-24T13:16:57.774570+00:00",
+  "updatedAt": "2026-08-24T14:27:37.640757+00:00",
   "summary": {
     "last7Days": {
       "correct": 292,
@@ -167,7 +167,7 @@
         "worseThanCoinFlip": true,
         "unmoved": 16
       },
-      "provisionalPicks": 120,
+      "provisionalPicks": 121,
       "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started, over the whole graded record rather than the recent window. Median is the headline figure; the mean is pulled by a few large favourable moves."
     },
     "totals": {
@@ -47443,6 +47443,35 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-08-27"
+    },
+    "1133699": {
+      "eventId": "1133699",
+      "league": "afl",
+      "scheduleDate": "2026-08-28",
+      "matchup": "Collingwood @ Western Bulldogs",
+      "predicted": "Western Bulldogs",
+      "predictedSide": "home",
+      "outcomeLabel": "Western Bulldogs to win",
+      "confidence": 50.0,
+      "rawConfidence": 50.0,
+      "rawHomeWinPct": 50.0,
+      "probabilityMethod": "fitted",
+      "evPct": 2.1,
+      "kellyPct": 0.0,
+      "pickOdds": 104,
+      "openingOdds": 104,
+      "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": false,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-28"
     }
   },
   "skippedDates": []
