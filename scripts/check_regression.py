@@ -52,6 +52,10 @@ MIN_DIVERGENCE_SAMPLE = 10
 LOG_LOSS_TOLERANCE = 0.02
 BRIER_TOLERANCE = 0.01
 
+# Warn in the build log once this much of either tolerance is spent. A gate
+# that only speaks when it fails gives no chance to act before it does.
+BUDGET_WARN_PCT = 60.0
+
 # A model that cannot beat a coin flip is broken regardless of the baseline.
 COIN_FLIP_LOG_LOSS = 0.6931
 
@@ -181,17 +185,54 @@ def check(*, update: bool = False) -> int:
         print("\nIf the change is intended, re-run with --update-baseline and commit the result.")
         return 1
 
-    print(f"OK: within tolerance of baseline (logloss {baseline['logLoss']:.4f}, brier {baseline['brier']:.4f})")
+    # Say how close, not just that it passed. "OK: within tolerance" reads the
+    # same at 5% of the budget as at 95%, so the first sign of a slow drift is
+    # the day it fails -- which is how a red build arrives with no warning. On
+    # 2026-08-22 thirty consecutive runs failed on gates that had been creeping
+    # toward their limits in silence.
+    log_used = (log_loss - baseline["logLoss"]) / LOG_LOSS_TOLERANCE * 100
+    brier_used = (brier - baseline["brier"]) / BRIER_TOLERANCE * 100
+    print(
+        f"OK: within tolerance of baseline (logloss {baseline['logLoss']:.4f} @ n="
+        f"{baseline.get('n', '?')}, brier {baseline['brier']:.4f})"
+    )
+    print(
+        f"    budget used: logloss {max(0.0, log_used):.0f}% "
+        f"(headroom {baseline['logLoss'] + LOG_LOSS_TOLERANCE - log_loss:+.4f}) · "
+        f"brier {max(0.0, brier_used):.0f}% "
+        f"(headroom {baseline['brier'] + BRIER_TOLERANCE - brier:+.4f})"
+    )
+    if max(log_used, brier_used) >= BUDGET_WARN_PCT:
+        print(
+            f"::warning::Model quality has used {max(log_used, brier_used):.0f}% of its "
+            f"regression budget. At 100% the build fails. Either the model has drifted "
+            f"or the baseline was set on an easier sample (n={baseline.get('n', '?')} "
+            f"vs {current.get('n')} now); re-run with --update-baseline if the current "
+            f"score is the honest one."
+        )
 
     # Ratchet the baseline down when the model genuinely improves, so a later
     # regression is measured against the best score achieved rather than the
     # first one recorded.
-    if log_loss < baseline["logLoss"]:
+    #
+    # Only on a sample at least as large. Walk-forward scores on different
+    # populations are not interchangeable, and the ratchet is one-way: a lucky
+    # run on a small slate would lock in a score that a larger, more
+    # representative sample may never reach again, turning the gate into a
+    # permanent failure with no bug behind it. The baseline here was recorded
+    # at n=810 while the log is now at n=950, so this is not hypothetical --
+    # it is the direction the numbers are already moving.
+    if log_loss < baseline["logLoss"] and current.get("n", 0) >= baseline.get("n", 0):
         BASELINE_FILE.write_text(
             json.dumps({"logLoss": log_loss, "brier": brier, "n": current.get("n")}, indent=2),
             encoding="utf-8",
         )
-        print(f"Improved on baseline; ratcheted to logloss {log_loss:.4f}")
+        print(f"Improved on baseline; ratcheted to logloss {log_loss:.4f} at n={current.get('n')}")
+    elif log_loss < baseline["logLoss"]:
+        print(
+            f"Better than baseline but on a smaller sample "
+            f"({current.get('n')} < {baseline.get('n')}); baseline left alone."
+        )
 
     return 0
 
