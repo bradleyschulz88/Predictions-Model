@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-25T23:39:15.802371+00:00",
+  "updatedAt": "2026-08-26T00:04:10.125805+00:00",
   "summary": {
     "last7Days": {
       "correct": 283,
@@ -7,7 +7,7 @@
       "pct": 66.7,
       "units": 19.422,
       "roiPct": 4.6,
-      "pending": 49,
+      "pending": 47,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 62.4,
       "units": 27.46,
       "roiPct": 2.5,
-      "pending": 49,
-      "voided": 17
+      "pending": 47,
+      "voided": 18
     },
     "allTimePriced": {
       "correct": 536,
@@ -6358,35 +6358,6 @@
       "date": "2026-08-25"
     },
     {
-      "eventId": "401857173",
-      "league": "wnba",
-      "scheduleDate": "2026-08-25",
-      "matchup": "Chicago Sky @ Connecticut Sun",
-      "predicted": "Chicago Sky",
-      "predictedSide": "away",
-      "outcomeLabel": "Chicago Sky to win",
-      "confidence": 53.0,
-      "rawConfidence": 53.0,
-      "rawHomeWinPct": 47.0,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-25"
-    },
-    {
       "eventId": "401816679",
       "league": "mlb",
       "scheduleDate": "2026-08-25",
@@ -6455,35 +6426,6 @@
       "confidence": 57.1,
       "rawConfidence": 57.1,
       "rawHomeWinPct": 42.9,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-08-25"
-    },
-    {
-      "eventId": "401816669",
-      "league": "mlb",
-      "scheduleDate": "2026-08-25",
-      "matchup": "Los Angeles Dodgers @ Atlanta Braves",
-      "predicted": "Los Angeles Dodgers",
-      "predictedSide": "away",
-      "outcomeLabel": "Los Angeles Dodgers to win",
-      "confidence": 52.7,
-      "rawConfidence": 52.7,
-      "rawHomeWinPct": 47.3,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -46728,14 +46670,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-25"
+      "date": "2026-08-25",
+      "voidReason": "voided"
     },
     "401816673": {
       "eventId": "401816673",
@@ -46757,14 +46700,15 @@
       "pickOddsFrozenAt": null,
       "published": false,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-25"
+      "date": "2026-08-25",
+      "voidReason": "voided"
     },
     "401816672": {
       "eventId": "401816672",
@@ -46786,14 +46730,15 @@
       "pickOddsFrozenAt": null,
       "published": false,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-08-25"
+      "date": "2026-08-25",
+      "voidReason": "voided"
     },
     "401816676": {
       "eventId": "401816676",
@@ -46987,7 +46932,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
