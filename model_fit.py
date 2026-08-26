@@ -999,6 +999,16 @@ def _league_intercepts(
     leagues -- one of six clearing p<0.05 by chance about a quarter of the
     time. Preseason rests starters and does not carry the regular season's home
     advantage, which is the same reason `strengthGames` exists.
+
+    Preseason games are kept in this fit deliberately (owner's call, 26 Aug
+    2026) rather than filtered out. The two guards above are what make that
+    safe, and the evidence is that it is already working: with 21 graded rows
+    the NFL intercept was -0.1506, and at 1015 total samples it had moved to
+    -0.0917 without anyone touching it. A preseason-only estimate has a wide
+    standard error, the soft threshold discards most of it, and regular-season
+    games pull what survives toward zero as they grade. The failure mode to
+    watch is the opposite one -- a preseason signal that does NOT decay once
+    the real season starts -- which check_regression's 0.25 ceiling catches.
     """
     by_league: dict[str, list[Sample]] = {}
     for sample in samples:
