@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-26T00:04:10.125805+00:00",
+  "updatedAt": "2026-08-26T00:33:19.141658+00:00",
   "summary": {
     "last7Days": {
       "correct": 283,
@@ -7,7 +7,7 @@
       "pct": 66.7,
       "units": 19.422,
       "roiPct": 4.6,
-      "pending": 47,
+      "pending": 48,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 62.4,
       "units": 27.46,
       "roiPct": 2.5,
-      "pending": 47,
+      "pending": 48,
       "voided": 18
     },
     "allTimePriced": {
@@ -6345,6 +6345,35 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-08-25"
+    },
+    {
+      "eventId": "401857173",
+      "league": "wnba",
+      "scheduleDate": "2026-08-25",
+      "matchup": "Chicago Sky @ Connecticut Sun",
+      "predicted": "Chicago Sky",
+      "predictedSide": "away",
+      "outcomeLabel": "Chicago Sky to win",
+      "confidence": 53.0,
+      "rawConfidence": 53.0,
+      "rawHomeWinPct": 47.0,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -46932,7 +46961,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
