@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import math
 import re
 from pathlib import Path
 from statistics import NormalDist
@@ -454,8 +453,22 @@ def compute_total_implied_probabilities(lines: list[dict[str, Any]]) -> dict[str
     }
 
 
-def sigmoid(value: float) -> float:
-    return 1.0 / (1.0 + math.exp(-value))
+# `sigmoid` is imported from model_fit at the top of this file. A second
+# definition used to sit here, silently shadowing it, and it was the one every
+# caller in this module actually got. Two defects came with it:
+#
+#   sigmoid(-710)  OverflowError: math range error   -- math.exp(710) overflows
+#   sigmoid(nan)   nan                               -- passed straight through
+#
+# The single-branch form `1/(1+exp(-x))` overflows on large negative input;
+# model_fit's version picks the branch that cannot. And the NaN guard added to
+# model_fit (an unusable probability must read 0.5, never certainty) never
+# applied here at all, because this definition won.
+#
+# Nothing outside this module imported it, and the accumulated heuristic logit
+# is a sum of clamped terms, so no crash was observed -- but predict_total now
+# feeds a market-derived logit through the same call, and "no observed crash"
+# is not a bound. One definition, in one place.
 
 
 def clamp(value: float, low: float = 0.05, high: float = 0.95) -> float:
