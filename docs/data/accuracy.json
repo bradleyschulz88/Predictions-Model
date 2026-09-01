@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-01T10:05:17.314095+00:00",
+  "updatedAt": "2026-09-01T14:55:44.681461+00:00",
   "summary": {
     "last7Days": {
       "correct": 282,
@@ -7,7 +7,7 @@
       "pct": 65.7,
       "units": 16.363,
       "roiPct": 3.8,
-      "pending": 34,
+      "pending": 35,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 62.5,
       "units": 29.427,
       "roiPct": 2.5,
-      "pending": 34,
+      "pending": 35,
       "voided": 11
     },
     "allTimePriced": {
@@ -167,7 +167,7 @@
         "worseThanCoinFlip": true,
         "unmoved": 19
       },
-      "provisionalPicks": 124,
+      "provisionalPicks": 125,
       "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started, over the whole graded record rather than the recent window. Median is the headline figure; the mean is pulled by a few large favourable moves."
     },
     "totals": {
@@ -5181,6 +5181,35 @@
     }
   ],
   "pendingPicks": [
+    {
+      "eventId": "1133702",
+      "league": "afl",
+      "scheduleDate": "2026-09-05",
+      "matchup": "Brisbane Lions @ Sydney Swans",
+      "predicted": "Brisbane Lions",
+      "predictedSide": "away",
+      "outcomeLabel": "Brisbane Lions to win",
+      "confidence": 67.3,
+      "rawConfidence": 67.3,
+      "rawHomeWinPct": 32.7,
+      "probabilityMethod": "fitted",
+      "evPct": -11.1,
+      "kellyPct": 0.0,
+      "pickOdds": -312,
+      "openingOdds": -312,
+      "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-09-05"
+    },
     {
       "eventId": "401877193",
       "league": "mlb",
@@ -54797,6 +54826,64 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-09-04"
+    },
+    "1133702": {
+      "eventId": "1133702",
+      "league": "afl",
+      "scheduleDate": "2026-09-05",
+      "matchup": "Brisbane Lions @ Sydney Swans",
+      "predicted": "Brisbane Lions",
+      "predictedSide": "away",
+      "outcomeLabel": "Brisbane Lions to win",
+      "confidence": 67.3,
+      "rawConfidence": 67.3,
+      "rawHomeWinPct": 32.7,
+      "probabilityMethod": "fitted",
+      "evPct": -11.1,
+      "kellyPct": 0.0,
+      "pickOdds": -312,
+      "openingOdds": -312,
+      "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-09-05"
+    },
+    "1133703": {
+      "eventId": "1133703",
+      "league": "afl",
+      "scheduleDate": "2026-09-05",
+      "matchup": null,
+      "predicted": "Adelaide Crows",
+      "predictedSide": "home",
+      "outcomeLabel": "Adelaide Crows to win",
+      "confidence": 52.9,
+      "rawConfidence": 52.9,
+      "rawHomeWinPct": 52.9,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": false,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-09-05"
     }
   },
   "skippedDates": []
