@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-05T19:04:30.410938+00:00",
+  "updatedAt": "2026-09-05T21:17:39.076042+00:00",
   "summary": {
     "last7Days": {
       "correct": 271,
@@ -7,7 +7,7 @@
       "pct": 64.4,
       "units": 10.591,
       "roiPct": 2.5,
-      "pending": 38,
+      "pending": 36,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 62.4,
       "units": 29.325,
       "roiPct": 2.4,
-      "pending": 38,
-      "voided": 11
+      "pending": 36,
+      "voided": 13
     },
     "allTimePriced": {
       "correct": 621,
@@ -6073,35 +6073,6 @@
       "date": "2026-09-05"
     },
     {
-      "eventId": "401816818",
-      "league": "mlb",
-      "scheduleDate": "2026-09-05",
-      "matchup": "San Francisco Giants @ New York Mets",
-      "predicted": "New York Mets",
-      "predictedSide": "home",
-      "outcomeLabel": "New York Mets to win",
-      "confidence": 56.6,
-      "rawConfidence": 56.6,
-      "rawHomeWinPct": 56.6,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-09-05"
-    },
-    {
       "eventId": "401816817",
       "league": "mlb",
       "scheduleDate": "2026-09-05",
@@ -6147,35 +6118,6 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-09-05"
-    },
-    {
-      "eventId": "401816815",
-      "league": "mlb",
-      "scheduleDate": "2026-09-05",
-      "matchup": "Chicago Cubs @ Miami Marlins",
-      "predicted": "Chicago Cubs",
-      "predictedSide": "away",
-      "outcomeLabel": "Chicago Cubs to win",
-      "confidence": 51.5,
-      "rawConfidence": 51.5,
-      "rawHomeWinPct": 48.5,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -56511,14 +56453,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-09-05"
+      "date": "2026-09-05",
+      "voidReason": "voided"
     },
     "401816818": {
       "eventId": "401816818",
@@ -56540,14 +56483,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-09-05"
+      "date": "2026-09-05",
+      "voidReason": "voided"
     },
     "401816813": {
       "eventId": "401816813",
