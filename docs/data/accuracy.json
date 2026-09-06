@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-06T14:28:01.068340+00:00",
+  "updatedAt": "2026-09-06T17:26:12.460822+00:00",
   "summary": {
     "last7Days": {
       "correct": 266,
@@ -7,7 +7,7 @@
       "pct": 63.3,
       "units": 3.108,
       "roiPct": 0.7,
-      "pending": 39,
+      "pending": 38,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 62.2,
       "units": 25.145,
       "roiPct": 2.0,
-      "pending": 39,
-      "voided": 11
+      "pending": 38,
+      "voided": 12
     },
     "allTimePriced": {
       "correct": 625,
@@ -97,10 +97,10 @@
       "bestLoss": 6
     },
     "closingLineValue": {
-      "picks": 545,
+      "picks": 546,
       "medianPct": -0.7,
-      "avgPct": -0.77,
-      "beatCloseP": 36.4,
+      "avgPct": -0.76,
+      "beatCloseP": 36.6,
       "beatCloseStdErrPct": 2.2,
       "beatsCoinFlip": false,
       "worseThanCoinFlip": true,
@@ -117,11 +117,11 @@
           "unmoved": 3
         },
         "epl": {
-          "picks": 24,
+          "picks": 25,
           "medianPct": 0.0,
-          "avgPct": 1.24,
-          "beatCloseP": 45.0,
-          "beatCloseStdErrPct": 11.2,
+          "avgPct": 1.47,
+          "beatCloseP": 47.6,
+          "beatCloseStdErrPct": 10.9,
           "beatsCoinFlip": false,
           "worseThanCoinFlip": false,
           "unmoved": 4
@@ -167,7 +167,7 @@
         "worseThanCoinFlip": true,
         "unmoved": 19
       },
-      "provisionalPicks": 123,
+      "provisionalPicks": 122,
       "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started, over the whole graded record rather than the recent window. Median is the headline figure; the mean is pulled by a few large favourable moves."
     },
     "totals": {
@@ -6147,35 +6147,6 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-09-06"
-    },
-    {
-      "eventId": "401816832",
-      "league": "mlb",
-      "scheduleDate": "2026-09-06",
-      "matchup": "Milwaukee Brewers @ Cincinnati Reds",
-      "predicted": "Milwaukee Brewers",
-      "predictedSide": "away",
-      "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 63.3,
-      "rawConfidence": 63.3,
-      "rawHomeWinPct": 36.7,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "away",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -57278,26 +57249,39 @@
       "predicted": "Manchester United",
       "predictedSide": "away",
       "outcomeLabel": "Manchester United to win",
-      "confidence": 41.5,
-      "rawConfidence": 61.0,
-      "rawHomeWinPct": 39.0,
+      "confidence": 45.5,
+      "rawConfidence": 66.9,
+      "rawHomeWinPct": 33.1,
       "probabilityMethod": "fitted",
-      "evPct": -8.75,
+      "evPct": -13.14,
       "kellyPct": 0.0,
-      "pickOdds": 120,
+      "pickOdds": -110,
       "openingOdds": 120,
       "openingSide": "away",
-      "pickOddsFrozenAt": null,
+      "pickOddsFrozenAt": "2026-09-06T17:25:48.815184+00:00",
       "published": false,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-09-06"
+      "clvPct": 6.93,
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "2",
+      "awayScore": "2",
+      "gradedAt": "2026-09-06T17:26:02.928956+00:00",
+      "date": "2026-09-06",
+      "totalResult": {
+        "line": 2.5,
+        "pickSide": "over",
+        "actual": 4,
+        "outcome": "win",
+        "odds": -170,
+        "units": 0.588,
+        "marketOverPct": 59.7,
+        "modelOverPct": 70.0,
+        "publishedOverPct": 64.4,
+        "marketAnchored": true
+      },
+      "spreadResult": null
     },
     "401879292": {
       "eventId": "401879292",
@@ -57348,14 +57332,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-09-06"
+      "date": "2026-09-06",
+      "voidReason": "voided"
     },
     "401816828": {
       "eventId": "401816828",
