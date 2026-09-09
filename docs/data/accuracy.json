@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-09T14:37:14.730670+00:00",
+  "updatedAt": "2026-09-09T18:02:14.201859+00:00",
   "summary": {
     "last7Days": {
       "correct": 252,
@@ -7,7 +7,7 @@
       "pct": 63.3,
       "units": 2.797,
       "roiPct": 0.7,
-      "pending": 38,
+      "pending": 39,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 62.3,
       "units": 27.622,
       "roiPct": 2.2,
-      "pending": 38,
+      "pending": 39,
       "voided": 11
     },
     "allTimePriced": {
@@ -5918,6 +5918,35 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-09-10"
+    },
+    {
+      "eventId": "401816884",
+      "league": "mlb",
+      "scheduleDate": "2026-09-10",
+      "matchup": "Houston Astros @ Philadelphia Phillies",
+      "predicted": "Philadelphia Phillies",
+      "predictedSide": "home",
+      "outcomeLabel": "Philadelphia Phillies to win",
+      "confidence": 54.5,
+      "rawConfidence": 54.5,
+      "rawHomeWinPct": 54.5,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
       "status": "pending",
       "actual": null,
       "correct": null,
@@ -59886,7 +59915,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
