@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-13T06:49:18.693541+00:00",
+  "updatedAt": "2026-09-13T12:48:03.517722+00:00",
   "summary": {
     "last7Days": {
       "correct": 251,
@@ -7,7 +7,7 @@
       "pct": 65.0,
       "units": 16.472,
       "roiPct": 4.3,
-      "pending": 45,
+      "pending": 46,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 62.7,
       "units": 36.566,
       "roiPct": 2.8,
-      "pending": 45,
+      "pending": 46,
       "voided": 11
     },
     "allTimePriced": {
@@ -6234,6 +6234,35 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-09-13"
+    },
+    {
+      "eventId": "401816926",
+      "league": "mlb",
+      "scheduleDate": "2026-09-13",
+      "matchup": "Chicago White Sox @ St. Louis Cardinals",
+      "predicted": "Chicago White Sox",
+      "predictedSide": "away",
+      "outcomeLabel": "Chicago White Sox to win",
+      "confidence": 51.2,
+      "rawConfidence": 51.2,
+      "rawHomeWinPct": 48.8,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -62900,7 +62929,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
