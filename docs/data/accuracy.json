@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T05:31:05.620227+00:00",
+  "updatedAt": "2026-09-14T11:05:50.618350+00:00",
   "summary": {
     "last7Days": {
       "correct": 264,
@@ -7,7 +7,7 @@
       "pct": 66.2,
       "units": 24.974,
       "roiPct": 6.3,
-      "pending": 33,
+      "pending": 32,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 62.8,
       "units": 39.409,
       "roiPct": 3.0,
-      "pending": 33,
+      "pending": 32,
       "voided": 11
     },
     "allTimePriced": {
@@ -192,25 +192,25 @@
       "note": "ROI is over all 605 graded picks; 10 of them carry no logged price and count as zero return. Over the 595 priced picks alone the return is -1.2%."
     },
     "spreads": {
-      "graded": 586,
-      "decided": 585,
-      "wins": 334,
-      "losses": 251,
+      "graded": 588,
+      "decided": 587,
+      "wins": 335,
+      "losses": 252,
       "pushes": 1,
       "pct": 57.1,
       "stdErrPct": 2.0,
-      "pricedDecided": 477,
+      "pricedDecided": 479,
       "pricedHitPct": 56.4,
       "pricedStdErrPct": 2.3,
       "breakEvenPct": 54.2,
       "beatsBreakEven": false,
-      "priced": 478,
+      "priced": 480,
       "unpriced": 108,
-      "units": 23.724,
+      "units": 23.65,
       "roiPct": 4.0,
-      "pricedUnits": 23.724,
-      "pricedRoiPct": 5.0,
-      "note": "ROI is over all 586 graded picks; 108 of them carry no logged price and count as zero return. Over the 478 priced picks alone the return is +5.0%."
+      "pricedUnits": 23.65,
+      "pricedRoiPct": 4.9,
+      "note": "ROI is over all 588 graded picks; 108 of them carry no logged price and count as zero return. Over the 480 priced picks alone the return is +4.9%."
     }
   },
   "recentResults": [
@@ -254,7 +254,15 @@
         "publishedOverPct": 51.1,
         "marketAnchored": true
       },
-      "spreadResult": null
+      "spreadResult": {
+        "line": 3.0,
+        "pickSide": "home",
+        "margin": 8,
+        "market": "spread",
+        "outcome": "win",
+        "odds": -108,
+        "units": 0.926
+      }
     },
     {
       "eventId": "401816930",
@@ -388,7 +396,15 @@
         "publishedOverPct": 51.1,
         "marketAnchored": true
       },
-      "spreadResult": null
+      "spreadResult": {
+        "line": -6.0,
+        "pickSide": "home",
+        "margin": 2,
+        "market": "spread",
+        "outcome": "loss",
+        "odds": -110,
+        "units": -1.0
+      }
     },
     {
       "eventId": "401872927",
@@ -6055,35 +6071,6 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "away",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-09-14"
-    },
-    {
-      "eventId": "401816935",
-      "league": "mlb",
-      "scheduleDate": "2026-09-14",
-      "matchup": "Detroit Tigers @ Toronto Blue Jays",
-      "predicted": "Toronto Blue Jays",
-      "predictedSide": "home",
-      "outcomeLabel": "Toronto Blue Jays to win",
-      "confidence": 53.0,
-      "rawConfidence": 53.0,
-      "rawHomeWinPct": 53.0,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -63547,7 +63534,15 @@
         "publishedOverPct": 51.1,
         "marketAnchored": true
       },
-      "spreadResult": null
+      "spreadResult": {
+        "line": -6.0,
+        "pickSide": "home",
+        "margin": 2,
+        "market": "spread",
+        "outcome": "loss",
+        "odds": -110,
+        "units": -1.0
+      }
     },
     "401872926": {
       "eventId": "401872926",
@@ -63631,7 +63626,15 @@
         "publishedOverPct": 51.1,
         "marketAnchored": true
       },
-      "spreadResult": null
+      "spreadResult": {
+        "line": 3.0,
+        "pickSide": "home",
+        "margin": 8,
+        "market": "spread",
+        "outcome": "win",
+        "odds": -108,
+        "units": 0.926
+      }
     },
     "401879280": {
       "eventId": "401879280",
@@ -63738,7 +63741,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
@@ -65287,11 +65290,5 @@
       "date": "2026-09-17"
     }
   },
-  "skippedDates": [
-    {
-      "league": "epl",
-      "date": "2026-08-18",
-      "error": "The read operation timed out"
-    }
-  ]
+  "skippedDates": []
 }
