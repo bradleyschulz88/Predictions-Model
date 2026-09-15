@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T15:03:54.975724+00:00",
+  "updatedAt": "2026-09-15T19:11:24.099545+00:00",
   "summary": {
     "last7Days": {
       "correct": 257,
@@ -7,7 +7,7 @@
       "pct": 66.4,
       "units": 26.896,
       "roiPct": 6.9,
-      "pending": 46,
+      "pending": 47,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 62.9,
       "units": 41.323,
       "roiPct": 3.1,
-      "pending": 46,
+      "pending": 47,
       "voided": 11
     },
     "allTimePriced": {
@@ -6071,6 +6071,35 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-09-16"
+    },
+    {
+      "eventId": "401816964",
+      "league": "mlb",
+      "scheduleDate": "2026-09-16",
+      "matchup": "Philadelphia Phillies @ Washington Nationals",
+      "predicted": "Philadelphia Phillies",
+      "predictedSide": "away",
+      "outcomeLabel": "Philadelphia Phillies to win",
+      "confidence": 53.7,
+      "rawConfidence": 53.7,
+      "rawHomeWinPct": 46.3,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "away",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -65290,7 +65319,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
