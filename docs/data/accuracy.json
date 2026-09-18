@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T05:58:47.495620+00:00",
+  "updatedAt": "2026-09-18T11:11:41.956043+00:00",
   "summary": {
     "last7Days": {
       "correct": 255,
@@ -17,7 +17,7 @@
       "units": 41.859,
       "roiPct": 3.0,
       "pending": 61,
-      "voided": 11
+      "voided": 12
     },
     "allTimePriced": {
       "correct": 721,
@@ -67020,14 +67020,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "voidReason": "voided"
     },
     "401879275": {
       "eventId": "401879275",
@@ -67308,7 +67309,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
@@ -69553,16 +69554,5 @@
       "date": "2026-09-21"
     }
   },
-  "skippedDates": [
-    {
-      "league": "mlb",
-      "date": "2026-08-23",
-      "error": "The read operation timed out"
-    },
-    {
-      "league": "nba",
-      "date": "2026-09-14",
-      "error": "The read operation timed out"
-    }
-  ]
+  "skippedDates": []
 }
