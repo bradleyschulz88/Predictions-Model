@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T21:21:09.854059+00:00",
+  "updatedAt": "2026-09-18T23:39:37.486287+00:00",
   "summary": {
     "last7Days": {
       "correct": 255,
@@ -16,8 +16,8 @@
       "pct": 62.9,
       "units": 40.859,
       "roiPct": 3.0,
-      "pending": 58,
-      "voided": 11
+      "pending": 54,
+      "voided": 14
     },
     "allTimePriced": {
       "correct": 721,
@@ -6587,22 +6587,22 @@
       "date": "2026-09-18"
     },
     {
-      "eventId": "401816995",
+      "eventId": "401816993",
       "league": "mlb",
       "scheduleDate": "2026-09-18",
-      "matchup": "New York Yankees @ Arizona Diamondbacks",
-      "predicted": "New York Yankees",
-      "predictedSide": "away",
-      "outcomeLabel": "New York Yankees to win",
-      "confidence": 56.4,
-      "rawConfidence": 56.4,
-      "rawHomeWinPct": 43.6,
+      "matchup": "Miami Marlins @ San Diego Padres",
+      "predicted": "San Diego Padres",
+      "predictedSide": "home",
+      "outcomeLabel": "San Diego Padres to win",
+      "confidence": 64.0,
+      "rawConfidence": 64.0,
+      "rawHomeWinPct": 64.0,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
       "pickOdds": null,
       "openingOdds": null,
-      "openingSide": "away",
+      "openingSide": "home",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -67074,14 +67074,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "voidReason": "voided"
     },
     "401816985": {
       "eventId": "401816985",
@@ -67103,14 +67104,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "voidReason": "voided"
     },
     "401816986": {
       "eventId": "401816986",
@@ -67190,14 +67192,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "voidReason": "voided"
     },
     "401816987": {
       "eventId": "401816987",
@@ -67219,14 +67222,15 @@
       "pickOddsFrozenAt": null,
       "published": false,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-09-18"
+      "date": "2026-09-18",
+      "voidReason": "voided"
     },
     "401816989": {
       "eventId": "401816989",
@@ -67449,7 +67453,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
