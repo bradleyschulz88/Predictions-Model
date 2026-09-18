@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T18:29:35.249846+00:00",
+  "updatedAt": "2026-09-18T21:21:09.854059+00:00",
   "summary": {
     "last7Days": {
       "correct": 255,
@@ -16,7 +16,7 @@
       "pct": 62.9,
       "units": 40.859,
       "roiPct": 3.0,
-      "pending": 60,
+      "pending": 58,
       "voided": 11
     },
     "allTimePriced": {
@@ -97,7 +97,7 @@
       "bestLoss": 3
     },
     "closingLineValue": {
-      "picks": 722,
+      "picks": 723,
       "medianPct": -0.64,
       "avgPct": -1.14,
       "beatCloseP": 37.4,
@@ -117,11 +117,11 @@
           "unmoved": 3
         },
         "epl": {
-          "picks": 35,
-          "medianPct": -0.53,
-          "avgPct": 0.6,
-          "beatCloseP": 36.7,
-          "beatCloseStdErrPct": 9.1,
+          "picks": 36,
+          "medianPct": -0.6,
+          "avgPct": 0.44,
+          "beatCloseP": 35.5,
+          "beatCloseStdErrPct": 9.0,
           "beatsCoinFlip": false,
           "worseThanCoinFlip": false,
           "unmoved": 5
@@ -167,7 +167,7 @@
         "worseThanCoinFlip": true,
         "unmoved": 25
       },
-      "provisionalPicks": 149,
+      "provisionalPicks": 148,
       "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started, over the whole graded record rather than the recent window. Median is the headline figure; the mean is pulled by a few large favourable moves."
     },
     "totals": {
@@ -67020,26 +67020,39 @@
       "predicted": "Chelsea",
       "predictedSide": "away",
       "outcomeLabel": "Chelsea to win",
-      "confidence": 43.6,
-      "rawConfidence": 64.0,
-      "rawHomeWinPct": 36.0,
+      "confidence": 41.4,
+      "rawConfidence": 58.5,
+      "rawHomeWinPct": 41.5,
       "probabilityMethod": "fitted",
-      "evPct": -2.01,
-      "kellyPct": 0.0,
-      "pickOdds": 125,
+      "evPct": 7.71,
+      "kellyPct": 1.2,
+      "pickOdds": 155,
       "openingOdds": 125,
       "openingSide": "away",
-      "pickOddsFrozenAt": null,
+      "pickOddsFrozenAt": "2026-09-18T21:20:24.031234+00:00",
       "published": false,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-09-18"
+      "clvPct": -5.23,
+      "status": "graded",
+      "actual": "Brentford",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "3",
+      "awayScore": "0",
+      "gradedAt": "2026-09-18T21:20:51.208853+00:00",
+      "date": "2026-09-18",
+      "totalResult": {
+        "line": 3.5,
+        "pickSide": "under",
+        "actual": 3,
+        "outcome": "win",
+        "odds": -160,
+        "units": 0.625,
+        "marketOverPct": 41.4,
+        "modelOverPct": 70.0,
+        "publishedOverPct": 46.3,
+        "marketAnchored": true
+      },
+      "spreadResult": null
     },
     "401816984": {
       "eventId": "401816984",
@@ -67204,7 +67217,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
@@ -67291,7 +67304,7 @@
       "openingOdds": null,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
