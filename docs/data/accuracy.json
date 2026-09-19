@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-19T11:36:03.284335+00:00",
+  "updatedAt": "2026-09-19T14:50:39.072156+00:00",
   "summary": {
     "last7Days": {
       "correct": 255,
@@ -97,10 +97,10 @@
       "bestLoss": 3
     },
     "closingLineValue": {
-      "picks": 740,
-      "medianPct": -0.64,
+      "picks": 741,
+      "medianPct": -0.63,
       "avgPct": -1.11,
-      "beatCloseP": 37.5,
+      "beatCloseP": 37.6,
       "beatCloseStdErrPct": 1.9,
       "beatsCoinFlip": false,
       "worseThanCoinFlip": true,
@@ -117,11 +117,11 @@
           "unmoved": 3
         },
         "epl": {
-          "picks": 36,
-          "medianPct": -0.6,
-          "avgPct": 0.44,
-          "beatCloseP": 35.5,
-          "beatCloseStdErrPct": 9.0,
+          "picks": 37,
+          "medianPct": -0.53,
+          "avgPct": 0.46,
+          "beatCloseP": 37.5,
+          "beatCloseStdErrPct": 8.8,
           "beatsCoinFlip": false,
           "worseThanCoinFlip": false,
           "unmoved": 5
@@ -167,7 +167,7 @@
         "worseThanCoinFlip": true,
         "unmoved": 23
       },
-      "provisionalPicks": 144,
+      "provisionalPicks": 143,
       "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started, over the whole graded record rather than the recent window. Median is the headline figure; the mean is pulled by a few large favourable moves."
     },
     "totals": {
@@ -68031,26 +68031,39 @@
       "predicted": "Tottenham Hotspur",
       "predictedSide": "home",
       "outcomeLabel": "Tottenham Hotspur to win",
-      "confidence": 34.1,
-      "rawConfidence": 50.1,
-      "rawHomeWinPct": 50.1,
+      "confidence": 34.4,
+      "rawConfidence": 50.7,
+      "rawHomeWinPct": 50.7,
       "probabilityMethod": "fitted",
-      "evPct": -31.87,
+      "evPct": -35.6,
       "kellyPct": 0.0,
-      "pickOdds": 100,
+      "pickOdds": -105,
       "openingOdds": 100,
       "openingSide": "home",
-      "pickOddsFrozenAt": null,
+      "pickOddsFrozenAt": "2026-09-19T11:35:40.160528+00:00",
       "published": false,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-09-19"
+      "clvPct": 1.22,
+      "status": "graded",
+      "actual": "Aston Villa",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "2",
+      "awayScore": "3",
+      "gradedAt": "2026-09-19T14:50:26.437978+00:00",
+      "date": "2026-09-19",
+      "totalResult": {
+        "line": 2.5,
+        "pickSide": "over",
+        "actual": 5,
+        "outcome": "win",
+        "odds": -160,
+        "units": 0.625,
+        "marketOverPct": 58.6,
+        "modelOverPct": 50.0,
+        "publishedOverPct": 58.6,
+        "marketAnchored": true
+      },
+      "spreadResult": null
     },
     "401879274": {
       "eventId": "401879274",
