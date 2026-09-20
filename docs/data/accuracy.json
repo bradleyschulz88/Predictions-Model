@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-20T05:27:17.388350+00:00",
+  "updatedAt": "2026-09-20T10:11:26.557705+00:00",
   "summary": {
     "last7Days": {
       "correct": 258,
@@ -7,7 +7,7 @@
       "pct": 67.2,
       "units": 28.854,
       "roiPct": 7.5,
-      "pending": 47,
+      "pending": 48,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 63.2,
       "units": 45.205,
       "roiPct": 3.2,
-      "pending": 47,
+      "pending": 48,
       "voided": 11
     },
     "allTimePriced": {
@@ -6390,6 +6390,35 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-09-20"
+    },
+    {
+      "eventId": "401817020",
+      "league": "mlb",
+      "scheduleDate": "2026-09-20",
+      "matchup": "Toronto Blue Jays @ Texas Rangers",
+      "predicted": "Texas Rangers",
+      "predictedSide": "home",
+      "outcomeLabel": "Texas Rangers to win",
+      "confidence": 55.8,
+      "rawConfidence": 55.8,
+      "rawHomeWinPct": 55.8,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "home",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -69412,7 +69441,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
