@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-21T07:18:56.261230+00:00",
+  "updatedAt": "2026-09-21T14:37:33.790629+00:00",
   "summary": {
     "last7Days": {
       "correct": 265,
@@ -7,7 +7,7 @@
       "pct": 67.4,
       "units": 27.358,
       "roiPct": 7.0,
-      "pending": 35,
+      "pending": 34,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 63.5,
       "units": 49.232,
       "roiPct": 3.4,
-      "pending": 35,
+      "pending": 34,
       "voided": 11
     },
     "allTimePriced": {
@@ -6150,35 +6150,6 @@
       "pickOdds": null,
       "openingOdds": null,
       "openingSide": "away",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-09-21"
-    },
-    {
-      "eventId": "401817028",
-      "league": "mlb",
-      "scheduleDate": "2026-09-21",
-      "matchup": "Washington Nationals @ Detroit Tigers",
-      "predicted": "Detroit Tigers",
-      "predictedSide": "home",
-      "outcomeLabel": "Detroit Tigers to win",
-      "confidence": 54.4,
-      "rawConfidence": 54.4,
-      "rawHomeWinPct": 54.4,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
@@ -70581,7 +70552,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
