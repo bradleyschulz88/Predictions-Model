@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-28T22:36:16.776581+00:00",
+  "updatedAt": "2026-09-29T02:24:04.245868+00:00",
   "summary": {
     "last7Days": {
       "correct": 250,
@@ -7,7 +7,7 @@
       "pct": 69.1,
       "units": 31.046,
       "roiPct": 8.6,
-      "pending": 14,
+      "pending": 13,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 63.9,
       "units": 56.017,
       "roiPct": 3.7,
-      "pending": 14,
-      "voided": 12
+      "pending": 13,
+      "voided": 13
     },
     "allTimePriced": {
       "correct": 820,
@@ -5552,35 +5552,6 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-09-29"
-    },
-    {
-      "eventId": "401872963",
-      "league": "nfl",
-      "scheduleDate": "2026-09-28",
-      "matchup": "Philadelphia Eagles @ Chicago Bears",
-      "predicted": "Philadelphia Eagles",
-      "predictedSide": "away",
-      "outcomeLabel": "Philadelphia Eagles to win",
-      "confidence": 70.2,
-      "rawConfidence": 70.2,
-      "rawHomeWinPct": 29.8,
-      "probabilityMethod": "fitted",
-      "evPct": 1.37,
-      "kellyPct": 2.09,
-      "pickOdds": -225,
-      "openingOdds": -225,
-      "openingSide": "away",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-09-28"
     }
   ],
   "picksByEventId": {
@@ -76204,14 +76175,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-09-28"
+      "date": "2026-09-28",
+      "voidReason": "voided"
     },
     "401907896": {
       "eventId": "401907896",
