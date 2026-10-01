@@ -192167,7 +192167,7 @@
         "pickSide": "away",
         "odds": -115
       },
-      "recordedAt": "2026-10-01T15:27:22.679406+00:00"
+      "recordedAt": "2026-10-01T20:31:39.638270+00:00"
     },
     "401907896": {
       "eventId": "401907896",
@@ -192312,7 +192312,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-10-01T15:26:55.229296+00:00"
+      "recordedAt": "2026-10-01T20:31:22.242735+00:00"
     },
     "401907924": {
       "eventId": "401907924",
@@ -192465,7 +192465,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-10-01T15:26:55.229296+00:00"
+      "recordedAt": "2026-10-01T20:31:22.242735+00:00"
     },
     "401907965": {
       "eventId": "401907965",
@@ -192603,7 +192603,7 @@
         "market": "runline",
         "odds": 158
       },
-      "recordedAt": "2026-10-01T15:26:55.229296+00:00"
+      "recordedAt": "2026-10-01T20:31:22.242735+00:00"
     },
     "401907974": {
       "eventId": "401907974",
@@ -192752,7 +192752,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-10-01T15:26:55.229296+00:00"
+      "recordedAt": "2026-10-01T20:31:22.242735+00:00"
     },
     "401918018": {
       "eventId": "401918018",
@@ -192880,7 +192880,7 @@
         "pickSide": "away",
         "odds": -115
       },
-      "recordedAt": "2026-10-01T15:27:53.436656+00:00"
+      "recordedAt": "2026-10-01T20:32:06.633990+00:00"
     },
     "401918017": {
       "eventId": "401918017",
@@ -193012,7 +193012,7 @@
         "pickSide": "away",
         "odds": -112
       },
-      "recordedAt": "2026-10-01T15:27:53.436656+00:00"
+      "recordedAt": "2026-10-01T20:32:06.633990+00:00"
     },
     "401907897": {
       "eventId": "401907897",
@@ -193137,7 +193137,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-10-01T15:27:04.987457+00:00"
+      "recordedAt": "2026-10-01T20:31:28.089755+00:00"
     },
     "401907963": {
       "eventId": "401907963",
@@ -193266,7 +193266,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-10-01T15:27:04.987457+00:00"
+      "recordedAt": "2026-10-01T20:31:28.089755+00:00"
     },
     "401907972": {
       "eventId": "401907972",
@@ -193396,7 +193396,7 @@
         "market": "runline",
         "odds": 158
       },
-      "recordedAt": "2026-10-01T15:27:04.987457+00:00"
+      "recordedAt": "2026-10-01T20:31:28.089755+00:00"
     },
     "401907975": {
       "eventId": "401907975",
@@ -193533,7 +193533,7 @@
         "pickSide": "away",
         "market": "runline"
       },
-      "recordedAt": "2026-10-01T15:27:04.987457+00:00"
+      "recordedAt": "2026-10-01T20:31:28.089755+00:00"
     },
     "401918019": {
       "eventId": "401918019",
@@ -193661,7 +193661,7 @@
         "pickSide": "home",
         "odds": -115
       },
-      "recordedAt": "2026-10-01T15:27:55.951982+00:00"
+      "recordedAt": "2026-10-01T20:32:09.028158+00:00"
     },
     "401918020": {
       "eventId": "401918020",
@@ -193792,7 +193792,7 @@
         "line": 4.5,
         "pickSide": "push"
       },
-      "recordedAt": "2026-10-01T15:27:55.951982+00:00"
+      "recordedAt": "2026-10-01T20:32:09.028158+00:00"
     },
     "401907973": {
       "eventId": "401907973",
@@ -193843,7 +193843,7 @@
         "parkEdge": 1.0,
         "h2hDiff": 0.3846,
         "travelDiff": 0.531,
-        "handednessDiff": null,
+        "handednessDiff": 1.0,
         "bullpenDiff": 2.5,
         "homeInjuryLoad": 3.45,
         "awayInjuryLoad": 2.3,
@@ -193872,10 +193872,19 @@
         "mlbPitching": {
           "sources": [
             "MLB Stats API bullpen",
+            "MLB Stats API pitcher",
             "MLB Stats API team pitching"
           ],
+          "homePitcherApiEra": 1.47,
+          "homePitcherFip": 3.97324,
+          "homePitcherRecentEra": 2.9,
+          "homePitcherHand": "L",
           "homeTeamPitchingEra": 3.63,
           "homeBullpenEra": 3.65,
+          "awayPitcherApiEra": 4.67,
+          "awayPitcherFip": 4.86857,
+          "awayPitcherRecentEra": 3.68,
+          "awayPitcherHand": "R",
           "awayTeamPitchingEra": 4.04,
           "awayBullpenEra": 4.06
         },
@@ -193897,10 +193906,10 @@
       "total": {
         "line": 7.5,
         "pickSide": "under",
-        "odds": -120,
-        "marketOverPct": 47.8,
-        "modelOverPct": 50.6,
-        "overPct": 47.9,
+        "odds": -118,
+        "marketOverPct": 48.3,
+        "modelOverPct": 38.6,
+        "overPct": 45.5,
         "marketAnchored": true
       },
       "spread": {
@@ -193909,7 +193918,7 @@
         "market": "runline",
         "odds": 158
       },
-      "recordedAt": "2026-10-01T15:27:06.603254+00:00"
+      "recordedAt": "2026-10-01T20:31:29.976867+00:00"
     },
     "401907898": {
       "eventId": "401907898",
@@ -194304,7 +194313,7 @@
         "pickSide": "home",
         "odds": 100
       },
-      "recordedAt": "2026-10-01T15:27:26.985759+00:00"
+      "recordedAt": "2026-10-01T20:31:43.942583+00:00"
     },
     "401918021": {
       "eventId": "401918021",
@@ -194489,7 +194498,7 @@
         "pickSide": "home",
         "odds": -115
       },
-      "recordedAt": "2026-10-01T15:27:57.428906+00:00"
+      "recordedAt": "2026-10-01T20:32:10.212777+00:00"
     },
     "401918293": {
       "eventId": "401918293",
@@ -194657,12 +194666,12 @@
       },
       "featuresFrozenAt": null,
       "total": {
-        "line": 158.5,
+        "line": 157.5,
         "pickSide": "over",
-        "odds": -110,
-        "marketOverPct": 50.0,
+        "odds": -115,
+        "marketOverPct": 51.1,
         "modelOverPct": 70.0,
-        "overPct": 57.0,
+        "overPct": 58.0,
         "marketAnchored": true
       },
       "spread": {
@@ -194670,7 +194679,7 @@
         "pickSide": "home",
         "odds": -102
       },
-      "recordedAt": "2026-10-01T15:27:58.894565+00:00"
+      "recordedAt": "2026-10-01T20:32:11.933379+00:00"
     },
     "401908002": {
       "eventId": "401908002",
@@ -194780,10 +194789,10 @@
       "total": {
         "line": 7.0,
         "pickSide": "over",
-        "odds": -105,
-        "marketOverPct": 48.9,
+        "odds": -102,
+        "marketOverPct": 48.3,
         "modelOverPct": 70.0,
-        "overPct": 55.6,
+        "overPct": 55.0,
         "marketAnchored": true
       },
       "spread": {
@@ -194792,7 +194801,7 @@
         "market": "runline",
         "odds": -118
       },
-      "recordedAt": "2026-10-01T15:27:17.034901+00:00"
+      "recordedAt": "2026-10-01T20:31:35.943104+00:00"
     },
     "401908007": {
       "eventId": "401908007",
@@ -194879,7 +194888,7 @@
       "featuresFrozenAt": null,
       "total": null,
       "spread": null,
-      "recordedAt": "2026-10-01T15:27:17.034901+00:00"
+      "recordedAt": "2026-10-01T20:31:35.943104+00:00"
     },
     "401907990": {
       "eventId": "401907990",
@@ -194891,13 +194900,13 @@
       "predictedWinner": "Cleveland Guardians",
       "predictedSide": "home",
       "outcomeLabel": "Cleveland Guardians to win",
-      "confidence": 57.2,
-      "rawConfidence": 57.2,
-      "rawHomeWinPct": 57.2,
+      "confidence": 57.1,
+      "rawConfidence": 57.1,
+      "rawHomeWinPct": 57.1,
       "probabilityMethod": "fitted",
-      "evPct": -5.64,
+      "evPct": -4.79,
       "kellyPct": 0.0,
-      "pickOdds": -154,
+      "pickOdds": -150,
       "priceSpread": {
         "books": 1,
         "best": -158,
@@ -194916,6 +194925,10 @@
         {
           "at": "2026-10-01T07:48:02.240701+00:00",
           "odds": -154
+        },
+        {
+          "at": "2026-10-01T20:31:35.943104+00:00",
+          "odds": -150
         }
       ],
       "pickOddsFrozenAt": null,
@@ -194942,8 +194955,8 @@
         "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 59.0,
-        "impliedAway": 41.0,
+        "impliedHome": 58.9,
+        "impliedAway": 41.1,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
@@ -194972,11 +194985,11 @@
           "opsEdge": -0.033,
           "eraEdge": -1.27
         },
-        "trueHome": 57.2,
-        "trueAway": 42.8,
-        "confidence": 57.2,
-        "rawConfidence": 57.2,
-        "rawHomeWinPct": 57.2,
+        "trueHome": 57.1,
+        "trueAway": 42.9,
+        "confidence": 57.1,
+        "rawConfidence": 57.1,
+        "rawHomeWinPct": 57.1,
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
@@ -194984,10 +194997,10 @@
       "total": {
         "line": 7.0,
         "pickSide": "over",
-        "odds": -105,
-        "marketOverPct": 48.9,
+        "odds": 101,
+        "marketOverPct": 47.5,
         "modelOverPct": 70.0,
-        "overPct": 56.2,
+        "overPct": 54.8,
         "marketAnchored": true
       },
       "spread": {
@@ -194996,7 +195009,7 @@
         "market": "runline",
         "odds": -172
       },
-      "recordedAt": "2026-10-01T15:27:17.034901+00:00"
+      "recordedAt": "2026-10-01T20:31:35.943104+00:00"
     },
     "401907985": {
       "eventId": "401907985",
@@ -195008,13 +195021,13 @@
       "predictedWinner": "Tampa Bay Rays",
       "predictedSide": "home",
       "outcomeLabel": "Tampa Bay Rays to win",
-      "confidence": 54.3,
-      "rawConfidence": 54.3,
-      "rawHomeWinPct": 54.3,
+      "confidence": 54.1,
+      "rawConfidence": 54.1,
+      "rawHomeWinPct": 54.1,
       "probabilityMethod": "fitted",
-      "evPct": -5.22,
+      "evPct": -4.28,
       "kellyPct": 0.0,
-      "pickOdds": -134,
+      "pickOdds": -130,
       "priceSpread": {
         "books": 7,
         "best": -130,
@@ -195033,6 +195046,10 @@
         {
           "at": "2026-10-01T15:27:17.034901+00:00",
           "odds": -134
+        },
+        {
+          "at": "2026-10-01T20:31:35.943104+00:00",
+          "odds": -130
         }
       ],
       "pickOddsFrozenAt": null,
@@ -195059,8 +195076,8 @@
         "awayRest": 2,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 55.6,
-        "impliedAway": 44.4,
+        "impliedHome": 55.4,
+        "impliedAway": 44.6,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
@@ -195094,11 +195111,11 @@
           "opsEdge": -0.282,
           "eraEdge": -2.7
         },
-        "trueHome": 54.3,
-        "trueAway": 45.7,
-        "confidence": 54.3,
-        "rawConfidence": 54.3,
-        "rawHomeWinPct": 54.3,
+        "trueHome": 54.1,
+        "trueAway": 45.9,
+        "confidence": 54.1,
+        "rawConfidence": 54.1,
+        "rawHomeWinPct": 54.1,
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
@@ -195106,10 +195123,10 @@
       "total": {
         "line": 7.0,
         "pickSide": "over",
-        "odds": 100,
-        "marketOverPct": 47.8,
+        "odds": 102,
+        "marketOverPct": 47.4,
         "modelOverPct": 70.0,
-        "overPct": 56.9,
+        "overPct": 56.5,
         "marketAnchored": true
       },
       "spread": {
@@ -195118,7 +195135,7 @@
         "market": "runline",
         "odds": -213
       },
-      "recordedAt": "2026-10-01T15:27:17.034901+00:00"
+      "recordedAt": "2026-10-01T20:31:35.943104+00:00"
     },
     "401902644": {
       "eventId": "401902644",
@@ -195195,7 +195212,7 @@
       "featuresFrozenAt": null,
       "total": null,
       "spread": null,
-      "recordedAt": "2026-10-01T15:27:47.485532+00:00"
+      "recordedAt": "2026-10-01T20:32:01.499580+00:00"
     },
     "401908003": {
       "eventId": "401908003",
@@ -195294,7 +195311,7 @@
         "market": "runline",
         "odds": -118
       },
-      "recordedAt": "2026-10-01T15:27:20.041031+00:00"
+      "recordedAt": "2026-10-01T20:31:37.744423+00:00"
     },
     "401908014": {
       "eventId": "401908014",
@@ -195381,7 +195398,7 @@
       "featuresFrozenAt": null,
       "total": null,
       "spread": null,
-      "recordedAt": "2026-10-01T15:27:20.041031+00:00"
+      "recordedAt": "2026-10-01T20:31:37.744423+00:00"
     },
     "401872965": {
       "eventId": "401872965",
@@ -195470,10 +195487,10 @@
       "total": {
         "line": 47.5,
         "pickSide": "over",
-        "odds": -108,
-        "marketOverPct": 49.6,
+        "odds": -112,
+        "marketOverPct": 50.4,
         "modelOverPct": 70.0,
-        "overPct": 54.6,
+        "overPct": 55.4,
         "marketAnchored": true
       },
       "spread": {
@@ -195481,7 +195498,7 @@
         "pickSide": "home",
         "odds": -108
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872971": {
       "eventId": "401872971",
@@ -195493,13 +195510,13 @@
       "predictedWinner": "Buffalo Bills",
       "predictedSide": "home",
       "outcomeLabel": "Buffalo Bills to win",
-      "confidence": 75.9,
-      "rawConfidence": 75.9,
-      "rawHomeWinPct": 75.9,
+      "confidence": 76.3,
+      "rawConfidence": 76.3,
+      "rawHomeWinPct": 76.3,
       "probabilityMethod": "fitted",
-      "evPct": 2.13,
-      "kellyPct": 1.99,
-      "pickOdds": -290,
+      "evPct": 1.95,
+      "kellyPct": 1.52,
+      "pickOdds": -298,
       "priceSpread": {
         "books": 1,
         "best": -290,
@@ -195514,6 +195531,10 @@
         {
           "at": "2026-10-01T07:48:18.341072+00:00",
           "odds": -290
+        },
+        {
+          "at": "2026-10-01T20:31:54.770036+00:00",
+          "odds": -298
         }
       ],
       "pickOddsFrozenAt": null,
@@ -195540,8 +195561,8 @@
         "awayRest": 7,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 72.7,
-        "impliedAway": 27.3,
+        "impliedHome": 73.2,
+        "impliedAway": 26.8,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
@@ -195558,11 +195579,11 @@
         "leagueMetrics": {
           "league": "nfl"
         },
-        "trueHome": 75.9,
-        "trueAway": 24.1,
-        "confidence": 75.9,
-        "rawConfidence": 75.9,
-        "rawHomeWinPct": 75.9,
+        "trueHome": 76.3,
+        "trueAway": 23.7,
+        "confidence": 76.3,
+        "rawConfidence": 76.3,
+        "rawHomeWinPct": 76.3,
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
@@ -195577,11 +195598,11 @@
         "marketAnchored": true
       },
       "spread": {
-        "line": -6.5,
+        "line": -7.0,
         "pickSide": "home",
-        "odds": -120
+        "odds": -105
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872972": {
       "eventId": "401872972",
@@ -195668,12 +195689,12 @@
       },
       "featuresFrozenAt": null,
       "total": {
-        "line": 43.5,
+        "line": 42.5,
         "pickSide": "under",
-        "odds": -120,
-        "marketOverPct": 47.8,
+        "odds": -102,
+        "marketOverPct": 51.7,
         "modelOverPct": 30.0,
-        "overPct": 42.8,
+        "overPct": 46.7,
         "marketAnchored": true
       },
       "spread": {
@@ -195681,7 +195702,7 @@
         "pickSide": "home",
         "odds": -105
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872969": {
       "eventId": "401872969",
@@ -195781,7 +195802,7 @@
         "pickSide": "home",
         "odds": -115
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872966": {
       "eventId": "401872966",
@@ -195790,16 +195811,16 @@
       "matchup": "Arizona Cardinals @ New York Giants",
       "homeTeam": "New York Giants",
       "awayTeam": "Arizona Cardinals",
-      "predictedWinner": "New York Giants",
-      "predictedSide": "home",
-      "outcomeLabel": "New York Giants to win",
-      "confidence": 50.4,
-      "rawConfidence": 50.4,
-      "rawHomeWinPct": 50.4,
+      "predictedWinner": "Arizona Cardinals",
+      "predictedSide": "away",
+      "outcomeLabel": "Arizona Cardinals to win",
+      "confidence": 50.7,
+      "rawConfidence": 50.7,
+      "rawHomeWinPct": 49.3,
       "probabilityMethod": "fitted",
-      "evPct": 7.83,
-      "kellyPct": 0.69,
-      "pickOdds": 114,
+      "evPct": -13.68,
+      "kellyPct": 0.0,
+      "pickOdds": -142,
       "priceSpread": {
         "books": 1,
         "best": -142,
@@ -195818,6 +195839,10 @@
         {
           "at": "2026-10-01T15:27:39.399483+00:00",
           "odds": 114
+        },
+        {
+          "at": "2026-10-01T20:31:54.770036+00:00",
+          "odds": -142
         }
       ],
       "pickOddsFrozenAt": null,
@@ -195844,8 +195869,8 @@
         "awayRest": 6,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 44.5,
-        "impliedAway": 55.5,
+        "impliedHome": 43.3,
+        "impliedAway": 56.7,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
@@ -195862,12 +195887,12 @@
         "leagueMetrics": {
           "league": "nfl"
         },
-        "trueHome": 50.4,
-        "trueAway": 49.6,
-        "confidence": 50.4,
-        "rawConfidence": 50.4,
-        "rawHomeWinPct": 50.4,
-        "predictedSide": "home",
+        "trueHome": 49.3,
+        "trueAway": 50.7,
+        "confidence": 50.7,
+        "rawConfidence": 50.7,
+        "rawHomeWinPct": 49.3,
+        "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
       "featuresFrozenAt": null,
@@ -195885,7 +195910,7 @@
         "pickSide": "home",
         "odds": -108
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872970": {
       "eventId": "401872970",
@@ -195897,13 +195922,13 @@
       "predictedWinner": "Los Angeles Rams",
       "predictedSide": "away",
       "outcomeLabel": "Los Angeles Rams to win",
-      "confidence": 54.4,
-      "rawConfidence": 54.4,
-      "rawHomeWinPct": 45.6,
+      "confidence": 55.4,
+      "rawConfidence": 55.4,
+      "rawHomeWinPct": 44.6,
       "probabilityMethod": "fitted",
-      "evPct": -11.95,
+      "evPct": -11.99,
       "kellyPct": 0.0,
-      "pickOdds": -162,
+      "pickOdds": -170,
       "priceSpread": {
         "books": 1,
         "best": -162,
@@ -195918,10 +195943,14 @@
         {
           "at": "2026-10-01T07:48:18.341072+00:00",
           "odds": -162
+        },
+        {
+          "at": "2026-10-01T20:31:54.770036+00:00",
+          "odds": -170
         }
       ],
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "features": {
         "league": "nfl",
         "recordDiff": 0.3333,
@@ -195934,9 +195963,9 @@
         "travelDiff": 6.428,
         "handednessDiff": null,
         "bullpenDiff": null,
-        "homeInjuryLoad": 0,
+        "homeInjuryLoad": 1.15,
         "awayInjuryLoad": 0,
-        "homeInjurySeverity": 0.0,
+        "homeInjurySeverity": 1.14,
         "awayInjurySeverity": 0.0,
         "eloEdge": -88.20000000000005,
         "videoIntelEdge": null,
@@ -195944,12 +195973,12 @@
         "awayRest": 6,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 40.1,
-        "impliedAway": 59.9,
+        "impliedHome": 39.0,
+        "impliedAway": 61.0,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
-          "injuries": false,
+          "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
           "restData": true,
@@ -195962,11 +195991,11 @@
         "leagueMetrics": {
           "league": "nfl"
         },
-        "trueHome": 45.6,
-        "trueAway": 54.4,
-        "confidence": 54.4,
-        "rawConfidence": 54.4,
-        "rawHomeWinPct": 45.6,
+        "trueHome": 44.6,
+        "trueAway": 55.4,
+        "confidence": 55.4,
+        "rawConfidence": 55.4,
+        "rawHomeWinPct": 44.6,
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
@@ -195974,18 +196003,18 @@
       "total": {
         "line": 43.5,
         "pickSide": "under",
-        "odds": -108,
-        "marketOverPct": 50.4,
+        "odds": -112,
+        "marketOverPct": 49.6,
         "modelOverPct": 30.0,
-        "overPct": 45.4,
+        "overPct": 44.6,
         "marketAnchored": true
       },
       "spread": {
-        "line": 3.0,
+        "line": 3.5,
         "pickSide": "home",
-        "odds": -112
+        "odds": -118
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872968": {
       "eventId": "401872968",
@@ -195997,13 +196026,13 @@
       "predictedWinner": "Green Bay Packers",
       "predictedSide": "away",
       "outcomeLabel": "Green Bay Packers to win",
-      "confidence": 64.1,
-      "rawConfidence": 64.1,
-      "rawHomeWinPct": 35.9,
+      "confidence": 64.6,
+      "rawConfidence": 64.6,
+      "rawHomeWinPct": 35.4,
       "probabilityMethod": "fitted",
-      "evPct": -0.22,
+      "evPct": -0.41,
       "kellyPct": 0.0,
-      "pickOdds": -180,
+      "pickOdds": -185,
       "priceSpread": {
         "books": 1,
         "best": -180,
@@ -196018,6 +196047,10 @@
         {
           "at": "2026-10-01T07:48:18.341072+00:00",
           "odds": -180
+        },
+        {
+          "at": "2026-10-01T20:31:54.770036+00:00",
+          "odds": -185
         }
       ],
       "pickOddsFrozenAt": null,
@@ -196044,8 +196077,8 @@
         "awayRest": null,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 37.6,
-        "impliedAway": 62.4,
+        "impliedHome": 37.0,
+        "impliedAway": 63.0,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
@@ -196062,11 +196095,11 @@
         "leagueMetrics": {
           "league": "nfl"
         },
-        "trueHome": 35.9,
-        "trueAway": 64.1,
-        "confidence": 64.1,
-        "rawConfidence": 64.1,
-        "rawHomeWinPct": 35.9,
+        "trueHome": 35.4,
+        "trueAway": 64.6,
+        "confidence": 64.6,
+        "rawConfidence": 64.6,
+        "rawHomeWinPct": 35.4,
         "predictedSide": "away",
         "probabilityMethod": "fitted"
       },
@@ -196085,7 +196118,7 @@
         "pickSide": "away",
         "odds": -112
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872973": {
       "eventId": "401872973",
@@ -196097,13 +196130,13 @@
       "predictedWinner": "Baltimore Ravens",
       "predictedSide": "home",
       "outcomeLabel": "Baltimore Ravens to win",
-      "confidence": 85.2,
-      "rawConfidence": 85.2,
-      "rawHomeWinPct": 85.2,
+      "confidence": 84.9,
+      "rawConfidence": 84.9,
+      "rawHomeWinPct": 84.9,
       "probabilityMethod": "fitted",
-      "evPct": -2.61,
+      "evPct": -2.58,
       "kellyPct": 0.0,
-      "pickOdds": -700,
+      "pickOdds": -675,
       "priceSpread": {
         "books": 1,
         "best": -675,
@@ -196122,6 +196155,10 @@
         {
           "at": "2026-10-01T15:27:39.399483+00:00",
           "odds": -700
+        },
+        {
+          "at": "2026-10-01T20:31:54.770036+00:00",
+          "odds": -675
         }
       ],
       "pickOddsFrozenAt": null,
@@ -196148,8 +196185,8 @@
         "awayRest": 7,
         "homeBackToBack": false,
         "awayBackToBack": false,
-        "impliedHome": 86.3,
-        "impliedAway": 13.7,
+        "impliedHome": 85.9,
+        "impliedAway": 14.1,
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
@@ -196166,11 +196203,11 @@
         "leagueMetrics": {
           "league": "nfl"
         },
-        "trueHome": 85.2,
-        "trueAway": 14.8,
-        "confidence": 85.2,
-        "rawConfidence": 85.2,
-        "rawHomeWinPct": 85.2,
+        "trueHome": 84.9,
+        "trueAway": 15.1,
+        "confidence": 84.9,
+        "rawConfidence": 84.9,
+        "rawHomeWinPct": 84.9,
         "predictedSide": "home",
         "probabilityMethod": "fitted"
       },
@@ -196189,7 +196226,7 @@
         "pickSide": "home",
         "odds": -108
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872967": {
       "eventId": "401872967",
@@ -196289,7 +196326,7 @@
         "pickSide": "away",
         "odds": -108
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872974": {
       "eventId": "401872974",
@@ -196389,7 +196426,7 @@
         "pickSide": "home",
         "odds": -108
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872976": {
       "eventId": "401872976",
@@ -196488,7 +196525,7 @@
         "line": 4.5,
         "pickSide": "push"
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872975": {
       "eventId": "401872975",
@@ -196588,7 +196625,7 @@
         "pickSide": "home",
         "odds": 100
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872977": {
       "eventId": "401872977",
@@ -196637,9 +196674,9 @@
         "travelDiff": 0.777,
         "handednessDiff": null,
         "bullpenDiff": null,
-        "homeInjuryLoad": 0,
+        "homeInjuryLoad": 1.15,
         "awayInjuryLoad": 0,
-        "homeInjurySeverity": 0.0,
+        "homeInjurySeverity": 1.235,
         "awayInjurySeverity": 0.0,
         "eloEdge": 92.70000000000005,
         "videoIntelEdge": null,
@@ -196652,7 +196689,7 @@
         "hasLineup": true,
         "dataCoverage": {
           "lineup": true,
-          "injuries": false,
+          "injuries": true,
           "espnPredictor": true,
           "advancedStats": true,
           "restData": true,
@@ -196688,7 +196725,7 @@
         "pickSide": "home",
         "odds": -115
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401872978": {
       "eventId": "401872978",
@@ -196788,7 +196825,7 @@
         "pickSide": "away",
         "odds": -112
       },
-      "recordedAt": "2026-10-01T15:27:39.399483+00:00"
+      "recordedAt": "2026-10-01T20:31:54.770036+00:00"
     },
     "401914127": {
       "eventId": "401914127",
@@ -196865,7 +196902,7 @@
       "featuresFrozenAt": null,
       "total": null,
       "spread": null,
-      "recordedAt": "2026-10-01T15:27:49.663470+00:00"
+      "recordedAt": "2026-10-01T20:32:03.249996+00:00"
     },
     "401918010": {
       "eventId": "401918010",
@@ -196942,7 +196979,7 @@
       "featuresFrozenAt": null,
       "total": null,
       "spread": null,
-      "recordedAt": "2026-10-01T15:27:49.663470+00:00"
+      "recordedAt": "2026-10-01T20:32:03.249996+00:00"
     },
     "401918295": {
       "eventId": "401918295",
@@ -197019,7 +197056,7 @@
       "featuresFrozenAt": null,
       "total": null,
       "spread": null,
-      "recordedAt": "2026-10-01T15:28:02.166167+00:00"
+      "recordedAt": "2026-10-01T20:32:14.784379+00:00"
     },
     "401918296": {
       "eventId": "401918296",
@@ -197096,7 +197133,7 @@
       "featuresFrozenAt": null,
       "total": null,
       "spread": null,
-      "recordedAt": "2026-10-01T15:28:02.166167+00:00"
+      "recordedAt": "2026-10-01T20:32:14.784379+00:00"
     }
   }
 }

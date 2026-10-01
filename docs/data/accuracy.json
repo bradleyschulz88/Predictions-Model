@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-01T15:28:32.650168+00:00",
+  "updatedAt": "2026-10-01T20:32:48.094065+00:00",
   "summary": {
     "last7Days": {
       "correct": 231,
@@ -7,7 +7,7 @@
       "pct": 68.8,
       "units": 27.562,
       "roiPct": 8.2,
-      "pending": 22,
+      "pending": 23,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 63.9,
       "units": 57.29,
       "roiPct": 3.8,
-      "pending": 22,
+      "pending": 23,
       "voided": 12
     },
     "allTimePriced": {
@@ -5454,6 +5454,35 @@
       "pickOdds": -290,
       "openingOdds": -290,
       "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-10-04"
+    },
+    {
+      "eventId": "401872970",
+      "league": "nfl",
+      "scheduleDate": "2026-10-04",
+      "matchup": "Los Angeles Rams @ Philadelphia Eagles",
+      "predicted": "Los Angeles Rams",
+      "predictedSide": "away",
+      "outcomeLabel": "Los Angeles Rams to win",
+      "confidence": 54.7,
+      "rawConfidence": 54.7,
+      "rawHomeWinPct": 45.3,
+      "probabilityMethod": "fitted",
+      "evPct": -11.5,
+      "kellyPct": 0.0,
+      "pickOdds": -162,
+      "openingOdds": -162,
+      "openingSide": "away",
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
@@ -77693,7 +77722,7 @@
       "openingOdds": -162,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": 0.0,
       "status": "pending",
       "actual": null,
