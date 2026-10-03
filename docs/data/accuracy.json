@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-03T16:45:25.694984+00:00",
+  "updatedAt": "2026-10-03T19:52:05.980601+00:00",
   "summary": {
     "last7Days": {
       "correct": 225,
@@ -7,7 +7,7 @@
       "pct": 71.0,
       "units": 36.235,
       "roiPct": 11.4,
-      "pending": 23,
+      "pending": 22,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 63.9,
       "units": 59.015,
       "roiPct": 3.9,
-      "pending": 23,
-      "voided": 12
+      "pending": 22,
+      "voided": 13
     },
     "allTimePriced": {
       "correct": 829,
@@ -5685,35 +5685,6 @@
       "predicted": "Milwaukee Brewers",
       "predictedSide": "home",
       "outcomeLabel": "Milwaukee Brewers to win",
-      "confidence": 53.1,
-      "rawConfidence": 53.1,
-      "rawHomeWinPct": 53.1,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-10-03"
-    },
-    {
-      "eventId": "401907990",
-      "league": "mlb",
-      "scheduleDate": "2026-10-03",
-      "matchup": "White Sox/Astros @ Cleveland Guardians",
-      "predicted": "Cleveland Guardians",
-      "predictedSide": "home",
-      "outcomeLabel": "Cleveland Guardians to win",
       "confidence": 53.1,
       "rawConfidence": 53.1,
       "rawHomeWinPct": 53.1,
@@ -77526,14 +77497,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-10-03"
+      "date": "2026-10-03",
+      "voidReason": "voided"
     },
     "401907985": {
       "eventId": "401907985",
