@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-04T08:48:47.897792+00:00",
+  "updatedAt": "2026-10-04T14:50:42.186017+00:00",
   "summary": {
     "last7Days": {
       "correct": 223,
@@ -7,7 +7,7 @@
       "pct": 71.0,
       "units": 35.591,
       "roiPct": 11.3,
-      "pending": 23,
+      "pending": 22,
       "voided": 0
     },
     "allTime": {
@@ -16,8 +16,8 @@
       "pct": 63.9,
       "units": 58.858,
       "roiPct": 3.8,
-      "pending": 23,
-      "voided": 12
+      "pending": 22,
+      "voided": 13
     },
     "allTimePriced": {
       "correct": 831,
@@ -5701,35 +5701,6 @@
       "kellyPct": 0.0,
       "pickOdds": -180,
       "openingOdds": -180,
-      "openingSide": "away",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-10-04"
-    },
-    {
-      "eventId": "401872965",
-      "league": "nfl",
-      "scheduleDate": "2026-10-04",
-      "matchup": "Indianapolis Colts @ Washington Commanders",
-      "predicted": "Indianapolis Colts",
-      "predictedSide": "away",
-      "outcomeLabel": "Indianapolis Colts to win",
-      "confidence": 58.8,
-      "rawConfidence": 58.8,
-      "rawHomeWinPct": 41.2,
-      "probabilityMethod": "fitted",
-      "evPct": -10.65,
-      "kellyPct": 0.0,
-      "pickOdds": -192,
-      "openingOdds": -192,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
       "published": true,
@@ -77765,14 +77736,15 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-10-04"
+      "date": "2026-10-04",
+      "voidReason": "voided"
     },
     "401872971": {
       "eventId": "401872971",
