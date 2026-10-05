@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-05T07:02:34.310848+00:00",
+  "updatedAt": "2026-10-05T16:00:12.257146+00:00",
   "summary": {
     "last7Days": {
       "correct": 223,
@@ -7,7 +7,7 @@
       "pct": 70.6,
       "units": 31.181,
       "roiPct": 9.9,
-      "pending": 9,
+      "pending": 10,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 64.1,
       "units": 60.956,
       "roiPct": 3.9,
-      "pending": 9,
+      "pending": 10,
       "voided": 15
     },
     "allTimePriced": {
@@ -5386,6 +5386,35 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-10-07"
+    },
+    {
+      "eventId": "401908947",
+      "league": "nba",
+      "scheduleDate": "2026-10-05",
+      "matchup": "Phoenix Suns @ Detroit Pistons",
+      "predicted": "Detroit Pistons",
+      "predictedSide": "home",
+      "outcomeLabel": "Detroit Pistons to win",
+      "confidence": 53.2,
+      "rawConfidence": 53.2,
+      "rawHomeWinPct": 53.2,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-10-05"
     },
     {
       "eventId": "401907991",
@@ -78357,7 +78386,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
