@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T09:27:19.767008+00:00",
+  "updatedAt": "2026-10-06T16:19:24.950312+00:00",
   "summary": {
     "last7Days": {
       "correct": 220,
@@ -7,7 +7,7 @@
       "pct": 71.2,
       "units": 33.811,
       "roiPct": 10.9,
-      "pending": 12,
+      "pending": 11,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 64.0,
       "units": 59.956,
       "roiPct": 3.9,
-      "pending": 12,
+      "pending": 11,
       "voided": 16
     },
     "allTimePriced": {
@@ -5387,35 +5387,6 @@
       "confidence": 68.8,
       "rawConfidence": 68.8,
       "rawHomeWinPct": 68.8,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-10-07"
-    },
-    {
-      "eventId": "401907992",
-      "league": "mlb",
-      "scheduleDate": "2026-10-07",
-      "matchup": "Cleveland Guardians @ Chicago White Sox",
-      "predicted": "Chicago White Sox",
-      "predictedSide": "home",
-      "outcomeLabel": "Chicago White Sox to win",
-      "confidence": 56.2,
-      "rawConfidence": 56.2,
-      "rawHomeWinPct": 56.2,
       "probabilityMethod": "fitted",
       "evPct": null,
       "kellyPct": null,
@@ -78929,7 +78900,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
