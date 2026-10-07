@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-07T07:14:27.862921+00:00",
+  "updatedAt": "2026-10-07T14:48:32.426717+00:00",
   "summary": {
     "last7Days": {
       "correct": 213,
@@ -7,7 +7,7 @@
       "pct": 71.0,
       "units": 31.037,
       "roiPct": 10.3,
-      "pending": 12,
+      "pending": 13,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 64.0,
       "units": 60.326,
       "roiPct": 3.9,
-      "pending": 12,
+      "pending": 13,
       "voided": 16
     },
     "allTimePriced": {
@@ -5442,6 +5442,35 @@
       "predicted": "Portland Trail Blazers",
       "predictedSide": "home",
       "outcomeLabel": "Portland Trail Blazers to win",
+      "confidence": 53.3,
+      "rawConfidence": 53.3,
+      "rawHomeWinPct": 53.3,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-10-07"
+    },
+    {
+      "eventId": "401914123",
+      "league": "nba",
+      "scheduleDate": "2026-10-07",
+      "matchup": "Minnesota Timberwolves @ Indiana Pacers",
+      "predicted": "Indiana Pacers",
+      "predictedSide": "home",
+      "outcomeLabel": "Indiana Pacers to win",
       "confidence": 53.3,
       "rawConfidence": 53.3,
       "rawHomeWinPct": 53.3,
@@ -79171,7 +79200,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
