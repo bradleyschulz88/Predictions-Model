@@ -1,30 +1,30 @@
 {
-  "updatedAt": "2026-10-08T06:40:59.460123+00:00",
+  "updatedAt": "2026-10-08T14:06:33.925564+00:00",
   "summary": {
     "last7Days": {
       "correct": 212,
-      "total": 300,
-      "pct": 70.7,
-      "units": 29.359,
-      "roiPct": 9.8,
-      "pending": 22,
+      "total": 299,
+      "pct": 70.9,
+      "units": 30.359,
+      "roiPct": 10.2,
+      "pending": 24,
       "voided": 0
     },
     "allTime": {
       "correct": 998,
-      "total": 1559,
-      "pct": 64.0,
-      "units": 59.796,
-      "roiPct": 3.8,
-      "pending": 22,
+      "total": 1558,
+      "pct": 64.1,
+      "units": 60.796,
+      "roiPct": 3.9,
+      "pending": 24,
       "voided": 16
     },
     "allTimePriced": {
       "correct": 850,
-      "total": 1336,
-      "pct": 63.6,
-      "units": 46.796,
-      "roiPct": 3.5,
+      "total": 1335,
+      "pct": 63.7,
+      "units": 47.796,
+      "roiPct": 3.6,
       "pending": 0,
       "voided": 0
     },
@@ -55,13 +55,13 @@
       },
       "mlb": {
         "correct": 133,
-        "total": 195,
-        "pct": 68.2,
-        "units": 21.715,
-        "roiPct": 11.1,
+        "total": 194,
+        "pct": 68.6,
+        "units": 22.715,
+        "roiPct": 11.7,
         "pending": 0,
         "voided": 0,
-        "priced": 195,
+        "priced": 194,
         "unpriced": 0,
         "pricedSharePct": 100.0
       },
@@ -91,7 +91,7 @@
       }
     },
     "streak": {
-      "current": 1,
+      "current": 2,
       "type": "loss",
       "bestWin": 14,
       "bestLoss": 5
@@ -168,10 +168,10 @@
         }
       },
       "last7Days": {
-        "picks": 286,
+        "picks": 285,
         "medianPct": 0.0,
         "avgPct": -1.0,
-        "beatCloseP": 52.9,
+        "beatCloseP": 53.1,
         "beatCloseStdErrPct": 3.1,
         "beatsCoinFlip": false,
         "worseThanCoinFlip": false,
@@ -181,46 +181,46 @@
       "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started, over the whole graded record rather than the recent window. Median is the headline figure; the mean is pulled by a few large favourable moves."
     },
     "totals": {
-      "graded": 829,
-      "decided": 799,
+      "graded": 828,
+      "decided": 798,
       "wins": 403,
-      "losses": 396,
+      "losses": 395,
       "pushes": 30,
-      "pct": 50.4,
+      "pct": 50.5,
       "stdErrPct": 1.8,
-      "pricedDecided": 789,
-      "pricedHitPct": 49.9,
+      "pricedDecided": 788,
+      "pricedHitPct": 50.0,
       "pricedStdErrPct": 1.8,
       "breakEvenPct": 52.8,
       "beatsBreakEven": false,
-      "priced": 819,
+      "priced": 818,
       "unpriced": 10,
-      "units": -44.178,
-      "roiPct": -5.3,
-      "pricedUnits": -44.178,
-      "pricedRoiPct": -5.4,
-      "note": "ROI is over all 829 graded picks; 10 of them carry no logged price and count as zero return. Over the 819 priced picks alone the return is -5.4%."
+      "units": -43.178,
+      "roiPct": -5.2,
+      "pricedUnits": -43.178,
+      "pricedRoiPct": -5.3,
+      "note": "ROI is over all 828 graded picks; 10 of them carry no logged price and count as zero return. Over the 818 priced picks alone the return is -5.3%."
     },
     "spreads": {
-      "graded": 802,
-      "decided": 798,
-      "wins": 463,
+      "graded": 803,
+      "decided": 799,
+      "wins": 464,
       "losses": 335,
       "pushes": 4,
-      "pct": 58.0,
+      "pct": 58.1,
       "stdErrPct": 1.7,
-      "pricedDecided": 646,
-      "pricedHitPct": 57.7,
+      "pricedDecided": 647,
+      "pricedHitPct": 57.8,
       "pricedStdErrPct": 1.9,
       "breakEvenPct": 54.1,
       "beatsBreakEven": false,
-      "priced": 650,
+      "priced": 651,
       "unpriced": 152,
-      "units": 58.282,
+      "units": 58.294,
       "roiPct": 7.3,
-      "pricedUnits": 58.282,
+      "pricedUnits": 58.294,
       "pricedRoiPct": 9.0,
-      "note": "ROI is over all 802 graded picks; 152 of them carry no logged price and count as zero return. Over the 650 priced picks alone the return is +9.0%."
+      "note": "ROI is over all 803 graded picks; 152 of them carry no logged price and count as zero return. Over the 651 priced picks alone the return is +9.0%."
     }
   },
   "recentResults": [
@@ -264,7 +264,15 @@
         "publishedOverPct": 50.9,
         "marketAnchored": true
       },
-      "spreadResult": null
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "home",
+        "margin": 2,
+        "market": "spread",
+        "outcome": "win",
+        "odds": -115,
+        "units": 0.87
+      }
     },
     {
       "eventId": "401918297",
@@ -306,7 +314,15 @@
         "publishedOverPct": 52.0,
         "marketAnchored": true
       },
-      "spreadResult": null
+      "spreadResult": {
+        "line": -2.5,
+        "pickSide": "home",
+        "margin": 3,
+        "market": "spread",
+        "outcome": "win",
+        "odds": -105,
+        "units": 0.952
+      }
     },
     {
       "eventId": "401914129",
@@ -506,56 +522,6 @@
         "outcome": "win",
         "odds": null,
         "units": null
-      }
-    },
-    {
-      "eventId": "401907992",
-      "league": "mlb",
-      "scheduleDate": "2026-10-07",
-      "matchup": "Cleveland Guardians @ Chicago White Sox",
-      "predicted": "Chicago White Sox",
-      "predictedSide": "home",
-      "outcomeLabel": "Chicago White Sox to win",
-      "confidence": 55.1,
-      "rawConfidence": 55.1,
-      "rawHomeWinPct": 55.1,
-      "probabilityMethod": "fitted",
-      "evPct": -0.84,
-      "kellyPct": 0.0,
-      "pickOdds": -115,
-      "openingOdds": -119,
-      "openingSide": "home",
-      "pickOddsFrozenAt": "2026-10-07T20:37:21.573250+00:00",
-      "published": true,
-      "clvPct": -0.85,
-      "status": "graded",
-      "actual": "Cleveland Guardians",
-      "correct": false,
-      "units": -1.0,
-      "homeScore": "3",
-      "awayScore": "9",
-      "gradedAt": "2026-10-08T00:27:55.916375+00:00",
-      "date": "2026-10-07",
-      "totalResult": {
-        "line": 7.5,
-        "pickSide": "under",
-        "actual": 12,
-        "outcome": "loss",
-        "odds": -103,
-        "units": -1.0,
-        "marketOverPct": 51.5,
-        "modelOverPct": 38.0,
-        "publishedOverPct": 48.5,
-        "marketAnchored": true
-      },
-      "spreadResult": {
-        "line": -1.5,
-        "pickSide": "away",
-        "margin": -6,
-        "market": "runline",
-        "outcome": "win",
-        "odds": 181,
-        "units": 1.81
       }
     },
     {
@@ -5183,6 +5149,56 @@
         "odds": -149,
         "units": 0.671
       }
+    },
+    {
+      "eventId": "401817056",
+      "league": "mlb",
+      "scheduleDate": "2026-09-23",
+      "matchup": "Los Angeles Angels @ Athletics",
+      "predicted": "Los Angeles Angels",
+      "predictedSide": "away",
+      "outcomeLabel": "Los Angeles Angels to win",
+      "confidence": 55.8,
+      "rawConfidence": 55.8,
+      "rawHomeWinPct": 44.2,
+      "probabilityMethod": "fitted",
+      "evPct": -4.91,
+      "kellyPct": 0.0,
+      "pickOdds": -135,
+      "openingOdds": -130,
+      "openingSide": "away",
+      "pickOddsFrozenAt": "2026-09-24T06:09:51.680835+00:00",
+      "published": true,
+      "clvPct": 0.93,
+      "status": "graded",
+      "actual": "Athletics",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "7",
+      "awayScore": "3",
+      "gradedAt": "2026-09-24T06:11:53.877113+00:00",
+      "date": "2026-09-23",
+      "totalResult": {
+        "line": 9.0,
+        "pickSide": "over",
+        "actual": 10,
+        "outcome": "win",
+        "odds": -114,
+        "units": 0.877,
+        "marketOverPct": 50.9,
+        "modelOverPct": 53.0,
+        "publishedOverPct": 51.6,
+        "marketAnchored": true
+      },
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "away",
+        "margin": 4,
+        "market": "runline",
+        "outcome": "loss",
+        "odds": null,
+        "units": null
+      }
     }
   ],
   "pendingPicks": [
@@ -5235,6 +5251,35 @@
       "pickOddsFrozenAt": null,
       "published": true,
       "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-10-11"
+    },
+    {
+      "eventId": "401872992",
+      "league": "nfl",
+      "scheduleDate": "2026-10-11",
+      "matchup": "San Francisco 49ers @ Seattle Seahawks",
+      "predicted": "Seattle Seahawks",
+      "predictedSide": "home",
+      "outcomeLabel": "Seattle Seahawks to win",
+      "confidence": 54.9,
+      "rawConfidence": 54.9,
+      "rawHomeWinPct": 54.9,
+      "probabilityMethod": "fitted",
+      "evPct": -9.69,
+      "kellyPct": 0.0,
+      "pickOdds": -155,
+      "openingOdds": -155,
+      "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": 0.0,
       "status": "pending",
       "actual": null,
       "correct": null,
@@ -5774,6 +5819,35 @@
       "predicted": "Miami Heat",
       "predictedSide": "home",
       "outcomeLabel": "Miami Heat to win",
+      "confidence": 53.4,
+      "rawConfidence": 53.4,
+      "rawHomeWinPct": 53.4,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-10-08"
+    },
+    {
+      "eventId": "401898392",
+      "league": "nba",
+      "scheduleDate": "2026-10-08",
+      "matchup": "Boston Celtics @ Cleveland Cavaliers",
+      "predicted": "Cleveland Cavaliers",
+      "predictedSide": "home",
+      "outcomeLabel": "Cleveland Cavaliers to win",
       "confidence": 53.4,
       "rawConfidence": 53.4,
       "rawHomeWinPct": 53.4,
@@ -79329,7 +79403,7 @@
       "openingOdds": -119,
       "openingSide": "home",
       "pickOddsFrozenAt": "2026-10-07T20:37:21.573250+00:00",
-      "published": true,
+      "published": false,
       "clvPct": -0.85,
       "status": "graded",
       "actual": "Cleveland Guardians",
@@ -79601,7 +79675,15 @@
         "publishedOverPct": 52.0,
         "marketAnchored": true
       },
-      "spreadResult": null
+      "spreadResult": {
+        "line": 1.5,
+        "pickSide": "home",
+        "margin": -4,
+        "market": "spread",
+        "outcome": "loss",
+        "odds": -105,
+        "units": -1.0
+      }
     },
     "401908620": {
       "eventId": "401908620",
@@ -79793,7 +79875,15 @@
         "publishedOverPct": 52.0,
         "marketAnchored": true
       },
-      "spreadResult": null
+      "spreadResult": {
+        "line": -2.5,
+        "pickSide": "home",
+        "margin": 3,
+        "market": "spread",
+        "outcome": "win",
+        "odds": -105,
+        "units": 0.952
+      }
     },
     "401918298": {
       "eventId": "401918298",
@@ -79835,7 +79925,15 @@
         "publishedOverPct": 50.9,
         "marketAnchored": true
       },
-      "spreadResult": null
+      "spreadResult": {
+        "line": -1.5,
+        "pickSide": "home",
+        "margin": 2,
+        "market": "spread",
+        "outcome": "win",
+        "odds": -115,
+        "units": 0.87
+      }
     },
     "401907993": {
       "eventId": "401907993",
@@ -79942,7 +80040,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
@@ -81160,7 +81258,7 @@
       "openingOdds": -155,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": 0.0,
       "status": "pending",
       "actual": null,
