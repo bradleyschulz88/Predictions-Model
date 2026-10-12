@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-12T09:09:40.686984+00:00",
+  "updatedAt": "2026-10-12T19:03:47.905430+00:00",
   "summary": {
     "last7Days": {
       "correct": 207,
@@ -7,7 +7,7 @@
       "pct": 70.6,
       "units": 27.681,
       "roiPct": 9.4,
-      "pending": 9,
+      "pending": 10,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 64.0,
       "units": 59.857,
       "roiPct": 3.8,
-      "pending": 9,
+      "pending": 10,
       "voided": 16
     },
     "allTimePriced": {
@@ -5268,6 +5268,35 @@
       "predicted": "Washington Wizards",
       "predictedSide": "home",
       "outcomeLabel": "Washington Wizards to win",
+      "confidence": 53.1,
+      "rawConfidence": 53.1,
+      "rawHomeWinPct": 53.1,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-10-12"
+    },
+    {
+      "eventId": "401898721",
+      "league": "nba",
+      "scheduleDate": "2026-10-12",
+      "matchup": "San Antonio Spurs @ Utah Jazz",
+      "predicted": "Utah Jazz",
+      "predictedSide": "home",
+      "outcomeLabel": "Utah Jazz to win",
       "confidence": 53.1,
       "rawConfidence": 53.1,
       "rawHomeWinPct": 53.1,
@@ -82195,7 +82224,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
