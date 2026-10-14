@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-14T05:27:12.114143+00:00",
+  "updatedAt": "2026-10-14T10:38:15.825150+00:00",
   "summary": {
     "last7Days": {
       "correct": 185,
@@ -7,7 +7,7 @@
       "pct": 70.6,
       "units": 22.353,
       "roiPct": 8.5,
-      "pending": 9,
+      "pending": 8,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 64.1,
       "units": 60.869,
       "roiPct": 3.8,
-      "pending": 9,
+      "pending": 8,
       "voided": 19
     },
     "allTimePriced": {
@@ -5259,35 +5259,6 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-10-17"
-    },
-    {
-      "eventId": "401914125",
-      "league": "nba",
-      "scheduleDate": "2026-10-14",
-      "matchup": "Detroit Pistons @ Minnesota Timberwolves",
-      "predicted": "Minnesota Timberwolves",
-      "predictedSide": "home",
-      "outcomeLabel": "Minnesota Timberwolves to win",
-      "confidence": 51.5,
-      "rawConfidence": 51.5,
-      "rawHomeWinPct": 51.5,
-      "probabilityMethod": "fitted",
-      "evPct": null,
-      "kellyPct": null,
-      "pickOdds": null,
-      "openingOdds": null,
-      "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": null,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-10-14"
     },
     {
       "eventId": "401908032",
@@ -82882,7 +82853,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": null,
       "status": "pending",
       "actual": null,
