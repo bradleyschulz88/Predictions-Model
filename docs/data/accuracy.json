@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T12:54:46.221860+00:00",
+  "updatedAt": "2026-10-15T17:48:14.664600+00:00",
   "summary": {
     "last7Days": {
       "correct": 183,
@@ -7,7 +7,7 @@
       "pct": 70.1,
       "units": 18.643,
       "roiPct": 7.1,
-      "pending": 16,
+      "pending": 17,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 64.1,
       "units": 59.966,
       "roiPct": 3.7,
-      "pending": 16,
+      "pending": 17,
       "voided": 21
     },
     "allTimePriced": {
@@ -5477,6 +5477,35 @@
       "probabilityMethod": "fitted",
       "evPct": 6.96,
       "kellyPct": 0.76,
+      "pickOdds": -115,
+      "openingOdds": -115,
+      "openingSide": "away",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-10-18"
+    },
+    {
+      "eventId": "401872998",
+      "league": "nfl",
+      "scheduleDate": "2026-10-18",
+      "matchup": "Carolina Panthers @ Philadelphia Eagles",
+      "predicted": "Carolina Panthers",
+      "predictedSide": "away",
+      "outcomeLabel": "Carolina Panthers to win",
+      "confidence": 53.6,
+      "rawConfidence": 53.6,
+      "rawHomeWinPct": 46.4,
+      "probabilityMethod": "fitted",
+      "evPct": 0.17,
+      "kellyPct": 0.0,
       "pickOdds": -115,
       "openingOdds": -115,
       "openingSide": "away",
@@ -83315,14 +83344,15 @@
       "pickOddsFrozenAt": null,
       "published": false,
       "clvPct": null,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-10-15"
+      "date": "2026-10-15",
+      "voidReason": "voided"
     },
     "401908033": {
       "eventId": "401908033",
@@ -84386,7 +84416,7 @@
       "openingOdds": -115,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": 0.0,
       "status": "pending",
       "actual": null,
