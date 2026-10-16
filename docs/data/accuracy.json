@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-16T14:16:36.120006+00:00",
+  "updatedAt": "2026-10-16T18:23:13.521705+00:00",
   "summary": {
     "last7Days": {
       "correct": 178,
@@ -7,7 +7,7 @@
       "pct": 71.2,
       "units": 21.586,
       "roiPct": 8.6,
-      "pending": 25,
+      "pending": 26,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 64.1,
       "units": 59.454,
       "roiPct": 3.7,
-      "pending": 25,
+      "pending": 26,
       "voided": 21
     },
     "allTimePriced": {
@@ -5761,6 +5761,35 @@
       "predicted": "Detroit Pistons",
       "predictedSide": "home",
       "outcomeLabel": "Detroit Pistons to win",
+      "confidence": 53.2,
+      "rawConfidence": 53.2,
+      "rawHomeWinPct": 53.2,
+      "probabilityMethod": "fitted",
+      "evPct": null,
+      "kellyPct": null,
+      "pickOdds": null,
+      "openingOdds": null,
+      "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": null,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-10-16"
+    },
+    {
+      "eventId": "401908943",
+      "league": "nba",
+      "scheduleDate": "2026-10-16",
+      "matchup": "Minnesota Timberwolves @ Chicago Bulls",
+      "predicted": "Chicago Bulls",
+      "predictedSide": "home",
+      "outcomeLabel": "Chicago Bulls to win",
       "confidence": 53.2,
       "rawConfidence": 53.2,
       "rawHomeWinPct": 53.2,
@@ -84114,7 +84143,7 @@
       "openingOdds": null,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": null,
       "status": "pending",
       "actual": null,
