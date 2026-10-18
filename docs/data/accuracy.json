@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-18T09:07:38.980394+00:00",
+  "updatedAt": "2026-10-18T13:16:25.570804+00:00",
   "summary": {
     "last7Days": {
       "correct": 166,
@@ -7,7 +7,7 @@
       "pct": 70.3,
       "units": 15.858,
       "roiPct": 6.7,
-      "pending": 26,
+      "pending": 27,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 64.0,
       "units": 57.717,
       "roiPct": 3.6,
-      "pending": 26,
+      "pending": 27,
       "voided": 21
     },
     "allTimePriced": {
@@ -5433,6 +5433,35 @@
       "awayScore": null,
       "gradedAt": null,
       "date": "2026-10-21"
+    },
+    {
+      "eventId": "401909090",
+      "league": "nba",
+      "scheduleDate": "2026-10-20",
+      "matchup": "Oklahoma City Thunder @ San Antonio Spurs",
+      "predicted": "San Antonio Spurs",
+      "predictedSide": "home",
+      "outcomeLabel": "San Antonio Spurs to win",
+      "confidence": 54.2,
+      "rawConfidence": 54.2,
+      "rawHomeWinPct": 54.2,
+      "probabilityMethod": "fitted",
+      "evPct": -4.11,
+      "kellyPct": 0.0,
+      "pickOdds": -130,
+      "openingOdds": -130,
+      "openingSide": "home",
+      "pickOddsFrozenAt": null,
+      "published": true,
+      "clvPct": 0.0,
+      "status": "pending",
+      "actual": null,
+      "correct": null,
+      "units": null,
+      "homeScore": null,
+      "awayScore": null,
+      "gradedAt": null,
+      "date": "2026-10-20"
     },
     {
       "eventId": "401909089",
@@ -85539,7 +85568,7 @@
       "openingOdds": -130,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": 0.0,
       "status": "pending",
       "actual": null,
