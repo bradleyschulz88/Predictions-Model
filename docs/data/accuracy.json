@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-19T17:49:04.471576+00:00",
+  "updatedAt": "2026-10-19T22:21:32.978143+00:00",
   "summary": {
     "last7Days": {
       "correct": 166,
@@ -97,10 +97,10 @@
       "bestLoss": 5
     },
     "closingLineValue": {
-      "picks": 1038,
-      "medianPct": -0.43,
+      "picks": 1039,
+      "medianPct": -0.44,
       "avgPct": -1.21,
-      "beatCloseP": 40.8,
+      "beatCloseP": 40.7,
       "beatCloseStdErrPct": 1.6,
       "beatsCoinFlip": false,
       "worseThanCoinFlip": true,
@@ -117,11 +117,11 @@
           "unmoved": 3
         },
         "epl": {
-          "picks": 63,
+          "picks": 64,
           "medianPct": 0.0,
-          "avgPct": 0.09,
-          "beatCloseP": 45.1,
-          "beatCloseStdErrPct": 7.0,
+          "avgPct": 0.02,
+          "beatCloseP": 44.2,
+          "beatCloseStdErrPct": 6.9,
           "beatsCoinFlip": false,
           "worseThanCoinFlip": false,
           "unmoved": 12
@@ -177,7 +177,7 @@
         "worseThanCoinFlip": false,
         "unmoved": 21
       },
-      "provisionalPicks": 139,
+      "provisionalPicks": 138,
       "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started, over the whole graded record rather than the recent window. Median is the headline figure; the mean is pulled by a few large favourable moves."
     },
     "totals": {
@@ -85284,26 +85284,39 @@
       "predicted": "Tottenham Hotspur",
       "predictedSide": "home",
       "outcomeLabel": "Tottenham Hotspur to win",
-      "confidence": 43.5,
-      "rawConfidence": 63.9,
-      "rawHomeWinPct": 63.9,
+      "confidence": 45.7,
+      "rawConfidence": 63.4,
+      "rawHomeWinPct": 63.4,
       "probabilityMethod": "fitted",
-      "evPct": -35.83,
+      "evPct": -28.96,
       "kellyPct": 0.0,
-      "pickOdds": -210,
+      "pickOdds": -175,
       "openingOdds": -210,
       "openingSide": "home",
-      "pickOddsFrozenAt": null,
+      "pickOddsFrozenAt": "2026-10-19T22:21:10.447609+00:00",
       "published": false,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-10-19"
+      "clvPct": -4.11,
+      "status": "graded",
+      "actual": "Tottenham Hotspur",
+      "correct": true,
+      "units": 0.571,
+      "homeScore": "3",
+      "awayScore": "1",
+      "gradedAt": "2026-10-19T22:21:22.081290+00:00",
+      "date": "2026-10-19",
+      "totalResult": {
+        "line": 3.5,
+        "pickSide": "under",
+        "actual": 4,
+        "outcome": "loss",
+        "odds": -175,
+        "units": -1.0,
+        "marketOverPct": 39.6,
+        "modelOverPct": 30.0,
+        "publishedOverPct": 34.9,
+        "marketAnchored": true
+      },
+      "spreadResult": null
     },
     "401908028": {
       "eventId": "401908028",
