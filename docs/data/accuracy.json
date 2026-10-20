@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-20T17:05:16.480192+00:00",
+  "updatedAt": "2026-10-20T20:36:19.111183+00:00",
   "summary": {
     "last7Days": {
       "correct": 157,
@@ -17,7 +17,7 @@
       "units": 58.688,
       "roiPct": 3.6,
       "pending": 16,
-      "voided": 21
+      "voided": 22
     },
     "allTimePriced": {
       "correct": 898,
@@ -5229,18 +5229,18 @@
       "date": "2026-10-22"
     },
     {
-      "eventId": "401909093",
-      "league": "nba",
+      "eventId": "401873010",
+      "league": "nfl",
       "scheduleDate": "2026-10-22",
-      "matchup": "Cleveland Cavaliers @ Philadelphia 76ers",
-      "predicted": "Philadelphia 76ers",
+      "matchup": "New England Patriots @ Chicago Bears",
+      "predicted": "Chicago Bears",
       "predictedSide": "home",
-      "outcomeLabel": "Philadelphia 76ers to win",
-      "confidence": 57.3,
-      "rawConfidence": 57.3,
-      "rawHomeWinPct": 57.3,
+      "outcomeLabel": "Chicago Bears to win",
+      "confidence": 55.1,
+      "rawConfidence": 55.1,
+      "rawHomeWinPct": 55.1,
       "probabilityMethod": "fitted",
-      "evPct": -5.79,
+      "evPct": -9.29,
       "kellyPct": 0.0,
       "pickOdds": -155,
       "openingOdds": -155,
@@ -85537,16 +85537,17 @@
       "openingOdds": -115,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": 0.0,
-      "status": "pending",
+      "status": "voided",
       "actual": null,
       "correct": null,
       "units": null,
       "homeScore": null,
       "awayScore": null,
       "gradedAt": null,
-      "date": "2026-10-20"
+      "date": "2026-10-20",
+      "voidReason": "voided"
     },
     "401909089": {
       "eventId": "401909089",
@@ -85972,7 +85973,7 @@
       "openingOdds": -155,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": false,
+      "published": true,
       "clvPct": 0.0,
       "status": "pending",
       "actual": null,
@@ -86001,7 +86002,7 @@
       "openingOdds": -155,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": 0.0,
       "status": "pending",
       "actual": null,
