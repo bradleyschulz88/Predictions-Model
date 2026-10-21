@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-21T07:34:05.913416+00:00",
+  "updatedAt": "2026-10-21T13:15:25.577394+00:00",
   "summary": {
     "last7Days": {
       "correct": 136,
@@ -7,7 +7,7 @@
       "pct": 68.7,
       "units": 10.303,
       "roiPct": 5.2,
-      "pending": 17,
+      "pending": 16,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 64.1,
       "units": 59.535,
       "roiPct": 3.6,
-      "pending": 17,
+      "pending": 16,
       "voided": 21
     },
     "allTimePriced": {
@@ -5526,35 +5526,6 @@
       "kellyPct": 0.0,
       "pickOdds": -205,
       "openingOdds": -205,
-      "openingSide": "home",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-10-21"
-    },
-    {
-      "eventId": "401909834",
-      "league": "nba",
-      "scheduleDate": "2026-10-21",
-      "matchup": "Atlanta Hawks @ Orlando Magic",
-      "predicted": "Orlando Magic",
-      "predictedSide": "home",
-      "outcomeLabel": "Orlando Magic to win",
-      "confidence": 56.7,
-      "rawConfidence": 56.7,
-      "rawHomeWinPct": 56.7,
-      "probabilityMethod": "fitted",
-      "evPct": -5.05,
-      "kellyPct": 0.0,
-      "pickOdds": -148,
-      "openingOdds": -148,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
       "published": true,
@@ -85700,7 +85671,7 @@
       "openingOdds": -148,
       "openingSide": "home",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": 0.0,
       "status": "pending",
       "actual": null,
