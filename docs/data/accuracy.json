@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-22T11:47:49.976241+00:00",
+  "updatedAt": "2026-10-22T17:09:00.077781+00:00",
   "summary": {
     "last7Days": {
       "correct": 145,
@@ -7,7 +7,7 @@
       "pct": 70.4,
       "units": 16.374,
       "roiPct": 7.9,
-      "pending": 33,
+      "pending": 32,
       "voided": 0
     },
     "allTime": {
@@ -16,7 +16,7 @@
       "pct": 64.4,
       "units": 65.698,
       "roiPct": 4.0,
-      "pending": 33,
+      "pending": 32,
       "voided": 22
     },
     "allTimePriced": {
@@ -5444,35 +5444,6 @@
       "kellyPct": 0.16,
       "pickOdds": -130,
       "openingOdds": -130,
-      "openingSide": "away",
-      "pickOddsFrozenAt": null,
-      "published": true,
-      "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-10-25"
-    },
-    {
-      "eventId": "401873012",
-      "league": "nfl",
-      "scheduleDate": "2026-10-25",
-      "matchup": "Cincinnati Bengals @ Baltimore Ravens",
-      "predicted": "Cincinnati Bengals",
-      "predictedSide": "away",
-      "outcomeLabel": "Cincinnati Bengals to win",
-      "confidence": 54.9,
-      "rawConfidence": 54.9,
-      "rawHomeWinPct": 45.1,
-      "probabilityMethod": "fitted",
-      "evPct": -0.17,
-      "kellyPct": 0.0,
-      "pickOdds": -122,
-      "openingOdds": -122,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
       "published": true,
@@ -87927,7 +87898,7 @@
       "openingOdds": -122,
       "openingSide": "away",
       "pickOddsFrozenAt": null,
-      "published": true,
+      "published": false,
       "clvPct": 0.0,
       "status": "pending",
       "actual": null,
