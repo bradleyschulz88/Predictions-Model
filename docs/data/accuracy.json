@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-23T17:55:50.464346+00:00",
+  "updatedAt": "2026-10-23T21:24:06.512676+00:00",
   "summary": {
     "last7Days": {
       "correct": 141,
@@ -97,14 +97,14 @@
       "bestLoss": 4
     },
     "closingLineValue": {
-      "picks": 1054,
+      "picks": 1055,
       "medianPct": -0.42,
       "avgPct": -1.19,
       "beatCloseP": 41.0,
       "beatCloseStdErrPct": 1.6,
       "beatsCoinFlip": false,
       "worseThanCoinFlip": true,
-      "unmoved": 80,
+      "unmoved": 81,
       "byLeague": {
         "afl": {
           "picks": 31,
@@ -117,14 +117,14 @@
           "unmoved": 3
         },
         "epl": {
-          "picks": 64,
+          "picks": 65,
           "medianPct": 0.0,
           "avgPct": 0.02,
           "beatCloseP": 44.2,
           "beatCloseStdErrPct": 6.9,
           "beatsCoinFlip": false,
           "worseThanCoinFlip": false,
-          "unmoved": 12
+          "unmoved": 13
         },
         "mlb": {
           "picks": 675,
@@ -177,7 +177,7 @@
         "worseThanCoinFlip": false,
         "unmoved": 13
       },
-      "provisionalPicks": 145,
+      "provisionalPicks": 144,
       "note": "Closing line value predicts long-run profitability better than win rate. Measured only on picks whose price was frozen when the game started, over the whole graded record rather than the recent window. Median is the headline figure; the mean is pulled by a few large favourable moves."
     },
     "totals": {
@@ -86788,26 +86788,39 @@
       "predicted": "Nottingham Forest",
       "predictedSide": "away",
       "outcomeLabel": "Nottingham Forest to win",
-      "confidence": 40.8,
-      "rawConfidence": 59.9,
-      "rawHomeWinPct": 40.1,
+      "confidence": 42.6,
+      "rawConfidence": 62.6,
+      "rawHomeWinPct": 37.4,
       "probabilityMethod": "fitted",
-      "evPct": -8.3,
+      "evPct": -4.19,
       "kellyPct": 0.0,
       "pickOdds": 125,
       "openingOdds": 125,
       "openingSide": "away",
-      "pickOddsFrozenAt": null,
+      "pickOddsFrozenAt": "2026-10-23T21:23:34.861499+00:00",
       "published": false,
       "clvPct": 0.0,
-      "status": "pending",
-      "actual": null,
-      "correct": null,
-      "units": null,
-      "homeScore": null,
-      "awayScore": null,
-      "gradedAt": null,
-      "date": "2026-10-23"
+      "status": "graded",
+      "actual": "Draw",
+      "correct": false,
+      "units": -1.0,
+      "homeScore": "1",
+      "awayScore": "1",
+      "gradedAt": "2026-10-23T21:23:52.468309+00:00",
+      "date": "2026-10-23",
+      "totalResult": {
+        "line": 2.5,
+        "pickSide": "over",
+        "actual": 2,
+        "outcome": "loss",
+        "odds": -115,
+        "units": -1.0,
+        "marketOverPct": 51.1,
+        "modelOverPct": 50.0,
+        "publishedOverPct": 51.1,
+        "marketAnchored": true
+      },
+      "spreadResult": null
     },
     "401908042": {
       "eventId": "401908042",
